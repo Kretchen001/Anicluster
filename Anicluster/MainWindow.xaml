@@ -6,4 +6,41 @@
         xmlns:local="clr-namespace:Anicluster"
         mc:Ignorable="d"
         Title="Anicluster" Height="900" Width="1600">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Start">
+                <MenuItem Header="Daten exportieren"/>
+                <MenuItem Header="Daten importieren"/>
+                <MenuItem Header="Dummy Daten hinzufügen" Click="click_DummyDaten"/>
+            </MenuItem>
+            <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
+        </Menu>
+        <Grid Margin="10">
+            <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
+                    <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="5*"/>
+                    <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name}" Width="30*"/>
+                    <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="15*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <ProgressBar Grid.Row="0" Grid.Column="0" Minimum="0" Maximum="100" Value="{Binding rating}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0"  Text="{Binding rating}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Tags" IsReadOnly="True" Binding="{Binding tags}" Width="35*"/>
+                    <DataGridTemplateColumn Header="Details" Width="10*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="buttonShowDetails" Content="Details anzeigen" Click="click_ShowDetails" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
 </Window>
