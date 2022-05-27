@@ -70,6 +70,10 @@ namespace Anicluster {
             dataGridAnimeList.ItemsSource = null;
             dataGridAnimeList.ItemsSource = listOfAnimeRows;
         }
+
+        private void click_AddNewAnime(object sender, RoutedEventArgs e) {
+
+        }
     }
 
     public class AnimeRow {
@@ -78,11 +82,5 @@ namespace Anicluster {
         public string name { get; set; }
         public int rating { get; set; }
         public string tags { get; set; }
-    }
-
-    public enum AnimeTags {
-        Romanze,
-        Militär,
-        Roboter
     }
 }
