@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Anicluster"
         mc:Ignorable="d"
         Title="Anicluster" Height="900" Width="1600">
     <DockPanel>
@@ -15,13 +14,17 @@
             </MenuItem>
             <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
         </Menu>
-        <Grid Margin="10">
-            <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False">
+        <Grid Margin="10" DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="90*" />
+                <RowDefinition Height="10*" />
+            </Grid.RowDefinitions>
+            <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False" Grid.Row="0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
                     <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="5*"/>
                     <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name}" Width="30*"/>
-                    <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="15*">
+                    <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="15*" SortMemberPath="rating">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -31,7 +34,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Tags" IsReadOnly="True" Binding="{Binding tags}" Width="35*"/>
+                    <DataGridTextColumn Header="Tags" IsReadOnly="True" Binding="{Binding tags}" Width="35*" SortMemberPath="tags.Count"/>
                     <DataGridTemplateColumn Header="Details" Width="10*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -41,6 +44,7 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <Button Grid.Row="1" Background="ForestGreen" Click="click_AddNewAnime">Hinzufügen</Button>
         </Grid>
     </DockPanel>
 </Window>
