@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using BiboAnime.datatypes;
+using System.Windows;
 
 namespace Anicluster.windows {
     /// <summary>
@@ -6,8 +7,11 @@ namespace Anicluster.windows {
     /// </summary>
     public partial class ShowDetails : Window {
 
-        public ShowDetails() {
+        public AnimeData oneAnime;
+
+        public ShowDetails(AnimeData oneAnime) {
             InitializeComponent();
+            this.oneAnime = oneAnime;
         }
 
         private void click_EditEnitity(object sender, RoutedEventArgs e) {

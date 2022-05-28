@@ -17,13 +17,48 @@
                 <RowDefinition Height="10*" />
                 <RowDefinition Height="10*" />
                 <RowDefinition Height="10*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="10*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10*" />
             </Grid.ColumnDefinitions>
+            <Image>
+                <Image.Style>
+                    <Style TargetType="{x:Type Image}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding oneAnime.favorite}" Value="False">
+                                <Setter Property="Source" Value="../png/favoriteFalse.png"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding oneAnime.favorite}" Value="True">
+                                <Setter Property="Source" Value="../png/favoriteTrue.png"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+            
+            <!-- "With Data is Shown" Column -->            
+            <Label Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Name</Label>
+            <Label Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine">Original-Name</Label>
+            <Label Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Bewertung (max. 100 Pkt)</Label>
+            <Label Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine">Status</Label>
+            <Label Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Tags</Label>
+            
+            <!-- Data Column -->
         </Grid>
     </DockPanel>
 </Window>
