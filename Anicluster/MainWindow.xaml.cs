@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BiboAnime.datatypes;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Anicluster {
@@ -8,49 +9,50 @@ namespace Anicluster {
     /// </summary>
     public partial class MainWindow : Window {
 
-        public List<AnimeRow> listOfAnimeRows = new List<AnimeRow>();
-
         public MainWindow() {
             InitializeComponent();
 
             //Dummy Daten für Zeigen.
-            List<AnimeTags> animeTags = new List<AnimeTags>();
-            animeTags.Add(AnimeTags.Romanze);
-            listOfAnimeRows.Add(new AnimeRow() {
-                id = (listOfAnimeRows.Count + 1),
+            List<string> string1 = new List<string>();
+            string1.Add("Romanze");
+            data.listOfAnimeRows.Add(new AnimeRow() {
+                id = (data.listOfAnimeRows.Count + 1),
                 favorite = true,
                 name = "Tonikawa",
                 rating = 80,
-                tags = convertTagList(animeTags),
+                tags = convertTagList(string1),
+                status = AnimeStatus.Fertig
             });
-            List<AnimeTags> animeTags2 = new List<AnimeTags>();
-            animeTags2.Add(AnimeTags.Roboter);
-            listOfAnimeRows.Add(new AnimeRow() {
-                id = (listOfAnimeRows.Count + 1),
+            List<string> string2 = new List<string>();
+            string2.Add("Roboter");
+            data.listOfAnimeRows.Add(new AnimeRow() {
+                id = (data.listOfAnimeRows.Count + 1),
                 favorite = false,
                 name = "Neon Genesis Evangelion",
                 rating = 70,
-                tags = convertTagList(animeTags2),
+                tags = convertTagList(string2),
+                status = AnimeStatus.Unterbrochen
             });
 
-            dataGridAnimeList.ItemsSource = listOfAnimeRows;
+            dataGridAnimeList.ItemsSource = data.listOfAnimeRows;
         }
 
         private void click_DummyDaten(object sender, RoutedEventArgs e) {
-            List<AnimeTags> animeTags3 = new List<AnimeTags>();
-            animeTags3.Add(AnimeTags.Romanze);
-            animeTags3.Add(AnimeTags.Militär);
-            listOfAnimeRows.Add(new AnimeRow() {
-                id = (listOfAnimeRows.Count + 1),
+            List<string> string3 = new List<string>();
+            string3.Add("Romanze");
+            string3.Add("Militär");
+            data.listOfAnimeRows.Add(new AnimeRow() {
+                id = (data.listOfAnimeRows.Count + 1),
                 favorite = true,
                 name = "Girls & Panzer",
                 rating = 85,
-                tags = convertTagList(animeTags3),
+                tags = convertTagList(string3),
+                status = AnimeStatus.Wunschliste
             });
             dataGridAnimeList.Items.Refresh();
         }
 
-        private string convertTagList(List<AnimeTags> tempList) {
+        private string convertTagList(List<string> tempList) {
             string tempString = "";
             for (int i = 0; i < tempList.Count; i += 1) {
                 tempString += tempList[i].ToString();
@@ -68,10 +70,14 @@ namespace Anicluster {
 
         private void click_UpdateView(object sender, RoutedEventArgs e) {
             dataGridAnimeList.ItemsSource = null;
-            dataGridAnimeList.ItemsSource = listOfAnimeRows;
+            dataGridAnimeList.ItemsSource = data.listOfAnimeRows;
         }
 
         private void click_AddNewAnime(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void click_OpenInformation(object sender, RoutedEventArgs e) {
 
         }
     }
@@ -82,5 +88,6 @@ namespace Anicluster {
         public string name { get; set; }
         public int rating { get; set; }
         public string tags { get; set; }
+        public AnimeStatus status { get; set; }
     }
 }
