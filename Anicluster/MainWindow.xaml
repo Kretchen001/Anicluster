@@ -13,6 +13,7 @@
                 <MenuItem Header="Dummy Daten hinzufügen" Click="click_DummyDaten"/>
             </MenuItem>
             <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
+            <MenuItem Header="Informationen" Click="click_OpenInformation"></MenuItem>
         </Menu>
         <Grid Margin="10" DockPanel.Dock="Top">
             <Grid.RowDefinitions>
@@ -22,7 +23,7 @@
             <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False" Grid.Row="0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
-                    <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="5*"/>
+                    <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="4*"/>
                     <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name}" Width="30*"/>
                     <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="15*" SortMemberPath="rating">
                         <DataGridTemplateColumn.CellTemplate>
@@ -34,7 +35,8 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Tags" IsReadOnly="True" Binding="{Binding tags}" Width="35*" SortMemberPath="tags.Count"/>
+                    <DataGridTextColumn Header="Tags" IsReadOnly="True" Binding="{Binding tags}" Width="30*" SortMemberPath="tags.Count"/>
+                    <DataGridTextColumn Header="Status" IsReadOnly="True" Binding="{Binding status}" Width="6*" />
                     <DataGridTemplateColumn Header="Details" Width="10*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
