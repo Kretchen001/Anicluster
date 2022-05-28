@@ -11,6 +11,6 @@
         public string urlAnimePlanet { get; set; }
         public AnimeStatus status { get; set; }
         public int staffeln { get; set; }
-        public int episodes { get; set; }
+        public int episodesTotal { get; set; }
     }
 }
