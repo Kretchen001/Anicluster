@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="0.25*"/>
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="10*" />
@@ -51,14 +51,19 @@
                 </Image.Style>
             </Image>
             
-            <!-- "With Data is Shown" Column -->            
+            <!-- "Which Data is Shown" Column -->            
             <Label Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Name</Label>
             <Label Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine">Original-Name</Label>
             <Label Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Bewertung (max. 100 Pkt)</Label>
             <Label Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine">Status</Label>
             <Label Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Tags</Label>
-            
+
             <!-- Data Column -->
+            <Label Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" Content="{Binding oneAnime.name}"/>
+            <Label Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine" Content="{Binding oneAnime.originalName}"/>
+            <Label Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" Content="{Binding oneAnime.rating}"/>
+            <Label Grid.Column="4" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine" Content="{Binding oneAnime.status}"/>
+            <Label Grid.Column="4" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" Content="{Binding oneAnime.tags}"/>
         </Grid>
     </DockPanel>
 </Window>
