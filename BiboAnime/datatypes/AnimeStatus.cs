@@ -4,15 +4,15 @@ namespace BiboAnime.datatypes {
 
     public enum AnimeStatus {
 
-        [EnumMember(Value = "want")]
-        Wunschliste,
+        [EnumMember(Value = "dropped")]
+        Abgebrochen,
         [EnumMember(Value = "started")]
         Angefangen,
         [EnumMember(Value = "finish")]
         Fertig,
         [EnumMember(Value = "stalled")]
         Unterbrochen,
-        [EnumMember(Value = "dropped")]
-        Abgebrochen
+        [EnumMember(Value = "want")]
+        Wunschliste
     }
 }
