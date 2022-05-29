@@ -13,6 +13,11 @@
                 <MenuItem Header="Dummy Daten hinzufügen" Click="click_DummyDaten"/>
             </MenuItem>
             <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
+            <MenuItem Header="Filtern">
+                <MenuItem Header="Nach Tags" />
+                <MenuItem Header="Tags ausschließen" />
+                <MenuItem Header="Tags filtern (Ein- wie Ausschließen) [Dummy Button, kommt in ner späteren Version]" />
+            </MenuItem>
             <MenuItem Header="Informationen" Click="click_OpenInformation"></MenuItem>
         </Menu>
         <Grid Margin="10" DockPanel.Dock="Top">
@@ -22,15 +27,15 @@
             </Grid.RowDefinitions>
             <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False" Grid.Row="0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
+                    <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
                     <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="4*"/>
                     <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name}" Width="30*"/>
-                    <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="15*" SortMemberPath="rating">
+                    <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="15*" SortMemberPath="generalRating">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <ProgressBar Grid.Row="0" Grid.Column="0" Minimum="0" Maximum="100" Value="{Binding rating}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="0"  Text="{Binding rating}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <ProgressBar Grid.Row="0" Grid.Column="0" Minimum="0" Maximum="100" Value="{Binding generalRating}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0"  Text="{Binding generalRating}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -46,7 +51,7 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <Button Grid.Row="1" Background="ForestGreen" Click="click_AddNewAnime">Hinzufügen</Button>
+            <Button x:Name="buttonHinzufuegen" Grid.Row="1" Background="ForestGreen" Click="click_AddNewAnime">Hinzufügen</Button>
         </Grid>
     </DockPanel>
 </Window>
