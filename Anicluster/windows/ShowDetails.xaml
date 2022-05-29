@@ -36,21 +36,24 @@
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="10*" />
             </Grid.ColumnDefinitions>
-            <Image>
+
+            <!-- Soll mal noch gehen... -> bis dahin erstmal ne Notlösung -->
+            <Label x:Name="labelFavorite" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDoubleClick="click_DoubleClickChangeFavorite"></Label>
+            <!--<Image HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
                 <Image.Style>
                     <Style TargetType="{x:Type Image}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding oneAnime.favorite}" Value="False">
-                                <Setter Property="Source" Value="../png/favoriteFalse.png"/>
+                                <Setter Property="Source" Value="../png/favoriteFalse.png" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding oneAnime.favorite}" Value="True">
-                                <Setter Property="Source" Value="../png/favoriteTrue.png"/>
+                                <Setter Property="Source" Value="../png/favoriteTrue.png" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Image.Style>
-            </Image>
-            
+            </Image>-->
+
             <!-- "Which Data is Shown" Column -->            
             <Label Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Name</Label>
             <Label Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine">Original-Name</Label>
@@ -59,11 +62,13 @@
             <Label Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Tags</Label>
 
             <!-- Data Column -->
-            <Label Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" Content="{Binding oneAnime.name}"/>
-            <Label Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine" Content="{Binding oneAnime.originalName}"/>
-            <Label Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" Content="{Binding oneAnime.rating}"/>
+            <Label x:Name="labelName" Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" />
+            <Label x:Name="labelOriginalName" Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine" />
+            <Label x:Name="labelRatingGeneral" Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" />
             <Label Grid.Column="4" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine" Content="{Binding oneAnime.status}"/>
             <Label Grid.Column="4" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" Content="{Binding oneAnime.tags}"/>
+
+            <Button x:Name="buttonRatingDetails" Grid.Column="6" Grid.Row="2" Grid.ColumnSpan="1" Margin="8" Background="#FF3B47FF" Content="Details" Click="click_ShowRatingDetails" />
         </Grid>
     </DockPanel>
 </Window>
