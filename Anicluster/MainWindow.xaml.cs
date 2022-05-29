@@ -1,4 +1,5 @@
-﻿using BiboAnime.datatypes;
+﻿using Anicluster.windows;
+using BiboAnime.datatypes;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -12,6 +13,27 @@ namespace Anicluster {
         public MainWindow() {
             InitializeComponent();
 
+            Rating rating = new Rating(
+                story : 80,
+                animation : 80,
+                germanDub : 80,
+                sound : 80,
+                specialEffect : 80
+            );
+
+            data.listOfAnimes.Add(new AnimeData {
+                id = 1,
+                favorite = true,
+                name = "Neon Genesis Evangelion",
+                originalName = "-",
+                rating = rating,
+                tags = new List<string>() { "Mecha" },
+                urlAnimePlanet = "aksljdf",
+                status = AnimeStatus.Fertig, 
+                staffeln = 1,
+                episodesTotal = 24
+            });
+
             //Dummy Daten für Zeigen.
             List<string> string1 = new List<string>();
             string1.Add("Romanze");
@@ -19,7 +41,7 @@ namespace Anicluster {
                 id = (data.listOfAnimeRows.Count + 1),
                 favorite = true,
                 name = "Tonikawa",
-                rating = 80,
+                generalRating = 80,
                 tags = convertTagList(string1),
                 status = AnimeStatus.Fertig
             });
@@ -29,7 +51,7 @@ namespace Anicluster {
                 id = (data.listOfAnimeRows.Count + 1),
                 favorite = false,
                 name = "Neon Genesis Evangelion",
-                rating = 70,
+                generalRating = 70,
                 tags = convertTagList(string2),
                 status = AnimeStatus.Unterbrochen
             });
@@ -45,7 +67,7 @@ namespace Anicluster {
                 id = (data.listOfAnimeRows.Count + 1),
                 favorite = true,
                 name = "Girls & Panzer",
-                rating = 85,
+                generalRating = 85,
                 tags = convertTagList(string3),
                 status = AnimeStatus.Wunschliste
             });
@@ -66,6 +88,17 @@ namespace Anicluster {
         private void click_ShowDetails(object sender, RoutedEventArgs e) {
             // open new Window with Details of the selected Anime.
             
+            // get the id per clicked Details-Button
+            int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem);
+            //buttonHinzufuegen.Content = currentRowIndex.ToString();
+            AnimeRow selectedAnime = (AnimeRow) dataGridAnimeList.Items[currentRowIndex];
+            //buttonHinzufuegen.Content = selectedAnime.id.ToString();
+
+            // give the anime to the ShowDetails-Window
+            ShowDetails showDetailsScreen = new ShowDetails(data.listOfAnimes[selectedAnime.id - 1]);
+            showDetailsScreen.Show();
+
+            //int index = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
         }
 
         private void click_UpdateView(object sender, RoutedEventArgs e) {
@@ -81,3 +114,4 @@ namespace Anicluster {
 
         }
     }
+}
