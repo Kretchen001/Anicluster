@@ -107,7 +107,8 @@ namespace Anicluster {
         }
 
         private void click_AddNewAnime(object sender, RoutedEventArgs e) {
-
+            AddAnime addAnime = new AddAnime();
+            addAnime.Show();
         }
 
         private void click_OpenInformation(object sender, RoutedEventArgs e) {
