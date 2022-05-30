@@ -30,7 +30,6 @@
             this.specialEffect = specialEffect;
             this.germanDub = germanDub;
 
-            double x = (story * 0.4) + (sound * 0.2) + (animation * 0.3) + (specialEffect * 0.1);
             if (germanDub == 0) {
                 this.general = (int) ((story * 0.4) + (sound * 0.2) + (animation * 0.3) + (specialEffect * 0.1));
             }
