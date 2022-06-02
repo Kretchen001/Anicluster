@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using BiboAnime.datatypes;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Anicluster.windows {
@@ -14,10 +16,19 @@ namespace Anicluster.windows {
         private int ratingSound = 0;
         private int ratingGermanDub = 0;
 
+        private string animeName = "";
+        private string originalName = "";
+        private string urlAnimePlanet = "";
+
+        private AnimeStatus animeStatus = AnimeStatus.Wunschliste;
+
+        private bool favorite = false;
+
         public AddAnime() {
             InitializeComponent();
 
             initLabel();
+            initCheckBox();
         }
 
         private void mouseWheelSrollStory(object sender, MouseWheelEventArgs e) {
@@ -135,6 +146,99 @@ namespace Anicluster.windows {
             labelSpecialEffectsRating.Content = ratingSpecialEffects.ToString();
             labelSoundRating.Content = ratingSound.ToString();
             labelGermanDubRating.Content = ratingGermanDub.ToString();
+        }
+
+        private void initCheckBox() { 
+            checkBoxStatus0.Content = AnimeStatus.Wunschliste;
+            checkBoxStatus1.Content = AnimeStatus.Angefangen;
+            checkBoxStatus2.Content = AnimeStatus.Fertig;
+            checkBoxStatus3.Content = AnimeStatus.Unterbrochen;
+            checkBoxStatus4.Content = AnimeStatus.Abgebrochen;
+        }
+
+        private void checkBoxStatus0_Checked(object sender, RoutedEventArgs e) {
+            checkBoxStatus0.IsChecked = true;
+            checkBoxStatus1.IsChecked = false;
+            checkBoxStatus2.IsChecked = false;
+            checkBoxStatus3.IsChecked = false;
+            checkBoxStatus4.IsChecked = false;
+            animeStatus = AnimeStatus.Wunschliste;
+        }
+
+        private void checkBoxStatus1_Checked(object sender, RoutedEventArgs e) {
+            checkBoxStatus0.IsChecked = false;
+            checkBoxStatus1.IsChecked = true;
+            checkBoxStatus2.IsChecked = false;
+            checkBoxStatus3.IsChecked = false;
+            checkBoxStatus4.IsChecked = false;
+            animeStatus = AnimeStatus.Angefangen;
+        }
+
+        private void checkBoxStatus2_Checked(object sender, RoutedEventArgs e) {
+            checkBoxStatus0.IsChecked = false;
+            checkBoxStatus1.IsChecked = false;
+            checkBoxStatus2.IsChecked = true;
+            checkBoxStatus3.IsChecked = false;
+            checkBoxStatus4.IsChecked = false;
+            animeStatus = AnimeStatus.Fertig;
+        }
+
+        private void checkBoxStatus3_Checked(object sender, RoutedEventArgs e) {
+            checkBoxStatus0.IsChecked = false;
+            checkBoxStatus1.IsChecked = false;
+            checkBoxStatus2.IsChecked = false;
+            checkBoxStatus3.IsChecked = true;
+            checkBoxStatus4.IsChecked = false;
+            animeStatus = AnimeStatus.Unterbrochen;
+        }
+
+        private void checkBoxStatus4_Checked(object sender, RoutedEventArgs e) {
+            checkBoxStatus0.IsChecked = false;
+            checkBoxStatus1.IsChecked = false;
+            checkBoxStatus2.IsChecked = false;
+            checkBoxStatus3.IsChecked = false;
+            checkBoxStatus4.IsChecked = true;
+            animeStatus = AnimeStatus.Abgebrochen;
+        }
+
+        private void checkBoxFavorit_Checked(object sender, RoutedEventArgs e) {
+            if (favorite == false) {
+                checkBoxFavorit.IsChecked = true;
+                favorite = true;
+            }
+            else {
+                checkBoxFavorit.IsChecked = false;
+                favorite = false;
+            }
+        }
+
+        private void textChangeName(object sender, TextChangedEventArgs e) {
+            animeName = textBoxName.Text;
+        }
+
+        private void textChangeOriginalName(object sender, TextChangedEventArgs e) {
+            originalName = textBoxOriginalName.Text;
+        }
+
+        private void textChangeUrlTextBox(object sender, TextChangedEventArgs e) {
+            urlAnimePlanet = textBoxUrlAnimePlanet.Text;
+        }
+
+        private void click_ConfirmButton(object sender, RoutedEventArgs e) {
+            // the obligated data
+            if (!(animeName == "" || originalName == "" || ratingStory == 0 || ratingSound == 0 || ratingAnimation == 0 || ratingSpecialEffects == 0)) {
+                AnimeData temp = new AnimeData {
+                    id = data.listOfAnimes.Count,
+                    name = animeName,
+                    originalName = originalName,
+                    favorite = favorite,
+                    status = animeStatus,
+                    rating = new Rating(ratingStory, ratingSound, ratingAnimation, ratingSpecialEffects, ratingGermanDub)
+                };
+            }
+            else {
+                MessageBoxResult result = MessageBox.Show("Es fehlen obligatorische Daten", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
