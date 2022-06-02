@@ -1,4 +1,5 @@
 ﻿using BiboAnime.datatypes;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -204,11 +205,25 @@ namespace Anicluster.windows {
         private void checkBoxFavorit_Checked(object sender, RoutedEventArgs e) {
             if (favorite == false) {
                 checkBoxFavorit.IsChecked = true;
+                checkBoxNotFavorit.IsChecked = false;
                 favorite = true;
             }
             else {
                 checkBoxFavorit.IsChecked = false;
+                checkBoxNotFavorit.IsChecked = true;
                 favorite = false;
+            }
+        }
+        private void checkBoxFavorit_NotChecked(object sender, RoutedEventArgs e) {
+            if (favorite == true) {
+                checkBoxFavorit.IsChecked = false;
+                checkBoxNotFavorit.IsChecked = true;
+                favorite = false;
+            }
+            else {
+                checkBoxFavorit.IsChecked = true;
+                checkBoxNotFavorit.IsChecked = false;
+                favorite = true;
             }
         }
 
@@ -226,7 +241,7 @@ namespace Anicluster.windows {
 
         private void click_ConfirmButton(object sender, RoutedEventArgs e) {
             // the obligated data
-            if (!(animeName == "" || originalName == "" || ratingStory == 0 || ratingSound == 0 || ratingAnimation == 0 || ratingSpecialEffects == 0)) {
+            if (animeName != "" && originalName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0) {
                 AnimeData temp = new AnimeData {
                     id = data.listOfAnimes.Count,
                     name = animeName,
@@ -237,8 +252,32 @@ namespace Anicluster.windows {
                 };
             }
             else {
-                MessageBoxResult result = MessageBox.Show("Es fehlen obligatorische Daten", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Es fehlen obligatorische Daten", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void click_LinkAutoGenerate(object sender, RoutedEventArgs e) {
+            if (animeName != "") {
+                string autoLink = "https://www.anime-planet.com/anime/";
+                autoLink += animeNameConvert();
+
+                textBoxUrlAnimePlanet.Text = autoLink;
+                //urlAnimePlanet = autoLink;
+            }
+            else {
+                MessageBox.Show("Kein Name, der Konvertiert werden kann!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private string animeNameConvert() {
+            return animeName.ToLower().Replace(' ','-');
+        }
+
+        private void click_CallLink(object sender, RoutedEventArgs e) {
+            Process.Start(new ProcessStartInfo {
+                FileName = urlAnimePlanet,
+                UseShellExecute = true
+            });
         }
     }
 }

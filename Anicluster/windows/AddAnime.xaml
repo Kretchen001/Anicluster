@@ -45,10 +45,17 @@
 
         <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Favorit</Label>
         <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
-        <CheckBox x:Name="checkBoxFavorit" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxFavorit_Checked">
+        <CheckBox x:Name="checkBoxNotFavorit" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxFavorit_NotChecked" IsChecked="True">
             <CheckBox.LayoutTransform>
                 <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
             </CheckBox.LayoutTransform>
+            × Nein
+        </CheckBox>
+        <CheckBox x:Name="checkBoxFavorit" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxFavorit_Checked">
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+            </CheckBox.LayoutTransform>
+            ✓ Ja
         </CheckBox>
 
         <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">URL-AnimePlanet</Label>
