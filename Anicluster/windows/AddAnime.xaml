@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Anicluster.windows"
         mc:Ignorable="d"
-        Title="AddAnime" Height="720" Width="1280">
+        Title="Anime hinzufügen" Height="720" Width="1280">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -37,16 +37,24 @@
 
         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Name</Label>
         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
-        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" />
-        
+        <TextBox x:Name="textBoxName" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeName" />
+
         <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">original Name</Label>
         <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" />
+        <TextBox x:Name="textBoxOriginalName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeOriginalName" />
 
         <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Favorit</Label>
         <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
+        <CheckBox x:Name="checkBoxFavorit" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxFavorit_Checked">
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+            </CheckBox.LayoutTransform>
+        </CheckBox>
+
         <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">URL-AnimePlanet</Label>
         <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
+        <TextBox x:Name="textBoxUrlAnimePlanet" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeUrlTextBox" />
+
         <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Bewertung</Label>
         <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
@@ -81,11 +89,21 @@
             <ProgressBar x:Name="progressBarGermanDubRating" Grid.Row="1" Grid.Column="5" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollGermanDub"></ProgressBar>
             <Label x:Name="labelGermanDubRating" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
         </Grid>
+        
         <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Status</Label>
         <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
+        <CheckBox x:Name="checkBoxStatus0" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxStatus0_Checked" IsChecked="True" />
+        <CheckBox x:Name="checkBoxStatus1" Grid.Row="8" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxStatus1_Checked" />
+        <CheckBox x:Name="checkBoxStatus2" Grid.Row="8" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxStatus2_Checked" />
+        <CheckBox x:Name="checkBoxStatus3" Grid.Row="8" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxStatus3_Checked" />
+        <CheckBox x:Name="checkBoxStatus4" Grid.Row="8" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxStatus4_Checked" />
+
         <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Staffeln</Label>
         <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
+        
         <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Gesamt-Episoden</Label>
         <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
+
+        <Button Grid.Row="13" Grid.Column="4" Grid.ColumnSpan="2" x:Name="buttonConfirm" Click="click_ConfirmButton" FontSize="18">Bestätigen</Button>
     </Grid>
 </Window>
