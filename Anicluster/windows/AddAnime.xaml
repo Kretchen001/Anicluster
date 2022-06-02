@@ -6,6 +6,35 @@
         xmlns:local="clr-namespace:Anicluster.windows"
         mc:Ignorable="d"
         Title="Anime hinzufügen" Height="720" Width="1280">
+
+    <Window.Resources>
+        <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border Background="White" BorderBrush="#FF7D8683" BorderThickness="1"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" VerticalAlignment="Center"
+                               Visibility="Collapsed" Foreground="Gray" FontFamily="Arial"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="DimGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -60,7 +89,9 @@
 
         <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">URL-AnimePlanet</Label>
         <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
-        <TextBox x:Name="textBoxUrlAnimePlanet" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeUrlTextBox" />
+        <TextBox x:Name="textBoxUrlAnimePlanet" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeUrlTextBox" Style="{StaticResource MyWaterMarkStyle}" Tag="Autogenerierten Link unbedingt überprüfen!"/>
+        <Button Grid.Row="4" Grid.Column="4" Margin="35,13,35,13" Click="click_CallLink">↗ Link aufrufen</Button>
+        <Button Grid.Row="4" Grid.Column="5" Margin="35,13,35,13" Click="click_LinkAutoGenerate">Link autogenerieren</Button>
 
         <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Bewertung</Label>
         <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="2">
@@ -96,7 +127,7 @@
             <ProgressBar x:Name="progressBarGermanDubRating" Grid.Row="1" Grid.Column="5" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollGermanDub"></ProgressBar>
             <Label x:Name="labelGermanDubRating" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
         </Grid>
-        
+
         <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Status</Label>
         <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
         <CheckBox x:Name="checkBoxStatus0" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxStatus0_Checked" IsChecked="True" />
@@ -107,10 +138,18 @@
 
         <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Staffeln</Label>
         <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
-        
+
         <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Gesamt-Episoden</Label>
         <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
 
-        <Button Grid.Row="13" Grid.Column="4" Grid.ColumnSpan="2" x:Name="buttonConfirm" Click="click_ConfirmButton" FontSize="18">Bestätigen</Button>
+        <Button Grid.Row="13" Grid.Column="4" Grid.ColumnSpan="2" x:Name="buttonConfirm" Click="click_ConfirmButton" FontSize="18">
+            <Button.Background>
+                <RadialGradientBrush>
+                    <GradientStop Color="#FFB7FFB8" Offset="1"/>
+                    <GradientStop Color="#FF00FF04" Offset="0"/>
+                </RadialGradientBrush>
+            </Button.Background>
+            Bestätigen <!-- <-Text -->
+        </Button>
     </Grid>
 </Window>
