@@ -12,6 +12,7 @@
         public AnimeStatus status { get; set; }
         public int staffeln { get; set; }
         public int episodesTotal { get; set; }
+        public bool thirdPartyRecommendation { get; set; }
     }
 
     public class Rating {
