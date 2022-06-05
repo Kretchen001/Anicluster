@@ -133,7 +133,7 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarStoryRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelSrollStory"></ProgressBar>
-                <Label x:Name="labelStoryRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                <Label x:Name="labelStoryRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelSrollStory"></Label>
                 <RepeatButton x:Name="buttonRatingStoryPlus" Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingStoryPlus" Delay="500">+</RepeatButton>
                 <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingStoryMinus" Delay="500">-</RepeatButton>
             </Grid>
@@ -154,7 +154,7 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarAnimationRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollAnimation"></ProgressBar>
-                <Label x:Name="labelAnimationRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                <Label x:Name="labelAnimationRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"  MouseWheel="mouseWheelScrollAnimation"></Label>
                 <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingAnimationPlus" Delay="500">+</RepeatButton>
                 <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingAnimationMinus" Delay="500">-</RepeatButton>
             </Grid>
@@ -175,7 +175,7 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarSpecialEffectsRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSpecialEffects"></ProgressBar>
-                <Label x:Name="labelSpecialEffectsRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                <Label x:Name="labelSpecialEffectsRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollSpecialEffects"></Label>
                 <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingSpecialEffectsPlus" Delay="500">+</RepeatButton>
                 <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingSpecialEffectsMinus" Delay="500">-</RepeatButton>
             </Grid>
@@ -196,7 +196,7 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarSoundRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSound"></ProgressBar>
-                <Label x:Name="labelSoundRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                <Label x:Name="labelSoundRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollSound"></Label>
                 <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingSoundPlus" Delay="500">+</RepeatButton>
                 <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingSoundMinus" Delay="500">-</RepeatButton>
             </Grid>
@@ -217,7 +217,7 @@
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarGermanDubRating" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" Grid.RowSpan="2" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollGermanDub"></ProgressBar>
-                <Label x:Name="labelGermanDubRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8"  HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                <Label x:Name="labelGermanDubRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8"  HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollGermanDub"></Label>
                 <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingGermanDubPlus" Delay="500">+</RepeatButton>
                 <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingGermanDubMinus" Delay="500">-</RepeatButton>
             </Grid>
