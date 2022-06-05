@@ -35,97 +35,23 @@ namespace Anicluster.windows {
         }
 
         private void mouseWheelSrollStory(object sender, MouseWheelEventArgs e) {
-            if ((e.Delta > 0) && (ratingStory <= 100)) {
-                if (ratingStory != 100) {
-                    ratingStory += 1;
-                }
-            }
-            else {
-                if (ratingStory >= 0) {
-                    if (ratingStory != 0) {
-                        ratingStory -= 1;
-                    }
-                }
-            }
-            labelStoryRating.Content = ratingStory.ToString();
-            progressBarStoryRating.Value = ratingStory;
-            // generalRating recalculate
-            calculateAndPrintGeneralRating();
+            ratingStoryIncDec(e.Delta);
         }
 
         private void mouseWheelScrollAnimation(object sender, MouseWheelEventArgs e) {
-            if ((e.Delta > 0) && (ratingAnimation <= 100)) {
-                if (ratingAnimation != 100) {
-                    ratingAnimation += 1;
-                }
-            }
-            else {
-                if (ratingAnimation >= 0) {
-                    if (ratingAnimation != 0) {
-                        ratingAnimation -= 1;
-                    }
-                }
-            }
-            labelAnimationRating.Content = ratingAnimation.ToString();
-            progressBarAnimationRating.Value = ratingAnimation;
-            // generalRating recalculate
-            calculateAndPrintGeneralRating();
+            ratingAnimationIncDec(e.Delta);
         }
+
         private void mouseWheelScrollSpecialEffects(object sender, MouseWheelEventArgs e) {
-            if ((e.Delta > 0) && (ratingSpecialEffects <= 100)) {
-                if (ratingSpecialEffects != 100) {
-                    ratingSpecialEffects += 1;
-                }
-            }
-            else {
-                if (ratingSpecialEffects >= 0) {
-                    if (ratingSpecialEffects != 0) {
-                        ratingSpecialEffects -= 1;
-                    }
-                }
-            }
-            labelSpecialEffectsRating.Content = ratingSpecialEffects.ToString();
-            progressBarSpecialEffectsRating.Value = ratingSpecialEffects;
-            // generalRating recalculate
-            calculateAndPrintGeneralRating();
+            ratingSpecialEffectsIncDec(e.Delta);
         }
         
         private void mouseWheelScrollSound(object sender, MouseWheelEventArgs e) {
-            if ((e.Delta > 0) && (ratingSound <= 100)) {
-                if (ratingSound != 100) {
-                    ratingSound += 1;
-                }
-            }
-            else {
-                if (ratingSound >= 0) {
-                    if (ratingSound != 0) {
-                        ratingSound -= 1;
-                    }
-                }
-            }
-            labelSoundRating.Content = ratingSound.ToString();
-            progressBarSoundRating.Value = ratingSound;
-            // generalRating recalculate
-            calculateAndPrintGeneralRating();
+            ratingSoundIncDec(e.Delta);
         }
 
         private void mouseWheelScrollGermanDub(object sender, MouseWheelEventArgs e) {
-            if ((e.Delta > 0) && (ratingGermanDub <= 100)) {
-                if (ratingGermanDub != 100) {
-                    ratingGermanDub += 1;
-                }
-            }
-            else {
-                if (ratingGermanDub >= 0) {
-                    if (ratingGermanDub != 0) {
-                        ratingGermanDub -= 1;
-                    }
-                }
-            }
-            labelGermanDubRating.Content = ratingGermanDub.ToString();
-            progressBarGermanDubRating.Value = ratingGermanDub;
-            // generalRating recalculate
-            calculateAndPrintGeneralRating();
+            ratingGermanDubIncDec(e.Delta);
         }
 
         private void calculateAndPrintGeneralRating() {
@@ -307,6 +233,145 @@ namespace Anicluster.windows {
 
         private void textChange_TotalEpisodes(object sender, TextChangedEventArgs e) {
             animeTotalEpisodes = int.Parse(textBoxTotalEpisodes.Text);
+        }
+
+        private void click_RatingStoryPlus(object sender, RoutedEventArgs e) {
+            ratingStoryIncDec(1);
+        }
+
+        private void click_RatingStoryMinus(object sender, RoutedEventArgs e) {
+            ratingStoryIncDec(-1);
+        }
+
+        private void ratingStoryIncDec(int e) {
+            if ((e > 0) && (ratingStory <= 100)) {
+                if (ratingStory != 100) {
+                    ratingStory += 1;
+                }
+            }
+            else {
+                if (ratingStory >= 0) {
+                    if (ratingStory != 0) {
+                        ratingStory -= 1;
+                    }
+                }
+            }
+            labelStoryRating.Content = ratingStory.ToString();
+            progressBarStoryRating.Value = ratingStory;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void ratingAnimationIncDec(int e) {
+            if ((e > 0) && (ratingAnimation <= 100)) {
+                if (ratingAnimation != 100) {
+                    ratingAnimation += 1;
+                }
+            }
+            else {
+                if (ratingAnimation >= 0) {
+                    if (ratingAnimation != 0) {
+                        ratingAnimation -= 1;
+                    }
+                }
+            }
+            labelAnimationRating.Content = ratingAnimation.ToString();
+            progressBarAnimationRating.Value = ratingAnimation;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void ratingSpecialEffectsIncDec(int e) {
+            if ((e > 0) && (ratingSpecialEffects <= 100)) {
+                if (ratingSpecialEffects != 100) {
+                    ratingSpecialEffects += 1;
+                }
+            }
+            else {
+                if (ratingSpecialEffects >= 0) {
+                    if (ratingSpecialEffects != 0) {
+                        ratingSpecialEffects -= 1;
+                    }
+                }
+            }
+            labelSpecialEffectsRating.Content = ratingSpecialEffects.ToString();
+            progressBarSpecialEffectsRating.Value = ratingSpecialEffects;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void ratingSoundIncDec(int e) {
+            if ((e > 0) && (ratingSound <= 100)) {
+                if (ratingSound != 100) {
+                    ratingSound += 1;
+                }
+            }
+            else {
+                if (ratingSound >= 0) {
+                    if (ratingSound != 0) {
+                        ratingSound -= 1;
+                    }
+                }
+            }
+            labelSoundRating.Content = ratingSound.ToString();
+            progressBarSoundRating.Value = ratingSound;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void ratingGermanDubIncDec(int e) {
+            if ((e > 0) && (ratingGermanDub <= 100)) {
+                if (ratingGermanDub != 100) {
+                    ratingGermanDub += 1;
+                }
+            }
+            else {
+                if (ratingGermanDub >= 0) {
+                    if (ratingGermanDub != 0) {
+                        ratingGermanDub -= 1;
+                    }
+                }
+            }
+            labelGermanDubRating.Content = ratingGermanDub.ToString();
+            progressBarGermanDubRating.Value = ratingGermanDub;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void click_RatingAnimationPlus(object sender, RoutedEventArgs e) {
+            ratingAnimationIncDec(1);
+        }
+
+        private void click_RatingAnimationMinus(object sender, RoutedEventArgs e) {
+            ratingAnimationIncDec(-1);
+        }
+
+        private void click_RatingSpecialEffectsPlus(object sender, RoutedEventArgs e) {
+            ratingSpecialEffectsIncDec(1);
+        }
+
+        private void click_RatingSpecialEffectsMinus(object sender, RoutedEventArgs e) {
+            ratingSpecialEffectsIncDec(-1);
+        }
+
+        private void click_RatingSoundPlus(object sender, RoutedEventArgs e) {
+            ratingSoundIncDec(1);
+        }
+
+        private void click_RatingSoundMinus(object sender, RoutedEventArgs e) {
+            ratingSoundIncDec(-1);
+        }
+
+        private void click_RatingGermanDubPlus(object sender, RoutedEventArgs e) {
+            ratingGermanDubIncDec(1);
+        }
+
+        private void click_RatingGermanDubMinus(object sender, RoutedEventArgs e) {
+            ratingGermanDubIncDec(-1);
+        }
+
+        private void click_RatingGermanDubMinus(object sender, MouseButtonEventArgs e) {
+            ratingGermanDubIncDec(-1);
         }
     }
 }
