@@ -16,6 +16,8 @@ namespace Anicluster.windows {
         private int ratingSpecialEffects = 0;
         private int ratingSound = 0;
         private int ratingGermanDub = 0;
+        private int animeStaffeln = 0;
+        private int animeTotalEpisodes = 0;
 
         private string animeName = "";
         private string originalName = "";
@@ -278,6 +280,33 @@ namespace Anicluster.windows {
                 FileName = urlAnimePlanet,
                 UseShellExecute = true
             });
+        }
+
+        private void click_StaffelnPlus(object sender, RoutedEventArgs e) {
+            animeStaffeln += 1;
+            textBoxStaffeln.Text = animeStaffeln.ToString();
+        }
+
+        private void click_TotalEpisodesPlus(object sender, RoutedEventArgs e) {
+            animeTotalEpisodes += 1;
+            textBoxTotalEpisodes.Text = animeTotalEpisodes.ToString();
+        }
+
+        private void click_StaffelnMinus(object sender, RoutedEventArgs e) {
+            animeStaffeln -= 1;
+            textBoxStaffeln.Text = animeStaffeln.ToString();
+        }
+
+        private void click_TotalEpisodesMinus(object sender, RoutedEventArgs e) {
+            animeTotalEpisodes -= 1;
+        }
+
+        private void textChange_Staffeln(object sender, TextChangedEventArgs e) {
+            animeStaffeln = int.Parse(textBoxStaffeln.Text);
+        }
+
+        private void textChange_TotalEpisodes(object sender, TextChangedEventArgs e) {
+            animeTotalEpisodes = int.Parse(textBoxTotalEpisodes.Text);
         }
     }
 }
