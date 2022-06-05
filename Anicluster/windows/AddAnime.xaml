@@ -134,8 +134,8 @@
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarStoryRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelSrollStory"></ProgressBar>
                 <Label x:Name="labelStoryRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
-                <Button x:Name="buttonRatingStoryPlus" Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingStoryPlus">+</Button>
-                <Button Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingStoryMinus">-</Button>
+                <RepeatButton x:Name="buttonRatingStoryPlus" Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingStoryPlus" Delay="500">+</RepeatButton>
+                <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingStoryMinus" Delay="500">-</RepeatButton>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="2" Margin="5,3,5,3">
                 <Grid.ColumnDefinitions>
@@ -155,8 +155,8 @@
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarAnimationRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollAnimation"></ProgressBar>
                 <Label x:Name="labelAnimationRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
-                <Button Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingAnimationPlus">+</Button>
-                <Button Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingAnimationMinus">-</Button>
+                <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingAnimationPlus" Delay="500">+</RepeatButton>
+                <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingAnimationMinus" Delay="500">-</RepeatButton>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="3" Margin="5,3,5,3">
                 <Grid.ColumnDefinitions>
@@ -176,8 +176,8 @@
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarSpecialEffectsRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSpecialEffects"></ProgressBar>
                 <Label x:Name="labelSpecialEffectsRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
-                <Button Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingSpecialEffectsPlus">+</Button>
-                <Button Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingSpecialEffectsMinus">-</Button>
+                <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingSpecialEffectsPlus" Delay="500">+</RepeatButton>
+                <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingSpecialEffectsMinus" Delay="500">-</RepeatButton>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="4" Margin="5,3,5,3">
                 <Grid.ColumnDefinitions>
@@ -197,8 +197,8 @@
                 </Grid.RowDefinitions>
                 <ProgressBar x:Name="progressBarSoundRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSound"></ProgressBar>
                 <Label x:Name="labelSoundRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
-                <Button Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingSoundPlus">+</Button>
-                <Button Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingSoundMinus">-</Button>
+                <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="click_RatingSoundPlus" Delay="500">+</RepeatButton>
+                <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="click_RatingSoundMinus" Delay="500">-</RepeatButton>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="5" Margin="5,3,5,3">
                 <Grid.ColumnDefinitions>
