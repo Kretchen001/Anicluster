@@ -12,6 +12,8 @@
         public AnimeStatus status { get; set; }
         public int staffeln { get; set; }
         public int episodesTotal { get; set; }
+        public int movies { get; set; }
+        public int ovh { get; set; }
         public bool thirdPartyRecommendation { get; set; }
     }
 
