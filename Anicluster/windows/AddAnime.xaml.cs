@@ -18,6 +18,8 @@ namespace Anicluster.windows {
         private int ratingGermanDub = 0;
         private int animeStaffeln = 0;
         private int animeTotalEpisodes = 0;
+        private int animeMovies = 0;
+        private int animeOvh = 0;
 
         private string animeName = "";
         private string originalName = "";
@@ -26,6 +28,7 @@ namespace Anicluster.windows {
         private AnimeStatus animeStatus = AnimeStatus.Wunschliste;
 
         private bool favorite = false;
+        private bool recommendation = false;
 
         public AddAnime() {
             InitializeComponent();
@@ -372,6 +375,37 @@ namespace Anicluster.windows {
 
         private void click_RatingGermanDubMinus(object sender, MouseButtonEventArgs e) {
             ratingGermanDubIncDec(-1);
+        }
+
+        private void click_MoviesPlus(object sender, RoutedEventArgs e) {
+            animeMovies += 1;
+            textBoxMovies.Text = animeMovies.ToString();
+        }
+
+        private void click_MoviesMinus(object sender, RoutedEventArgs e) {
+            animeMovies -= 1;
+            textBoxMovies.Text = animeMovies.ToString();
+        }
+
+        private void click_OvhsPlus(object sender, RoutedEventArgs e) {
+            animeOvh += 1;
+            textBoxOvhs.Text = animeOvh.ToString();
+        }
+
+        private void click_OvhsMinus(object sender, RoutedEventArgs e) {
+            animeOvh -= 1;
+            textBoxOvhs.Text = animeOvh.ToString();
+        }
+
+        private void checkBoxToggleRecommendation(object sender, RoutedEventArgs e) {
+            if (recommendation == false) {
+                recommendation = true;
+                checkBoxRecommendation.IsChecked = true;
+            }
+            else {
+                recommendation = false;
+                checkBoxRecommendation.IsChecked = false;
+            }
         }
     }
 }

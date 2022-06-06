@@ -87,6 +87,15 @@
             ✓ Ja
         </CheckBox>
 
+        <Label Grid.Row="3" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Empfehlung</Label>
+        <Label Grid.Row="3" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
+        <CheckBox x:Name="checkBoxRecommendation" Grid.Row="3" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Click="checkBoxToggleRecommendation" IsChecked="False">
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+            </CheckBox.LayoutTransform>
+            ✓ Ja
+        </CheckBox>
+
         <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">URL-AnimePlanet</Label>
         <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
         <TextBox x:Name="textBoxUrlAnimePlanet" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeUrlTextBox" Style="{StaticResource MyWaterMarkStyle}" Tag="Autogenerierten Link unbedingt überprüfen!"/>
@@ -256,6 +265,31 @@
             </Grid>
         </Grid>
 
+        <Label Grid.Row="9" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Filme</Label>
+        <Label Grid.Row="9" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
+        <Grid Grid.Row="9" Grid.Column="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <TextBox x:Name="textBoxMovies" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" TextChanged="textChange_Staffeln" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Grid Grid.Row="0" Grid.Column="4" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_MoviesPlus" FontSize="10">+</Button>
+                <Button Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_MoviesMinus" FontSize="10">-</Button>
+            </Grid>
+        </Grid>
+
         <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Gesamt-Episoden</Label>
         <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
         <Grid Grid.Row="10" Grid.Column="1">
@@ -278,6 +312,31 @@
                 </Grid.RowDefinitions>
                 <Button x:Name="buttonTotalEpisodesPlus" Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_TotalEpisodesPlus" FontSize="10">+</Button>
                 <Button x:Name="textBoxTotalEpisodes1" Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_TotalEpisodesMinus" FontSize="10">-</Button>
+            </Grid>
+        </Grid>
+
+        <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">OVH-Episoden</Label>
+        <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
+        <Grid Grid.Row="10" Grid.Column="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <TextBox x:Name="textBoxOvhs" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" TextChanged="textChange_TotalEpisodes" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Grid Grid.Row="0" Grid.Column="4" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_OvhsPlus" FontSize="10">+</Button>
+                <Button Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_OvhsMinus" FontSize="10">-</Button>
             </Grid>
         </Grid>
 
