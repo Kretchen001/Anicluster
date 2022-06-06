@@ -254,7 +254,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <TextBox x:Name="textBoxStaffeln" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" TextChanged="textChange_Staffeln" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <TextBox x:Name="textBoxStaffeln" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             <Grid Grid.Row="0" Grid.Column="4" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
@@ -279,7 +279,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <TextBox x:Name="textBoxMovies" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" TextChanged="textChange_Staffeln" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <TextBox x:Name="textBoxMovies" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             <Grid Grid.Row="0" Grid.Column="4" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
@@ -304,7 +304,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <TextBox x:Name="textBoxTotalEpisodes" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" TextChanged="textChange_TotalEpisodes" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <TextBox x:Name="textBoxTotalEpisodes" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             <Grid Grid.Row="0" Grid.Column="4" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
@@ -329,7 +329,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <TextBox x:Name="textBoxOvhs" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" TextChanged="textChange_TotalEpisodes" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <TextBox x:Name="textBoxOvhs" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             <Grid Grid.Row="0" Grid.Column="4" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />

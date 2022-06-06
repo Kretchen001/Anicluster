@@ -37,6 +37,23 @@ namespace Anicluster.windows {
             initCheckBox();
         }
 
+        private void initLabel() {
+            labelGeneralRating.Content = ratingGeneral.ToString();
+            labelStoryRating.Content = ratingStory.ToString();
+            labelAnimationRating.Content = ratingAnimation.ToString();
+            labelSpecialEffectsRating.Content = ratingSpecialEffects.ToString();
+            labelSoundRating.Content = ratingSound.ToString();
+            labelGermanDubRating.Content = ratingGermanDub.ToString();
+        }
+
+        private void initCheckBox() {
+            checkBoxStatus0.Content = AnimeStatus.Wunschliste;
+            checkBoxStatus1.Content = AnimeStatus.Angefangen;
+            checkBoxStatus2.Content = AnimeStatus.Fertig;
+            checkBoxStatus3.Content = AnimeStatus.Unterbrochen;
+            checkBoxStatus4.Content = AnimeStatus.Abgebrochen;
+        }
+
         private void mouseWheelSrollStory(object sender, MouseWheelEventArgs e) {
             ratingStoryIncDec(e.Delta);
         }
@@ -69,23 +86,6 @@ namespace Anicluster.windows {
             }
             labelGeneralRating.Content = ratingGeneral;
             progressBarGeneralRating.Value = ratingGeneral;
-        }
-
-        private void initLabel() {
-            labelGeneralRating.Content = ratingGeneral.ToString();
-            labelStoryRating.Content = ratingStory.ToString();
-            labelAnimationRating.Content = ratingAnimation.ToString();
-            labelSpecialEffectsRating.Content = ratingSpecialEffects.ToString();
-            labelSoundRating.Content = ratingSound.ToString();
-            labelGermanDubRating.Content = ratingGermanDub.ToString();
-        }
-
-        private void initCheckBox() { 
-            checkBoxStatus0.Content = AnimeStatus.Wunschliste;
-            checkBoxStatus1.Content = AnimeStatus.Angefangen;
-            checkBoxStatus2.Content = AnimeStatus.Fertig;
-            checkBoxStatus3.Content = AnimeStatus.Unterbrochen;
-            checkBoxStatus4.Content = AnimeStatus.Abgebrochen;
         }
 
         private void checkBoxStatus0_Checked(object sender, RoutedEventArgs e) {
@@ -171,9 +171,10 @@ namespace Anicluster.windows {
         }
 
         private void click_ConfirmButton(object sender, RoutedEventArgs e) {
+            AnimeData temp = null;
             // the obligated data
             if (animeName != "" && originalName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0) {
-                AnimeData temp = new AnimeData {
+                temp = new AnimeData {
                     id = data.listOfAnimes.Count,
                     name = animeName,
                     originalName = originalName,
@@ -184,6 +185,33 @@ namespace Anicluster.windows {
             }
             else {
                 MessageBox.Show("Es fehlen obligatorische Daten", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return; // -> end of function
+            }
+
+            // optional data added
+            if (originalName != "") {
+                temp.originalName = originalName;
+            }
+            if (recommendation == true) {
+                temp.thirdPartyRecommendation = true;
+            }
+            else {
+                temp.thirdPartyRecommendation = false;
+            }
+            if (urlAnimePlanet != "") {
+                temp.urlAnimePlanet = urlAnimePlanet;
+            }
+            if (animeStaffeln != 0) {
+                temp.staffeln = animeStaffeln;
+            }
+            if (animeTotalEpisodes != 0) {
+                temp.episodesTotal = animeTotalEpisodes;
+            }
+            if (animeOvh != 0) {
+                temp.ovh = animeOvh;
+            }
+            if (animeMovies != 0) {
+                temp.movies = animeMovies;
             }
         }
 
@@ -222,20 +250,17 @@ namespace Anicluster.windows {
         }
 
         private void click_StaffelnMinus(object sender, RoutedEventArgs e) {
-            animeStaffeln -= 1;
-            textBoxStaffeln.Text = animeStaffeln.ToString();
+            if (animeStaffeln != 0) {
+                animeStaffeln -= 1;
+                textBoxStaffeln.Text = animeStaffeln.ToString();
+            }
         }
 
         private void click_TotalEpisodesMinus(object sender, RoutedEventArgs e) {
-            animeTotalEpisodes -= 1;
-        }
-
-        private void textChange_Staffeln(object sender, TextChangedEventArgs e) {
-            animeStaffeln = int.Parse(textBoxStaffeln.Text);
-        }
-
-        private void textChange_TotalEpisodes(object sender, TextChangedEventArgs e) {
-            animeTotalEpisodes = int.Parse(textBoxTotalEpisodes.Text);
+            if (animeTotalEpisodes != 0) {
+                animeTotalEpisodes -= 1;
+                textBoxTotalEpisodes.Text = animeTotalEpisodes.ToString();
+            }
         }
 
         private void click_RatingStoryPlus(object sender, RoutedEventArgs e) {
@@ -383,8 +408,10 @@ namespace Anicluster.windows {
         }
 
         private void click_MoviesMinus(object sender, RoutedEventArgs e) {
-            animeMovies -= 1;
-            textBoxMovies.Text = animeMovies.ToString();
+            if (animeMovies != 0) {
+                animeMovies -= 1;
+                textBoxMovies.Text = animeMovies.ToString();
+            }
         }
 
         private void click_OvhsPlus(object sender, RoutedEventArgs e) {
@@ -393,8 +420,10 @@ namespace Anicluster.windows {
         }
 
         private void click_OvhsMinus(object sender, RoutedEventArgs e) {
-            animeOvh -= 1;
-            textBoxOvhs.Text = animeOvh.ToString();
+            if (animeOvh != 0) {
+                animeOvh -= 1;
+                textBoxOvhs.Text = animeOvh.ToString();
+            }
         }
 
         private void checkBoxToggleRecommendation(object sender, RoutedEventArgs e) {
