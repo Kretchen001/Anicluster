@@ -1,7 +1,7 @@
 ﻿namespace BiboAnime.datatypes {
 
     public class AnimeData {
-        
+
         public int id { get; set; }
         public bool favorite { get; set; }
         public string name { get; set; }
@@ -15,6 +15,7 @@
         public int movies { get; set; }
         public int ovh { get; set; }
         public bool thirdPartyRecommendation { get; set; }
+        public AnimeTier tier { get; set; }
     }
 
     public class Rating {
