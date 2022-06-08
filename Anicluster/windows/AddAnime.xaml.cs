@@ -30,6 +30,8 @@ namespace Anicluster.windows {
         private bool favorite = false;
         private bool recommendation = false;
 
+        private AnimeTier tier = AnimeTier.Dummy;
+
         public AddAnime() {
             InitializeComponent();
 
@@ -171,7 +173,7 @@ namespace Anicluster.windows {
         }
 
         private void click_ConfirmButton(object sender, RoutedEventArgs e) {
-            AnimeData temp = null;
+            AnimeData? temp = null;
             // the obligated data
             if (animeName != "" && originalName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0) {
                 temp = new AnimeData {
@@ -434,6 +436,81 @@ namespace Anicluster.windows {
             else {
                 recommendation = false;
                 checkBoxRecommendation.IsChecked = false;
+            }
+        }
+
+        private void clickTierS(object sender, MouseButtonEventArgs e) {
+            if (tier == AnimeTier.S) {
+                labelTierS.BorderThickness = new Thickness(0);
+                tier = AnimeTier.Dummy;
+            } 
+            else {
+                labelTierS.BorderThickness = new Thickness(2);
+                labelTierA.BorderThickness = new Thickness(0);
+                labelTierB.BorderThickness = new Thickness(0);
+                labelTierC.BorderThickness = new Thickness(0);
+                labelTierD.BorderThickness = new Thickness(0);
+                tier = AnimeTier.S;
+            }
+        }
+
+        private void clickTierA(object sender, MouseButtonEventArgs e) {
+            if (tier == AnimeTier.A) {
+                labelTierA.BorderThickness = new Thickness(0);
+                tier = AnimeTier.Dummy;
+            }
+            else {
+                labelTierS.BorderThickness = new Thickness(0);
+                labelTierA.BorderThickness = new Thickness(2);
+                labelTierB.BorderThickness = new Thickness(0);
+                labelTierC.BorderThickness = new Thickness(0);
+                labelTierD.BorderThickness = new Thickness(0);
+                tier = AnimeTier.A;
+            }
+        }
+
+        private void clickTierB(object sender, MouseButtonEventArgs e) {
+            if (tier == AnimeTier.B) {
+                labelTierB.BorderThickness = new Thickness(0);
+                tier = AnimeTier.Dummy;
+            }
+            else {
+                labelTierS.BorderThickness = new Thickness(0);
+                labelTierA.BorderThickness = new Thickness(0);
+                labelTierB.BorderThickness = new Thickness(2);
+                labelTierC.BorderThickness = new Thickness(0);
+                labelTierD.BorderThickness = new Thickness(0);
+                tier = AnimeTier.B;
+            }
+        }
+
+        private void clickTierC(object sender, MouseButtonEventArgs e) {
+            if (tier == AnimeTier.C) {
+                labelTierC.BorderThickness = new Thickness(0);
+                tier = AnimeTier.Dummy;
+            }
+            else {
+                labelTierS.BorderThickness = new Thickness(0);
+                labelTierA.BorderThickness = new Thickness(0);
+                labelTierB.BorderThickness = new Thickness(0);
+                labelTierC.BorderThickness = new Thickness(2);
+                labelTierD.BorderThickness = new Thickness(0);
+                tier = AnimeTier.C;
+            }
+        }
+
+        private void clickTierD(object sender, MouseButtonEventArgs e) {
+            if (tier == AnimeTier.D) {
+                labelTierD.BorderThickness = new Thickness(0);
+                tier = AnimeTier.Dummy;
+            }
+            else {
+                labelTierS.BorderThickness = new Thickness(0);
+                labelTierA.BorderThickness = new Thickness(0);
+                labelTierB.BorderThickness = new Thickness(0);
+                labelTierC.BorderThickness = new Thickness(0);
+                labelTierD.BorderThickness = new Thickness(2);
+                tier = AnimeTier.D;
             }
         }
     }

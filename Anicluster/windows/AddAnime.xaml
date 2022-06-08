@@ -68,6 +68,24 @@
         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
         <TextBox x:Name="textBoxName" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeName" />
 
+        <Grid Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Margin="15,5,15,5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Label x:Name="labelTierS" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Aqua" BorderBrush="Black" MouseDown="clickTierS">S</Label>
+            <Label x:Name="labelTierA" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="GreenYellow" BorderBrush="Black" MouseDown="clickTierA" >A</Label>
+            <Label x:Name="labelTierB" Grid.Column="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Yellow" BorderBrush="Black" MouseDown="clickTierB" >B</Label>
+            <Label x:Name="labelTierC" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Orange" BorderBrush="Black" MouseDown="clickTierC" >C</Label>
+            <Label x:Name="labelTierD" Grid.Column="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Red" BorderBrush="Black" MouseDown="clickTierD" >D</Label>
+        </Grid>
+
         <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">original Name</Label>
         <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
         <TextBox x:Name="textBoxOriginalName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeOriginalName" Style="{StaticResource MyWaterMarkStyle}" Tag="jap. Name z.B."/>
