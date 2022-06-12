@@ -1,5 +1,6 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,13 +26,15 @@ namespace Anicluster.windows {
         private string animeName = "";
         private string originalName = "";
         private string urlAnimePlanet = "";
+        private string animeRecomendation = "";
 
         private AnimeStatus animeStatus = AnimeStatus.Wunschliste;
 
         private bool favorite = false;
-        private bool recommendation = false;
 
         private AnimeTier animeTier = AnimeTier.Dummy;
+
+        private List<string> animeTagList = new List<string>();
 
         public AddAnime() {
             InitializeComponent();
@@ -173,17 +176,23 @@ namespace Anicluster.windows {
             urlAnimePlanet = textBoxUrlAnimePlanet.Text;
         }
 
+        private void textChangeRecommendation(object sender, RoutedEventArgs e) {
+            animeRecomendation = textBoxRecommendation.Text;
+        }
+
         private void click_ConfirmButton(object sender, RoutedEventArgs e) {
+            databaseController dbController = new databaseController();
+
             AnimeData? temp = null;
             // the obligated data
-            if (animeName != "" && originalName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0) {
+            if (animeName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0 /*&& animeTagList.Count != 0*/) {                
                 temp = new AnimeData {
-                    id = data.listOfAnimes.Count,
+                    id = dbController.getDbCountForIdPlusOne(),
                     name = animeName,
-                    originalName = originalName,
                     favorite = favorite,
                     status = animeStatus,
-                    rating = new Rating(ratingStory, ratingSound, ratingAnimation, ratingSpecialEffects, ratingGermanDub)
+                    rating = new Rating(ratingStory, ratingSound, ratingAnimation, ratingSpecialEffects, ratingGermanDub),
+                    tags = animeTagList,
                 };
             }
             else {
@@ -195,11 +204,8 @@ namespace Anicluster.windows {
             if (originalName != "") {
                 temp.originalName = originalName;
             }
-            if (recommendation == true) {
-                temp.thirdPartyRecommendation = true;
-            }
-            else {
-                temp.thirdPartyRecommendation = false;
+            if (animeRecomendation != "") {
+                temp.thirdPartyRecommendation = animeRecomendation;
             }
             if (urlAnimePlanet != "") {
                 temp.urlAnimePlanet = urlAnimePlanet;
@@ -220,7 +226,6 @@ namespace Anicluster.windows {
                 temp.tier = animeTier;
             }
 
-            databaseController dbController = new databaseController();
             dbController.addAnimeToDB(temp);
         }
 
@@ -435,17 +440,6 @@ namespace Anicluster.windows {
             }
         }
 
-        private void checkBoxToggleRecommendation(object sender, RoutedEventArgs e) {
-            if (recommendation == false) {
-                recommendation = true;
-                checkBoxRecommendation.IsChecked = true;
-            }
-            else {
-                recommendation = false;
-                checkBoxRecommendation.IsChecked = false;
-            }
-        }
-
         private void clickTierS(object sender, MouseButtonEventArgs e) {
             if (animeTier == AnimeTier.S) {
                 labelTierS.BorderThickness = new Thickness(0);
@@ -519,6 +513,14 @@ namespace Anicluster.windows {
                 labelTierD.BorderThickness = new Thickness(2);
                 animeTier = AnimeTier.D;
             }
+        }
+
+        private void clickTags(object sender, MouseButtonEventArgs e) {
+
+        }
+
+        private void clickChooseTags(object sender, RoutedEventArgs e) {
+
         }
     }
 }

@@ -63,7 +63,7 @@ namespace BiboAnime.databaseLiteDB {
         public List<AnimeRow> getAllAnimesAsRow() {
             using (var db = new LiteDatabase(locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
-                var result = col.Query()
+                List<AnimeData> result = col.Query()
                     .ToList();
                 List<AnimeRow> rows = new List<AnimeRow>();
                 for (int i = 0; i < result.Count; i += 1) {
@@ -82,6 +82,7 @@ namespace BiboAnime.databaseLiteDB {
                         name = result[i].name,
                         status = result[i].status,
                         tags = tagString,
+                        generalRating = result[i].rating.general,
                     });
                 }
                 return rows;
@@ -130,6 +131,31 @@ namespace BiboAnime.databaseLiteDB {
                 List<AnimeData> result = new List<AnimeData>();
                 result = col.Query()
                     .Where(x => x.tier == animeTier)
+                    .ToList();
+                return result;
+            }
+        }
+
+//-------------------------------------------------------------------------------------------------
+//------------------------------------TAGS---------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Add the given AnimeTag to the database.
+        /// </summary>
+        public void addOneTag(AnimeTag tag) {
+            using (var db = new LiteDatabase(locationOfDataBase)) {
+                var col = db.GetCollection<AnimeTag>("Tags");
+                col.Insert(tag);
+                col.EnsureIndex(x => x.id);
+            }
+        }
+
+        public List<AnimeTag> getAllAnimeTags() {
+            using (var db = new LiteDatabase(locationOfDataBase)) {
+                var col = db.GetCollection<AnimeTag>("Tags");
+                List<AnimeTag> result = new List<AnimeTag>();
+                result = col.Query()
                     .ToList();
                 return result;
             }

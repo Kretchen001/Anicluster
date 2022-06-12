@@ -20,17 +20,6 @@ namespace Anicluster {
         }
 
         private void click_DummyDaten(object sender, RoutedEventArgs e) {
-            //List<string> string3 = new List<string>();
-            //string3.Add("Romanze");
-            //string3.Add("Militär");
-            //data.listOfAnimeRows.Add(new AnimeRow() {
-            //    id = (data.listOfAnimeRows.Count + 1),
-            //    favorite = true,
-            //    name = "Girls & Panzer",
-            //    generalRating = 85,
-            //    tags = convertTagList(string3),
-            //    status = AnimeStatus.Wunschliste
-            //});
 
             databaseController dbController = new databaseController();
 
@@ -73,15 +62,15 @@ namespace Anicluster {
             // open new Window with Details of the selected Anime.
             
             // get the id per clicked Details-Button
-            int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem);
-            AnimeRow selectedAnime = (AnimeRow) dataGridAnimeList.Items[currentRowIndex];
+            int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
+            if (currentRowIndex != (dataGridAnimeList.Items.Count - 1)) {
+                AnimeRow selectedAnime = (AnimeRow)dataGridAnimeList.Items[currentRowIndex];
 
-            // give the anime to the ShowDetails-Window
-            databaseController dbController = new databaseController();
-            ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
-            showDetailsScreen.Show();
-
-            //int index = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
+                // give the anime to the ShowDetails-Window
+                databaseController dbController = new databaseController();
+                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
+                showDetailsScreen.Show();
+            } 
         }
 
         private void click_UpdateView(object sender, RoutedEventArgs e) {
