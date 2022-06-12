@@ -1,7 +1,8 @@
 ﻿namespace BiboAnime.datatypes {
 
-    public struct AnimeTags {
+    public class AnimeTag {
 
-        public List<string> Tags;
+        public int id { get; set; }
+        public string tagDesignator { get; set; }
     }
 }
