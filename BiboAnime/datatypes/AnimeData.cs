@@ -14,7 +14,7 @@
         public int episodesTotal { get; set; }
         public int movies { get; set; }
         public int ovh { get; set; }
-        public bool thirdPartyRecommendation { get; set; }
+        public string thirdPartyRecommendation { get; set; }
         public AnimeTier tier { get; set; }
     }
 
