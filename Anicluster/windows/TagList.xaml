@@ -1,0 +1,26 @@
+﻿<Window x:Class="Anicluster.windows.TagList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows"
+        mc:Ignorable="d"
+        Title="Tags - Liste" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="14*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <DataGrid Name="dataGridTagList" AutoGenerateColumns="False" Grid.Row="0">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="4*"/>
+                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding tag}" Width="30*"/>
+                <DataGridCheckBoxColumn x:Name="dgCheckBoxColumnAddTag" Header="Hinzufügen" Binding="{Binding isChecked}" IsReadOnly="False" Width="4*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Grid.Row="1" Click="clickConfirmTagChoice" >Fertig</Button>
+    </Grid>
+</Window>

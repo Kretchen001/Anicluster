@@ -13,6 +13,9 @@
     <Compile Update="windows\ShowDetails.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="windows\TagList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="MainWindow.xaml">
@@ -22,6 +25,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="windows\ShowDetails.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="windows\TagList.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
