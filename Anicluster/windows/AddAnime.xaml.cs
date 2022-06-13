@@ -520,7 +520,7 @@ namespace Anicluster.windows {
         }
 
         private void clickChooseTags(object sender, RoutedEventArgs e) {
-
+        
         }
     }
 }

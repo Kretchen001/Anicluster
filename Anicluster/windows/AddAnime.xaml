@@ -355,7 +355,7 @@
 
         <Label Grid.Row="12" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Tags</Label>
         <Label Grid.Row="12" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
-        <Button Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="1" Margin="30,10,30,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >Tags verwalten</Button>
+        <Button Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="1" Margin="30,10,30,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="clickChooseTags" >Tags verwalten</Button>
 
         <Button Grid.Row="13" Grid.Column="4" Grid.ColumnSpan="2" x:Name="buttonConfirm" Click="click_ConfirmButton" FontSize="18">
             <Button.Background>
