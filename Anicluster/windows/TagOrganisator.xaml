@@ -1,0 +1,31 @@
+﻿<Window x:Class="Anicluster.windows.TagOrganisator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows"
+        mc:Ignorable="d"
+        Title="Tag-Organisator" Height="450" Width="800">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Tag hinzufügen" Click="clickAddTag" />
+            <MenuItem Header="Ausgewählten Tag Löschen (einer!)" Click="clickDeleteSelectedTag" />
+            <MenuItem Header="Tag suchen (einfach)" Click="clickSearchAfterTagSimple" />
+            <MenuItem Header="Tag suchen (komplex)" Click="clickSearchAfterTagComplex" />
+        </Menu>
+        <Grid Margin="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <DataGrid Name="dataGridTags" AutoGenerateColumns="False" Grid.Row="0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="4*"/>
+                    <DataGridTextColumn Header="Tag" IsReadOnly="True" Binding="{Binding tagDesignator}" Width="30*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</Window>

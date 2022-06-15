@@ -18,6 +18,7 @@
                 <MenuItem Header="Tags ausschließen" />
                 <MenuItem Header="Tags filtern (Ein- wie Ausschließen) [Dummy Button, kommt in ner späteren Version]" />
             </MenuItem>
+            <MenuItem Header="Tags verwalten" Click="click_tagsOrganisation" ></MenuItem>
             <MenuItem Header="Informationen" Click="click_OpenInformation"></MenuItem>
         </Menu>
         <Grid Margin="10" DockPanel.Dock="Top">

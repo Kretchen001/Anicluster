@@ -30,7 +30,10 @@ namespace Anicluster {
                 specialEffect: 42,
                 germanDub: 0
             );
-            List<string> tags = new List<string> { "Romanze", "Militär"};
+            List<AnimeTag> tags = new List<AnimeTag> { 
+                new AnimeTag() { tagDesignator = "Romanze" }, 
+                new AnimeTag() { tagDesignator = "Militär" }
+            };
 
             AnimeData dummyAnime = new AnimeData {
                 id = dbController.getDbCountForIdPlusOne(),
@@ -92,6 +95,11 @@ namespace Anicluster {
         private void clickExportData(object sender, RoutedEventArgs e) {
             Export.exportAnimeList();
             Export.exportAnimeTags();
+        }
+
+        private void click_tagsOrganisation(object sender, RoutedEventArgs e) {
+            TagOrganisator tagOrganisatorWindow = new TagOrganisator();
+            tagOrganisatorWindow.Show();
         }
     }
 }

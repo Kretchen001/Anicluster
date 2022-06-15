@@ -34,7 +34,7 @@ namespace Anicluster.windows {
 
         private AnimeTier animeTier = AnimeTier.Dummy;
 
-        private List<string> animeTagList = new List<string>();
+        private List<AnimeTag> animeTagList = new List<AnimeTag>();
 
         public AddAnime() {
             InitializeComponent();
