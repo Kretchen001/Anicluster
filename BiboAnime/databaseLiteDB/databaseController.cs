@@ -134,7 +134,8 @@ namespace BiboAnime.databaseLiteDB {
         public void addOneTag(AnimeTag tag) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeTag>("Tags");
-                col.Insert(tag);
+                AnimeTag tempTag = new AnimeTag() { tagDesignator = tag.tagDesignator}; // without id
+                col.Insert(tempTag);
                 col.EnsureIndex(x => x.id);
             }
         }
@@ -166,7 +167,13 @@ namespace BiboAnime.databaseLiteDB {
                 var col = db.GetCollection<AnimeTag>("Tags");
                 var result = col.Query()
                     .Where(x => x.tagDesignator == animeTag.tagDesignator);
-                return (result is not null);
+                if (result.Count() == 0) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+                //return (result is null);
             }
         }
 

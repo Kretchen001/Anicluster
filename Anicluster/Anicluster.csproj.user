@@ -19,6 +19,15 @@
     <Compile Update="windows\TagOrganisator.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="windows\tagOrganisatorChildWindows\TagAdd.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="windows\tagOrganisatorChildWindows\TagComplexSearch.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="windows\tagOrganisatorChildWindows\TagSimpleSearch.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="MainWindow.xaml">
@@ -34,6 +43,15 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="windows\TagOrganisator.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="windows\tagOrganisatorChildWindows\TagAdd.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="windows\tagOrganisatorChildWindows\TagComplexSearch.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="windows\tagOrganisatorChildWindows\TagSimpleSearch.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
