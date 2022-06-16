@@ -1,10 +1,5 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BiboAnime {
 
@@ -16,14 +11,25 @@ namespace BiboAnime {
 
             List<AnimeData> animesToExport = dbController.getAllAnimes();
 
-            List<string> line = new List<string>();
+            List<string> animeLines = new List<string>();
             for (int i = 0; i < animesToExport.Count(); i += 1) {
-                line.Add(convertToCsvLine(animesToExport[i]));
+                animeLines.Add(convertToCsvLine(animesToExport[i]));
             }
             return false;
         }
 
         public static bool exportAnimeTags() {
+
+            databaseController dbController = new databaseController();
+
+            List<AnimeTag> animeTagsToExport = dbController.getAllAnimeTags();
+
+            List<string> tagLines = new List<string>();
+            for (int i = 0; i < animeTagsToExport.Count(); i += 1) {
+                tagLines.Add(convertToCsvLine(animeTagsToExport[i]));
+            }
+
+            //OpenFileDialog a = new OpenFileDialog();
 
             return false;
         }
@@ -48,6 +54,12 @@ namespace BiboAnime {
                 + animeData.thirdPartyRecommendation.ToString() + ";"
                 + animeData.tier.ToString()
                 ;
+            return line;
+        }
+
+        private static string convertToCsvLine(AnimeTag animeTag) {
+            string line = animeTag.id + ";"
+                + animeTag.tagDesignator;
             return line;
         }
     }
