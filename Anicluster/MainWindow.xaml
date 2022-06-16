@@ -26,7 +26,7 @@
                 <RowDefinition Height="90*" />
                 <RowDefinition Height="10*" />
             </Grid.RowDefinitions>
-            <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False" Grid.Row="0">
+            <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
                     <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="4*"/>
