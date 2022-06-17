@@ -29,7 +29,7 @@ namespace BiboAnime {
                 tagLines.Add(convertToCsvLine(animeTagsToExport[i]));
             }
 
-            //OpenFileDialog a = new OpenFileDialog();
+            OpenFileDialog a = new OpenFileDialog();
 
             return false;
         }
