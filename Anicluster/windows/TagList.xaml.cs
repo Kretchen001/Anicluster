@@ -11,6 +11,13 @@ namespace Anicluster.windows {
     public partial class TagList : Window {
 
         private List<TagRow> tagRows = new List<TagRow>();
+        public List<AnimeTag> selectedTagList = new List<AnimeTag>();
+
+        internal class TagRow {
+            public int id { get; set; }
+            public string tag { get; set; }
+            public bool isChecked { get; set; }
+        }
 
         public TagList(List<AnimeTag> givenTagList) {
             InitializeComponent();
