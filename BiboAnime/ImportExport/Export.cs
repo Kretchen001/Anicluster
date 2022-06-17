@@ -5,7 +5,7 @@ namespace BiboAnime {
 
     public static class Export {
 
-        public static bool exportAnimeList() {
+        public static bool exportAnimeList(string filePath) {
 
             databaseController dbController = new databaseController();
 
@@ -13,25 +13,32 @@ namespace BiboAnime {
 
             List<string> animeLines = new List<string>();
             for (int i = 0; i < animesToExport.Count(); i += 1) {
-                animeLines.Add(convertToCsvLine(animesToExport[i]));
+                animeLines.Add(convertToCsvLine(animesToExport[i])); //convertToCsvLine(AnimeData animeData)
             }
+
+            File.WriteAllLines(filePath, animeLines);
+
             return false;
         }
 
-        public static bool exportAnimeTags() {
+        public static bool exportAnimeTags(string filePath) {
+            try {
+                databaseController dbController = new databaseController();
 
-            databaseController dbController = new databaseController();
+                List<AnimeTag> animeTagsToExport = dbController.getAllAnimeTags();
 
-            List<AnimeTag> animeTagsToExport = dbController.getAllAnimeTags();
+                List<string> tagLines = new List<string>();
+                for (int i = 0; i < animeTagsToExport.Count(); i += 1) {
+                    tagLines.Add(convertToCsvLine(animeTagsToExport[i])); //convertToCsvLine(AnimeTag animeTag)
+                }
 
-            List<string> tagLines = new List<string>();
-            for (int i = 0; i < animeTagsToExport.Count(); i += 1) {
-                tagLines.Add(convertToCsvLine(animeTagsToExport[i]));
+                File.WriteAllLines(filePath, tagLines);
+
+                return true;
             }
-
-            OpenFileDialog a = new OpenFileDialog();
-
-            return false;
+            catch (Exception ex) {
+                return false;
+            }
         }
 
         private static string convertToCsvLine(AnimeData animeData) {

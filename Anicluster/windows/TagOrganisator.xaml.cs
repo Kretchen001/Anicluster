@@ -1,7 +1,11 @@
 ﻿using Anicluster.windows.tagOrganisatorChildWindows;
+using BiboAnime;
 using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace Anicluster.windows {
@@ -87,6 +91,47 @@ namespace Anicluster.windows {
             TagComplexSearch complexSearchWindow = new TagComplexSearch();
             complexSearchWindow.Owner = this;
             complexSearchWindow.ShowDialog();
+        }
+
+        private void clickExport(object sender, RoutedEventArgs e) {
+
+            string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
+
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
+            }
+
+            SaveFileDialog saveFileDialogWindow = new SaveFileDialog() {
+                InitialDirectory = dir,
+                FileName = "tags.csv",
+            };
+
+            saveFileDialogWindow.ShowDialog();
+
+            if (!Export.exportAnimeTags(saveFileDialogWindow.FileName)) {
+                MessageBox.Show("Da ist was beim Import schief gelaufen", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else {
+                MessageBox.Show("Tags importiert", "Meldung", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void clickImport(object sender, RoutedEventArgs e) {
+
+            string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
+
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            }
+
+            OpenFileDialog  openFileDialogWindow = new OpenFileDialog() {
+                InitialDirectory = dir,
+                FileName = "tags.csv",
+            };
+
+            openFileDialogWindow.ShowDialog();
+
+            Import.importAnimeTags(openFileDialogWindow.FileName, false);
         }
     }
 }
