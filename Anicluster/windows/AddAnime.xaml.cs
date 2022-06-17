@@ -504,7 +504,9 @@ namespace Anicluster.windows {
         }
 
         private void clickChooseTags(object sender, RoutedEventArgs e) {
-        
+            TagList tagListWindow = new TagList(animeTagList);
+            tagListWindow.ShowDialog();
+            animeTagList = tagListWindow.selectedTagList;
         }
     }
 }
