@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BiboAnime.databaseLiteDB;
+using BiboAnime.datatypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +15,18 @@ namespace BiboAnime {
             return false;
         }
 
-        public static bool importAnimeTags() {
+        public static bool importAnimeTags(string filePath, bool importToDataBase) {
+
+            databaseController dbController = new databaseController();
+
+            List<string> importedTagList = File.ReadAllLines(filePath).ToList();
+
+            if (importToDataBase) {
+
+            }
+            else {
+
+            }
 
             return false;
         }
