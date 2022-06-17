@@ -2,7 +2,10 @@
 using BiboAnime;
 using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace Anicluster {
@@ -61,9 +64,7 @@ namespace Anicluster {
             return tempString;
         }
 
-        private void click_ShowDetails(object sender, RoutedEventArgs e) {
-            // open new Window with Details of the selected Anime.
-            
+        private void click_ShowDetails(object sender, RoutedEventArgs e) {            
             // get the id per clicked Details-Button
             int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
             if (currentRowIndex != (dataGridAnimeList.Items.Count - 1)) {
@@ -92,14 +93,43 @@ namespace Anicluster {
 
         }
 
-        private void clickExportData(object sender, RoutedEventArgs e) {
-            Export.exportAnimeList();
-            Export.exportAnimeTags();
+        private void unimplementetYet() {
+            MessageBox.Show("Komm später wieder ;)", "Unimplementiert", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void clickExportDataTags(object sender, RoutedEventArgs e) {
+
+            string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
+
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
+            }
+
+            SaveFileDialog saveFileDialogWindow = new SaveFileDialog() {
+                InitialDirectory = dir,
+                FileName = "tags.csv",
+            };
+
+            saveFileDialogWindow.ShowDialog();
+
+            Export.exportAnimeTags(saveFileDialogWindow.FileName);
         }
 
         private void click_tagsOrganisation(object sender, RoutedEventArgs e) {
             TagOrganisator tagOrganisatorWindow = new TagOrganisator();
             tagOrganisatorWindow.Show();
+        }
+
+        private void clickExportDataAnimes(object sender, RoutedEventArgs e) {
+            unimplementetYet();
+        }
+
+        private void clickImportDataAnimes(object sender, RoutedEventArgs e) {
+            unimplementetYet();
+        }
+
+        private void clickImporDataTags(object sender, RoutedEventArgs e) {
+            unimplementetYet();
         }
     }
 }
