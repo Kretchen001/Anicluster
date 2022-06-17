@@ -446,11 +446,7 @@ namespace Anicluster.windows {
                 animeTier = AnimeTier.Dummy;
             } 
             else {
-                labelTierS.BorderThickness = new Thickness(2);
-                labelTierA.BorderThickness = new Thickness(0);
-                labelTierB.BorderThickness = new Thickness(0);
-                labelTierC.BorderThickness = new Thickness(0);
-                labelTierD.BorderThickness = new Thickness(0);
+                tierBorderThicknessChange(S: 2, A: 0, B: 0, C: 0, D: 0);
                 animeTier = AnimeTier.S;
             }
         }
@@ -461,11 +457,7 @@ namespace Anicluster.windows {
                 animeTier = AnimeTier.Dummy;
             }
             else {
-                labelTierS.BorderThickness = new Thickness(0);
-                labelTierA.BorderThickness = new Thickness(2);
-                labelTierB.BorderThickness = new Thickness(0);
-                labelTierC.BorderThickness = new Thickness(0);
-                labelTierD.BorderThickness = new Thickness(0);
+                tierBorderThicknessChange(S: 0, A: 2, B: 0, C: 0, D: 0);
                 animeTier = AnimeTier.A;
             }
         }
@@ -476,11 +468,7 @@ namespace Anicluster.windows {
                 animeTier = AnimeTier.Dummy;
             }
             else {
-                labelTierS.BorderThickness = new Thickness(0);
-                labelTierA.BorderThickness = new Thickness(0);
-                labelTierB.BorderThickness = new Thickness(2);
-                labelTierC.BorderThickness = new Thickness(0);
-                labelTierD.BorderThickness = new Thickness(0);
+                tierBorderThicknessChange(S: 0, A: 0, B: 2, C: 0, D: 0);
                 animeTier = AnimeTier.B;
             }
         }
@@ -491,11 +479,7 @@ namespace Anicluster.windows {
                 animeTier = AnimeTier.Dummy;
             }
             else {
-                labelTierS.BorderThickness = new Thickness(0);
-                labelTierA.BorderThickness = new Thickness(0);
-                labelTierB.BorderThickness = new Thickness(0);
-                labelTierC.BorderThickness = new Thickness(2);
-                labelTierD.BorderThickness = new Thickness(0);
+                tierBorderThicknessChange(S: 0, A: 0, B: 0, C: 2, D: 0);
                 animeTier = AnimeTier.C;
             }
         }
@@ -506,17 +490,17 @@ namespace Anicluster.windows {
                 animeTier = AnimeTier.Dummy;
             }
             else {
-                labelTierS.BorderThickness = new Thickness(0);
-                labelTierA.BorderThickness = new Thickness(0);
-                labelTierB.BorderThickness = new Thickness(0);
-                labelTierC.BorderThickness = new Thickness(0);
-                labelTierD.BorderThickness = new Thickness(2);
+                tierBorderThicknessChange(S: 0, A: 0, B: 0, C: 0, D: 2);
                 animeTier = AnimeTier.D;
             }
         }
 
-        private void clickTags(object sender, MouseButtonEventArgs e) {
-
+        private void tierBorderThicknessChange(int S, int A, int B, int C, int D) {
+            labelTierS.BorderThickness = new Thickness(S);
+            labelTierA.BorderThickness = new Thickness(A);
+            labelTierB.BorderThickness = new Thickness(B);
+            labelTierC.BorderThickness = new Thickness(C);
+            labelTierD.BorderThickness = new Thickness(D);
         }
 
         private void clickChooseTags(object sender, RoutedEventArgs e) {
