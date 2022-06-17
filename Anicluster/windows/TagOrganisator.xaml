@@ -8,6 +8,10 @@
         Title="Tag-Organisator" Height="450" Width="800">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
+            <MenuItem Header="↳" Background="Beige">
+                <MenuItem Header="Export List" Click="clickExport" />
+                <MenuItem Header="Import List" Click="clickImport"/>
+            </MenuItem>
             <MenuItem Header="Tag hinzufügen" Click="clickAddTag" />
             <MenuItem Header="Ausgewählten Tag Löschen (einer!)" Click="clickDeleteSelectedTag" />
             <MenuItem Header="Tag suchen (einfach)" Click="clickSearchAfterTagSimple" />

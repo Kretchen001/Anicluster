@@ -8,8 +8,15 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Start">
-                <MenuItem Header="Daten exportieren" Click="clickExportData"/>
-                <MenuItem Header="Daten importieren"/>
+                <MenuItem Header="Daten exportieren">
+                    <MenuItem Header="Alles"/>
+                    <MenuItem Header="Animes" Click="clickExportDataAnimes" />
+                    <MenuItem Header="Tags" Click="clickExportDataTags"/>
+                </MenuItem>
+                <MenuItem Header="Daten importieren">
+                    <MenuItem Header="Animes" Click="clickImportDataAnimes"/>
+                    <MenuItem Header="Tags" Click="clickImporDataTags"/>
+                </MenuItem>
                 <MenuItem Header="Dummy Daten hinzufügen" Click="click_DummyDaten"/>
             </MenuItem>
             <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
