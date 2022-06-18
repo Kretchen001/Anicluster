@@ -1,4 +1,5 @@
 ﻿using BiboAnime.datatypes;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -10,16 +11,33 @@ namespace Anicluster.windows {
 
         public AnimeData oneAnime;
 
-        private string a { get; set; } = "ahfsd";
-
         public ShowDetails(AnimeData oneAnime) {
             InitializeComponent();
             this.oneAnime = oneAnime;
             labelNameHeadLine.Content = oneAnime.name;
+
+            setDisplay();
+        }
+
+        private void setDisplay() { 
+            textBoxName.Text = oneAnime.name;
+            textBoxOriginalName.Text = oneAnime.originalName;
+            if (oneAnime.favorite) { 
+                checkBoxFavorit.IsChecked = true;
+                checkBoxNotFavorit.IsChecked = false;
+            }
+            else {
+                checkBoxFavorit.IsChecked = false;
+                checkBoxNotFavorit.IsChecked = true;
+            }
+            textBoxUrlAnimePlanet.Text = oneAnime.urlAnimePlanet;
         }
 
         private void clickCallLink(object sender, RoutedEventArgs e) {
-
+            Process.Start(new ProcessStartInfo {
+                FileName = oneAnime.urlAnimePlanet,
+                UseShellExecute = true
+            });
         }
 
         private void clickCloseButton(object sender, RoutedEventArgs e) {
@@ -35,7 +53,8 @@ namespace Anicluster.windows {
         }
 
         private void clickChoosenTags(object sender, RoutedEventArgs e) {
-
+            ShowDetailsTags showDetailsTagsWindows = new ShowDetailsTags(oneAnime.tags);
+            showDetailsTagsWindows.ShowDialog();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace Anicluster.windows {
@@ -44,7 +45,7 @@ namespace Anicluster.windows {
                 tagRows.Add(tempTagRow);
             }
 
-            dataGridTagList.ItemsSource = tagRows;
+            dataGridTagList.ItemsSource = tagRows.OrderBy(x => x.tagDesignator).ToList();
         }
 
         private void clickConfirmTagChoice(object sender, RoutedEventArgs e) {
