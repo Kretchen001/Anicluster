@@ -104,6 +104,7 @@ namespace Anicluster.windows {
             SaveFileDialog saveFileDialogWindow = new SaveFileDialog() {
                 InitialDirectory = dir,
                 FileName = "tags.csv",
+                Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*"
             };
 
             saveFileDialogWindow.ShowDialog();
@@ -124,9 +125,10 @@ namespace Anicluster.windows {
                 Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory);
             }
 
-            OpenFileDialog  openFileDialogWindow = new OpenFileDialog() {
+            OpenFileDialog openFileDialogWindow = new OpenFileDialog() {
                 InitialDirectory = dir,
                 FileName = "tags.csv",
+                Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*"
             };
 
             openFileDialogWindow.ShowDialog();
