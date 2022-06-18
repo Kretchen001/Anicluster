@@ -68,7 +68,7 @@ namespace Anicluster {
         private void click_ShowDetails(object sender, RoutedEventArgs e) {            
             // get the id per clicked Details-Button
             int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
-            if (currentRowIndex != (dataGridAnimeList.Items.Count - 1) || currentRowIndex == 0) {
+            if ((currentRowIndex != (dataGridAnimeList.Items.Count - 1)) || (currentRowIndex == 0)) {
                 AnimeRow selectedAnime = (AnimeRow)dataGridAnimeList.Items[currentRowIndex];
 
                 // give the anime to the ShowDetails-Window

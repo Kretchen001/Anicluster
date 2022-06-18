@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Anicluster.windows.tagOrganisatorChildWindows"
         mc:Ignorable="d"
-        Title="TagSimpleSearch" Height="450" Width="800">
-    <Grid>
-        
+        Title="Tag Suchen (vereinfacht)" Height="450" Width="800">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Tag Bezeichnung</Label>
+        <TextBox x:Name="textBoxTagInputForSearch" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10" TextChanged="textBoxTextChange"></TextBox>
+
+        <DataGrid x:Name="dataGridSolutions" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="3" AutoGenerateColumns="False" CanUserAddRows="false">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nr." Width="1*" CanUserSort="False" Binding="{Binding nr}"/>
+                <DataGridTextColumn Header="Ergebnisse" Width="19*" CanUserSort="False" Binding="{Binding tagDesignatorR}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
