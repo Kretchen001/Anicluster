@@ -5,70 +5,227 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Anicluster.windows"
         mc:Ignorable="d"
-        Title="ShowDetails" Height="450" Width="800">
+        Title="Details" Height="576" Width="1024">
+
+    <Window.Resources>
+        <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Border Background="White" BorderBrush="#FF7D8683" BorderThickness="1"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" VerticalAlignment="Center"
+                               Visibility="Collapsed" Foreground="Gray" FontFamily="Arial"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="DimGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Bearbeiten" Click="click_EditEnitity" />
-            <MenuItem Header="Löschen" Click="click_RemoveEntity" />
+            <MenuItem Header="Bearbeiten" Click="clickEditEnitity" />
+            <MenuItem Header="Löschen" Click="clickRemoveEntity" />
         </Menu>
         <Grid Margin="10" DockPanel.Dock="Top">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-                <RowDefinition Height="10*" />
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="0.25*"/>
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="10*" />
-                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.5*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
 
-            <!-- Soll mal noch gehen... -> bis dahin erstmal ne Notlösung -->
-            <Label x:Name="labelFavorite" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDoubleClick="click_DoubleClickChangeFavorite"></Label>
-            <!--<Image HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
-                <Image.Style>
-                    <Style TargetType="{x:Type Image}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding oneAnime.favorite}" Value="False">
-                                <Setter Property="Source" Value="../png/favoriteFalse.png" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding oneAnime.favorite}" Value="True">
-                                <Setter Property="Source" Value="../png/favoriteTrue.png" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Image.Style>
-            </Image>-->
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Background="Azure"></Label>
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label VerticalAlignment="Center" Grid.Column="0" FontSize="22" FontWeight="Bold" >Anime -</Label>
+                <Label x:Name="labelNameHeadLine" VerticalAlignment="Center" Grid.Column="1" FontSize="24" FontWeight="Bold" />
+                <Label VerticalAlignment="Center" Grid.Column="2" FontSize="22" FontWeight="Bold" >- Daten</Label>
+            </Grid>
+            <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Name</Label>
+            <TextBox x:Name="textBoxName" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14"/>
 
-            <!-- "Which Data is Shown" Column -->            
-            <Label Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Name</Label>
-            <Label Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine">Original-Name</Label>
-            <Label Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Bewertung (max. 100 Pkt)</Label>
-            <Label Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine">Status</Label>
-            <Label Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue">Tags</Label>
+            <Grid Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Margin="15,5,15,5" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Label x:Name="labelTierS" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Aqua" BorderBrush="Black">S</Label>
+                <Label x:Name="labelTierA" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="GreenYellow" BorderBrush="Black">A</Label>
+                <Label x:Name="labelTierB" Grid.Column="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Yellow" BorderBrush="Black">B</Label>
+                <Label x:Name="labelTierC" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Orange" BorderBrush="Black">C</Label>
+                <Label x:Name="labelTierD" Grid.Column="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Red" BorderBrush="Black">D</Label>
+            </Grid>
 
-            <!-- Data Column -->
-            <Label x:Name="labelName" Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" />
-            <Label x:Name="labelOriginalName" Grid.Column="4" Grid.Row="1" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine" />
-            <Label x:Name="labelRatingGeneral" Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" />
-            <Label Grid.Column="4" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="Aquamarine" Content="{Binding oneAnime.status}"/>
-            <Label Grid.Column="4" Grid.Row="4" Grid.ColumnSpan="2" VerticalContentAlignment="Center" Background="AliceBlue" Content="{Binding oneAnime.tags}"/>
+            <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">original Name</Label>
+            <TextBox x:Name="textBoxOriginalName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10"/>
 
-            <Button x:Name="buttonRatingDetails" Grid.Column="6" Grid.Row="2" Grid.ColumnSpan="1" Margin="8" Background="#FF3B47FF" Content="Details" Click="click_ShowRatingDetails" />
+            <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Favorit</Label>
+            <CheckBox x:Name="checkBoxNotFavorit" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True">
+                <CheckBox.LayoutTransform>
+                    <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
+                </CheckBox.LayoutTransform>
+                × Nein
+            </CheckBox>
+            <CheckBox x:Name="checkBoxFavorit" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <CheckBox.LayoutTransform>
+                    <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
+                </CheckBox.LayoutTransform>
+                ✓ Ja
+            </CheckBox>
+
+            <Label Grid.Row="3" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Empfehlung</Label>
+            <TextBox x:Name="textBoxRecommendation" Grid.Row="3" Grid.Column="5" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+            <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">URL-AnimePlanet</Label>
+            <TextBox x:Name="textBoxUrlAnimePlanet" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10"/>
+            <Button Grid.Row="4" Grid.Column="4" Margin="35,10,35,10" Click="clickCallLink">↗ Link aufrufen</Button>
+
+            <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Bewertung</Label>
+            <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="6" Grid.RowSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Gesamt (autom.)</Label>
+                <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">Geschichte/Story</Label>
+                <Label Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">Animation</Label>
+                <Label Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">Spezialeffekte</Label>
+                <Label Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center">Musik/Sound</Label>
+                <Label Grid.Row="0" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center">dt. Dub (optional)</Label>
+
+                <ProgressBar x:Name="progressBarGeneralRating" Grid.Row="1" Grid.Column="0" Margin="10,10,10,10" Minimum="0" Maximum="100"></ProgressBar>
+                <Label x:Name="labelGeneralRating" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                <Grid Grid.Row="1" Grid.Column="1" Margin="5,3,5,3">
+                    <ProgressBar x:Name="progressBarStoryRating" Margin="10,10,10,10" Minimum="0" Maximum="100" />
+                    <Label x:Name="labelStoryRating" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="2" Margin="5,3,5,3">
+                    <ProgressBar x:Name="progressBarAnimationRating" Margin="10,10,10,10" Minimum="0" Maximum="100" />
+                    <Label x:Name="labelAnimationRating" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="3" Margin="5,3,5,3">
+                    <ProgressBar x:Name="progressBarSpecialEffectsRating" Margin="10,10,10,10" Minimum="0" Maximum="100" />
+                    <Label x:Name="labelSpecialEffectsRating" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="4" Margin="5,3,5,3">
+                    <ProgressBar x:Name="progressBarSoundRating" Margin="10,10,10,10" Minimum="0" Maximum="100" />
+                    <Label x:Name="labelSoundRating" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="5" Margin="5,3,5,3">
+                    <ProgressBar x:Name="progressBarGermanDubRating" Grid.Row="0" Grid.Column="0" Margin="10,10,10,10" Minimum="0" Maximum="100" />
+                    <Label x:Name="labelGermanDubRating" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+            </Grid>
+
+            <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Status</Label>
+            <TextBox x:Name="textBoxStatus" Grid.Row="8" Grid.Column="1" Margin="20,10,20,10" HorizontalAlignment="Stretch" />
+
+            <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Staffeln</Label>
+            <TextBox x:Name="textBoxStaffeln" Grid.Row="9" Grid.Column="1" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+
+            <Label Grid.Row="9" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Filme</Label>
+            <TextBox x:Name="textBoxMovies" Grid.Row="9" Grid.Column="4" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+
+            <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Gesamt-Episoden</Label>
+            <TextBox x:Name="textBoxTotalEpisodes" Grid.Row="10" Grid.Column="1" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+
+            <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">OVH-Episoden</Label>
+            <Grid Grid.Row="10" Grid.Column="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <TextBox x:Name="textBoxOvhs" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            </Grid>
+
+            <Label Grid.Row="12" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Tags</Label>
+            <Button Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="1" Margin="30,10,30,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="clickChoosenTags">
+                Tags ansehen
+            </Button>
+
+            <Button Grid.Row="12" Grid.Column="4" Grid.ColumnSpan="2" x:Name="buttonConfirm" Click="clickCloseButton" FontSize="18">
+                <Button.Background>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#FFB7FFB8" Offset="1"/>
+                        <GradientStop Color="#FF00FF04" Offset="0"/>
+                    </RadialGradientBrush>
+                </Button.Background>
+                Schließen
+            </Button>
         </Grid>
     </DockPanel>
 </Window>
+
+
+<!-- Soll mal noch gehen... -> bis dahin erstmal ne Notlösung -->
+<!--<Label x:Name="labelFavorite" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDoubleClick="click_DoubleClickChangeFavorite"></Label>-->
+<!--<Image HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto">
+        <Image.Style>
+            <Style TargetType="{x:Type Image}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding oneAnime.favorite}" Value="False">
+                        <Setter Property="Source" Value="../png/favoriteFalse.png" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding oneAnime.favorite}" Value="True">
+                        <Setter Property="Source" Value="../png/favoriteTrue.png" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Image.Style>
+    </Image>-->
