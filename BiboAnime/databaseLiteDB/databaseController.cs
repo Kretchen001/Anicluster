@@ -58,10 +58,10 @@ namespace BiboAnime.databaseLiteDB {
                     string tagString = "";
                     for (int j = 0; j < result[i].tags.Count; j += 1) {
                         if (j != (result[i].tags.Count - 1)) {
-                            tagString += result[i].tags[j] + ", ";
+                            tagString += result[i].tags[j].tagDesignator + ", ";
                         }
                         else {
-                            tagString += result[i].tags[j];
+                            tagString += result[i].tags[j].tagDesignator;
                         }
                     }
                     rows.Add(new AnimeRow {

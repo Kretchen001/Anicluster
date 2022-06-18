@@ -15,10 +15,11 @@ namespace Anicluster {
     /// </summary>
     public partial class MainWindow : Window {
 
+        private databaseController dbController = new databaseController();
+
         public MainWindow() {
             InitializeComponent();
 
-            databaseController dbController = new databaseController();
             dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
 
@@ -67,19 +68,16 @@ namespace Anicluster {
         private void click_ShowDetails(object sender, RoutedEventArgs e) {            
             // get the id per clicked Details-Button
             int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
-            if (currentRowIndex != (dataGridAnimeList.Items.Count - 1)) {
+            if (currentRowIndex != (dataGridAnimeList.Items.Count - 1) || currentRowIndex == 0) {
                 AnimeRow selectedAnime = (AnimeRow)dataGridAnimeList.Items[currentRowIndex];
 
                 // give the anime to the ShowDetails-Window
-                databaseController dbController = new databaseController();
                 ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
                 showDetailsScreen.Show();
             } 
         }
 
         private void click_UpdateView(object sender, RoutedEventArgs e) {
-            databaseController dbController = new databaseController();
-
             dataGridAnimeList.ItemsSource = null;
             dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
