@@ -112,48 +112,36 @@ namespace Anicluster.windows {
         }
 
         private void checkBoxStatus0_Checked(object sender, RoutedEventArgs e) {
-            checkBoxStatus0.IsChecked = true;
-            checkBoxStatus1.IsChecked = false;
-            checkBoxStatus2.IsChecked = false;
-            checkBoxStatus3.IsChecked = false;
-            checkBoxStatus4.IsChecked = false;
+            boxCheckChange(true, false, false, false, false);
             animeStatus = AnimeStatus.Wunschliste;
         }
 
         private void checkBoxStatus1_Checked(object sender, RoutedEventArgs e) {
-            checkBoxStatus0.IsChecked = false;
-            checkBoxStatus1.IsChecked = true;
-            checkBoxStatus2.IsChecked = false;
-            checkBoxStatus3.IsChecked = false;
-            checkBoxStatus4.IsChecked = false;
+            boxCheckChange(false, true, false, false, false);
             animeStatus = AnimeStatus.Angefangen;
         }
 
         private void checkBoxStatus2_Checked(object sender, RoutedEventArgs e) {
-            checkBoxStatus0.IsChecked = false;
-            checkBoxStatus1.IsChecked = false;
-            checkBoxStatus2.IsChecked = true;
-            checkBoxStatus3.IsChecked = false;
-            checkBoxStatus4.IsChecked = false;
+            boxCheckChange(false, false, true, false, false);
             animeStatus = AnimeStatus.Fertig;
         }
 
         private void checkBoxStatus3_Checked(object sender, RoutedEventArgs e) {
-            checkBoxStatus0.IsChecked = false;
-            checkBoxStatus1.IsChecked = false;
-            checkBoxStatus2.IsChecked = false;
-            checkBoxStatus3.IsChecked = true;
-            checkBoxStatus4.IsChecked = false;
+            boxCheckChange(false, false, false, true, false);
             animeStatus = AnimeStatus.Unterbrochen;
         }
 
         private void checkBoxStatus4_Checked(object sender, RoutedEventArgs e) {
-            checkBoxStatus0.IsChecked = false;
-            checkBoxStatus1.IsChecked = false;
-            checkBoxStatus2.IsChecked = false;
-            checkBoxStatus3.IsChecked = false;
-            checkBoxStatus4.IsChecked = true;
+            boxCheckChange(false, false, false, false, true);
             animeStatus = AnimeStatus.Abgebrochen;
+        }
+        
+        private void boxCheckChange(bool zero, bool one, bool two, bool three, bool four) {
+            checkBoxStatus0.IsChecked = zero;
+            checkBoxStatus1.IsChecked = one;
+            checkBoxStatus2.IsChecked = two;
+            checkBoxStatus3.IsChecked = three;
+            checkBoxStatus4.IsChecked = four;
         }
 
         private void checkBoxFavorit_Checked(object sender, RoutedEventArgs e) {
