@@ -232,6 +232,7 @@ namespace Anicluster.windows {
             }
 
             dbController.addAnimeToDB(temp);
+            this.Close();
         }
 
         private void click_LinkAutoGenerate(object sender, RoutedEventArgs e) {
