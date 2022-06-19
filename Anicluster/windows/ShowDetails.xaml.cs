@@ -1,4 +1,5 @@
-﻿using BiboAnime.datatypes;
+﻿using BiboAnime.databaseLiteDB;
+using BiboAnime.datatypes;
 using System.Diagnostics;
 using System.Windows;
 
@@ -9,6 +10,8 @@ namespace Anicluster.windows {
     public partial class ShowDetails : Window {
 
         public AnimeData oneAnime;
+
+        databaseController dbController = new databaseController();
 
         public ShowDetails(AnimeData oneAnime) {
             InitializeComponent();
@@ -40,7 +43,7 @@ namespace Anicluster.windows {
         }
 
         private void clickCloseButton(object sender, RoutedEventArgs e) {
-
+            this.Close();
         }
 
         private void clickEditEnitity(object sender, RoutedEventArgs e) {
@@ -48,7 +51,20 @@ namespace Anicluster.windows {
         }
 
         private void clickRemoveEntity(object sender, RoutedEventArgs e) {
-
+            var yesNo = MessageBox.Show("Möchten Sie " + oneAnime.name + " wirklich löschen?",
+                "Löschen",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (yesNo == MessageBoxResult.Yes) {
+                bool del = dbController.deleteAnimeFromDB(oneAnime);
+                if (del) {
+                    MessageBox.Show(oneAnime.name + " gelöscht!",
+                        "Gelöscht",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                    this.Close();
+                }
+            }
         }
 
         private void clickChoosenTags(object sender, RoutedEventArgs e) {

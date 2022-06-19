@@ -20,6 +20,13 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
+        public bool deleteAnimeFromDB(AnimeData animeToDelete) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                return col.Delete(animeToDelete.id);
+            }
+        }
+
         public void updateAnime(AnimeData animeToUpdate) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
