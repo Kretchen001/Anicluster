@@ -23,8 +23,8 @@
 
         <DataGrid x:Name="dataGridSolutions" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="3" AutoGenerateColumns="False" CanUserAddRows="false">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Nr." Width="1*" CanUserSort="False" Binding="{Binding nr}"/>
-                <DataGridTextColumn Header="Ergebnisse" Width="19*" CanUserSort="False" Binding="{Binding tagDesignatorR}"/>
+                <DataGridTextColumn Header="Erg-Nr." Width="Auto" CanUserSort="False" Binding="{Binding nr}"/>
+                <DataGridTextColumn Header="Ergebnisse" Width="1*" CanUserSort="False" Binding="{Binding tagDesignatorR}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

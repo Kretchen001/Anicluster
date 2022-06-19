@@ -38,6 +38,8 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
             inputToSearch = textBoxTagInputForSearch.Text;
             inputToSearch = inputToSearch.ToLower();
 
+            animeTagList = animeTagList.OrderBy(q => q.tagDesignator).ToList();
+
             for (int i = 0; i < animeTagList.Count; i += 1) {
                 if (animeTagList[i].tagDesignator.ToLower().Contains(inputToSearch)) {
                     resultList.Add(new ResultRow() {
@@ -48,7 +50,7 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
             }
 
             dataGridSolutions.ItemsSource = null;
-            dataGridSolutions.ItemsSource = resultList.OrderBy(q => q.tagDesignatorR).ToList(); ;
+            dataGridSolutions.ItemsSource = resultList;
         }
     }
 }
