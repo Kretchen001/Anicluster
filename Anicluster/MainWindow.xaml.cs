@@ -34,8 +34,8 @@ namespace Anicluster {
                 specialEffect: 42,
                 germanDub: 0
             );
-            List<AnimeTag> tags = new List<AnimeTag> { 
-                new AnimeTag() { tagDesignator = "Romanze" }, 
+            List<AnimeTag> tags = new List<AnimeTag> {
+                new AnimeTag() { tagDesignator = "Romanze" },
                 new AnimeTag() { tagDesignator = "Militär" }
             };
 
@@ -65,7 +65,7 @@ namespace Anicluster {
             return tempString;
         }
 
-        private void click_ShowDetails(object sender, RoutedEventArgs e) {            
+        private void click_ShowDetails(object sender, RoutedEventArgs e) {
             // get the id per clicked Details-Button
             int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
             if ((currentRowIndex != (dataGridAnimeList.Items.Count)) || (currentRowIndex == 0)) {
@@ -74,7 +74,7 @@ namespace Anicluster {
                 // give the anime to the ShowDetails-Window
                 ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
                 showDetailsScreen.Show();
-            } 
+            }
         }
 
         private void click_UpdateView(object sender, RoutedEventArgs e) {

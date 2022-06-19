@@ -41,7 +41,7 @@ namespace Anicluster.windows {
         public AddAnime() {
             InitializeComponent();
 
-            AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler) HandleKeyDownEvent);
+            AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
             AddHandler(Keyboard.KeyUpEvent, (KeyEventHandler)HandleKeyUpEvent);
 
             initLabel();
@@ -88,7 +88,7 @@ namespace Anicluster.windows {
         private void mouseWheelScrollSpecialEffects(object sender, MouseWheelEventArgs e) {
             ratingSpecialEffectsIncDec(e.Delta);
         }
-        
+
         private void mouseWheelScrollSound(object sender, MouseWheelEventArgs e) {
             ratingSoundIncDec(e.Delta);
         }
@@ -98,14 +98,14 @@ namespace Anicluster.windows {
         }
 
         private void calculateAndPrintGeneralRating() {
-            if (ratingGermanDub == 0) { 
-                ratingGeneral = (int)((ratingStory * 0.4) + (ratingSound * 0.2) 
-                    + (ratingAnimation * 0.3) + (ratingSpecialEffects* 0.1));
+            if (ratingGermanDub == 0) {
+                ratingGeneral = (int)((ratingStory * 0.4) + (ratingSound * 0.2)
+                    + (ratingAnimation * 0.3) + (ratingSpecialEffects * 0.1));
             }
             else {
-                ratingGeneral = (int)((ratingStory * 0.4) + (ratingSound * 0.1) 
-                    + (ratingAnimation * 0.3) + (ratingSpecialEffects * 0.1) 
-                    + (ratingGermanDub* 0.1));
+                ratingGeneral = (int)((ratingStory * 0.4) + (ratingSound * 0.1)
+                    + (ratingAnimation * 0.3) + (ratingSpecialEffects * 0.1)
+                    + (ratingGermanDub * 0.1));
             }
             labelGeneralRating.Content = ratingGeneral;
             progressBarGeneralRating.Value = ratingGeneral;
@@ -135,7 +135,7 @@ namespace Anicluster.windows {
             boxCheckChange(false, false, false, false, true);
             animeStatus = AnimeStatus.Abgebrochen;
         }
-        
+
         private void boxCheckChange(bool zero, bool one, bool two, bool three, bool four) {
             checkBoxStatus0.IsChecked = zero;
             checkBoxStatus1.IsChecked = one;
@@ -190,7 +190,7 @@ namespace Anicluster.windows {
 
             AnimeData? temp = null;
             // the obligated data
-            if (animeName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0 /*&& animeTagList.Count != 0*/) {                
+            if (animeName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0 && animeTagList.Count != 0) {
                 temp = new AnimeData {
                     id = dbController.getDbCountForIdPlusOne(),
                     name = animeName,
@@ -248,7 +248,7 @@ namespace Anicluster.windows {
         }
 
         private string animeNameConvert() {
-            return animeName.ToLower().Replace(' ','-');
+            return animeName.ToLower().Replace(' ', '-');
         }
 
         private void click_CallLink(object sender, RoutedEventArgs e) {
@@ -523,7 +523,7 @@ namespace Anicluster.windows {
             if (animeTier == AnimeTier.S) {
                 labelTierS.BorderThickness = new Thickness(0);
                 animeTier = AnimeTier.Dummy;
-            } 
+            }
             else {
                 tierBorderThicknessChange(S: 2, A: 0, B: 0, C: 0, D: 0);
                 animeTier = AnimeTier.S;

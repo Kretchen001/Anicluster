@@ -1,7 +1,6 @@
 ﻿using BiboAnime.datatypes;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Media;
 
 namespace Anicluster.windows {
     /// <summary>
@@ -19,10 +18,10 @@ namespace Anicluster.windows {
             setDisplay();
         }
 
-        private void setDisplay() { 
+        private void setDisplay() {
             textBoxName.Text = oneAnime.name;
             textBoxOriginalName.Text = oneAnime.originalName;
-            if (oneAnime.favorite) { 
+            if (oneAnime.favorite) {
                 checkBoxFavorit.IsChecked = true;
                 checkBoxNotFavorit.IsChecked = false;
             }

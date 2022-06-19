@@ -8,7 +8,7 @@ namespace Anicluster.windows {
     /// Interaktionslogik für ShowDetailsTags.xaml
     /// </summary
     public partial class ShowDetailsTags : Window {
-                
+
         public ShowDetailsTags(List<AnimeTag> choosenTagList) {
             InitializeComponent();
 

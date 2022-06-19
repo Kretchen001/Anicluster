@@ -88,7 +88,7 @@ namespace BiboAnime.databaseLiteDB {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = col.Query()
-                    .Where(x => x.rating.story >= minStory 
+                    .Where(x => x.rating.story >= minStory
                         && x.rating.sound >= minSound
                         && x.rating.animation >= minAnimation
                         && x.rating.specialEffect >= minSpecialEffect
@@ -97,7 +97,7 @@ namespace BiboAnime.databaseLiteDB {
                 return result;
             }
         }
-        
+
         public List<AnimeData> dbFilterRatingHasGermanDub() {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");

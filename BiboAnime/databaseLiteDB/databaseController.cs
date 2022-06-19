@@ -1,6 +1,5 @@
 ﻿using BiboAnime.datatypes;
 using LiteDB;
-using System.Linq;
 
 namespace BiboAnime.databaseLiteDB {
 
@@ -77,7 +76,7 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
-        public AnimeData getAnimeById(int id) { 
+        public AnimeData getAnimeById(int id) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
                 var result = col.Query()
@@ -124,9 +123,9 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
-//-------------------------------------------------------------------------------------------------
-//------------------------------------TAGS---------------------------------------------------------
-//-------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------
+        //------------------------------------TAGS---------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// Add the given AnimeTag to the database.
@@ -134,7 +133,7 @@ namespace BiboAnime.databaseLiteDB {
         public void addOneTag(AnimeTag tag) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeTag>("Tags");
-                AnimeTag tempTag = new AnimeTag() { tagDesignator = tag.tagDesignator}; // without id
+                AnimeTag tempTag = new AnimeTag() { tagDesignator = tag.tagDesignator }; // without id
                 col.Insert(tempTag);
                 col.EnsureIndex(x => x.id);
             }
@@ -183,5 +182,5 @@ namespace BiboAnime.databaseLiteDB {
                 return (col.Delete(tagToDelete.id));
             }
         }
-    }   
+    }
 }
