@@ -29,7 +29,7 @@ namespace BiboAnime {
 
                 List<string> tagLines = new List<string>();
                 for (int i = 0; i < animeTagsToExport.Count(); i += 1) {
-                    tagLines.Add(convertToCsvLine(animeTagsToExport[i])); //convertToCsvLine(AnimeTag animeTag)
+                    tagLines.Add(convertToCsvLineTag(animeTagsToExport[i].id, animeTagsToExport[i].tagDesignator));//convertToCsvLine(animeTagsToExport[i])); //convertToCsvLine(AnimeTag animeTag)
                 }
 
                 File.WriteAllLines(filePath, tagLines);
@@ -64,10 +64,6 @@ namespace BiboAnime {
             return line;
         }
 
-        private static string convertToCsvLine(AnimeTag animeTag) {
-            string line = animeTag.id + ";"
-                + animeTag.tagDesignator;
-            return line;
-        }
+        private static Func<int, string, string> convertToCsvLineTag = (x, y) => x + ";" + y;
     }
 }
