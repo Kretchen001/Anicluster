@@ -4,7 +4,7 @@
 #define MyAppName "Anicluster"
 #define MyAppVersion "1.0"
 #define MyAppPublisher "Kretchen001"
-#define MyAppExeName "Anicluster.exe"
+#define MyAppExeName "Anicluster.bat"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
