@@ -26,14 +26,6 @@ namespace Anicluster.windows {
         public TagOrganisator() {
             InitializeComponent();
 
-            AnimeTag dummyTag = new AnimeTag {
-                tagDesignator = "Drachen"
-            };
-            if (!dbController.checkIfTagExists(dummyTag)) {
-                AnzeigeDummy.Header = dummyTag.tagDesignator;
-                dbController.addOneTag(dummyTag);
-            }
-
             fetchTags();
         }
 
