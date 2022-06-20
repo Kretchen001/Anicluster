@@ -60,31 +60,16 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
-        /*
-         * Wrapper-functions for the Rating-Filter 
-         * -> minStory
-         * -> minSound
-         * -> minAnimation
-         * -> minSpecialEffect
-         * -> minGermanDub
-         */
-        public List<AnimeData> dbFilterRatingOnlyMinStory(int minStory) {
-            return dbFilterRatingMinABCDE(minStory, 0, 0, 0, 0);
-        }
-        public List<AnimeData> dbFilterRatingOnlyMinSound(int minSound) {
-            return dbFilterRatingMinABCDE(0, minSound, 0, 0, 0);
-        }
-        public List<AnimeData> dbFilterRatingOnlyMinAnimation(int minAnimation) {
-            return dbFilterRatingMinABCDE(0, 0, minAnimation, 0, 0);
-        }
-        public List<AnimeData> dbFilterRatingOnlyMinSpecialEffects(int minSpecialEffects) {
-            return dbFilterRatingMinABCDE(0, 0, 0, minSpecialEffects, 0);
-        }
-        public List<AnimeData> dbFilterRatingOnlyMinGermanDub(int minGermanDub) {
-            return dbFilterRatingMinABCDE(0, 0, 0, 0, minGermanDub);
-        }
-
-        public List<AnimeData> dbFilterRatingMinABCDE(int minStory, int minSound, int minAnimation, int minSpecialEffect, int minGermanDub) {
+        /// <summary>
+        /// By calling, set concrete the questionary rating-parameters. The rest is 0.
+        /// </summary>
+        /// <param name="minStory">Rating -> Story</param>
+        /// <param name="minSound">Rating -> Sound</param>
+        /// <param name="minAnimation">Rating -> Animation</param>
+        /// <param name="minSpecialEffect">Rating -> Special Effect</param>
+        /// <param name="minGermanDub">Rating -> German Dub</param>
+        /// <returns>The List of hole Anime´s that have the min Ratings.</returns>
+        public List<AnimeData> dbFilterRatingMinABCDE(int minStory = 0, int minSound = 0, int minAnimation = 0, int minSpecialEffect = 0, int minGermanDub = 0) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = col.Query()
