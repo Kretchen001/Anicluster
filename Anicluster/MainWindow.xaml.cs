@@ -50,6 +50,12 @@ namespace Anicluster {
             };
             dbController.addAnimeToDB(dummyAnime);
 
+            updateDataGrid();
+            dataGridAnimeList.ItemsSource = null;
+            dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
+        }
+
+        private void updateDataGrid() {
             dataGridAnimeList.ItemsSource = null;
             dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
@@ -84,7 +90,8 @@ namespace Anicluster {
 
         private void click_AddNewAnime(object sender, RoutedEventArgs e) {
             AddAnime addAnime = new AddAnime();
-            addAnime.Show();
+            addAnime.ShowDialog();
+            updateDataGrid();
         }
 
         private void click_OpenInformation(object sender, RoutedEventArgs e) {
