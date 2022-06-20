@@ -55,19 +55,17 @@ namespace Anicluster.windows {
         private void doubleMouseClickChangeCheck(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             // get the id per clicked Details-Button
             int currentRowIndex = dataGridTagList.Items.IndexOf(dataGridTagList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
-            if (currentRowIndex != (dataGridTagList.Items.Count - 1)) {
-                AnimeTag tempTag = new AnimeTag() {
-                    id = tagRows[currentRowIndex].id,
-                    tagDesignator = tagRows[currentRowIndex].tagDesignator
-                };
-                if (tagRows[currentRowIndex].isChecked) {
-                    tagRows[currentRowIndex].isChecked = false;
-                    selectedTagList.RemoveAll(x => x.id == tempTag.id);
-                }
-                else {
-                    tagRows[currentRowIndex].isChecked = true;
-                    selectedTagList.Add(tempTag);
-                }
+            AnimeTag tempTag = new AnimeTag() {
+                id = tagRows[currentRowIndex].id,
+                tagDesignator = tagRows[currentRowIndex].tagDesignator
+            };
+            if (tagRows[currentRowIndex].isChecked) {
+                tagRows[currentRowIndex].isChecked = false;
+                selectedTagList.RemoveAll(x => x.id == tempTag.id);
+            }
+            else {
+                tagRows[currentRowIndex].isChecked = true;
+                selectedTagList.Add(tempTag);
             }
             updateDataGrid();
         }

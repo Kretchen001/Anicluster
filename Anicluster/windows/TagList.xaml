@@ -14,7 +14,7 @@
             <RowDefinition Height="14*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <DataGrid Name="dataGridTagList" AutoGenerateColumns="False" Grid.Row="0" MouseDoubleClick="doubleMouseClickChangeCheck">
+        <DataGrid Name="dataGridTagList" AutoGenerateColumns="False" Grid.Row="0" MouseDoubleClick="doubleMouseClickChangeCheck" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="4*"/>
                 <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding tagDesignator}" Width="30*"/>
