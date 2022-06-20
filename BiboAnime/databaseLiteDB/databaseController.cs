@@ -5,7 +5,7 @@ namespace BiboAnime.databaseLiteDB {
 
     public class databaseController {
 
-        public int resetDataBase() {
+        public int resetDataBaseAnimes() {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
                 return col.DeleteAll(); // how many was deleted
@@ -143,6 +143,24 @@ namespace BiboAnime.databaseLiteDB {
                 AnimeTag tempTag = new AnimeTag() { tagDesignator = tag.tagDesignator }; // without id
                 col.Insert(tempTag);
                 col.EnsureIndex(x => x.id);
+            }
+        }
+
+        public void addImportedTags(List<AnimeTag> tagList) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeTag>("Tags");
+                for (int i = 0; i < tagList.Count; i += 1) {
+                    AnimeTag tempTag = new AnimeTag() { tagDesignator = tagList[i].tagDesignator };
+                    col.Insert(tempTag);
+                    col.EnsureIndex(x => x.id);
+                }
+            }
+        }
+
+        public int resetDataBaseTags() {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Tags");
+                return col.DeleteAll(); // how many was deleted
             }
         }
 
