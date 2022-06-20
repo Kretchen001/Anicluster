@@ -45,7 +45,7 @@ namespace Anicluster.windows {
                 tagRows.Add(tempTagRow);
             }
 
-            dataGridTagList.ItemsSource = tagRows.OrderBy(x => x.tagDesignator).ToList();
+            updateDataGrid();
         }
 
         private void clickConfirmTagChoice(object sender, RoutedEventArgs e) {
@@ -73,6 +73,7 @@ namespace Anicluster.windows {
         }
 
         private void updateDataGrid() {
+            tagRows = tagRows.OrderBy(x => x.tagDesignator).ToList();
             dataGridTagList.ItemsSource = null;
             dataGridTagList.ItemsSource = tagRows;
         }
