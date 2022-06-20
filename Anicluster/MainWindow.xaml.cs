@@ -51,8 +51,6 @@ namespace Anicluster {
             dbController.addAnimeToDB(dummyAnime);
 
             updateDataGrid();
-            dataGridAnimeList.ItemsSource = null;
-            dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
 
         private void updateDataGrid() {
@@ -120,11 +118,6 @@ namespace Anicluster {
             Export.exportAnimeTags(saveFileDialogWindow.FileName);
         }
 
-        private void click_tagsOrganisation(object sender, RoutedEventArgs e) {
-            TagOrganisator tagOrganisatorWindow = new TagOrganisator();
-            tagOrganisatorWindow.Show();
-        }
-
         private void clickExportDataAnimes(object sender, RoutedEventArgs e) {
             unimplementetYet();
         }
@@ -134,7 +127,36 @@ namespace Anicluster {
         }
 
         private void clickImporDataTags(object sender, RoutedEventArgs e) {
-            unimplementetYet();
+            string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
+
+            if (!Directory.Exists(dir)) {
+                dir = AppDomain.CurrentDomain.BaseDirectory;
+            }
+
+            OpenFileDialog openFileDialogWindow = new OpenFileDialog() {
+                InitialDirectory = dir,
+                FileName = "tags.csv",
+            };
+
+            openFileDialogWindow.ShowDialog();
+
+            if (Import.checkTagListValid(openFileDialogWindow.FileName)) {
+                Import.importAnimeTags(openFileDialogWindow.FileName, true);
+            }
+            else {
+                var mail = MessageBox.Show("Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
+                    "Importfehler",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                if (mail == MessageBoxResult.Yes) { 
+                    // TODO: mailto einrichten?
+                }
+            }
+        }
+
+        private void click_tagsOrganisation(object sender, RoutedEventArgs e) {
+            TagOrganisator tagOrganisatorWindow = new TagOrganisator();
+            tagOrganisatorWindow.Show();
         }
     }
 }
