@@ -88,8 +88,12 @@ namespace Anicluster {
 
         private void click_AddNewAnime(object sender, RoutedEventArgs e) {
             AddAnime addAnime = new AddAnime();
-            addAnime.ShowDialog();
-            updateDataGrid();
+            addAnime.shouldViewUpdated = updateAfterAddAnime;
+            addAnime.Show();
+
+            void updateAfterAddAnime(bool e) {
+                updateDataGrid();
+            }
         }
 
         private void click_OpenInformation(object sender, RoutedEventArgs e) {
@@ -119,7 +123,20 @@ namespace Anicluster {
         }
 
         private void clickExportDataAnimes(object sender, RoutedEventArgs e) {
-            unimplementetYet();
+            string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
+
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
+            }
+
+            SaveFileDialog saveFileDialogWindow = new SaveFileDialog() {
+                InitialDirectory = dir,
+                FileName = "animes.csv",
+            };
+
+            saveFileDialogWindow.ShowDialog();
+
+            Export.exportAnimeList(saveFileDialogWindow.FileName);
         }
 
         private void clickImportDataAnimes(object sender, RoutedEventArgs e) {

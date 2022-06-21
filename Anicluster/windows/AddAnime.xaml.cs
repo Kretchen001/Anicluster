@@ -1,5 +1,6 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -37,6 +38,8 @@ namespace Anicluster.windows {
         private List<AnimeTag> animeTagList = new List<AnimeTag>();
 
         private bool isShiftPressed = false;
+
+        public Action<bool> shouldViewUpdated;
 
         public AddAnime() {
             InitializeComponent();
@@ -230,8 +233,12 @@ namespace Anicluster.windows {
             if (animeTier != AnimeTier.Dummy) {
                 temp.tier = animeTier;
             }
+            else {
+                temp.tier = AnimeTier.Dummy;
+            }
 
             dbController.addAnimeToDB(temp);
+            shouldViewUpdated(true);
             this.Close();
         }
 
