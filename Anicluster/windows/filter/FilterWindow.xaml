@@ -1,0 +1,207 @@
+﻿<Window x:Class="Anicluster.windows.filter.FilterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows.filter"
+        mc:Ignorable="d"
+        Title="Filtern" Height="720" Width="1280">
+    <Grid x:Name="MainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="dummyGridForWidth" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="DummyGridForWidth4_5" Width="4*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <TreeView x:Name="TreeViewFilterSelection" Grid.Row="1">
+            <TreeViewItem Header="Favorisiert">
+                <CheckBox>
+                    <TreeViewItem Header="Ja/Nein"/>
+                </CheckBox>
+            </TreeViewItem>
+            <TreeViewItem Header="Tier">
+                <CheckBox>
+                    <TreeViewItem Header="S" Background="Aqua"/>
+                </CheckBox>
+                <CheckBox>
+                    <TreeViewItem Header="A" Background="GreenYellow"/>
+                </CheckBox>
+                <CheckBox>
+                    <TreeViewItem Header="B" Background="Yellow"/>
+                </CheckBox>
+                <CheckBox>
+                    <TreeViewItem Header="C" Background="Orange"/>
+                </CheckBox>
+                <CheckBox>
+                    <TreeViewItem Header="D" Background="Red"/>
+                </CheckBox>
+            </TreeViewItem>
+            <TreeViewItem Header="Bewertung">
+                <CheckBox>
+                    <TreeViewItem Header="General (min)"/>
+                </CheckBox>
+                <Grid Width="{Binding ActualWidth, ElementName=DummyGridForWidth4_5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar x:Name="progressBarGeneralRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSpecialEffects"></ProgressBar>
+                    <Label x:Name="labelGeneralRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollSpecialEffects"></Label>
+                    <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="clickRatingGeneralPlus" Delay="500">+</RepeatButton>
+                    <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="clickRatingGeneralMinus" Delay="500">-</RepeatButton>
+                </Grid>
+                <CheckBox>
+                    <TreeViewItem Header="Story/Geschichte  (min)"/>
+                </CheckBox>
+                <Grid Width="{Binding ActualWidth, ElementName=DummyGridForWidth4_5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar x:Name="progressBarStoryRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSpecialEffects"></ProgressBar>
+                    <Label x:Name="labelStoryRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollSpecialEffects"></Label>
+                    <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="clickRatingStoryPlus" Delay="500">+</RepeatButton>
+                    <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="clickRatingStoryMinus" Delay="500">-</RepeatButton>
+                </Grid>
+                <CheckBox>
+                    <TreeViewItem Header="Sound/Musik (min)"/>
+                </CheckBox>
+                <Grid Width="{Binding ActualWidth, ElementName=DummyGridForWidth4_5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar x:Name="progressBarSoundRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSpecialEffects"></ProgressBar>
+                    <Label x:Name="labelSoundRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollSpecialEffects"></Label>
+                    <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="clickRatingSoundPlus" Delay="500">+</RepeatButton>
+                    <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="clickRatingSoundMinus" Delay="500">-</RepeatButton>
+                </Grid>
+                <CheckBox>
+                    <TreeViewItem Header="Animation (min)"/>
+                </CheckBox>
+                <Grid Width="{Binding ActualWidth, ElementName=DummyGridForWidth4_5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar x:Name="progressBarAnimationRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSpecialEffects"></ProgressBar>
+                    <Label x:Name="labelAnimationRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollSpecialEffects"></Label>
+                    <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="clickRatingAnimationPlus" Delay="500">+</RepeatButton>
+                    <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="clickRatingAnimationMinus" Delay="500">-</RepeatButton>
+                </Grid>
+                <CheckBox>
+                    <TreeViewItem Header="Special Effekts (min)"/>
+                </CheckBox>
+                <Grid Width="{Binding ActualWidth, ElementName=DummyGridForWidth4_5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar x:Name="progressBarSpecialEffectsRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSpecialEffects"></ProgressBar>
+                    <Label x:Name="labelSpecialEffectsRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollSpecialEffects"></Label>
+                    <RepeatButton Grid.Column="8" Grid.Row="0" Margin="3" FontSize="8" Click="clickRatingSpecialEffectsPlus" Delay="500">+</RepeatButton>
+                    <RepeatButton Grid.Column="8" Grid.Row="1" Margin="3" FontSize="8" Click="clickRatingSpecialEffectsMinus" Delay="500">-</RepeatButton>
+                </Grid>
+                <CheckBox>
+                    <TreeViewItem Header="Deutscher Dub (min)"/>
+                </CheckBox>
+                <Grid Width="{Binding ActualWidth, ElementName=DummyGridForWidth4_5}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <ProgressBar x:Name="progressBarGermanDubRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" Margin="10,12,10,12" Minimum="0" Maximum="100" MouseWheel="mouseWheelScrollSpecialEffects"></ProgressBar>
+                    <Label x:Name="labelGermanDubRating" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" MouseWheel="mouseWheelScrollSpecialEffects"></Label>
+                    <RepeatButton Grid.Row="0" Grid.Column="8" Margin="3" FontSize="8" Click="clickRatingGermanDubPlus" Delay="500">+</RepeatButton>
+                    <RepeatButton Grid.Row="1" Grid.Column="8" Margin="3" FontSize="8" Click="clickRatingGermanDubMinus" Delay="500">-</RepeatButton>
+                </Grid>
+            </TreeViewItem>
+        </TreeView>
+        <!--<TreeView Grid.Row="2" ItemsSource="{Binding tagSelectionFilter}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding tagSelectionFilter}">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding isChecked}"/>
+                        <TextBlock Text="{Binding tagDesignator}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>-->
+    </Grid>
+</Window>

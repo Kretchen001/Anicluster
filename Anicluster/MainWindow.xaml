@@ -21,6 +21,7 @@
             </MenuItem>
             <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
             <MenuItem Header="Filtern">
+                <MenuItem Header="Filterfenster" Click="clickFilterWindow"/>
                 <MenuItem Header="Nach Tags" />
                 <MenuItem Header="Tags ausschließen" />
                 <MenuItem Header="Tags filtern (Ein- wie Ausschließen) [Dummy Button, kommt in ner späteren Version]" />

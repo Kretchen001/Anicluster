@@ -1,4 +1,5 @@
 ﻿using Anicluster.windows;
+using Anicluster.windows.filter;
 using BiboAnime;
 using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
@@ -174,6 +175,11 @@ namespace Anicluster {
         private void click_tagsOrganisation(object sender, RoutedEventArgs e) {
             TagOrganisator tagOrganisatorWindow = new TagOrganisator();
             tagOrganisatorWindow.Show();
+        }
+
+        private void clickFilterWindow(object sender, RoutedEventArgs e) {
+            FilterWindow filterWindow = new FilterWindow();
+            filterWindow.Show();
         }
     }
 }
