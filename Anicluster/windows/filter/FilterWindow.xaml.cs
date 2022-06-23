@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using BiboAnime.databaseLiteDB;
+using BiboAnime.datatypes;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -8,7 +11,14 @@ namespace Anicluster.windows.filter {
     /// </summary>
     public partial class FilterWindow : Window {
 
-        List<tagFilter> tagSelectionFilter = new List<tagFilter>();
+        public bool favoriteBool = false;
+
+        private bool ratingGeneralBool = true;
+        private bool ratingStoryBool = false;
+        private bool ratingAnimationBool = false;
+        private bool ratingSpecialEffectsBool = false;
+        private bool ratingSoundBool = false;
+        private bool ratingGermanDubBool = false;
 
         private int ratingGeneral = 0;
         private int ratingStory = 0;
@@ -19,24 +29,31 @@ namespace Anicluster.windows.filter {
 
         private bool isShiftPressed = false;
 
+        private bool animeTierS = false;
+        private bool animeTierA = false;
+        private bool animeTierB = false;
+        private bool animeTierC = false;
+        private bool animeTierD = false;
+
+        private databaseController dbController = new databaseController();
+        private databaseFilterController dbFilterController = new databaseFilterController();
+        private List<AnimeRow> animeRows = new List<AnimeRow>();
+
         public FilterWindow() {
             InitializeComponent();
-            tagSelectionFilter.Add(new tagFilter() {
-                isChecked = false,
-                tagDesignator = "Hallo"
-            });
-            tagSelectionFilter.Add(new tagFilter() {
-                isChecked = false,
-                tagDesignator = "Hallo2"
-            });
-            tagSelectionFilter.Add(new tagFilter() {
-                isChecked = true,
-                tagDesignator = "Hallo3"
-            });
+
             AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
             AddHandler(Keyboard.KeyUpEvent, (KeyEventHandler)HandleKeyUpEvent);
+
+            animeRows = dbController.getAllAnimesAsRow();
+            updateFilterTable();
         }
-        
+
+        private void updateFilterTable() {
+            dataGridFilterAnimeList.ItemsSource = null;
+            dataGridFilterAnimeList.ItemsSource = animeRows;
+        }
+
         private void HandleKeyDownEvent(object sender, KeyEventArgs e) {
             if ((e.Key == Key.LeftShift) && (isShiftPressed == false)) {
                 isShiftPressed = true;
@@ -48,25 +65,16 @@ namespace Anicluster.windows.filter {
                 isShiftPressed = false;
             }
         }
+        private void click_ShowDetails(object sender, RoutedEventArgs e) {
+            // get the id per clicked Details-Button
+            int currentRowIndex = dataGridFilterAnimeList.Items.IndexOf(dataGridFilterAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
+            if ((currentRowIndex != (dataGridFilterAnimeList.Items.Count)) || (currentRowIndex == 0)) {
+                AnimeRow selectedAnime = (AnimeRow)dataGridFilterAnimeList.Items[currentRowIndex];
 
-        private void mouseWheelSrollStory(object sender, MouseWheelEventArgs e) {
-            ratingStoryIncDec(e.Delta);
-        }
-
-        private void mouseWheelScrollAnimation(object sender, MouseWheelEventArgs e) {
-            ratingAnimationIncDec(e.Delta);
-        }
-
-        private void mouseWheelScrollSpecialEffects(object sender, MouseWheelEventArgs e) {
-            ratingSpecialEffectsIncDec(e.Delta);
-        }
-
-        private void mouseWheelScrollSound(object sender, MouseWheelEventArgs e) {
-            ratingSoundIncDec(e.Delta);
-        }
-
-        private void mouseWheelScrollGermanDub(object sender, MouseWheelEventArgs e) {
-            ratingGermanDubIncDec(e.Delta);
+                // give the anime to the ShowDetails-Window
+                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
+                showDetailsScreen.Show();
+            }
         }
 
         private void ratingStoryIncDec(int e) {
@@ -233,13 +241,6 @@ namespace Anicluster.windows.filter {
             // generalRating recalculate
             calculateAndPrintGeneralRating();
         }
-        private void clickRatingGeneralPlus(object sender, RoutedEventArgs e) {
-            // TODO: 
-        }
-
-        private void clickRatingGeneralMinus(object sender, RoutedEventArgs e) {
-            // TODO:
-        }
 
         private void clickRatingStoryPlus(object sender, RoutedEventArgs e) {
             ratingStoryIncDec(1);
@@ -294,10 +295,176 @@ namespace Anicluster.windows.filter {
             labelGeneralRating.Content = ratingGeneral;
             progressBarGeneralRating.Value = ratingGeneral;
         }
-    }
 
-    internal class tagFilter {
-        public bool isChecked = false;
-        public string tagDesignator { get; set; } = "";
+
+        private void mouseWheelSrollStory(object sender, MouseWheelEventArgs e) {
+            ratingStoryIncDec(e.Delta);
+        }
+
+        private void mouseWheelScrollAnimation(object sender, MouseWheelEventArgs e) {
+            ratingAnimationIncDec(e.Delta);
+        }
+
+        private void mouseWheelScrollSpecialEffects(object sender, MouseWheelEventArgs e) {
+            ratingSpecialEffectsIncDec(e.Delta);
+        }
+
+        private void mouseWheelScrollSound(object sender, MouseWheelEventArgs e) {
+            ratingSoundIncDec(e.Delta);
+        }
+
+        private void mouseWheelScrollGermanDub(object sender, MouseWheelEventArgs e) {
+            ratingGermanDubIncDec(e.Delta);
+        }
+
+        private void toggleFavorite(object sender, RoutedEventArgs e) {
+            favoriteBool = !favoriteBool;
+
+            updateFilterData();
+        }
+
+        private void toggleGeneralRating(object sender, RoutedEventArgs e) {
+            ratingGeneralBool = !ratingGeneralBool;
+            ratingStoryBool = false;
+            checkBoxStoryRating.IsChecked = ratingStoryBool;
+            ratingSoundBool = false;
+            checkBoxSoundRating.IsChecked = ratingSoundBool;
+            ratingAnimationBool = false;
+            checkBoxAnimationRating.IsChecked = ratingAnimationBool;
+            ratingSpecialEffectsBool = false;
+            checkBoxSpecialEffectsRating.IsChecked = ratingSpecialEffectsBool;
+            ratingGermanDubBool = false;
+            checkBoxGermanDub.IsChecked = ratingGermanDubBool;
+        }
+
+        private void toggleStoryRating(object sender, RoutedEventArgs e) {
+            ratingStoryBool = !ratingStoryBool;
+            ratingGeneralBool = false;
+            checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+        }
+
+        private void toggleSoundRating(object sender, RoutedEventArgs e) {
+            ratingSoundBool = !ratingSoundBool;
+            ratingGeneralBool = false;
+            checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+        }
+
+        private void toggleAnimationRating(object sender, RoutedEventArgs e) {
+            ratingAnimationBool = !ratingAnimationBool;
+            ratingGeneralBool = false;
+            checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+        }
+
+        private void toggleSpecialEffectsRating(object sender, RoutedEventArgs e) {
+            ratingSpecialEffectsBool = !ratingSpecialEffectsBool;
+            ratingGeneralBool = false;
+            checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+        }
+
+        private void toggleGermanDubRating(object sender, RoutedEventArgs e) {
+            ratingGermanDubBool = !ratingGermanDubBool;
+            ratingGeneralBool = false;
+            checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+        }
+
+        private List<AnimeRow> rowCrafter(List<AnimeData> oList) {
+            List<AnimeRow> rows = new List<AnimeRow>();
+            for (int i = 0; i < oList.Count; i += 1) {
+                string tagString = "";
+                for (int j = 0; j < oList[i].tags.Count; j += 1) {
+                    if (j != (oList[i].tags.Count - 1)) {
+                        tagString += oList[i].tags[j].tagDesignator + ", ";
+                    }
+                    else {
+                        tagString += oList[i].tags[j].tagDesignator;
+                    }
+                }
+                rows.Add(new AnimeRow {
+                    id = oList[i].id,
+                    favorite = oList[i].favorite,
+                    name = oList[i].name,
+                    status = oList[i].status,
+                    tags = tagString,
+                    generalRating = oList[i].rating.general,
+                });
+            }
+            return rows;
+        }
+
+        private void updateFilterData() {
+            // favorite
+            if (favoriteBool) {
+                List<AnimeData> animeData = dbFilterController.dbFilterIsFav(true);
+                animeRows.Clear();
+                animeRows = rowCrafter(animeData);
+                updateFilterTable();
+            }
+            else {
+                animeRows.Clear();
+                animeRows = dbController.getAllAnimesAsRow();
+                updateFilterTable();
+            }
+
+            // tier
+            List<AnimeRow> tempList = new List<AnimeRow>();
+
+            if (animeTierS) {
+                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.S)));
+            }
+            if (animeTierA) {
+                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.A)));
+            }
+            if (animeTierB) {
+                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.B)));
+            }
+            if (animeTierC) {
+                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.C)));
+            }
+            if (animeTierD) {
+                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.D)));
+            }
+
+            for (int i = 0; i < tempList.Count; i += 1) {
+                for (int j = 0; j < animeRows.Count; j += 1) {
+                    if (tempList[i].id == animeRows[j].id) {
+                        animeRows.RemoveAt(j);
+                    }
+                }
+            }
+
+            // Rating
+
+            updateFilterTable();
+        }
+
+        private void toggleTierS(object sender, RoutedEventArgs e) {
+            animeTierS = !animeTierS;
+
+            updateFilterData();
+        }
+
+        private void toggleTierA(object sender, RoutedEventArgs e) {
+            animeTierA = !animeTierA;
+
+            updateFilterData();
+        }
+
+        private void toggleTierB(object sender, RoutedEventArgs e) {
+            animeTierB = !animeTierB;
+
+            updateFilterData();
+        }
+
+        private void toggleTierC(object sender, RoutedEventArgs e) {
+            animeTierC = !animeTierC;
+
+            updateFilterData();
+        }
+
+        private void toggleTierD(object sender, RoutedEventArgs e) {
+            animeTierD = !animeTierD;
+
+            updateFilterData();
+        }
     }
 }
