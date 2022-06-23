@@ -60,6 +60,16 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
+        public List<AnimeData> dbFilterIsFav(bool fav) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> result = col.Query()
+                    .Where(x => x.favorite == fav)
+                    .ToList();
+                return result;
+            }
+        }
+
         /// <summary>
         /// By calling, set concrete the questionary rating-parameters. The rest is 0.
         /// </summary>
