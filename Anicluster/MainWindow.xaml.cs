@@ -98,7 +98,7 @@ namespace Anicluster {
         }
 
         private void click_OpenInformation(object sender, RoutedEventArgs e) {
-
+            unimplementetYet();
         }
 
         private void unimplementetYet() {
