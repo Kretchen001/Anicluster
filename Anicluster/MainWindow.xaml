@@ -20,12 +20,7 @@
                 <MenuItem Header="Dummy Daten hinzufügen" Click="click_DummyDaten"/>
             </MenuItem>
             <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
-            <MenuItem Header="Filtern">
-                <MenuItem Header="Filterfenster" Click="clickFilterWindow"/>
-                <MenuItem Header="Nach Tags" />
-                <MenuItem Header="Tags ausschließen" />
-                <MenuItem Header="Tags filtern (Ein- wie Ausschließen) [Dummy Button, kommt in ner späteren Version]" />
-            </MenuItem>
+            <MenuItem Header="Filtern" Click="clickFilterWindow"></MenuItem>
             <MenuItem Header="Tags verwalten" Click="click_tagsOrganisation" ></MenuItem>
             <MenuItem Header="Informationen" Click="click_OpenInformation"></MenuItem>
         </Menu>
