@@ -466,5 +466,23 @@ namespace Anicluster.windows.filter {
 
             updateFilterData();
         }
+
+        private void expandTagView(object sender, RoutedEventArgs e) {
+            List<AnimeTag> tempTag = dbController.getAllAnimeTags();
+            
+            for (int i = 1; i < tempTag.Count; i += 1) {
+                treeViewItemTags.Items.Add(new TagUserControll(new TagSelection(tempTag[i])));
+            }
+        }
+    }
+
+
+    public class TagSelection : AnimeTag {
+
+        public bool inklisive { get; set; } = false;
+        public bool exklusive { get; set; } = false;
+
+        public TagSelection(AnimeTag animeTag) : base (animeTag.id, animeTag.tagDesignator) {
+        }
     }
 }

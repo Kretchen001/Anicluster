@@ -19,6 +19,7 @@ namespace Anicluster.windows {
             labelNameHeadLine.Content = oneAnime.name;
 
             setDisplay();
+            showTier();
         }
 
         private void setDisplay() {
@@ -70,6 +71,23 @@ namespace Anicluster.windows {
         private void clickChoosenTags(object sender, RoutedEventArgs e) {
             ShowDetailsTags showDetailsTagsWindows = new ShowDetailsTags(oneAnime.tags);
             showDetailsTagsWindows.ShowDialog();
+        }
+
+        private void showTier() {
+            int S = 0, A = 0, B = 0, C = 0, D = 0;
+            switch (oneAnime.tier) {
+                case AnimeTier.S: S = 2; break;
+                case AnimeTier.A: A = 2; break;
+                case AnimeTier.B: B = 2; break;
+                case AnimeTier.C: C = 2; break;
+                case AnimeTier.D: D = 2; break;
+                default: break;
+            }
+            labelTierS.BorderThickness = new Thickness(S);
+            labelTierA.BorderThickness = new Thickness(A);
+            labelTierB.BorderThickness = new Thickness(B);
+            labelTierC.BorderThickness = new Thickness(C);
+            labelTierD.BorderThickness = new Thickness(D);
         }
     }
 }

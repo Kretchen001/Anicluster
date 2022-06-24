@@ -15,6 +15,9 @@
     <Compile Update="windows\filter\FilterWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="windows\filter\TagUserControll.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="windows\ShowDetails.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -45,6 +48,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="windows\filter\FilterWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="windows\filter\TagUserControll.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="windows\ShowDetails.xaml">

@@ -18,12 +18,6 @@
             <RowDefinition Height="16*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Grid x:Name="dummyGridForWidth" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="DummyGridForWidth4_5" Width="4*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-        </Grid>
         <TreeView x:Name="TreeViewFilterSelection" Grid.Row="1">
             <TreeViewItem Header="Favorisiert" IsExpanded="True">
                 <CheckBox x:Name="checkBoxFavorite" Click="toggleFavorite">
@@ -189,6 +183,9 @@
                     <RepeatButton Grid.Row="0" Grid.Column="8" Margin="3" FontSize="8" Click="clickRatingGermanDubPlus" Delay="500">+</RepeatButton>
                     <RepeatButton Grid.Row="1" Grid.Column="8" Margin="3" FontSize="8" Click="clickRatingGermanDubMinus" Delay="500">-</RepeatButton>
                 </Grid>
+            </TreeViewItem>
+            <TreeViewItem x:Name="treeViewItemTags" Header="Tags" Expanded="expandTagView">
+                
             </TreeViewItem>
         </TreeView>
         <DataGrid Name="dataGridFilterAnimeList" Margin="2" AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" CanUserAddRows="false">
