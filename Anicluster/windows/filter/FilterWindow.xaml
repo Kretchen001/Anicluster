@@ -184,11 +184,18 @@
                     <RepeatButton Grid.Row="1" Grid.Column="8" Margin="3" FontSize="8" Click="clickRatingGermanDubMinus" Delay="500">-</RepeatButton>
                 </Grid>
             </TreeViewItem>
-            <TreeViewItem x:Name="treeViewItemTags" Header="Tags" Expanded="expandTagView">
-                
-            </TreeViewItem>
+            <TreeViewItem x:Name="treeViewItemTags" Header="Tags" />
         </TreeView>
         <DataGrid Name="dataGridFilterAnimeList" Margin="2" AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" CanUserAddRows="false">
+            <!--<DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding animeList.tier}" Value="0">
+                            <Setter Property="Background" Value="Aqua" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>-->
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
                 <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="4*"/>
