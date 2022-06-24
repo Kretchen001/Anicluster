@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Anicluster.windows.filter"
              mc:Ignorable="d" 
-             d:DesignHeight="45" d:DesignWidth="150">
+             d:DesignHeight="55" d:DesignWidth="175">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.1*" />
@@ -19,11 +19,11 @@
             <RowDefinition Height="9*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Label x:Name="labelTagDesignator" Margin="-2,-1,0,0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10" FontSize="10"></Label>
+        <Label x:Name="labelTagDesignator" Margin="-2,-1,0,0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"></Label>
         <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="False" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <Label Grid.Row="1" Grid.Column="2" Content="Inklusive" FontSize="8" />
+        <Label Grid.Row="1" Grid.Column="2" Content="Inklusive" FontSize="10" />
         <CheckBox Grid.Row="1" Grid.Column="3" IsChecked="False" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <Label Grid.Row="1" Grid.Column="4" Content="Exklusive" FontSize="8" />
+        <Label Grid.Row="1" Grid.Column="4" Content="Exklusive" FontSize="10" />
         <DockPanel Grid.Row="2"  Grid.Column="0" Grid.ColumnSpan="10" Background="Gray" />
     </Grid>
 </UserControl>

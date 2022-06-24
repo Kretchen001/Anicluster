@@ -1,7 +1,6 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -37,7 +36,8 @@ namespace Anicluster.windows.filter {
 
         private databaseController dbController = new databaseController();
         private databaseFilterController dbFilterController = new databaseFilterController();
-        private List<AnimeRow> animeRows = new List<AnimeRow>();
+        private List<AnimeData> animeList = new List<AnimeData>();
+        private List<AnimeTag> animeTags = new List<AnimeTag>();
 
         public FilterWindow() {
             InitializeComponent();
@@ -45,13 +45,15 @@ namespace Anicluster.windows.filter {
             AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
             AddHandler(Keyboard.KeyUpEvent, (KeyEventHandler)HandleKeyUpEvent);
 
-            animeRows = dbController.getAllAnimesAsRow();
+            fillTagView();
+
+            animeList = dbController.getAllAnimes();
             updateFilterTable();
         }
 
         private void updateFilterTable() {
             dataGridFilterAnimeList.ItemsSource = null;
-            dataGridFilterAnimeList.ItemsSource = animeRows;
+            dataGridFilterAnimeList.ItemsSource = rowCrafter(animeList);
         }
 
         private void HandleKeyDownEvent(object sender, KeyEventArgs e) {
@@ -65,6 +67,7 @@ namespace Anicluster.windows.filter {
                 isShiftPressed = false;
             }
         }
+
         private void click_ShowDetails(object sender, RoutedEventArgs e) {
             // get the id per clicked Details-Button
             int currentRowIndex = dataGridFilterAnimeList.Items.IndexOf(dataGridFilterAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
@@ -394,14 +397,13 @@ namespace Anicluster.windows.filter {
         private void updateFilterData() {
             // favorite
             if (favoriteBool) {
-                List<AnimeData> animeData = dbFilterController.dbFilterIsFav(true);
-                animeRows.Clear();
-                animeRows = rowCrafter(animeData);
+                animeList.Clear();
+                animeList = dbFilterController.dbFilterIsFav(true);
                 updateFilterTable();
             }
             else {
-                animeRows.Clear();
-                animeRows = dbController.getAllAnimesAsRow();
+                animeList.Clear();
+                animeList = dbController.getAllAnimes();
                 updateFilterTable();
             }
 
@@ -425,9 +427,9 @@ namespace Anicluster.windows.filter {
             }
 
             for (int i = 0; i < tempList.Count; i += 1) {
-                for (int j = 0; j < animeRows.Count; j += 1) {
-                    if (tempList[i].id == animeRows[j].id) {
-                        animeRows.RemoveAt(j);
+                for (int j = 0; j < animeList.Count; j += 1) {
+                    if (tempList[i].id == animeList[j].id) {
+                        animeList.RemoveAt(j);
                     }
                 }
             }
@@ -467,22 +469,12 @@ namespace Anicluster.windows.filter {
             updateFilterData();
         }
 
-        private void expandTagView(object sender, RoutedEventArgs e) {
-            List<AnimeTag> tempTag = dbController.getAllAnimeTags();
+        private void fillTagView() {
+            animeTags = dbController.getAllAnimeTags();
             
-            for (int i = 1; i < tempTag.Count; i += 1) {
-                treeViewItemTags.Items.Add(new TagUserControll(new TagSelection(tempTag[i])));
+            for (int i = 1; i < animeTags.Count; i += 1) {
+                treeViewItemTags.Items.Add(new TagUserControll(new TagSelection(animeTags[i])));
             }
-        }
-    }
-
-
-    public class TagSelection : AnimeTag {
-
-        public bool inklisive { get; set; } = false;
-        public bool exklusive { get; set; } = false;
-
-        public TagSelection(AnimeTag animeTag) : base (animeTag.id, animeTag.tagDesignator) {
         }
     }
 }
