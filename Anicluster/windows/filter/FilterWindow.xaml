@@ -40,6 +40,9 @@
                 <CheckBox  x:Name="checkBoxTierD" Click="toggleTierD">
                     <TreeViewItem Header="D" Background="Red"/>
                 </CheckBox>
+                <CheckBox  x:Name="checkBoxTierDummy" Click="toggleTierDummy">
+                    <TreeViewItem Header="ohne Tier" Background="Silver"/>
+                </CheckBox>
             </TreeViewItem>
             <TreeViewItem Header="Bewertung"  IsExpanded="True">
                 <CheckBox x:Name="checkBoxGeneralRating" Click="toggleGeneralRating">

@@ -35,7 +35,8 @@ namespace Anicluster.windows.filter {
         private bool animeTierA = false;
         private bool animeTierB = false;
         private bool animeTierC = false;
-        private bool animeTierD = false;
+        private bool animeTierD = false; 
+        private bool animeTierDummy = false;
 
         private databaseController dbController = new databaseController();
         private databaseFilterController dbFilterController = new databaseFilterController();
@@ -428,6 +429,9 @@ namespace Anicluster.windows.filter {
             if (animeTierD) {
                 tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.D)));
             }
+            if (animeTierDummy) {
+                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.Dummy)));
+            }
 
             List<AnimeData> newListToShow = new List<AnimeData>(); 
             for (int i = 0; i < tempList.Count; i += 1) {
@@ -474,6 +478,12 @@ namespace Anicluster.windows.filter {
 
         private void toggleTierD(object sender, RoutedEventArgs e) {
             animeTierD = !animeTierD;
+
+            updateFilterData();
+        }
+
+        private void toggleTierDummy(object sender, RoutedEventArgs e) {
+            animeTierDummy = !animeTierDummy;
 
             updateFilterData();
         }
