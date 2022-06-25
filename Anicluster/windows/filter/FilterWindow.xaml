@@ -186,7 +186,7 @@
             </TreeViewItem>
             <TreeViewItem x:Name="treeViewItemTags" Header="Tags" />
         </TreeView>
-        <DataGrid Name="dataGridFilterAnimeList" Margin="2" AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" CanUserAddRows="false">
+        <DataGrid Name="dataGridFilterAnimeList" Margin="2" AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" CanUserAddRows="false" LoadingRow="loadingRowFilterDataGrid">
             <!--<DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>

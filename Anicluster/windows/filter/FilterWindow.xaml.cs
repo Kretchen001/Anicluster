@@ -1,8 +1,11 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Anicluster.windows.filter {
     /// <summary>
@@ -426,16 +429,22 @@ namespace Anicluster.windows.filter {
                 tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.D)));
             }
 
+            List<AnimeData> newListToShow = new List<AnimeData>(); 
             for (int i = 0; i < tempList.Count; i += 1) {
                 for (int j = 0; j < animeList.Count; j += 1) {
                     if (tempList[i].id == animeList[j].id) {
-                        animeList.RemoveAt(j);
+                        newListToShow.Add(animeList[j]);
                     }
                 }
             }
 
             // Rating
 
+            //craft together
+            if (newListToShow.Count != 0) {
+                animeList.Clear();
+                animeList.AddRange(newListToShow);
+            }
             updateFilterTable();
         }
 
@@ -474,6 +483,24 @@ namespace Anicluster.windows.filter {
             
             for (int i = 1; i < animeTags.Count; i += 1) {
                 treeViewItemTags.Items.Add(new TagUserControll(new TagSelection(animeTags[i])));
+            }
+        }
+
+        private void loadingRowFilterDataGrid(object sender, DataGridRowEventArgs e) {
+            try {
+                AnimeRow tempRow = (AnimeRow) e.Row.DataContext;
+                switch (dbController.getAnimeById(tempRow.id).tier) {
+                    case AnimeTier.S: e.Row.Background = new SolidColorBrush(Colors.Aqua); break;
+                    case AnimeTier.A: e.Row.Background = new SolidColorBrush(Colors.GreenYellow); break;
+                    case AnimeTier.B: e.Row.Background = new SolidColorBrush(Colors.Yellow); break;
+                    case AnimeTier.C: e.Row.Background = new SolidColorBrush(Colors.Orange); break;
+                    case AnimeTier.D: e.Row.Background = new SolidColorBrush(Colors.Red); break;
+                    case AnimeTier.Dummy: e.Row.Background = new SolidColorBrush(Colors.Silver); break;
+                    default: break;
+                }
+            }
+            catch (Exception ex){
+                //Log?
             }
         }
     }
