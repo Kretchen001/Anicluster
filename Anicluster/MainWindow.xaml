@@ -22,6 +22,7 @@
             <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
             <MenuItem Header="Filtern" Click="clickFilterWindow"></MenuItem>
             <MenuItem Header="Tags verwalten" Click="click_tagsOrganisation" ></MenuItem>
+            <MenuItem x:Name="menuItemToggleTierColorShown"  Header="Nach Tier einfärben" Click="toggleTierColorShown"></MenuItem>
             <MenuItem Header="Informationen" Click="click_OpenInformation"></MenuItem>
         </Menu>
         <Grid Margin="10" DockPanel.Dock="Top">
@@ -29,7 +30,7 @@
                 <RowDefinition Height="90*" />
                 <RowDefinition Height="10*" />
             </Grid.RowDefinitions>
-            <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false">
+            <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false" LoadingRow="loadingRowDataGrid">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
                     <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="4*"/>

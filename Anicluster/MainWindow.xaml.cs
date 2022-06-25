@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Anicluster {
 
@@ -17,6 +18,8 @@ namespace Anicluster {
     public partial class MainWindow : Window {
 
         private databaseController dbController = new databaseController();
+
+        private bool showTagByColor = false;
 
         public MainWindow() {
             InitializeComponent();
@@ -180,6 +183,35 @@ namespace Anicluster {
         private void clickFilterWindow(object sender, RoutedEventArgs e) {
             FilterWindow filterWindow = new FilterWindow();
             filterWindow.Show();
+        }
+
+        private void toggleTierColorShown(object sender, RoutedEventArgs e) {
+            updateDataGrid();
+            if (showTagByColor) {
+                menuItemToggleTierColorShown.Header = "Nach Tier einfärben";
+            }
+            else {
+                menuItemToggleTierColorShown.Header = "Tierfärbung ausschalten";
+            }
+            showTagByColor = !showTagByColor;
+        }
+
+        private void loadingRowDataGrid(object sender, System.Windows.Controls.DataGridRowEventArgs e) {
+            if (showTagByColor) {
+                AnimeRow tempRow = (AnimeRow)e.Row.DataContext;
+                switch (dbController.getAnimeById(tempRow.id).tier) {
+                    case AnimeTier.S: e.Row.Background = new SolidColorBrush(Colors.Aqua); break;
+                    case AnimeTier.A: e.Row.Background = new SolidColorBrush(Colors.GreenYellow); break;
+                    case AnimeTier.B: e.Row.Background = new SolidColorBrush(Colors.Yellow); break;
+                    case AnimeTier.C: e.Row.Background = new SolidColorBrush(Colors.Orange); break;
+                    case AnimeTier.D: e.Row.Background = new SolidColorBrush(Colors.Red); break;
+                    case AnimeTier.Dummy: e.Row.Background = new SolidColorBrush(Colors.Silver); break;
+                    default: break;
+                }
+            }
+            else {
+                e.Row.Background = new SolidColorBrush(Colors.White);
+            }
         }
     }
 }
