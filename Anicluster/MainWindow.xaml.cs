@@ -200,8 +200,8 @@ namespace Anicluster {
             if (showTagByColor) {
                 AnimeRow tempRow = (AnimeRow)e.Row.DataContext;
                 switch (dbController.getAnimeById(tempRow.id).tier) {
-                    case AnimeTier.S: e.Row.Background = new SolidColorBrush(Colors.Aqua); break;
-                    case AnimeTier.A: e.Row.Background = new SolidColorBrush(Colors.GreenYellow); break;
+                    case AnimeTier.S: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00D4D4")); break;
+                    case AnimeTier.A: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF3FFF2F")); break;
                     case AnimeTier.B: e.Row.Background = new SolidColorBrush(Colors.Yellow); break;
                     case AnimeTier.C: e.Row.Background = new SolidColorBrush(Colors.Orange); break;
                     case AnimeTier.D: e.Row.Background = new SolidColorBrush(Colors.Red); break;

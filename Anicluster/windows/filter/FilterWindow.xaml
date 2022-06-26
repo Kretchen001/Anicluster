@@ -29,10 +29,10 @@
             </TreeViewItem>
             <TreeViewItem Header="Tier" IsExpanded="False">
                 <CheckBox x:Name="checkBoxTierS" Click="toggleTierS">
-                    <TreeViewItem Header="S" Background="Aqua"/>
+                    <TreeViewItem Header="S" Background="#FF00D4D4"/>
                 </CheckBox>
                 <CheckBox x:Name="checkBoxTierA" Click="toggleTierA">
-                    <TreeViewItem Header="A" Background="GreenYellow"/>
+                    <TreeViewItem Header="A" Background="#FF3FFF2F"/>
                 </CheckBox>
                 <CheckBox x:Name="checkBoxTierB" Click="toggleTierB">
                     <TreeViewItem Header="B" Background="Yellow"/>

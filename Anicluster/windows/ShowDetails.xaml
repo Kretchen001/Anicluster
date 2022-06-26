@@ -90,8 +90,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
-                <Label x:Name="labelTierS" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Aqua" BorderBrush="Black">S</Label>
-                <Label x:Name="labelTierA" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="GreenYellow" BorderBrush="Black">A</Label>
+                <Label x:Name="labelTierS" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="#FF00D4D4" BorderBrush="Black">S</Label>
+                <Label x:Name="labelTierA" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="#FF3FFF2F" BorderBrush="Black">A</Label>
                 <Label x:Name="labelTierB" Grid.Column="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Yellow" BorderBrush="Black">B</Label>
                 <Label x:Name="labelTierC" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Orange" BorderBrush="Black">C</Label>
                 <Label x:Name="labelTierD" Grid.Column="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Red" BorderBrush="Black">D</Label>

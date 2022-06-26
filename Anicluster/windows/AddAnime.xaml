@@ -79,8 +79,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <Label x:Name="labelTierS" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Aqua" BorderBrush="Black" MouseDown="clickTierS">S</Label>
-            <Label x:Name="labelTierA" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="GreenYellow" BorderBrush="Black" MouseDown="clickTierA" >A</Label>
+            <Label x:Name="labelTierS" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="#FF00D4D4" BorderBrush="Black" MouseDown="clickTierS">S</Label>
+            <Label x:Name="labelTierA" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="#FF3FFF2F" BorderBrush="Black" MouseDown="clickTierA" >A</Label>
             <Label x:Name="labelTierB" Grid.Column="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Yellow" BorderBrush="Black" MouseDown="clickTierB" >B</Label>
             <Label x:Name="labelTierC" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Orange" BorderBrush="Black" MouseDown="clickTierC" >C</Label>
             <Label x:Name="labelTierD" Grid.Column="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="Red" BorderBrush="Black" MouseDown="clickTierD" >D</Label>
