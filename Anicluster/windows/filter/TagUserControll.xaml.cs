@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Anicluster.windows.filter {
     /// <summary>
@@ -20,12 +8,39 @@ namespace Anicluster.windows.filter {
     public partial class TagUserControll : UserControl {
 
         public TagSelection tagSelection { get; set; }
+
+        public bool InclusiveState {
+            get { return tagSelection.inclusive; }
+            set { tagSelection.inclusive = value; }
+        }
+
+        public bool ExclusiveState {
+            get { return tagSelection.exclusive; }
+            set { tagSelection.exclusive = value; }
+        }
+
         public TagUserControll(TagSelection tagSelection) {
             InitializeComponent();
 
             this.tagSelection = tagSelection;
 
-            labelTagDesignator.Content = tagSelection.tagDesignator;
+            textBloxkTagDesignator.Text = tagSelection.tagDesignator;
+        }
+
+        private void clickInclusive(object sender, RoutedEventArgs e) {
+            InclusiveState = !InclusiveState;
+            if (InclusiveState) {
+                tagSelection.exclusive = false;
+                checkBoxExclusive.IsChecked = false;
+            }
+        }
+
+        private void clickExclusive(object sender, RoutedEventArgs e) {
+            ExclusiveState = !ExclusiveState;
+            if (ExclusiveState) {
+                tagSelection.inclusive = false;
+                checkBoxInclusive.IsChecked = false;
+            }
         }
     }
 }

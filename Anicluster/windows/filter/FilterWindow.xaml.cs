@@ -14,6 +14,7 @@ namespace Anicluster.windows.filter {
     public partial class FilterWindow : Window {
 
         public bool favoriteBool = false;
+        public bool noFavoriteBool = false;
 
         private bool ratingGeneralBool = true;
         private bool ratingStoryBool = false;
@@ -42,6 +43,7 @@ namespace Anicluster.windows.filter {
         private databaseFilterController dbFilterController = new databaseFilterController();
         private List<AnimeData> animeList = new List<AnimeData>();
         private List<AnimeTag> animeTags = new List<AnimeTag>();
+        private List<TagUserControll> tagUserControllList = new List<TagUserControll>();
 
         public FilterWindow() {
             InitializeComponent();
@@ -324,12 +326,6 @@ namespace Anicluster.windows.filter {
             ratingGermanDubIncDec(e.Delta);
         }
 
-        private void toggleFavorite(object sender, RoutedEventArgs e) {
-            favoriteBool = !favoriteBool;
-
-            updateFilterData();
-        }
-
         private void toggleGeneralRating(object sender, RoutedEventArgs e) {
             ratingGeneralBool = !ratingGeneralBool;
             ratingStoryBool = false;
@@ -405,6 +401,11 @@ namespace Anicluster.windows.filter {
                 animeList = dbFilterController.dbFilterIsFav(true);
                 updateFilterTable();
             }
+            else if (noFavoriteBool) {
+                animeList.Clear();
+                animeList = dbFilterController.dbFilterIsFav(false);
+                updateFilterTable();
+            }
             else {
                 animeList.Clear();
                 animeList = dbController.getAllAnimes();
@@ -443,6 +444,44 @@ namespace Anicluster.windows.filter {
             }
 
             // Rating
+
+            // Tag-Selection
+            List<AnimeTag> tagListInclusive = new List<AnimeTag>();
+            List<AnimeTag> tagListExclusive = new List<AnimeTag>();
+            for (int i = 0; i < animeTags.Count; i += 1) {
+                if (tagUserControllList[i].tagSelection.inclusive) {
+                    tagListInclusive.Add(new AnimeTag() {
+                        id = tagUserControllList[i].tagSelection.id,
+                        tagDesignator = tagUserControllList[i].tagSelection.tagDesignator
+                    });
+                }
+                if (tagUserControllList[i].tagSelection.exclusive) {
+                    tagListExclusive.Add(new AnimeTag() {
+                        id = tagUserControllList[i].tagSelection.id,
+                        tagDesignator = tagUserControllList[i].tagSelection.tagDesignator
+                    });
+                }
+            }
+            List<AnimeData> listOfTagSelectionIn = dbFilterController.dbFilterByTag(tagListInclusive);
+            List<AnimeData> listOfTagSelectionEx = dbFilterController.dbFilterWithoutTag(tagListExclusive);
+
+            List<AnimeData> listOfTagSelection = new List<AnimeData>();
+            listOfTagSelection.AddRange(listOfTagSelectionIn);
+            listOfTagSelection.AddRange(listOfTagSelectionEx);
+
+            for (int i = 0; i < listOfTagSelection.Count; i += 1) {
+                if (newListToShow.Count == 0) {
+                    newListToShow.AddRange(listOfTagSelection);
+                    break;
+                }
+                else {
+                    for (int j = 0; j < newListToShow.Count; j += 1) {
+                        if (newListToShow[j] != listOfTagSelection[i]) {
+                            newListToShow.Add(listOfTagSelection[i]);
+                        }
+                    }
+                }
+            }
 
             //craft together
             if (newListToShow.Count != 0) {
@@ -491,8 +530,10 @@ namespace Anicluster.windows.filter {
         private void fillTagView() {
             animeTags = dbController.getAllAnimeTags();
             
-            for (int i = 1; i < animeTags.Count; i += 1) {
-                treeViewItemTags.Items.Add(new TagUserControll(new TagSelection(animeTags[i])));
+            for (int i = 0; i < animeTags.Count; i += 1) {
+                TagUserControll tempControll = new TagUserControll(new TagSelection(animeTags[i]));
+                tagUserControllList.Add(tempControll);
+                treeViewItemTags.Items.Add(tempControll);
             }
         }
 
@@ -510,8 +551,35 @@ namespace Anicluster.windows.filter {
                 }
             }
             catch (Exception ex){
+                MessageBox.Show(ex.Message);
                 //Log?
             }
+        }
+
+        private void clickFavoriteYes(object sender, RoutedEventArgs e) {
+            checkBoxFavoriteNo.IsChecked = false;
+            favoriteBool = !favoriteBool;
+            if (favoriteBool) {
+                noFavoriteBool = false;
+            }
+            checkBoxFavoriteYes.IsChecked = favoriteBool;
+
+            updateFilterData();
+        }
+
+        private void clickFavoriteNo(object sender, RoutedEventArgs e) {
+            checkBoxFavoriteYes.IsChecked = false;
+            noFavoriteBool = !noFavoriteBool;
+            if (noFavoriteBool) { 
+                favoriteBool = false;
+            }
+            checkBoxFavoriteNo.IsChecked = noFavoriteBool;
+
+            updateFilterData();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e) {
+            updateFilterData();
         }
     }
 }

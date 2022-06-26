@@ -30,6 +30,50 @@ namespace BiboAnime.databaseLiteDB {
         }
 
 
+        public List<AnimeData> dbFilterByTag(List<AnimeTag> filterTags) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> result = col.Query().ToList();
+                List<AnimeData> returnResult = new List<AnimeData>();
+                for (int i = 0; i < filterTags.Count; i += 1) {
+                    AnimeTag tag = filterTags[i];
+                    List<AnimeData> tempResult = col.Query()
+                        .Where(x => x.tags.Contains(tag))
+                        .ToList();
+                    for (int j = 0; j < tempResult.Count; j += 1) {
+                        for (int k = 0; k < result.Count; k += 1) {
+                            if (result[k].id == tempResult[j].id) {
+                                returnResult.Add(tempResult[j]);
+                            }
+                        }
+                    }
+                }
+                return returnResult;
+            }
+        }
+
+        public List<AnimeData> dbFilterWithoutTag(List<AnimeTag> filterTags) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> result = col.Query().ToList();
+                List<AnimeData> returnResult = new List<AnimeData>();
+                for (int i = 0; i < filterTags.Count; i += 1) {
+                    AnimeTag tag = filterTags[i];
+                    List<AnimeData> tempResult = col.Query()
+                        .Where(x => x.tags.Contains(tag))
+                        .ToList();
+                    for (int j = 0; j < tempResult.Count; j += 1) {
+                        for (int k = 0; k < result.Count; k += 1) {
+                            if (result[j] == tempResult[k]) {
+                                returnResult.Add(result[j]);
+                            }
+                        }
+                    }
+                }
+                return returnResult;
+            }
+        }
+
         public List<AnimeData> dbFilterTagAndTier(AnimeTier filterTier, List<AnimeTag> filterTags) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");

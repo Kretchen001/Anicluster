@@ -19,12 +19,15 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <TreeView x:Name="TreeViewFilterSelection" Grid.Row="1">
-            <TreeViewItem Header="Favorisiert" IsExpanded="True">
-                <CheckBox x:Name="checkBoxFavorite" Click="toggleFavorite">
-                    <TreeViewItem Header="Ja/Nein"/>
+            <TreeViewItem Header="Favorisiert" IsExpanded="False">
+                <CheckBox x:Name="checkBoxFavoriteYes" Click="clickFavoriteYes">
+                    <TreeViewItem Header="Ja"/>
+                </CheckBox>
+                <CheckBox x:Name="checkBoxFavoriteNo" Click="clickFavoriteNo">
+                    <TreeViewItem Header="Nein"/>
                 </CheckBox>
             </TreeViewItem>
-            <TreeViewItem Header="Tier" IsExpanded="True">
+            <TreeViewItem Header="Tier" IsExpanded="False">
                 <CheckBox x:Name="checkBoxTierS" Click="toggleTierS">
                     <TreeViewItem Header="S" Background="Aqua"/>
                 </CheckBox>
@@ -44,7 +47,7 @@
                     <TreeViewItem Header="ohne Tier" Background="Silver"/>
                 </CheckBox>
             </TreeViewItem>
-            <TreeViewItem Header="Bewertung"  IsExpanded="True">
+            <TreeViewItem Header="Bewertung"  IsExpanded="False">
                 <CheckBox x:Name="checkBoxGeneralRating" Click="toggleGeneralRating">
                     <TreeViewItem Header="General (min)"/>
                 </CheckBox>
@@ -187,23 +190,15 @@
                     <RepeatButton Grid.Row="1" Grid.Column="8" Margin="3" FontSize="8" Click="clickRatingGermanDubMinus" Delay="500">-</RepeatButton>
                 </Grid>
             </TreeViewItem>
-            <TreeViewItem x:Name="treeViewItemTags" Header="Tags" />
+            <TreeViewItem x:Name="treeViewItemTags" Header="Tags" IsExpanded="False">
+                <Button Click="Button_Click" >Anwenden</Button>
+            </TreeViewItem>
         </TreeView>
         <DataGrid Name="dataGridFilterAnimeList" Margin="2" AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" CanUserAddRows="false" LoadingRow="loadingRowFilterDataGrid">
-            <!--<DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding animeList.tier}" Value="0">
-                            <Setter Property="Background" Value="Aqua" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>-->
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
-                <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="4*"/>
-                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name}" Width="30*"/>
-                <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="15*" SortMemberPath="generalRating">
+                <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="auto"/>
+                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name}" Width="*"/>
+                <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="2*" SortMemberPath="generalRating">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -213,9 +208,9 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Tags" IsReadOnly="True" Binding="{Binding tags}" Width="30*" SortMemberPath="tags.Count"/>
-                <DataGridTextColumn Header="Status" IsReadOnly="True" Binding="{Binding status}" Width="6*" />
-                <DataGridTemplateColumn Header="Details" Width="10*">
+                <DataGridTextColumn Header="Tags" IsReadOnly="True" Binding="{Binding tags}" Width="2*" SortMemberPath="tags.Count"/>
+                <DataGridTextColumn Header="Status" IsReadOnly="True" Binding="{Binding status}" Width="auto" />
+                <DataGridTemplateColumn Header="Details" Width="auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Name="buttonShowDetails" Content="Details" Click="click_ShowDetails" />

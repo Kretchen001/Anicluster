@@ -5,25 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Anicluster.windows.filter"
              mc:Ignorable="d" 
-             d:DesignHeight="55" d:DesignWidth="175">
+             d:DesignHeight="55" d:DesignWidth="200">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="10*" />
-            <RowDefinition Height="9*" />
-            <RowDefinition Height="1*" />
-        </Grid.RowDefinitions>
-        <Label x:Name="labelTagDesignator" Margin="-2,-1,0,0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"></Label>
-        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="False" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <Label Grid.Row="1" Grid.Column="2" Content="Inklusive" FontSize="10" />
-        <CheckBox Grid.Row="1" Grid.Column="3" IsChecked="False" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <Label Grid.Row="1" Grid.Column="4" Content="Exklusive" FontSize="10" />
-        <DockPanel Grid.Row="2"  Grid.Column="0" Grid.ColumnSpan="10" Background="Gray" />
+        <Border BorderBrush="LightSlateGray" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.1*" MinWidth="5"/>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="0.1*" MinWidth="5"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="9*" />
+                </Grid.RowDefinitions>
+                <Label x:Name="labelTagDesignator" Margin="-2,-1,0,0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10">
+                    <TextBlock x:Name="textBloxkTagDesignator" TextDecorations="Underline" FontWeight="Bold"></TextBlock>
+                </Label>
+                <CheckBox x:Name="checkBoxInclusive" Grid.Row="1" Grid.Column="1" IsChecked="False" VerticalAlignment="Center" HorizontalAlignment="Center" Click="clickInclusive"/>
+                <Label Grid.Row="1" Grid.Column="2" Content="Inklusive" />
+                <CheckBox x:Name="checkBoxExclusive" Grid.Row="1" Grid.Column="3" IsChecked="False" VerticalAlignment="Center" HorizontalAlignment="Center" Click="clickExclusive"/>
+                <Label Grid.Row="1" Grid.Column="4" Content="Exklusive" />
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
