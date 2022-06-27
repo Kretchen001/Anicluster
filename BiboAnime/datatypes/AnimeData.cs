@@ -17,4 +17,15 @@
         public string thirdPartyRecommendation { get; set; }
         public AnimeTier tier { get; set; }
     }
+
+    public class ItemEqualityComparer : IEqualityComparer<AnimeData> {
+        public bool Equals(AnimeData x, AnimeData y) {
+            // Two items are equal if their keys are equal.
+            return x.id == y.id;
+        }
+
+        public int GetHashCode(AnimeData obj) {
+            return obj.id.GetHashCode();
+        }
+    }
 }

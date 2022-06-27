@@ -2,6 +2,7 @@
 using BiboAnime.datatypes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,12 +17,15 @@ namespace Anicluster.windows.filter {
         public bool favoriteBool = false;
         public bool noFavoriteBool = false;
 
-        private bool ratingGeneralBool = true;
+        private bool ratingGeneralBool = false;
         private bool ratingStoryBool = false;
         private bool ratingAnimationBool = false;
         private bool ratingSpecialEffectsBool = false;
         private bool ratingSoundBool = false;
         private bool ratingGermanDubBool = false;
+
+        private bool existGermanDub = false;
+        private bool withoutGermanDub = false;
 
         private int ratingGeneral = 0;
         private int ratingStory = 0;
@@ -36,7 +40,7 @@ namespace Anicluster.windows.filter {
         private bool animeTierA = false;
         private bool animeTierB = false;
         private bool animeTierC = false;
-        private bool animeTierD = false; 
+        private bool animeTierD = false;
         private bool animeTierDummy = false;
 
         private databaseController dbController = new databaseController();
@@ -338,36 +342,42 @@ namespace Anicluster.windows.filter {
             checkBoxSpecialEffectsRating.IsChecked = ratingSpecialEffectsBool;
             ratingGermanDubBool = false;
             checkBoxGermanDub.IsChecked = ratingGermanDubBool;
+            updateFilterData();
         }
 
         private void toggleStoryRating(object sender, RoutedEventArgs e) {
             ratingStoryBool = !ratingStoryBool;
             ratingGeneralBool = false;
             checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+            updateFilterData();
         }
 
         private void toggleSoundRating(object sender, RoutedEventArgs e) {
             ratingSoundBool = !ratingSoundBool;
             ratingGeneralBool = false;
             checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+            updateFilterData();
         }
 
         private void toggleAnimationRating(object sender, RoutedEventArgs e) {
             ratingAnimationBool = !ratingAnimationBool;
             ratingGeneralBool = false;
             checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+            updateFilterData();
         }
 
         private void toggleSpecialEffectsRating(object sender, RoutedEventArgs e) {
             ratingSpecialEffectsBool = !ratingSpecialEffectsBool;
             ratingGeneralBool = false;
             checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+            updateFilterData();
         }
 
         private void toggleGermanDubRating(object sender, RoutedEventArgs e) {
             ratingGermanDubBool = !ratingGermanDubBool;
             ratingGeneralBool = false;
             checkBoxGeneralRating.IsChecked = ratingGeneralBool;
+            updateFilterData();
         }
 
         private List<AnimeRow> rowCrafter(List<AnimeData> oList) {
@@ -396,54 +406,65 @@ namespace Anicluster.windows.filter {
 
         private void updateFilterData() {
             // favorite
+            List<AnimeData> tempListFavorite = new List<AnimeData>();
             if (favoriteBool) {
-                animeList.Clear();
-                animeList = dbFilterController.dbFilterIsFav(true);
-                updateFilterTable();
+                tempListFavorite = dbFilterController.dbFilterIsFav(true);
             }
             else if (noFavoriteBool) {
-                animeList.Clear();
-                animeList = dbFilterController.dbFilterIsFav(false);
-                updateFilterTable();
-            }
-            else {
-                animeList.Clear();
-                animeList = dbController.getAllAnimes();
-                updateFilterTable();
+                tempListFavorite = dbFilterController.dbFilterIsFav(false);
             }
 
             // tier
-            List<AnimeRow> tempList = new List<AnimeRow>();
-
+            List<AnimeData> tempListTier = new List<AnimeData>();
             if (animeTierS) {
-                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.S)));
+                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.S));
             }
             if (animeTierA) {
-                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.A)));
+                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.A));
             }
             if (animeTierB) {
-                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.B)));
+                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.B));
             }
             if (animeTierC) {
-                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.C)));
+                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.C));
             }
             if (animeTierD) {
-                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.D)));
+                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.D));
             }
             if (animeTierDummy) {
-                tempList.AddRange(rowCrafter(dbFilterController.dbFilterTier(AnimeTier.Dummy)));
+                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.Dummy));
             }
 
-            List<AnimeData> newListToShow = new List<AnimeData>(); 
-            for (int i = 0; i < tempList.Count; i += 1) {
-                for (int j = 0; j < animeList.Count; j += 1) {
-                    if (tempList[i].id == animeList[j].id) {
-                        newListToShow.Add(animeList[j]);
-                    }
-                }
+            // check if anime has german dub
+            List<AnimeData> tempListDubCheck = new List<AnimeData>();
+            if (existGermanDub) {
+                tempListDubCheck = dbFilterController.dbFilterRatingCheckGermanDub(true);
+            }
+            if (withoutGermanDub) {
+                tempListDubCheck = dbFilterController.dbFilterRatingCheckGermanDub(false);
             }
 
             // Rating
+            List<AnimeData> tempListRating = new List<AnimeData>();
+
+            if (ratingGeneralBool) {
+                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minGeneral: ratingGeneral));
+            }
+            if (ratingStoryBool) {
+                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minStory: ratingStory));
+            }
+            if (ratingAnimationBool) {
+                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minAnimation: ratingAnimation));
+            }
+            if (ratingSoundBool) {
+                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minSound: ratingSound));
+            }
+            if (ratingSpecialEffectsBool) {
+                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minSpecialEffect: ratingSpecialEffects));
+            }
+            if (ratingGermanDubBool) {
+                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minGeneral: ratingGermanDub));
+            }
 
             // Tag-Selection
             List<AnimeTag> tagListInclusive = new List<AnimeTag>();
@@ -469,25 +490,16 @@ namespace Anicluster.windows.filter {
             listOfTagSelection.AddRange(listOfTagSelectionIn);
             listOfTagSelection.AddRange(listOfTagSelectionEx);
 
-            for (int i = 0; i < listOfTagSelection.Count; i += 1) {
-                if (newListToShow.Count == 0) {
-                    newListToShow.AddRange(listOfTagSelection);
-                    break;
-                }
-                else {
-                    for (int j = 0; j < newListToShow.Count; j += 1) {
-                        if (newListToShow[j] != listOfTagSelection[i]) {
-                            newListToShow.Add(listOfTagSelection[i]);
-                        }
-                    }
-                }
-            }
+            // merge Lists
+            animeList.Clear();
+            animeList.AddRange(tempListFavorite);
+            animeList.AddRange(tempListTier);
+            animeList.AddRange(tempListRating);
+            animeList.AddRange(listOfTagSelection);
 
-            //craft together
-            if (newListToShow.Count != 0) {
-                animeList.Clear();
-                animeList.AddRange(newListToShow);
-            }
+            // remove all duplicated Animes in the List
+            animeList = animeList.Distinct(new ItemEqualityComparer()).ToList();
+
             updateFilterTable();
         }
 
@@ -529,7 +541,7 @@ namespace Anicluster.windows.filter {
 
         private void fillTagView() {
             animeTags = dbController.getAllAnimeTags();
-            
+
             for (int i = 0; i < animeTags.Count; i += 1) {
                 TagUserControll tempControll = new TagUserControll(new TagSelection(animeTags[i]));
                 tagUserControllList.Add(tempControll);
@@ -539,10 +551,10 @@ namespace Anicluster.windows.filter {
 
         private void loadingRowFilterDataGrid(object sender, DataGridRowEventArgs e) {
             try {
-                AnimeRow tempRow = (AnimeRow) e.Row.DataContext;
+                AnimeRow tempRow = (AnimeRow)e.Row.DataContext;
                 switch (dbController.getAnimeById(tempRow.id).tier) {
-                    case AnimeTier.S: e.Row.Background = new SolidColorBrush(Colors.Aqua); break;
-                    case AnimeTier.A: e.Row.Background = new SolidColorBrush(Colors.GreenYellow); break;
+                    case AnimeTier.S: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00D4D4")); break;
+                    case AnimeTier.A: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF3FFF2F")); break;
                     case AnimeTier.B: e.Row.Background = new SolidColorBrush(Colors.Yellow); break;
                     case AnimeTier.C: e.Row.Background = new SolidColorBrush(Colors.Orange); break;
                     case AnimeTier.D: e.Row.Background = new SolidColorBrush(Colors.Red); break;
@@ -550,7 +562,7 @@ namespace Anicluster.windows.filter {
                     default: break;
                 }
             }
-            catch (Exception ex){
+            catch (Exception ex) {
                 MessageBox.Show(ex.Message);
                 //Log?
             }
@@ -570,7 +582,7 @@ namespace Anicluster.windows.filter {
         private void clickFavoriteNo(object sender, RoutedEventArgs e) {
             checkBoxFavoriteYes.IsChecked = false;
             noFavoriteBool = !noFavoriteBool;
-            if (noFavoriteBool) { 
+            if (noFavoriteBool) {
                 favoriteBool = false;
             }
             checkBoxFavoriteNo.IsChecked = noFavoriteBool;
