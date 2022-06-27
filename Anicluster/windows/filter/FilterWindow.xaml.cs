@@ -483,19 +483,34 @@ namespace Anicluster.windows.filter {
                     });
                 }
             }
-            List<AnimeData> listOfTagSelectionIn = dbFilterController.dbFilterByTag(tagListInclusive);
-            List<AnimeData> listOfTagSelectionEx = dbFilterController.dbFilterWithoutTag(tagListExclusive);
 
             List<AnimeData> listOfTagSelection = new List<AnimeData>();
-            listOfTagSelection.AddRange(listOfTagSelectionIn);
-            listOfTagSelection.AddRange(listOfTagSelectionEx);
+            listOfTagSelection.AddRange(dbFilterController.dbFilterByTag(tagListInclusive));
+            listOfTagSelection.AddRange(dbFilterController.dbFilterWithoutTag(tagListExclusive));
 
             // merge Lists
             animeList.Clear();
-            animeList.AddRange(tempListFavorite);
-            animeList.AddRange(tempListTier);
-            animeList.AddRange(tempListRating);
-            animeList.AddRange(listOfTagSelection);
+            if (tempListFavorite.Count != 0) {
+                animeList = tempListFavorite;
+            }
+            if ((tempListTier.Count != 0) && (animeList.Count == 0)) {
+                animeList.AddRange(tempListTier);
+            }
+            else if (tempListTier.Count != 0) {
+                animeList = tempListTier.Where(x => animeList.Contains(x)).ToList();
+            }
+            if ((tempListRating.Count != 0) && (animeList.Count == 0)) {
+                animeList.AddRange(tempListRating);
+            }
+            else if (tempListRating.Count != 0) {
+                animeList = tempListRating.Where(x => animeList.Contains(x)).ToList();
+            }
+            if ((listOfTagSelection.Count != 0) && (animeList.Count == 0)) {
+                animeList.AddRange(listOfTagSelection);
+            }
+            else if (listOfTagSelection.Count != 0) {
+                animeList = listOfTagSelection.Where(x => animeList.Contains(x)).ToList();
+            }
 
             // remove all duplicated Animes in the List
             animeList = animeList.Distinct(new ItemEqualityComparer()).ToList();
