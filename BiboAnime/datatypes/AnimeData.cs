@@ -1,6 +1,6 @@
 ﻿namespace BiboAnime.datatypes {
 
-    public class AnimeData {
+    public class AnimeData : IEquatable<AnimeData> {
 
         public int id { get; set; }
         public bool favorite { get; set; }
@@ -16,6 +16,11 @@
         public int ovh { get; set; }
         public string thirdPartyRecommendation { get; set; }
         public AnimeTier tier { get; set; }
+
+        public bool Equals(AnimeData other) {
+            return this.id == other.id &&
+                this.name == other.name;
+        }
     }
 
     public class ItemEqualityComparer : IEqualityComparer<AnimeData> {
