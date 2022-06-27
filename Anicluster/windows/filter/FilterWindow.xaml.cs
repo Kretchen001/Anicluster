@@ -593,5 +593,95 @@ namespace Anicluster.windows.filter {
         private void Button_Click(object sender, RoutedEventArgs e) {
             updateFilterData();
         }
+
+        private void toggleWithoutDub(object sender, RoutedEventArgs e) {
+            withoutGermanDub = !withoutGermanDub;
+            if (existGermanDub) {
+                existGermanDub = false;
+                checkBoxWithDub.IsChecked = false;
+            }
+            if (ratingGermanDubBool) {
+                ratingGermanDubBool = false;
+                checkBoxGermanDub.IsChecked = false;
+            }
+            updateFilterData();
+        }
+
+        private void toggleWithDub(object sender, RoutedEventArgs e) {
+            existGermanDub = !existGermanDub;
+            if (withoutGermanDub) {
+                withoutGermanDub = false;
+                checkBoxWithoutDub.IsChecked = false;
+            }
+            updateFilterData();
+        }
+
+        private void resetButtonClick(object sender, RoutedEventArgs e) {
+            animeList.Clear();
+            animeList = dbController.getAllAnimes();
+            updateFilterTable();
+
+            // properties
+            favoriteBool = false;
+            noFavoriteBool = false;
+
+            ratingGeneralBool = false;
+            ratingStoryBool = false;
+            ratingAnimationBool = false;
+            ratingSpecialEffectsBool = false;
+            ratingSoundBool = false;
+            ratingGermanDubBool = false;
+
+            existGermanDub = false;
+            withoutGermanDub = false;
+
+            ratingGeneral = 0;
+            ratingStory = 0;
+            ratingAnimation = 0;
+            ratingSpecialEffects = 0;
+            ratingSound = 0;
+            ratingGermanDub = 0;
+
+            isShiftPressed = false;
+
+            animeTierS = false;
+            animeTierA = false;
+            animeTierB = false;
+            animeTierC = false;
+            animeTierD = false;
+            animeTierDummy = false;
+
+            // overlay
+            checkBoxFavoriteYes.IsChecked = false;
+            checkBoxFavoriteNo.IsChecked = false;
+            checkBoxTierS.IsChecked = false;
+            checkBoxTierA.IsChecked = false;
+            checkBoxTierB.IsChecked = false;
+            checkBoxTierC.IsChecked = false;
+            checkBoxTierD.IsChecked = false;
+            checkBoxTierDummy.IsChecked = false;
+            checkBoxGeneralRating.IsChecked = false;
+            progressBarGeneralRating.Value = 0;
+            labelGeneralRating.Content = 0;
+            checkBoxStoryRating.IsChecked = false;
+            progressBarStoryRating.Value = 0; 
+            labelStoryRating.Content = 0;
+            checkBoxSoundRating.IsChecked = false;
+            progressBarSoundRating.Value = 0;
+            labelSoundRating.Content = 0;
+            checkBoxAnimationRating.IsChecked = false;
+            progressBarAnimationRating.Value = 0;
+            labelAnimationRating.Content = 0;
+            checkBoxSpecialEffectsRating.IsChecked = false;
+            progressBarSpecialEffectsRating.Value = 0;
+            labelSpecialEffectsRating.Content = 0;
+            checkBoxGermanDub.IsChecked = false;
+            progressBarGermanDubRating.Value = 0;
+            labelGermanDubRating.Content = 0;
+            checkBoxWithDub.IsChecked = false;
+            checkBoxWithoutDub.IsChecked = false;
+            // expanded
+            treeViewItemTags.IsExpanded = false;
+        }
     }
 }

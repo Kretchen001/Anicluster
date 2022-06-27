@@ -46,8 +46,8 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Tags" IsReadOnly="True" Binding="{Binding tags}" Width="30*" SortMemberPath="tags.Count"/>
-                    <DataGridTextColumn Header="Status" IsReadOnly="True" Binding="{Binding status}" Width="6*" />
-                    <DataGridTemplateColumn Header="Details" Width="10*">
+                    <DataGridTextColumn Header="Status" IsReadOnly="True" Binding="{Binding status}" Width="auto" />
+                    <DataGridTemplateColumn Header="Details" Width="auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Name="buttonShowDetails" Content="Details anzeigen" Click="click_ShowDetails" />
