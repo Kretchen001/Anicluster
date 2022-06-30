@@ -19,6 +19,7 @@
 
         public bool Equals(AnimeData other) {
             return this.id == other.id &&
+                this.favorite == other.favorite &&
                 this.name == other.name;
         }
     }
