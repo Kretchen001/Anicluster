@@ -20,6 +20,7 @@ namespace Anicluster.windows {
 
             setDisplay();
             showTier();
+            showRating();
         }
 
         private void setDisplay() {
@@ -88,6 +89,41 @@ namespace Anicluster.windows {
             labelTierB.BorderThickness = new Thickness(B);
             labelTierC.BorderThickness = new Thickness(C);
             labelTierD.BorderThickness = new Thickness(D);
+        }
+
+        private void showRating() {
+
+            progressBarStoryRating.Value = oneAnime.rating.story;
+            labelStoryRating.Content = oneAnime.rating.story;
+
+            progressBarAnimationRating.Value = oneAnime.rating.animation;
+            labelAnimationRating.Content = oneAnime.rating.animation;
+
+            progressBarSpecialEffectsRating.Value = oneAnime.rating.specialEffect;
+            labelSpecialEffectsRating.Content = oneAnime.rating.specialEffect;
+
+            progressBarSoundRating.Value = oneAnime.rating.sound;
+            labelSoundRating.Content = oneAnime.rating.sound;
+
+            progressBarGermanDubRating.Value = oneAnime.rating.germanDub;
+            labelGermanDubRating.Content = oneAnime.rating.germanDub;
+
+            calculateAndPrintGeneralRating();
+        }
+
+        private void calculateAndPrintGeneralRating() {
+            int ratingGeneral = 0;
+            if (oneAnime.rating.germanDub == 0) {
+                ratingGeneral = (int)((oneAnime.rating.story * 0.4) + (oneAnime.rating.sound * 0.2)
+                    + (oneAnime.rating.animation * 0.3) + (oneAnime.rating.specialEffect * 0.1));
+            }
+            else {
+                ratingGeneral = (int)((oneAnime.rating.story * 0.4) + (oneAnime.rating.sound * 0.1)
+                    + (oneAnime.rating.animation * 0.3) + (oneAnime.rating.specialEffect * 0.1)
+                    + (oneAnime.rating.germanDub * 0.1));
+            }
+            labelGeneralRating.Content = ratingGeneral;
+            progressBarGeneralRating.Value = ratingGeneral;
         }
     }
 }
