@@ -6,6 +6,7 @@ using BiboAnime.datatypes;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -26,6 +27,9 @@ namespace Anicluster {
 
             dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
+        public void OnWindowClosing(object sender, CancelEventArgs e) {
+            Application.Current.Shutdown();
+        }
 
         private void click_DummyDaten(object sender, RoutedEventArgs e) {
 
@@ -43,6 +47,12 @@ namespace Anicluster {
                 new AnimeTag() { tagDesignator = "Militär" }
             };
 
+            List<Staffel> staffeln = new List<Staffel> {
+                new Staffel() { counter = 1 , episodes = 12},
+                new Staffel() { counter = 2 , episodes = 24},
+                new Staffel() { counter = 3 , episodes = 12},
+            };
+
             AnimeData dummyAnime = new AnimeData {
                 id = dbController.getDbCountForIdPlusOne(),
                 favorite = true,
@@ -50,7 +60,8 @@ namespace Anicluster {
                 rating = rating,
                 status = AnimeStatus.Fertig,
                 tags = tags,
-                tier = AnimeTier.A
+                tier = AnimeTier.A,
+                staffeln = staffeln,
             };
             dbController.addAnimeToDB(dummyAnime);
 
@@ -81,6 +92,7 @@ namespace Anicluster {
 
                 // give the anime to the ShowDetails-Window
                 ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
+                showDetailsScreen.Owner = this;
                 showDetailsScreen.Show();
             }
         }
@@ -91,9 +103,10 @@ namespace Anicluster {
         }
 
         private void click_AddNewAnime(object sender, RoutedEventArgs e) {
-            AddAnime addAnime = new AddAnime();
-            addAnime.shouldViewUpdated = updateAfterAddAnime;
-            addAnime.Show();
+            AddAnime addAnimeWindow = new AddAnime();
+            addAnimeWindow.shouldViewUpdated = updateAfterAddAnime;
+            addAnimeWindow.Owner = this;
+            addAnimeWindow.Show();
 
             void updateAfterAddAnime(bool e) {
                 updateDataGrid();
@@ -177,11 +190,13 @@ namespace Anicluster {
 
         private void click_tagsOrganisation(object sender, RoutedEventArgs e) {
             TagOrganisator tagOrganisatorWindow = new TagOrganisator();
+            tagOrganisatorWindow.Owner = this;
             tagOrganisatorWindow.Show();
         }
 
         private void clickFilterWindow(object sender, RoutedEventArgs e) {
             FilterWindow filterWindow = new FilterWindow();
+            filterWindow.Owner = this;
             filterWindow.Show();
         }
 

@@ -167,16 +167,16 @@
             </Grid>
 
             <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Status</Label>
-            <TextBox x:Name="textBoxStatus" Grid.Row="8" Grid.Column="1" Margin="20,10,20,10" HorizontalAlignment="Stretch" IsReadOnly="False"/>
-
+            
+            <TextBlock x:Name="textBlockForStaffelPrint" Background="Beige" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Margin="20,10,20,10"></TextBlock>
+            
             <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Staffeln</Label>
-            <TextBox x:Name="textBoxStaffeln" Grid.Row="9" Grid.Column="1" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="False"/>
 
             <Label Grid.Row="9" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Filme</Label>
             <TextBox x:Name="textBoxMovies" Grid.Row="9" Grid.Column="4" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="False"/>
 
             <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Gesamt-Episoden</Label>
-            <TextBox x:Name="textBoxTotalEpisodes" Grid.Row="10" Grid.Column="1" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="False"/>
+            <TextBlock x:Name="textBoxTotalEpisodes" Background="Beige" Grid.Row="10" Grid.Column="1" Margin="20,10,20,10"/>
 
             <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">OVH-Episoden</Label>
             <TextBox x:Name="textBoxOvhs" Grid.Row="10" Grid.Column="4" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="False"/>
