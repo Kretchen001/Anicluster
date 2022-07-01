@@ -19,7 +19,7 @@ namespace Anicluster.windows {
         private int ratingSpecialEffects = 0;
         private int ratingSound = 0;
         private int ratingGermanDub = 0;
-        private int animeStaffeln = 0;
+        private List<Staffel> animeStaffeln = new List<Staffel>();
         private int animeTotalEpisodes = 0;
         private int animeMovies = 0;
         private int animeOvh = 0;
@@ -218,7 +218,7 @@ namespace Anicluster.windows {
             if (urlAnimePlanet != "") {
                 temp.urlAnimePlanet = urlAnimePlanet;
             }
-            if (animeStaffeln != 0) {
+            if (animeStaffeln.Count > 0) {
                 temp.staffeln = animeStaffeln;
             }
             if (animeTotalEpisodes != 0) {
@@ -267,30 +267,6 @@ namespace Anicluster.windows {
                         UseShellExecute = true
                     });
                 }
-            }
-        }
-
-        private void click_StaffelnPlus(object sender, RoutedEventArgs e) {
-            animeStaffeln += 1;
-            textBoxStaffeln.Text = animeStaffeln.ToString();
-        }
-
-        private void click_TotalEpisodesPlus(object sender, RoutedEventArgs e) {
-            animeTotalEpisodes += 1;
-            textBoxTotalEpisodes.Text = animeTotalEpisodes.ToString();
-        }
-
-        private void click_StaffelnMinus(object sender, RoutedEventArgs e) {
-            if (animeStaffeln != 0) {
-                animeStaffeln -= 1;
-                textBoxStaffeln.Text = animeStaffeln.ToString();
-            }
-        }
-
-        private void click_TotalEpisodesMinus(object sender, RoutedEventArgs e) {
-            if (animeTotalEpisodes != 0) {
-                animeTotalEpisodes -= 1;
-                textBoxTotalEpisodes.Text = animeTotalEpisodes.ToString();
             }
         }
 
@@ -594,6 +570,31 @@ namespace Anicluster.windows {
             TagList tagListWindow = new TagList(animeTagList);
             tagListWindow.ShowDialog();
             animeTagList = tagListWindow.selectedTagList;
+        }
+
+        private void clickStaffelManagement(object sender, RoutedEventArgs e) {
+            StaffelManager staffelManagerWindow = new StaffelManager(animeStaffeln);
+            staffelManagerWindow.ShowDialog();
+
+            animeStaffeln = staffelManagerWindow.managerStaffeln;
+
+            // show the Manager-Solution
+            textBlockForStaffelPrint.Text = "";
+            for (int i = 0; i < animeStaffeln.Count; i += 1) {
+                if (i != (animeStaffeln.Count - 1)) {
+                    textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + animeStaffeln[i].episodes + " | ";
+                }
+                else {
+                    textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + animeStaffeln[i].episodes;
+                }
+            }
+
+            // calculate and print total Episodes
+            int z = 0;
+            for (int i = 0; i < animeStaffeln.Count; i += 1) {
+                z += animeStaffeln[i].episodes;
+            }
+            textBoxTotalEpisodes.Text = z.ToString();
         }
     }
 }

@@ -255,32 +255,14 @@
 
         <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Staffeln</Label>
         <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
-        <Grid Grid.Row="9" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-            </Grid.RowDefinitions>
-            <TextBox x:Name="textBoxStaffeln" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Grid Grid.Row="0" Grid.Column="4" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="1*" />
-                </Grid.RowDefinitions>
-                <Button x:Name="buttonStaffelnPlus" Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_StaffelnPlus" FontSize="10">+</Button>
-                <Button x:Name="buttonStaffelnMinus" Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_StaffelnMinus" FontSize="10">-</Button>
-            </Grid>
-        </Grid>
 
-        <Label Grid.Row="9" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Filme</Label>
-        <Label Grid.Row="9" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
-        <Grid Grid.Row="9" Grid.Column="4">
+        <Button Grid.Row="9" Grid.Column="1" Margin="30,10,30,10" Click="clickStaffelManagement">Staffel-Verwaltung</Button>
+
+        <TextBlock x:Name="textBlockForStaffelPrint"  Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2" Margin="30,10,30,10"></TextBlock>
+        
+        <Label Grid.Row="9" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
+        <Label Grid.Row="9" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Filme</Label>
+        <Grid Grid.Row="9" Grid.Column="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
@@ -305,32 +287,12 @@
 
         <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Gesamt-Episoden</Label>
         <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
-        <Grid Grid.Row="10" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-            </Grid.RowDefinitions>
-            <TextBox x:Name="textBoxTotalEpisodes" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Grid Grid.Row="0" Grid.Column="4" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="1*" />
-                </Grid.RowDefinitions>
-                <Button x:Name="buttonTotalEpisodesPlus" Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_TotalEpisodesPlus" FontSize="10">+</Button>
-                <Button x:Name="textBoxTotalEpisodes1" Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="click_TotalEpisodesMinus" FontSize="10">-</Button>
-            </Grid>
-        </Grid>
 
-        <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">OVH-Episoden</Label>
-        <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
-        <Grid Grid.Row="10" Grid.Column="4">
+        <TextBox x:Name="textBoxTotalEpisodes" Grid.Row="10" Grid.Column="1" Margin="30,10,30,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
+        
+        <Label Grid.Row="10" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">OVH-Episoden</Label>
+        <Label Grid.Row="10" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFFDCC">[optional]</Label>
+        <Grid Grid.Row="10" Grid.Column="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
