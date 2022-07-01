@@ -28,6 +28,7 @@ namespace Anicluster {
             dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
         public void OnWindowClosing(object sender, CancelEventArgs e) {
+            // close the application after all orders are done.
             Application.Current.Shutdown();
         }
 

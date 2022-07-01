@@ -594,6 +594,7 @@ namespace Anicluster.windows {
             for (int i = 0; i < animeStaffeln.Count; i += 1) {
                 z += animeStaffeln[i].episodes;
             }
+            animeTotalEpisodes = z;
             textBoxTotalEpisodes.Text = z.ToString();
         }
     }

@@ -139,12 +139,7 @@ namespace Anicluster.windows {
                     }
                 }
 
-                // calculate and print total Episodes
-                int z = 0;
-                for (int i = 0; i < oneAnime.staffeln.Count; i += 1) {
-                    z += oneAnime.staffeln[i].episodes;
-                }
-                textBoxTotalEpisodes.Text = z.ToString();
+                textBoxTotalEpisodes.Text = oneAnime.episodesTotal.ToString();
             }
         }
     }
