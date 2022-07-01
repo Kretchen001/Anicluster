@@ -15,21 +15,6 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
-        /// <summary>
-        /// Check, which Animes has the Dummy-Tier, that implicite that there is no Rating from the User.
-        /// </summary>
-        /// <returns></returns>
-        public List<AnimeData> dbFilterAnimeWithoutTier() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                var result = col.Query()
-                    .Where(x => x.tier == AnimeTier.Dummy)
-                    .ToList();
-                return result;
-            }
-        }
-
-
         public List<AnimeData> dbFilterByTag(List<AnimeTag> filterTags) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
