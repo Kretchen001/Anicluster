@@ -21,6 +21,7 @@ namespace Anicluster.windows {
             setDisplay();
             showTier();
             showRating();
+            showStaffeln();
         }
 
         private void setDisplay() {
@@ -124,6 +125,27 @@ namespace Anicluster.windows {
             }
             labelGeneralRating.Content = ratingGeneral;
             progressBarGeneralRating.Value = ratingGeneral;
+        }
+
+        private void showStaffeln() {
+
+            if (oneAnime.staffeln != null) {
+                for (int i = 0; i < oneAnime.staffeln.Count; i += 1) {
+                    if (i != (oneAnime.staffeln.Count - 1)) {
+                        textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + oneAnime.staffeln[i].episodes + " | ";
+                    }
+                    else {
+                        textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + oneAnime.staffeln[i].episodes;
+                    }
+                }
+
+                // calculate and print total Episodes
+                int z = 0;
+                for (int i = 0; i < oneAnime.staffeln.Count; i += 1) {
+                    z += oneAnime.staffeln[i].episodes;
+                }
+                textBoxTotalEpisodes.Text = z.ToString();
+            }
         }
     }
 }
