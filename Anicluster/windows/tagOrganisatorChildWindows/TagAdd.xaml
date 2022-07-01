@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Anicluster.windows.tagOrganisatorChildWindows"
         mc:Ignorable="d"
-        Title="TagAdd" Height="288" Width="512">
+        Title="TagAdd" Height="288" Width="512" KeyDown="keyDown">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />

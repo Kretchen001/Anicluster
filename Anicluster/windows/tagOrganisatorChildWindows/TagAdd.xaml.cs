@@ -2,6 +2,7 @@
 using BiboAnime.datatypes;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Anicluster.windows.tagOrganisatorChildWindows {
     /// <summary>
@@ -20,6 +21,20 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
         }
 
         private void clickAdd(object sender, RoutedEventArgs e) {
+            addLogic();
+        }
+
+        private void clickAbort(object sender, RoutedEventArgs e) {
+            this.Close();
+        }
+
+        private void keyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Return) {
+                addLogic();
+            }
+        }
+
+        private void addLogic() {
             if (tagDesignator != "") {
                 databaseController dbController = new databaseController();
                 AnimeTag newTag = new AnimeTag() {
@@ -36,10 +51,6 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
             else {
                 MessageBox.Show("Tag ohne Text!", "Warnhinweis", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void clickAbort(object sender, RoutedEventArgs e) {
-            this.Close();
         }
     }
 }
