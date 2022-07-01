@@ -10,7 +10,7 @@
         public List<AnimeTag> tags { get; set; }
         public string urlAnimePlanet { get; set; }
         public AnimeStatus status { get; set; }
-        public int staffeln { get; set; }
+        public List<Staffel> staffeln { get; set; }
         public int episodesTotal { get; set; }
         public int movies { get; set; }
         public int ovh { get; set; }
