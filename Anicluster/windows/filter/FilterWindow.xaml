@@ -199,6 +199,21 @@
             <TreeViewItem x:Name="treeViewItemTags" Header="Tags" IsExpanded="False">
                 <Button Click="Button_Click" >Anwenden</Button>
             </TreeViewItem>
+            <TreeViewItem Header="Folgen (gesamt)">
+                <TreeViewItem Height="4"></TreeViewItem>
+                <CheckBox x:Name="checkBoxEpisodesMax" Click="clickMaxEpisodes">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="35">Max</Label>
+                        <TextBox x:Name="textBoxEpisodesMax" MinWidth="100" PreviewTextInput="NumberValidationTextBox" TextChanged="textChangeEpisodes"></TextBox>
+                    </StackPanel>
+                </CheckBox>
+                <CheckBox x:Name="checkBoxEpisodesMin" Click="clickMinEpisodes">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="35">Min</Label>
+                        <TextBox x:Name="textBoxEpisodesMin" MinWidth="100" PreviewTextInput="NumberValidationTextBox" TextChanged="textChangeEpisodes"></TextBox>
+                    </StackPanel>
+                </CheckBox>
+            </TreeViewItem>
         </TreeView>
         <DataGrid Name="dataGridFilterAnimeList" Margin="2" AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" CanUserAddRows="false" LoadingRow="loadingRowFilterDataGrid">
             <DataGrid.Columns>

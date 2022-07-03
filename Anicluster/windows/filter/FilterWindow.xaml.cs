@@ -3,6 +3,7 @@ using BiboAnime.datatypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,14 +26,6 @@ namespace Anicluster.windows.filter {
         private bool ratingGermanDubBool = false;
 
         private bool existGermanDub = false;
-        private bool withoutGermanDub = false;
-
-        private int ratingGeneral = 0;
-        private int ratingStory = 0;
-        private int ratingAnimation = 0;
-        private int ratingSpecialEffects = 0;
-        private int ratingSound = 0;
-        private int ratingGermanDub = 0;
 
         private bool isShiftPressed = false;
 
@@ -42,6 +35,21 @@ namespace Anicluster.windows.filter {
         private bool animeTierC = false;
         private bool animeTierD = false;
         private bool animeTierDummy = false;
+
+        private bool maxEpisodeBool = false;
+        private bool minEpisodeBool = false;
+
+        private bool withoutGermanDub = false;
+
+        private int ratingGeneral = 0;
+        private int ratingStory = 0;
+        private int ratingAnimation = 0;
+        private int ratingSpecialEffects = 0;
+        private int ratingSound = 0;
+        private int ratingGermanDub = 0;
+
+        private int minEpisodes = 0;
+        private int maxEpisodes = 0;
 
         private databaseController dbController = new databaseController();
         private databaseFilterController dbFilterController = new databaseFilterController();
@@ -488,6 +496,23 @@ namespace Anicluster.windows.filter {
             listOfTagSelection.AddRange(dbFilterController.dbFilterByTag(tagListInclusive));
             listOfTagSelection.AddRange(dbFilterController.dbFilterWithoutTag(tagListExclusive));
 
+            // Min Max Episodes
+            List<AnimeData> minMaxList = new List<AnimeData>();
+
+            if (maxEpisodeBool && !minEpisodeBool) {
+                minMaxList = dbFilterController.dbFilterMinMaxEpisodesTotal(true, maxEpisodes);
+            }
+            if (minEpisodeBool && !maxEpisodeBool) {
+                minMaxList = dbFilterController.dbFilterMinMaxEpisodesTotal(false, minEpisodes);
+            }
+            if (maxEpisodeBool && minEpisodeBool) {
+                if (!(maxEpisodes <= minEpisodes)) {
+                    List<AnimeData> maxList = dbFilterController.dbFilterMinMaxEpisodesTotal(true, maxEpisodes);
+                    List<AnimeData> minList = dbFilterController.dbFilterMinMaxEpisodesTotal(false, minEpisodes);
+                    minMaxList = minList.Where(x => maxList.Contains(x)).ToList();
+                }
+            }
+
             // merge Lists
             animeList.Clear();
             if (tempListFavorite.Count != 0) {
@@ -511,9 +536,19 @@ namespace Anicluster.windows.filter {
             else if (listOfTagSelection.Count != 0) {
                 animeList = listOfTagSelection.Where(x => animeList.Contains(x)).ToList();
             }
+            if ((minMaxList.Count != 0) && (animeList.Count == 0)) {
+                animeList.AddRange(minMaxList);
+            }
+            else if (minMaxList.Count != 0) {
+                animeList = minMaxList.Where(x => animeList.Contains(x)).ToList();
+            }
 
             // remove all duplicated Animes in the List
             animeList = animeList.Distinct(new ItemEqualityComparer()).ToList();
+
+            if (animeList.Count == 0) {
+                animeList = dbController.getAllAnimes();
+            }
 
             updateFilterTable();
         }
@@ -697,6 +732,36 @@ namespace Anicluster.windows.filter {
             checkBoxWithoutDub.IsChecked = false;
             // expanded
             treeViewItemTags.IsExpanded = false;
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void clickMaxEpisodes(object sender, RoutedEventArgs e) {
+            maxEpisodeBool = !maxEpisodeBool;
+
+            updateFilterData();
+        }
+
+        private void clickMinEpisodes(object sender, RoutedEventArgs e) {
+            minEpisodeBool = !minEpisodeBool;
+
+            updateFilterData();
+        }
+
+        private void textChangeEpisodes(object sender, TextChangedEventArgs e) {
+            if (textBoxEpisodesMax.Text == "") {
+                textBoxEpisodesMax.Text = "0";
+            }
+            if (textBoxEpisodesMin.Text == "") {
+                textBoxEpisodesMin.Text = "0";
+            }
+            maxEpisodes = int.Parse(textBoxEpisodesMax.Text);
+            minEpisodes = int.Parse(textBoxEpisodesMin.Text);
+
+            updateFilterData();
         }
     }
 }
