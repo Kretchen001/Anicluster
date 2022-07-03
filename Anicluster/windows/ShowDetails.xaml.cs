@@ -1,5 +1,6 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using System;
 using System.Diagnostics;
 using System.Windows;
 
@@ -10,6 +11,8 @@ namespace Anicluster.windows {
     public partial class ShowDetails : Window {
 
         public AnimeData oneAnime;
+
+        public Action<bool> shouldViewUpdated;
 
         databaseController dbController = new databaseController();
 
@@ -64,7 +67,8 @@ namespace Anicluster.windows {
                     MessageBox.Show(oneAnime.name + " gelöscht!",
                         "Gelöscht",
                         MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                        MessageBoxImage.Information); 
+                    shouldViewUpdated(true);
                     this.Close();
                 }
             }

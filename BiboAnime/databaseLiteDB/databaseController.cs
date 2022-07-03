@@ -129,6 +129,17 @@ namespace BiboAnime.databaseLiteDB {
                 return result;
             }
         }
+        
+
+        public bool checkIfAnimeExist(string name) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                var result = col.Query()
+                    .Where(x => x.name == name)
+                    .ToList();
+                return (result.Count != 0);
+            }
+        }
 
         //-------------------------------------------------------------------------------------------------
         //------------------------------------TAGS---------------------------------------------------------

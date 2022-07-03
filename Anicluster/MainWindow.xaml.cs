@@ -93,8 +93,13 @@ namespace Anicluster {
 
                 // give the anime to the ShowDetails-Window
                 ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
+                showDetailsScreen.shouldViewUpdated = updateAfterAddAnime;
                 showDetailsScreen.Owner = this;
                 showDetailsScreen.Show();
+
+                void updateAfterAddAnime(bool e) {
+                    updateDataGrid();
+                }
             }
         }
 
