@@ -237,9 +237,14 @@ namespace Anicluster.windows {
                 temp.tier = AnimeTier.Dummy;
             }
 
-            dbController.addAnimeToDB(temp);
-            shouldViewUpdated(true);
-            this.Close();
+            if (!dbController.checkIfAnimeExist(temp.name)) {
+                dbController.addAnimeToDB(temp);
+                shouldViewUpdated(true);
+                this.Close();
+            }
+            else {
+                MessageBox.Show("Name schon vorhanden!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void click_LinkAutoGenerate(object sender, RoutedEventArgs e) {
