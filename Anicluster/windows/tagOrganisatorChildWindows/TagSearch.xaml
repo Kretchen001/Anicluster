@@ -21,6 +21,15 @@
         <Label Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Tag Bezeichnung</Label>
         <TextBox x:Name="textBoxTagInputForSearch" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10" TextChanged="textBoxTextChange"></TextBox>
 
+        <Grid Grid.Row="0" Grid.Column="2" Margin="1">
+            <StackPanel>
+                <CheckBox x:Name="checkBoxLetterBig" Margin="0,3,0,3" Content="Groß-Kleinschreibung berücksichtigen" Click="toggleLetterCheck" />
+                <CheckBox x:Name="checkBox2" Margin="0,3,0,3" Content="Enthält-Buchstabenkette" Click="toggleContains" IsChecked="True" />
+                <CheckBox x:Name="checkBox3" Margin="0,3,0,3" Content="Dummy3" />
+                <CheckBox x:Name="checkBox4" Margin="0,3,0,3" Content="Dummy4" />
+            </StackPanel>
+        </Grid>
+        
         <DataGrid x:Name="dataGridSolutions" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="3" AutoGenerateColumns="False" CanUserAddRows="false">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Erg-Nr." Width="Auto" CanUserSort="False" Binding="{Binding nr}"/>

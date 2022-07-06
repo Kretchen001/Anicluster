@@ -79,12 +79,6 @@ namespace Anicluster.windows {
             simpleSearchWindow.ShowDialog();
         }
 
-        private void clickSearchAfterTagComplex(object sender, RoutedEventArgs e) {
-            TagComplexSearch complexSearchWindow = new TagComplexSearch();
-            complexSearchWindow.Owner = this;
-            complexSearchWindow.ShowDialog();
-        }
-
         private void clickExport(object sender, RoutedEventArgs e) {
 
             string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";

@@ -14,8 +14,7 @@
             </MenuItem>
             <MenuItem Header="Tag hinzufügen" Click="clickAddTag" />
             <MenuItem Header="Ausgewählten Tag Löschen (einer!)" Click="clickDeleteSelectedTag" />
-            <MenuItem Header="Tag suchen (einfach)" Click="clickSearchAfterTagSimple" />
-            <MenuItem Header="Tag suchen (komplex)" Click="clickSearchAfterTagComplex" />
+            <MenuItem Header="Tag suchen" Click="clickSearchAfterTagSimple" />
             <MenuItem Header="" Name="AnzeigeDummy"/>
         </Menu>
         <Grid Margin="3">
