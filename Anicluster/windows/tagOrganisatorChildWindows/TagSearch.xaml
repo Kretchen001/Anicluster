@@ -9,13 +9,13 @@
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
 
         <Label Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Tag Bezeichnung</Label>
@@ -24,9 +24,8 @@
         <Grid Grid.Row="0" Grid.Column="2" Margin="1">
             <StackPanel>
                 <CheckBox x:Name="checkBoxLetterBig" Margin="0,3,0,3" Content="Groß-Kleinschreibung berücksichtigen" Click="toggleLetterCheck" />
-                <CheckBox x:Name="checkBox2" Margin="0,3,0,3" Content="Enthält-Buchstabenkette" Click="toggleContains" IsChecked="True" />
-                <CheckBox x:Name="checkBox3" Margin="0,3,0,3" Content="Dummy3" />
-                <CheckBox x:Name="checkBox4" Margin="0,3,0,3" Content="Dummy4" />
+                <CheckBox x:Name="checkBoxContainString" Margin="0,3,0,3" Content="Enthält-Buchstabenkette" Click="toggleContains" IsChecked="True" />
+                <CheckBox x:Name="checkBoxIgnoreSpecialCharacters" Margin="0,3,0,3" Content="Sonderzeichen berücksichtigen" Click="toggleIgnoreSpecialCharacters" IsChecked="True" />
             </StackPanel>
         </Grid>
         
