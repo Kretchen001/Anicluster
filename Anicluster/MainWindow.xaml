@@ -24,6 +24,7 @@
             <MenuItem Header="Tags verwalten" Click="click_tagsOrganisation" ></MenuItem>
             <MenuItem x:Name="menuItemToggleTierColorShown"  Header="Nach Tier einfärben" Click="toggleTierColorShown"></MenuItem>
             <MenuItem Header="Informationen" Click="click_OpenInformation"></MenuItem>
+            <MenuItem Header="Statistik" Click="click_OpenStatistik"></MenuItem>
         </Menu>
         <Grid Margin="10" DockPanel.Dock="Top">
             <Grid.RowDefinitions>

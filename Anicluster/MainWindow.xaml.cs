@@ -1,5 +1,6 @@
 ﻿using Anicluster.windows;
 using Anicluster.windows.filter;
+using Anicluster.windows.statistic;
 using BiboAnime;
 using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
@@ -233,6 +234,12 @@ namespace Anicluster {
             else {
                 e.Row.Background = new SolidColorBrush(Colors.White);
             }
+        }
+
+        private void click_OpenStatistik(object sender, RoutedEventArgs e) {
+            Statistic statisticWindow = new Statistic();
+            statisticWindow.Owner = this;
+            statisticWindow.Show();
         }
     }
 }

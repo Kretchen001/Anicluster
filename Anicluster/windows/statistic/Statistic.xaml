@@ -1,0 +1,79 @@
+﻿<Window x:Class="Anicluster.windows.statistic.Statistic"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows.statistic"
+        mc:Ignorable="d"
+        Title="Statistiken" Height="450" Width="800">
+    <Grid>
+        <TabControl>
+            <TabItem x:Name="TierTab" Header="Tiers">
+                <Grid x:Name="tierDiagramm" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+
+                    <Label x:Name="barBehindTierS" Grid.Column="0" Margin="20" Background="WhiteSmoke" />
+                    <Label x:Name="barTierS" Grid.Column="0" Margin="20" Background="#FF00D4D4" VerticalAlignment="Bottom" Height="0" />
+                    <Label x:Name="barBehindTierA" Grid.Column="1" Margin="20" Background="WhiteSmoke" />
+                    <Label x:Name="barTierA" Grid.Column="1" Margin="20" Background="#FF3FFF2F" VerticalAlignment="Bottom" Height="0" />
+                    <Label x:Name="barBehindTierB" Grid.Column="2" Margin="20" Background="WhiteSmoke" />
+                    <Label x:Name="barTierB" Grid.Column="2" Margin="20" Background="Yellow" VerticalAlignment="Bottom" Height="0" />
+                    <Label x:Name="barBehindTierC" Grid.Column="3" Margin="20" Background="WhiteSmoke" />
+                    <Label x:Name="barTierC" Grid.Column="3" Margin="20" Background="Orange" VerticalAlignment="Bottom" Height="0" />
+                    <Label x:Name="barBehindTierD" Grid.Column="4" Margin="20" Background="WhiteSmoke" />
+                    <Label x:Name="barTierD" Grid.Column="4" Margin="20" Background="Red" VerticalAlignment="Bottom" Height="0" />
+                    <Label x:Name="barBehindTierDummy" Grid.Column="5" Margin="20" Background="WhiteSmoke" />
+                    <Label x:Name="barTierDummy" Grid.Column="5" Margin="20" Background="Silver" VerticalAlignment="Bottom" Height="0" />
+
+                    <Label x:Name="labelTierS" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Tier S"/>
+                    <Label x:Name="labelTierA" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Tier A"/>
+                    <Label x:Name="labelTierB" Grid.Column="2" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Tier B"/>
+                    <Label x:Name="labelTierC" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Tier C"/>
+                    <Label x:Name="labelTierD" Grid.Column="4" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Tier D"/>
+                    <Label x:Name="labelTierDummy" Grid.Column="5" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Kein Tier"/>
+
+                    <Label x:Name="labelTierSAmount" Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    <Label x:Name="labelTierAAmount" Grid.Column="1" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    <Label x:Name="labelTierBAmount" Grid.Column="2" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    <Label x:Name="labelTierCAmount" Grid.Column="3" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    <Label x:Name="labelTierDAmount" Grid.Column="4" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    <Label x:Name="labelTierDummyAmount" Grid.Column="5" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="FavoriteTab" Header="Favorisiert">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="TagTab" Header="Tags-Nutzung">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="StatusTab" Header="Status">
+                <Grid Margin="5">
+                    
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
