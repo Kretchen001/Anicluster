@@ -412,7 +412,7 @@ namespace Anicluster.windows.filter {
             return rows;
         }
 
-        private void updateFilterData() {
+        public void updateFilterData() {
             // favorite
             List<AnimeData> tempListFavorite = new List<AnimeData>();
             if (favoriteBool) {

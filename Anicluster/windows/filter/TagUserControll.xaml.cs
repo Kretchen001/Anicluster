@@ -33,6 +33,7 @@ namespace Anicluster.windows.filter {
                 tagSelection.exclusive = false;
                 checkBoxExclusive.IsChecked = false;
             }
+            ((FilterWindow)((Grid)((TreeView)((TreeViewItem) this.Parent).Parent).Parent).Parent).updateFilterData();
         }
 
         private void clickExclusive(object sender, RoutedEventArgs e) {
@@ -41,6 +42,7 @@ namespace Anicluster.windows.filter {
                 tagSelection.inclusive = false;
                 checkBoxInclusive.IsChecked = false;
             }
+            ((FilterWindow)((Grid)((TreeView)((TreeViewItem)this.Parent).Parent).Parent).Parent).updateFilterData();
         }
     }
 }
