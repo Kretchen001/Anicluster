@@ -640,10 +640,6 @@ namespace Anicluster.windows.filter {
             updateFilterData();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) {
-            updateFilterData();
-        }
-
         private void toggleWithoutDub(object sender, RoutedEventArgs e) {
             withoutGermanDub = !withoutGermanDub;
             if (existGermanDub) {

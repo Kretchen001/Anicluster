@@ -196,9 +196,7 @@
                     <TreeViewItem Header="Ohne deutschem Dub"/>
                 </CheckBox>
             </TreeViewItem>
-            <TreeViewItem x:Name="treeViewItemTags" Header="Tags" IsExpanded="False">
-                <Button Click="Button_Click" >Anwenden</Button>
-            </TreeViewItem>
+            <TreeViewItem x:Name="treeViewItemTags" Header="Tags" IsExpanded="False" />
             <TreeViewItem Header="Folgen (gesamt)">
                 <TreeViewItem Height="4"></TreeViewItem>
                 <CheckBox x:Name="checkBoxEpisodesMax" Click="clickMaxEpisodes">
