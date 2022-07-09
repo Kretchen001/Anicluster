@@ -8,7 +8,7 @@
         Title="Statistiken" Height="450" Width="800">
     <Grid>
         <TabControl>
-            <TabItem x:Name="TierTab" Header="Tiers">
+            <TabItem x:Name="TierTab" Header="Tiers" GotFocus="focusOnTiers">
                 <Grid x:Name="tierDiagramm" Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
@@ -53,7 +53,32 @@
 
                 </Grid>
             </TabItem>
-            <TabItem x:Name="FavoriteTab" Header="Favorisiert">
+            <TabItem x:Name="FavoriteTab" Header="Favorisiert" GotFocus="focusOnFavorite">
+                <Grid Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*" />
+                            <RowDefinition Height="3*" />
+                            <RowDefinition Height="4*" />
+                        </Grid.RowDefinitions>
+
+                        <Label x:Name="labelTotalNumber" Grid.Column="1" Grid.Row="0" Content="Ausgewertete Animes: " />
+
+                        <Label x:Name="labelNonFavoriteBar" Margin="5" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Background="LightGray" />
+                        <Label x:Name="labelFavoriteBar" Margin="5" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Background="#BF006400" Width="0" HorizontalAlignment="Right" />
+
+                        <Label Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Nicht Favorisiert" Background="LightGray"/>
+                        <Label Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Favorisiert" Background="#BF006400"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="TagTab" Header="Tags-Nutzung" GotFocus="focusOnTagsUsage">
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*" />
@@ -61,16 +86,56 @@
                     </Grid.ColumnDefinitions>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="TagTab" Header="Tags-Nutzung">
+            <TabItem x:Name="StatusTab" Header="Status" GotFocus="focusOnStatus">
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="3*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="StatusTab" Header="Status">
-                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="10*" />
+                        <RowDefinition Height="1.5*" />
+                        <RowDefinition Height="1.5*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Bars -->
+                    <Label x:Name="labelBarWishListBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="1" Background="WhiteSmoke"/>
+                    <Label x:Name="labelBarWishList" Margin="10,5,10,5" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+
+                    <Label x:Name="labelBarStartBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="2" Background="WhiteSmoke"/>
+                    <Label x:Name="labelBarStart" Margin="10,5,10,5" Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+
+                    <Label x:Name="labelBarFinishBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="3" Background="WhiteSmoke"/>
+                    <Label x:Name="labelBarFinish" Margin="10,5,10,5" Grid.Row="1" Grid.Column="3" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+
+                    <Label x:Name="labelBarStalledBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="4" Background="WhiteSmoke"/>
+                    <Label x:Name="labelBarStalled" Margin="10,5,10,5" Grid.Row="1" Grid.Column="4" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+
+                    <Label x:Name="labelBarDroppedBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="5" Background="WhiteSmoke"/>
+                    <Label x:Name="labelBarDropped" Margin="10,5,10,5" Grid.Row="1" Grid.Column="5" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+
+                    <!-- Text -->
+                    <Label Grid.Row="2" Grid.Column="1" Content="Wunschliste" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Label x:Name="labelNumberWishList" Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    
+                    <Label Grid.Row="2" Grid.Column="2" Content="Angefangen" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Label x:Name="labelNumberStart" Grid.Row="3" Grid.Column="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    
+                    <Label Grid.Row="2" Grid.Column="3" Content="Fertig" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Label x:Name="labelNumberFinish" Grid.Row="3" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    
+                    <Label Grid.Row="2" Grid.Column="4" Content="Unterbrochen" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Label x:Name="labelNumberStalled" Grid.Row="3" Grid.Column="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                    <Label Grid.Row="2" Grid.Column="5" Content="Abgebrochen" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Label x:Name="labelNumberDropped" Grid.Row="3" Grid.Column="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     
                 </Grid>
             </TabItem>
