@@ -78,13 +78,12 @@ namespace Anicluster.windows.statistic {
                 switch (animes[i].favorite) {
                     case true: fav += 1; break;
                     case false: nonFav += 1; break;
-                    default: break;
                 }
             }
 
             labelFavoriteBar.Width = (fav / animes.Count) * labelNonFavoriteBar.ActualWidth;
 
-            labelTotalNumber.Content += animes.Count.ToString();
+            labelTotalNumber.Content = "Ausgewertete Animes: " + animes.Count.ToString();
         }
 
         private void focusOnFavorite(object sender, RoutedEventArgs e) {
@@ -92,7 +91,41 @@ namespace Anicluster.windows.statistic {
         }
 
         private void loadTagUsage() {
+            Dictionary<string, int> tagDictionary = new Dictionary<string, int>();
 
+
+            for (int i = 0; i < animes.Count; i += 1) {
+                for (int j = 0; j < animes[i].tags.Count; j += 1) {
+                    if (tagDictionary.ContainsKey(animes[i].tags[j].tagDesignator)) {
+                        tagDictionary[animes[i].tags[j].tagDesignator] += 1;
+                    }
+                    else {
+                        tagDictionary.Add(animes[i].tags[j].tagDesignator, 1);
+                    }
+                }
+            }
+
+            int maxTag = tagDictionary.Values.Max();
+
+            List<DatatypForTable> tempListForTable = new List<DatatypForTable>();
+            for (int i = 0; i < tagDictionary.Count; i += 1) {
+                tempListForTable.Add(new DatatypForTable() {
+                    id = i + 1,
+                    name = tagDictionary.ElementAt(i).Key,
+                    value = tagDictionary.ElementAt(i).Value,
+                    maxTag = maxTag
+                });
+            }
+
+            dataGridTags.ItemsSource = null;
+            dataGridTags.ItemsSource = tempListForTable;
+        }
+
+        internal class DatatypForTable {
+            public int id { get; set; }
+            public string name { get; set; }
+            public int value { get; set; }
+            public int maxTag { get; set; }
         }
 
         private void focusOnTagsUsage(object sender, RoutedEventArgs e) {

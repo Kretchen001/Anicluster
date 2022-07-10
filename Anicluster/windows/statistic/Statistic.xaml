@@ -80,10 +80,22 @@
             </TabItem>
             <TabItem x:Name="TagTab" Header="Tags-Nutzung" GotFocus="focusOnTagsUsage">
                 <Grid Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="dataGridTags" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false" HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="dataGridTextId" Header="Nr." IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
+                            <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name}" Width="20*"/>
+                            <DataGridTemplateColumn Header="Häufigkeit" IsReadOnly="True" Width="30*" SortMemberPath="value">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <ProgressBar Grid.Row="0" Grid.Column="0" Minimum="0" Maximum="{Binding maxTag}" Value="{Binding value}"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0"  Text="{Binding value}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem x:Name="StatusTab" Header="Status" GotFocus="focusOnStatus">
@@ -107,19 +119,19 @@
 
                     <!-- Bars -->
                     <Label x:Name="labelBarWishListBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="1" Background="WhiteSmoke"/>
-                    <Label x:Name="labelBarWishList" Margin="10,5,10,5" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+                    <Label x:Name="labelBarWishList" Margin="10,5,10,5" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Height="0" Background="LightBlue"/>
 
                     <Label x:Name="labelBarStartBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="2" Background="WhiteSmoke"/>
-                    <Label x:Name="labelBarStart" Margin="10,5,10,5" Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+                    <Label x:Name="labelBarStart" Margin="10,5,10,5" Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Height="0" Background="Yellow"/>
 
                     <Label x:Name="labelBarFinishBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="3" Background="WhiteSmoke"/>
                     <Label x:Name="labelBarFinish" Margin="10,5,10,5" Grid.Row="1" Grid.Column="3" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
 
                     <Label x:Name="labelBarStalledBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="4" Background="WhiteSmoke"/>
-                    <Label x:Name="labelBarStalled" Margin="10,5,10,5" Grid.Row="1" Grid.Column="4" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+                    <Label x:Name="labelBarStalled" Margin="10,5,10,5" Grid.Row="1" Grid.Column="4" VerticalAlignment="Bottom" Height="0" Background="Orange"/>
 
                     <Label x:Name="labelBarDroppedBackground" Margin="10,5,10,5" Grid.Row="1" Grid.Column="5" Background="WhiteSmoke"/>
-                    <Label x:Name="labelBarDropped" Margin="10,5,10,5" Grid.Row="1" Grid.Column="5" VerticalAlignment="Bottom" Height="0" Background="ForestGreen"/>
+                    <Label x:Name="labelBarDropped" Margin="10,5,10,5" Grid.Row="1" Grid.Column="5" VerticalAlignment="Bottom" Height="0" Background="Red"/>
 
                     <!-- Text -->
                     <Label Grid.Row="2" Grid.Column="1" Content="Wunschliste" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
