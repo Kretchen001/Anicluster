@@ -24,13 +24,7 @@
     <Compile Update="windows\ShowDetailsTags.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="windows\StaffelManager.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="windows\statistic\Statistic.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="windows\TagList.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="windows\TagOrganisator.xaml.cs">
@@ -59,13 +53,7 @@
     <Page Update="windows\ShowDetailsTags.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="windows\StaffelManager.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="windows\statistic\Statistic.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="windows\TagList.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="windows\TagOrganisator.xaml">
