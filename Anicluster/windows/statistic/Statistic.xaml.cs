@@ -81,6 +81,8 @@ namespace Anicluster.windows.statistic {
                 }
             }
 
+            this.Show();
+
             labelFavoriteBar.Width = (fav / animes.Count) * labelNonFavoriteBar.ActualWidth;
 
             labelTotalNumber.Content = "Ausgewertete Animes: " + animes.Count.ToString();

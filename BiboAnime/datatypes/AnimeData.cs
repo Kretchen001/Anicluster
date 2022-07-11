@@ -2,7 +2,7 @@
 
     public class AnimeData : IEquatable<AnimeData> {
 
-        public int id { get; set; }
+        public Guid id { get; set; }
         public bool favorite { get; set; }
         public string name { get; set; }
         public string originalName { get; set; }

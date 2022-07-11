@@ -56,7 +56,7 @@ namespace Anicluster {
             };
 
             AnimeData dummyAnime = new AnimeData {
-                id = dbController.getDbCountForIdPlusOne(),
+                id = Guid.NewGuid(),
                 favorite = true,
                 name = "Girls & Panzer",
                 rating = rating,
@@ -93,7 +93,7 @@ namespace Anicluster {
                 AnimeRow selectedAnime = (AnimeRow)dataGridAnimeList.Items[currentRowIndex];
 
                 // give the anime to the ShowDetails-Window
-                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
+                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeByName(selectedAnime.name));
                 showDetailsScreen.shouldViewUpdated = updateAfterAddAnime;
                 showDetailsScreen.Owner = this;
                 showDetailsScreen.Show();
@@ -221,7 +221,7 @@ namespace Anicluster {
         private void loadingRowDataGrid(object sender, System.Windows.Controls.DataGridRowEventArgs e) {
             if (showTagByColor) {
                 AnimeRow tempRow = (AnimeRow)e.Row.DataContext;
-                switch (dbController.getAnimeById(tempRow.id).tier) {
+                switch (dbController.getAnimeByName(tempRow.name).tier) {
                     case AnimeTier.S: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00D4D4")); break;
                     case AnimeTier.A: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF3FFF2F")); break;
                     case AnimeTier.B: e.Row.Background = new SolidColorBrush(Colors.Yellow); break;

@@ -34,17 +34,6 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
-        /// <summary>
-        /// Gets the number of rows already in the database PLUS 1!
-        /// </summary>
-        /// <returns>Count + 1</returns>
-        public int getDbCountForIdPlusOne() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                return (col.Count() + 1);
-            }
-        }
-
         public List<AnimeData> getAllAnimes() {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
@@ -71,7 +60,7 @@ namespace BiboAnime.databaseLiteDB {
                         }
                     }
                     rows.Add(new AnimeRow {
-                        id = result[i].id,
+                        id = i + 1,
                         favorite = result[i].favorite,
                         name = result[i].name,
                         status = result[i].status,
@@ -83,11 +72,21 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
-        public AnimeData getAnimeById(int id) {
+        public AnimeData getAnimeById(Guid id) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
                 var result = col.Query()
-                    .Where(x => x.id == id)
+                    .Where(x => x.id.Equals(id))
+                    .Single();
+                return result;
+            }
+        }
+
+        public AnimeData getAnimeByName(string name) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                var result = col.Query()
+                    .Where(x => x.name == name)
                     .Single();
                 return result;
             }

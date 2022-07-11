@@ -195,7 +195,7 @@ namespace Anicluster.windows {
             // the obligated data
             if (animeName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0 && animeTagList.Count != 0) {
                 temp = new AnimeData {
-                    id = dbController.getDbCountForIdPlusOne(),
+                    id = Guid.NewGuid(),
                     name = animeName,
                     favorite = favorite,
                     status = animeStatus,

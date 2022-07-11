@@ -33,7 +33,7 @@
             </Grid.RowDefinitions>
             <DataGrid Name="dataGridAnimeList" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false" LoadingRow="loadingRowDataGrid" HeadersVisibility="Column">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
+                    <DataGridTextColumn x:Name="dataGridTextId" Header="Nr." IsReadOnly="True" Binding="{Binding id}" Width="5*"/>
                     <DataGridCheckBoxColumn Header="Favorit" IsReadOnly="True" Binding="{Binding favorite}" Width="4*"/>
                     <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding name}" Width="30*"/>
                     <DataGridTemplateColumn Header="Bewertung (x von 100)" IsReadOnly="True" Width="15*" SortMemberPath="generalRating">

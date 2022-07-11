@@ -48,10 +48,8 @@ namespace BiboAnime.databaseLiteDB {
                         .Where(x => x.tags.Contains(tag))
                         .ToList();
                     for (int j = 0; j < tempResult.Count; j += 1) {
-                        for (int k = 0; k < result.Count; k += 1) {
-                            if (result[j] == tempResult[k]) {
-                                returnResult.Add(result[j]);
-                            }
+                        if (result.Contains(tempResult[i]) && !(returnResult.Contains(tempResult[i]))) {
+                            returnResult.Add(result[i]);
                         }
                     }
                 }

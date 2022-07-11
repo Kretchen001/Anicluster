@@ -93,7 +93,7 @@ namespace Anicluster.windows.filter {
                 AnimeRow selectedAnime = (AnimeRow)dataGridFilterAnimeList.Items[currentRowIndex];
 
                 // give the anime to the ShowDetails-Window
-                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeById(selectedAnime.id));
+                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeByName(selectedAnime.name));
                 showDetailsScreen.Show();
             }
         }
@@ -401,7 +401,7 @@ namespace Anicluster.windows.filter {
                     }
                 }
                 rows.Add(new AnimeRow {
-                    id = oList[i].id,
+                    id = (i + 1),
                     favorite = oList[i].favorite,
                     name = oList[i].name,
                     status = oList[i].status,
@@ -494,7 +494,15 @@ namespace Anicluster.windows.filter {
 
             List<AnimeData> listOfTagSelection = new List<AnimeData>();
             listOfTagSelection.AddRange(dbFilterController.dbFilterByTag(tagListInclusive));
-            listOfTagSelection.AddRange(dbFilterController.dbFilterWithoutTag(tagListExclusive));
+            List<AnimeData> listOfTagSelectionEx = dbFilterController.dbFilterWithoutTag(tagListExclusive);
+            for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
+                if (listOfTagSelection.Contains(listOfTagSelectionEx[i])) {
+                    listOfTagSelection.Remove(listOfTagSelectionEx[i]);
+                }
+            }
+            if ((listOfTagSelection.Count == 0) && (listOfTagSelectionEx.Count != 0)) {
+                listOfTagSelection.AddRange(listOfTagSelectionEx);
+            }
 
             // Min Max Episodes
             List<AnimeData> minMaxList = new List<AnimeData>();
@@ -602,7 +610,7 @@ namespace Anicluster.windows.filter {
         private void loadingRowFilterDataGrid(object sender, DataGridRowEventArgs e) {
             try {
                 AnimeRow tempRow = (AnimeRow)e.Row.DataContext;
-                switch (dbController.getAnimeById(tempRow.id).tier) {
+                switch (dbController.getAnimeByName(tempRow.name).tier) {
                     case AnimeTier.S: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00D4D4")); break;
                     case AnimeTier.A: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF3FFF2F")); break;
                     case AnimeTier.B: e.Row.Background = new SolidColorBrush(Colors.Yellow); break;
