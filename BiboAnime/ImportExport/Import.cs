@@ -48,7 +48,7 @@ namespace BiboAnime {
             List<AnimeTag> tagList = new List<AnimeTag>();
 
             for (int i = 0; i < csvLines.Count; i += 1) {
-                int id = int.Parse(csvLines[i][0..csvLines[i].IndexOf(';')]);
+                Guid id = Guid.Parse(csvLines[i][0..csvLines[i].IndexOf(';')]);
                 string tagDesignator = csvLines[i][csvLines[i].IndexOf(';')..csvLines[i].Length];
                 AnimeTag animeTag = new AnimeTag() {
                     id = id,

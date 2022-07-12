@@ -1,5 +1,6 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -15,7 +16,7 @@ namespace Anicluster.windows {
         public List<AnimeTag> selectedTagList = new List<AnimeTag>();
 
         internal class TagRow {
-            public int id { get; set; }
+            public Guid id { get; set; }
             public string tagDesignator { get; set; } = "";
             public bool isChecked { get; set; }
         }

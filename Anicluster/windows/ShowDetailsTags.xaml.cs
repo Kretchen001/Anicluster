@@ -12,7 +12,20 @@ namespace Anicluster.windows {
         public ShowDetailsTags(List<AnimeTag> choosenTagList) {
             InitializeComponent();
 
-            dataGridTagList.ItemsSource = choosenTagList.OrderBy(x => x.tagDesignator).ToList();
+            List<ShowTag> list = new List<ShowTag>();
+            for (int i = 0; i < choosenTagList.Count; i += 1) {
+                list.Add(new ShowTag() {
+                    number = i + 1,
+                    tagDesignator = choosenTagList[i].tagDesignator,
+                });
+            }
+
+            dataGridTagList.ItemsSource = list.OrderBy(x => x.tagDesignator).ToList();
+        }
+
+        private class ShowTag {
+            public int number { get; set; }
+            public string tagDesignator { get; set; }
         }
 
         private void clickConfirmTagChoice(object sender, RoutedEventArgs e) {

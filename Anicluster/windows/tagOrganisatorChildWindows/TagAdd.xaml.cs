@@ -40,7 +40,7 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
                 AnimeTag newTag = new AnimeTag() {
                     tagDesignator = tagDesignator,
                 };
-                if (!dbController.checkIfTagExists(newTag)) {
+                if (!dbController.checkIfTagExistsByDesignator(newTag)) {
                     dbController.addOneTag(newTag);
                     this.Close();
                 }

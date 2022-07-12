@@ -26,7 +26,6 @@
             </Grid.RowDefinitions>
             <DataGrid Name="dataGridTags" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false" HeadersVisibility="Column">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="dataGridTextId" Header="ID" IsReadOnly="True" Binding="{Binding id}" Width="3*"/>
                     <DataGridTextColumn x:Name="dataGridTextNumber" Header="Nr." IsReadOnly="True" Binding="{Binding numberOfTag}" Width="3*"/>
                     <DataGridTextColumn Header="Tag" IsReadOnly="True" Binding="{Binding tagDesignator}" Width="30*"/>
                 </DataGrid.Columns>

@@ -167,9 +167,18 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
+        public AnimeTag getTagByDesignator(string designator) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeTag>("Tags");
+                return col.Query()
+                    .Where(x => x.tagDesignator == designator)
+                    .Single();
+            }
+        }
+
         public int resetDataBaseTags() {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Tags");
+                var col = db.GetCollection<AnimeTag>("Tags");
                 return col.DeleteAll(); // how many was deleted
             }
         }
@@ -196,7 +205,7 @@ namespace BiboAnime.databaseLiteDB {
         /// </summary>
         /// <param name="animeTag">the tag, which is checked</param>
         /// <returns>true -> Tag exists</returns>
-        public bool checkIfTagExists(AnimeTag animeTag) {
+        public bool checkIfTagExistsByDesignator(AnimeTag animeTag) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeTag>("Tags");
                 var result = col.Query()

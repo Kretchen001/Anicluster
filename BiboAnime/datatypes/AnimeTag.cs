@@ -2,14 +2,14 @@
 
     public class AnimeTag {
 
-        public int id { get; set; }
+        public Guid id { get; set; }
         public string tagDesignator { get; set; }
 
         public AnimeTag() {
             // null constructor
         }
 
-        public AnimeTag(int id, string tagDesignator) {
+        public AnimeTag(Guid id, string tagDesignator) {
             this.id = id;
             this.tagDesignator = tagDesignator;
         }

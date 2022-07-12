@@ -15,7 +15,6 @@ namespace Anicluster.windows {
     public partial class TagOrganisator : Window {
 
         internal class TagRowO {
-            public int id { get; set; }
             public int numberOfTag { get; set; }
             public string tagDesignator { get; set; }
         }
@@ -34,7 +33,6 @@ namespace Anicluster.windows {
             animeTags.Clear();
             for (int i = 0; i < tempTags.Count; i += 1) {
                 animeTags.Add(new TagRowO() {
-                    id = tempTags[i].id,
                     numberOfTag = (i + 1),
                     tagDesignator = tempTags[i].tagDesignator
                 });
@@ -55,17 +53,14 @@ namespace Anicluster.windows {
             int currentRowIndex = dataGridTags.Items.IndexOf(dataGridTags.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
             if ((currentRowIndex != (dataGridTags.Items.Count)) && (currentRowIndex != -1)) {
                 TagRowO selectedTag = (TagRowO)dataGridTags.Items[currentRowIndex];
-                AnimeTag tempTag = new AnimeTag() {
-                    id = selectedTag.id,
-                    tagDesignator = selectedTag.tagDesignator
-                };
+                AnimeTag tempTag = dbController.getTagByDesignator(selectedTag.tagDesignator);
                 bool result = MessageBox.Show("Sind Sie sicher, dass sie folgenden Tag löschen wollen? \n \t"
-                    + selectedTag.tagDesignator + "[" + selectedTag.id + "]",
+                    + selectedTag.tagDesignator + "[" + tempTag.id + "]",
                     "Error", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
                 if (result) {
                     if (dbController.deleteOneTag(tempTag)) {
                         MessageBox.Show("Tag gelöschen: \n \t"
-                            + selectedTag.tagDesignator + "[" + selectedTag.id + "]",
+                            + selectedTag.tagDesignator + "[" + tempTag.id + "]",
                             "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                         fetchTags();
                     }
