@@ -1,7 +1,5 @@
 .vs
-Anicluster/bin
-Anicluster/obj
-BiboAnime/bin
-BiboAnime/obj
+*/bin
+*/obj
 Anicluster/Properties/PublishProfiles/FolderProfile.pubxml.user
 InnoSetup/*.exe
