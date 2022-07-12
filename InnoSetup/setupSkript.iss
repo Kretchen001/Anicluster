@@ -34,6 +34,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
+Source: "..\TagAddInstall\bin\publish\TagAddInstall.exe"; DestDir: "{app}\prog"; Flags: ignoreversion deleteafterinstall
+
 Source: "..\Anicluster\bin\Publish\net6.0-windows\win-x86\System.Xml.XmlDocument.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
 Source: "..\Anicluster\bin\Publish\net6.0-windows\win-x86\System.Xml.XDocument.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
 Source: "..\Anicluster\bin\Publish\net6.0-windows\win-x86\System.Xml.Serialization.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
@@ -329,6 +331,7 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [Run]
+Filename: "{app}\prog\TagAddInstall.exe"; 
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Dirs]
