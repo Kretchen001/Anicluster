@@ -1,0 +1,45 @@
+﻿<Window x:Class="Anicluster.windows.Impressum"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows"
+        mc:Ignorable="d"
+        Title="Impressum" Height="450" Width="800">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width="11*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Version"/>
+        <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="1.0 [Info]"/>
+        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Veröffentlichungsdatum der Version"/>
+        <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="xx.xx.xxxx"/>
+        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Programm-Name (ausführlich)"/>
+        <Label Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Anicluster"/>
+        <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Programm-Name (kurz)"/>
+        <Label Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Anicluster"/>
+        <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Kompiliert für Betriebssystem"/>
+        <Label Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Windows 64bit"/>
+        <Label Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content=""/>
+        <Label Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Programmierer"/>
+        <Label Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Kretchen001 (GitHub-Account)"/>
+        <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Kontakt (e-Mail)"/>
+        <Label Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="xxxx@xxx.xx"/>
+        <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Danksagung(en)"/>
+        <Label Grid.Row="9" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Danke an 'Siggi' für die vielen techn. Hinweisen und Anregungen"/>
+    </Grid>
+</Window>

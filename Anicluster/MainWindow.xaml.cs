@@ -88,7 +88,7 @@ namespace Anicluster {
 
         private void click_ShowDetails(object sender, RoutedEventArgs e) {
             // get the id per clicked Details-Button
-            int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
+            int currentRowIndex = dataGridAnimeList.Items.IndexOf(dataGridAnimeList.CurrentItem); // begin by 0. Give the rowNumber
             if ((currentRowIndex != (dataGridAnimeList.Items.Count)) || (currentRowIndex == 0)) {
                 AnimeRow selectedAnime = (AnimeRow)dataGridAnimeList.Items[currentRowIndex];
 
@@ -240,6 +240,12 @@ namespace Anicluster {
             Statistic statisticWindow = new Statistic();
             statisticWindow.Owner = this;
             statisticWindow.Show();
+        }
+
+        private void clickImpressum(object sender, RoutedEventArgs e) {
+            Impressum impressumWindow = new Impressum();
+            impressumWindow.Owner = this;
+            impressumWindow.Show();
         }
     }
 }
