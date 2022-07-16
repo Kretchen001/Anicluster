@@ -101,13 +101,13 @@
             <TextBox x:Name="textBoxOriginalName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" IsReadOnly="False"/>
 
             <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Favorit</Label>
-            <CheckBox x:Name="checkBoxNotFavorit" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True">
+            <CheckBox x:Name="checkBoxNotFavorit" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True" IsEnabled="False">
                 <CheckBox.LayoutTransform>
                     <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
                 </CheckBox.LayoutTransform>
                 × Nein
             </CheckBox>
-            <CheckBox x:Name="checkBoxFavorit" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <CheckBox x:Name="checkBoxFavorit" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False">
                 <CheckBox.LayoutTransform>
                     <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
                 </CheckBox.LayoutTransform>
