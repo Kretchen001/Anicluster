@@ -1,5 +1,6 @@
 ﻿using BiboAnime.datatypes;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace Anicluster.windows {
@@ -24,8 +25,8 @@ namespace Anicluster.windows {
         }
 
         private void updateDataGrid() {
-            dataGrid.ItemsSource = null;
-            dataGrid.ItemsSource = managerStaffeln;
+            dataGridStaffeln.ItemsSource = null;
+            dataGridStaffeln.ItemsSource = managerStaffeln;
         }
 
         private void textChangeEpisodes(object sender, System.Windows.Controls.TextChangedEventArgs e) {
@@ -45,17 +46,30 @@ namespace Anicluster.windows {
                 MessageBox.Show("Eine Staffel hat doch keine 0 Folgen, oder?", "Anzahl?", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            int c = managerStaffeln.Count + 1;
+            for (int i = 0; i < managerStaffeln.Count; i++) {
+                if (managerStaffeln[i].counter != (i + 1)) {
+                    c = i + 1;
+                    break;
+                }
+            }
             managerStaffeln.Add(new Staffel() {
-                counter = (managerStaffeln.Count + 1),
+                counter = c,
                 episodes = epi
             });
 
+            managerStaffeln = managerStaffeln.OrderBy(x => x.counter).ToList();
             updateDataGrid();
 
         }
 
         private void clickDelete(object sender, RoutedEventArgs e) {
-            // TODO: impl
+            // get the id per clicked Details-Button
+            int currentRowIndex = dataGridStaffeln.Items.IndexOf(dataGridStaffeln.SelectedItem); // begin by 0. Give the rowNumber
+
+            managerStaffeln.RemoveAt(currentRowIndex);
+                
+            updateDataGrid();
         }
 
         private void clickFinish(object sender, RoutedEventArgs e) {

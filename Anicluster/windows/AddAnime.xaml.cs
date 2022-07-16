@@ -587,10 +587,10 @@ namespace Anicluster.windows {
             textBlockForStaffelPrint.Text = "";
             for (int i = 0; i < animeStaffeln.Count; i += 1) {
                 if (i != (animeStaffeln.Count - 1)) {
-                    textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + animeStaffeln[i].episodes + " | ";
+                    textBlockForStaffelPrint.Text += "St." + (animeStaffeln[i].counter) + " : " + animeStaffeln[i].episodes + " | ";
                 }
                 else {
-                    textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + animeStaffeln[i].episodes;
+                    textBlockForStaffelPrint.Text += "St." + (animeStaffeln[i].counter) + " : " + animeStaffeln[i].episodes;
                 }
             }
 
