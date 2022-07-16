@@ -135,6 +135,10 @@ namespace TagAddInstall {
                 id = Guid.NewGuid(),
                 tagDesignator = "Religion"
             });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Echi"
+            });
 
             for (int i = 0; i < animeTags.Count; i += 1) {
                 if (dbController.checkIfTagExistsByDesignator(animeTags[i])) {
