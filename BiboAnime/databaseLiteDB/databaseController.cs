@@ -172,6 +172,7 @@ namespace BiboAnime.databaseLiteDB {
                 var col = db.GetCollection<AnimeTag>("Tags");
                 return col.Query()
                     .Where(x => x.tagDesignator == designator)
+                    .Limit(1)
                     .Single();
             }
         }
