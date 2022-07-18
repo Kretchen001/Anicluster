@@ -45,8 +45,6 @@ namespace BiboAnime.databaseLiteDB {
                     AnimeTag tag = filterTags[i];
                     returnResult.AddRange(col.Query().Where(x => !x.tags.Contains(tag)).ToList());
                 }
-                returnResult = returnResult.Distinct(new ItemEqualityComparer()).ToList();
-
                 return returnResult;
             }
         }
