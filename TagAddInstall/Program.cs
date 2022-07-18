@@ -137,13 +137,100 @@ namespace TagAddInstall {
             });
             animeTags.Add(new AnimeTag() {
                 id = Guid.NewGuid(),
-                tagDesignator = "Echi"
+                tagDesignator = "Ecchi"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Zombie"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Slice-Of-Life"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Horror"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Androiden"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Krimi"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Katzen"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Hunde"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Elfen"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Gott"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Medizin"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Militär"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Rivalität"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Gefängniss"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Geheime Identität"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Skelette"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Vampire"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Polizei"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Krankenhaus"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Feuerwehr"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Zeitreise"
             });
 
+            animeTags = animeTags.OrderBy(x => x.tagDesignator).ToList();
+
+            List<AnimeTag> indexeToDelete = new List<AnimeTag>();
             for (int i = 0; i < animeTags.Count; i += 1) {
                 if (dbController.checkIfTagExistsByDesignator(animeTags[i])) {
-                    animeTags.RemoveAt(i);
+                    indexeToDelete.Add(animeTags[i]);
                 }
+            }
+
+            for (int i = 0; i < indexeToDelete.Count; i += 1) {
+                animeTags.Remove(indexeToDelete[i]);
             }
 
             dbController.addImportedTags(animeTags);
