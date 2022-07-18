@@ -41,6 +41,9 @@ namespace Anicluster.windows.filter {
 
         private bool withoutGermanDub = false;
 
+        private bool withThirdPartyRecomandation = false;
+        private bool withoutThirdPartyRecomandation = false;
+
         private int ratingGeneral = 0;
         private int ratingStory = 0;
         private int ratingAnimation = 0;
@@ -573,6 +576,9 @@ namespace Anicluster.windows.filter {
                 haveFilter = true;
             }
 
+            // third Party recommandation
+            List<AnimeData> tempListRecommendation = dbFilterController.dbFilterCheckRecommendation(withThirdPartyRecomandation, withoutThirdPartyRecomandation);
+
             // merge Lists
             animeList.Clear();
             if (tempListFavorite.Count != 0) {
@@ -601,6 +607,12 @@ namespace Anicluster.windows.filter {
             }
             else if (minMaxList.Count != 0) {
                 animeList = minMaxList.Where(x => animeList.Contains(x)).ToList();
+            }
+            if ((tempListRecommendation.Count != 0) && (animeList.Count == 0)) {
+                animeList.AddRange(tempListRecommendation);
+            }
+            else if (tempListRecommendation.Count != 0) {
+                animeList = tempListRecommendation.Where(x => animeList.Contains(x)).ToList();
             }
 
             // remove all duplicated Animes in the List
@@ -828,6 +840,28 @@ namespace Anicluster.windows.filter {
             }
             maxEpisodes = int.Parse(textBoxEpisodesMax.Text);
             minEpisodes = int.Parse(textBoxEpisodesMin.Text);
+
+            updateFilterData();
+        }
+
+        private void toggleWithThirdPartyRecomandation(object sender, RoutedEventArgs e) {
+            checkBoxWithoutThirdPartyRecomendation.IsChecked = false;
+            withThirdPartyRecomandation = !withThirdPartyRecomandation;
+            if (withThirdPartyRecomandation) { 
+                withoutThirdPartyRecomandation = false;
+            }
+            checkBoxWithThirdPartyRecomendation.IsChecked = withThirdPartyRecomandation;
+
+            updateFilterData();
+        }
+
+        private void toggleWithoutThirdPartyRecomandation(object sender, RoutedEventArgs e) {
+            checkBoxWithThirdPartyRecomendation.IsChecked = false;
+            withoutThirdPartyRecomandation = !withoutThirdPartyRecomandation;
+            if (withoutThirdPartyRecomandation) {
+                withThirdPartyRecomandation = false;
+            }
+            checkBoxWithoutThirdPartyRecomendation.IsChecked = withoutThirdPartyRecomandation;
 
             updateFilterData();
         }

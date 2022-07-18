@@ -212,6 +212,14 @@
                     </StackPanel>
                 </CheckBox>
             </TreeViewItem>
+            <TreeViewItem Header="Fremd-Empfehlung">
+                <CheckBox x:Name="checkBoxWithThirdPartyRecomendation" Click="toggleWithThirdPartyRecomandation">
+                    Mit Fremd-Emfpehlung
+                </CheckBox>
+                <CheckBox x:Name="checkBoxWithoutThirdPartyRecomendation" Click="toggleWithoutThirdPartyRecomandation">
+                    Ohne Fremd-Emfpehlung
+                </CheckBox>
+            </TreeViewItem>
         </TreeView>
         <DataGrid Name="dataGridFilterAnimeList" Margin="2" AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" CanUserAddRows="false" LoadingRow="loadingRowFilterDataGrid">
             <DataGrid.Columns>

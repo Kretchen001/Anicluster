@@ -174,5 +174,23 @@ namespace BiboAnime.databaseLiteDB {
                 return result;
             }
         }
+
+        public List<AnimeData> dbFilterCheckRecommendation(bool exist, bool existnot) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> result = new List<AnimeData>();
+                if (exist) {
+                    return result = col.Query()
+                    .Where(x => x.thirdPartyRecommendation.Length > 0)
+                    .ToList();
+                }
+                if (existnot) {
+                    return result = col.Query()
+                    .Where(x => x.thirdPartyRecommendation.Length == 0)
+                    .ToList();
+                }
+                return result;
+            }
+        }
     }
 }
