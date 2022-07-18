@@ -536,6 +536,22 @@ namespace Anicluster.windows.filter {
                     listOfTagSelection.Remove(listOfTagSelectionEx[i]);
                 }
             }
+            if ((listOfTagSelection.Count == 0) && (listOfTagSelectionEx.Count != 0)) {
+                c = 0;
+                for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
+                    int cc = listOfTagSelectionEx.Count(x => x.id == listOfTagSelectionEx[i].id);
+                    if (cc > c) {
+                        c = cc;
+                    }
+                }
+                tempListForDelete.Clear();
+                for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
+                    if (listOfTagSelectionEx.Count(x => x.id == listOfTagSelectionEx[i].id) == c) {
+                        tempListForDelete.Add(listOfTagSelectionEx[i]);
+                    }
+                }
+                listOfTagSelection.AddRange(tempListForDelete);
+            }
 
             // Min Max Episodes
             List<AnimeData> minMaxList = new List<AnimeData>();
@@ -641,7 +657,6 @@ namespace Anicluster.windows.filter {
 
             animeTags = animeTags.OrderBy(x => x.tagDesignator).ToList();
 
-            tagUserControllList.Clear();
             for (int i = 0; i < animeTags.Count; i += 1) {
                 TagUserControll tempControll = new TagUserControll(new TagSelection(animeTags[i]));
                 tagUserControllList.Add(tempControll);
@@ -717,7 +732,12 @@ namespace Anicluster.windows.filter {
             animeList = dbController.getAllAnimes();
             updateFilterTable();
 
-            fillTagView();
+            for (int i = 0; i < tagUserControllList.Count; i += 1) {
+                tagUserControllList[i].tagSelection.inclusive = false;
+                tagUserControllList[i].tagSelection.exclusive = false;
+                tagUserControllList[i].checkBoxInclusive.IsChecked = false;
+                tagUserControllList[i].checkBoxExclusive.IsChecked = false;
+            }
 
             // properties
             favoriteBool = false;
