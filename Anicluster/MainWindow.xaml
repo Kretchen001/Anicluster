@@ -17,10 +17,8 @@
                     <MenuItem Header="Animes" Click="clickImportDataAnimes"/>
                     <MenuItem Header="Tags" Click="clickImporDataTags"/>
                 </MenuItem>
-                <MenuItem Header="Dummy Daten hinzufügen" Click="click_DummyDaten"/>
                 <MenuItem Header="Impressum" />
             </MenuItem>
-            <MenuItem Header="Ansicht aktualisieren" Click="click_UpdateView"></MenuItem>
             <MenuItem Header="Filtern" Click="clickFilterWindow"></MenuItem>
             <MenuItem Header="Tags verwalten" Click="click_tagsOrganisation" ></MenuItem>
             <MenuItem x:Name="menuItemToggleTierColorShown"  Header="Nach Tier einfärben" Click="toggleTierColorShown"></MenuItem>
