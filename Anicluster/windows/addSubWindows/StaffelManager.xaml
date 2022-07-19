@@ -36,7 +36,7 @@
                 <RowDefinition Height="2*" />
             </Grid.RowDefinitions>
             <Label Grid.Row="0" FontWeight="Bold" Content="Anzahl der Episoden" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <TextBox x:Name="givenEpisodes" Grid.Row="1" Margin="10" TextChanged="textChangeEpisodes" />
+            <TextBox x:Name="textBoxGivenEpisodes" Grid.Row="1" Margin="10" TextChanged="textChangeEpisodes" />
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1">

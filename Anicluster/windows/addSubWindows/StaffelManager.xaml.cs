@@ -9,17 +9,19 @@ namespace Anicluster.windows {
     /// </summary>
     public partial class StaffelManager : Window {
 
-        public List<Staffel> managerStaffeln = new List<Staffel>();
+        private List<Staffel> managerStaffeln = new List<Staffel>();
 
         private int epi = 0;
 
         public StaffelManager(List<Staffel> givenStaffeln) {
 
-            this.managerStaffeln = givenStaffeln;
+            if (givenStaffeln is not null) {
+                managerStaffeln = givenStaffeln;
+            }
 
             InitializeComponent();
 
-            givenEpisodes.Text = epi.ToString();
+            textBoxGivenEpisodes.Text = epi.ToString();
 
             updateDataGrid();
         }
@@ -31,11 +33,11 @@ namespace Anicluster.windows {
 
         private void textChangeEpisodes(object sender, System.Windows.Controls.TextChangedEventArgs e) {
 
-            if (int.TryParse(givenEpisodes.Text, out int numericValue)) {
+            if (int.TryParse(textBoxGivenEpisodes.Text, out int numericValue)) {
                 epi = numericValue;
             }
             else {
-                givenEpisodes.Text = epi.ToString();
+                textBoxGivenEpisodes.Text = epi.ToString();
             }
 
         }
@@ -64,7 +66,6 @@ namespace Anicluster.windows {
         }
 
         private void clickDelete(object sender, RoutedEventArgs e) {
-            // get the id per clicked Details-Button
             int currentRowIndex = dataGridStaffeln.Items.IndexOf(dataGridStaffeln.SelectedItem); // begin by 0. Give the rowNumber
 
             managerStaffeln.RemoveAt(currentRowIndex);
@@ -74,6 +75,10 @@ namespace Anicluster.windows {
 
         private void clickFinish(object sender, RoutedEventArgs e) {
             this.Close();
+        }
+
+        public List<Staffel> getManagerStaffeln() {
+            return managerStaffeln;
         }
     }
 }
