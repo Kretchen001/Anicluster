@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace Anicluster.windows {
@@ -30,6 +31,7 @@ namespace Anicluster.windows {
 
         private void fetchTags() {
             List<AnimeTag> tempTags = dbController.getAllAnimeTags();
+            tempTags = tempTags.OrderBy(x => x.tagDesignator).ToList();
             animeTags.Clear();
             for (int i = 0; i < tempTags.Count; i += 1) {
                 animeTags.Add(new TagRowO() {
@@ -60,7 +62,7 @@ namespace Anicluster.windows {
                 if (result) {
                     if (dbController.deleteOneTag(tempTag)) {
                         MessageBox.Show("Tag gelöschen: \n \t"
-                            + selectedTag.tagDesignator + "[" + tempTag.id + "]",
+                            + selectedTag.tagDesignator + " [" + tempTag.id + "]",
                             "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                         fetchTags();
                     }
