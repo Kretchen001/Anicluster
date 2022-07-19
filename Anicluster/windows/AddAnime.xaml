@@ -319,6 +319,12 @@
         <Label Grid.Row="12" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
         <Button Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="1" Margin="30,10,30,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="clickChooseTags" >Tags verwalten</Button>
 
+        <DataGrid x:Name="dataGridTags" Grid.Row="12" Grid.Column="2" Grid.RowSpan="2" HeadersVisibility="None" AutoGenerateColumns="False" CanUserAddRows="false" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding}" Width="1*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
         <Button Grid.Row="13" Grid.Column="4" Grid.ColumnSpan="2" x:Name="buttonConfirm" Click="click_ConfirmButton" FontSize="18">
             <Button.Background>
                 <RadialGradientBrush>

@@ -3,6 +3,7 @@ using BiboAnime.datatypes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -575,13 +576,22 @@ namespace Anicluster.windows {
             TagList tagListWindow = new TagList(animeTagList);
             tagListWindow.ShowDialog();
             animeTagList = tagListWindow.selectedTagList;
+
+            List<string> tagNames = new List<string>();
+            for (int i = 0; i < animeTagList.Count; i += 1) {
+                tagNames.Add(animeTagList[i].tagDesignator);
+            }
+            tagNames.Sort();
+
+            dataGridTags.ItemsSource = null;
+            dataGridTags.ItemsSource = tagNames;
         }
 
         private void clickStaffelManagement(object sender, RoutedEventArgs e) {
             StaffelManager staffelManagerWindow = new StaffelManager(animeStaffeln);
             staffelManagerWindow.ShowDialog();
 
-            animeStaffeln = staffelManagerWindow.managerStaffeln;
+            animeStaffeln = staffelManagerWindow.getManagerStaffeln();
 
             // show the Manager-Solution
             textBlockForStaffelPrint.Text = "";
