@@ -1,7 +1,6 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,53 +22,21 @@ namespace Anicluster.windows {
         public ShowDetails(AnimeData givenAnime) {
             InitializeComponent();
 
-            this.oneAnime = new AnimeData() {
-                id = givenAnime.id,
-                favorite = givenAnime.favorite,
-                name = givenAnime.name,
-                originalName = givenAnime.originalName,
-                rating = givenAnime.rating,
-                staffeln = givenAnime.staffeln,
-                status = givenAnime.status,
-                tier = givenAnime.tier,
-                tags = givenAnime.tags,
-                thirdPartyRecommendation = givenAnime.thirdPartyRecommendation,
-                urlAnimePlanet = givenAnime.urlAnimePlanet,
-                episodesTotal = givenAnime.episodesTotal,
-                movies = givenAnime.movies,
-                ovh = givenAnime.ovh
-            };
-
-            labelNameHeadLine.Content = givenAnime.name;
-
-            this.changedData = new AnimeData() { 
-                //id = givenAnime.id,
-                //favorite = givenAnime.favorite,
-                //name = givenAnime.name,
-                //originalName = givenAnime.originalName,
-                //rating = givenAnime.rating,
-                //staffeln = givenAnime.staffeln,
-                //status = givenAnime.status,
-                //tier = givenAnime.tier,
-                //tags = givenAnime.tags,
-                //thirdPartyRecommendation = givenAnime.thirdPartyRecommendation,
-                //urlAnimePlanet = givenAnime.urlAnimePlanet,
-                //episodesTotal = givenAnime.episodesTotal,
-                //movies = givenAnime.movies,
-                //ovh = givenAnime.ovh
-            };
+            oneAnime = givenAnime.DeepClone();
+            changedData = givenAnime.DeepClone();
 
             setDisplay();
             showTier();
             showRating();
             showStaffeln();
             labelStatus.Content = oneAnime.status.ToString();
+            labelNameHeadLine.Content = givenAnime.name;
         }
 
         private void setDisplay() {
-            textBoxName.Text = oneAnime.name;
-            textBoxOriginalName.Text = oneAnime.originalName;
-            if (oneAnime.favorite) {
+            textBoxName.Text = changedData.name;
+            textBoxOriginalName.Text = changedData.originalName;
+            if (changedData.favorite) {
                 checkBoxFavorit.IsChecked = true;
                 checkBoxNotFavorit.IsChecked = false;
             }
@@ -77,8 +44,79 @@ namespace Anicluster.windows {
                 checkBoxFavorit.IsChecked = false;
                 checkBoxNotFavorit.IsChecked = true;
             }
-            textBoxUrlAnimePlanet.Text = oneAnime.urlAnimePlanet;
-            textBoxRecommendation.Text = oneAnime.thirdPartyRecommendation;
+            textBoxUrlAnimePlanet.Text = changedData.urlAnimePlanet;
+            textBoxRecommendation.Text = changedData.thirdPartyRecommendation;
+        }
+
+        private void showTier() {
+            int S = 0, A = 0, B = 0, C = 0, D = 0;
+            switch (changedData.tier) {
+                case AnimeTier.S: S = 2; break;
+                case AnimeTier.A: A = 2; break;
+                case AnimeTier.B: B = 2; break;
+                case AnimeTier.C: C = 2; break;
+                case AnimeTier.D: D = 2; break;
+                default: break;
+            }
+            labelTierS.BorderThickness = new Thickness(S);
+            labelTierA.BorderThickness = new Thickness(A);
+            labelTierB.BorderThickness = new Thickness(B);
+            labelTierC.BorderThickness = new Thickness(C);
+            labelTierD.BorderThickness = new Thickness(D);
+        }
+
+        private void showRating() {
+
+            progressBarStoryRating.Value = changedData.rating.story;
+            labelStoryRating.Content = changedData.rating.story;
+
+            progressBarAnimationRating.Value = changedData.rating.animation;
+            labelAnimationRating.Content = changedData.rating.animation;
+
+            progressBarSpecialEffectsRating.Value = changedData.rating.specialEffect;
+            labelSpecialEffectsRating.Content = changedData.rating.specialEffect;
+
+            progressBarSoundRating.Value = changedData.rating.sound;
+            labelSoundRating.Content = changedData.rating.sound;
+
+            progressBarGermanDubRating.Value = changedData.rating.germanDub;
+            labelGermanDubRating.Content = changedData.rating.germanDub;
+
+            calculateAndPrintGeneralRating();
+        }
+
+        private void calculateAndPrintGeneralRating() {
+            int ratingGeneral = 0;
+            if (changedData.rating.germanDub == 0) {
+                ratingGeneral = (int)((changedData.rating.story * 0.4) + (changedData.rating.sound * 0.2)
+                    + (changedData.rating.animation * 0.3) + (changedData.rating.specialEffect * 0.1));
+            }
+            else {
+                ratingGeneral = (int)((changedData.rating.story * 0.4) + (changedData.rating.sound * 0.1)
+                    + (changedData.rating.animation * 0.3) + (changedData.rating.specialEffect * 0.1)
+                    + (changedData.rating.germanDub * 0.1));
+            }
+            labelGeneralRating.Content = ratingGeneral;
+            progressBarGeneralRating.Value = ratingGeneral;
+        }
+
+        private void showStaffeln() {
+
+            textBlockForStaffelPrint.Text = "";
+            textBoxTotalEpisodes.Text = "";
+
+            if (changedData.staffeln != null) {
+                for (int i = 0; i < changedData.staffeln.Count; i += 1) {
+                    if (i != (changedData.staffeln.Count - 1)) {
+                        textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + changedData.staffeln[i].episodes + " | ";
+                    }
+                    else {
+                        textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + changedData.staffeln[i].episodes;
+                    }
+                }
+
+                textBoxTotalEpisodes.Text = changedData.episodesTotal.ToString();
+            }
         }
 
         private void clickCallLink(object sender, RoutedEventArgs e) {
@@ -103,7 +141,7 @@ namespace Anicluster.windows {
                     MessageBox.Show(oneAnime.name + " gelöscht!",
                         "Gelöscht",
                         MessageBoxButton.OK,
-                        MessageBoxImage.Information); 
+                        MessageBoxImage.Information);
                     shouldViewUpdated(true);
                     this.Close();
                 }
@@ -111,91 +149,20 @@ namespace Anicluster.windows {
         }
 
         private void clickChoosenTags(object sender, RoutedEventArgs e) {
-            ShowDetailsTags showDetailsTagsWindows = new ShowDetailsTags(oneAnime.tags);
+            ShowDetailsTags showDetailsTagsWindows = new ShowDetailsTags(changedData.tags);
             showDetailsTagsWindows.ShowDialog();
         }
 
-        private void showTier() {
-            int S = 0, A = 0, B = 0, C = 0, D = 0;
-            switch (oneAnime.tier) {
-                case AnimeTier.S: S = 2; break;
-                case AnimeTier.A: A = 2; break;
-                case AnimeTier.B: B = 2; break;
-                case AnimeTier.C: C = 2; break;
-                case AnimeTier.D: D = 2; break;
-                default: break;
-            }
-            labelTierS.BorderThickness = new Thickness(S);
-            labelTierA.BorderThickness = new Thickness(A);
-            labelTierB.BorderThickness = new Thickness(B);
-            labelTierC.BorderThickness = new Thickness(C);
-            labelTierD.BorderThickness = new Thickness(D);
-        }
-
-        private void showRating() {
-
-            progressBarStoryRating.Value = oneAnime.rating.story;
-            labelStoryRating.Content = oneAnime.rating.story;
-
-            progressBarAnimationRating.Value = oneAnime.rating.animation;
-            labelAnimationRating.Content = oneAnime.rating.animation;
-
-            progressBarSpecialEffectsRating.Value = oneAnime.rating.specialEffect;
-            labelSpecialEffectsRating.Content = oneAnime.rating.specialEffect;
-
-            progressBarSoundRating.Value = oneAnime.rating.sound;
-            labelSoundRating.Content = oneAnime.rating.sound;
-
-            progressBarGermanDubRating.Value = oneAnime.rating.germanDub;
-            labelGermanDubRating.Content = oneAnime.rating.germanDub;
-
-            calculateAndPrintGeneralRating();
-        }
-
-        private void calculateAndPrintGeneralRating() {
-            int ratingGeneral = 0;
-            if (oneAnime.rating.germanDub == 0) {
-                ratingGeneral = (int)((oneAnime.rating.story * 0.4) + (oneAnime.rating.sound * 0.2)
-                    + (oneAnime.rating.animation * 0.3) + (oneAnime.rating.specialEffect * 0.1));
+        private void checkIfAllOriginal() {
+            if (oneAnime == changedData) {
+                buttonAcceptChanges.Visibility = Visibility.Hidden;
             }
             else {
-                ratingGeneral = (int)((oneAnime.rating.story * 0.4) + (oneAnime.rating.sound * 0.1)
-                    + (oneAnime.rating.animation * 0.3) + (oneAnime.rating.specialEffect * 0.1)
-                    + (oneAnime.rating.germanDub * 0.1));
+                buttonAcceptChanges.Visibility = Visibility.Visible;
             }
-            labelGeneralRating.Content = ratingGeneral;
-            progressBarGeneralRating.Value = ratingGeneral;
-        }
-
-        private void showStaffeln() {
-
-            textBlockForStaffelPrint.Text = "";
-            textBoxTotalEpisodes.Text = "";
-
-            if (oneAnime.staffeln != null) {
-                for (int i = 0; i < oneAnime.staffeln.Count; i += 1) {
-                    if (i != (oneAnime.staffeln.Count - 1)) {
-                        textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + oneAnime.staffeln[i].episodes + " | ";
-                    }
-                    else {
-                        textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + oneAnime.staffeln[i].episodes;
-                    }
-                }
-
-                textBoxTotalEpisodes.Text = oneAnime.episodesTotal.ToString();
-            }
-        }
-
-        private void checkIfAllOriginal() {
-            buttonAcceptChanges.Visibility = Visibility.Hidden;
-            //if (oneAnime == changedData) {
-            //    buttonAcceptChanges.Visibility = Visibility.Hidden;
-            //}
         }
 
         private void toggleFavorite(object sender, RoutedEventArgs e) {
-            buttonAcceptChanges.Visibility = Visibility.Visible;
-
             changedData.favorite = !changedData.favorite;
 
             if (changedData.favorite) {
@@ -217,22 +184,13 @@ namespace Anicluster.windows {
 
             changedData.staffeln = staffelManagerWindow.getManagerStaffeln();
 
-            if (oneAnime.staffeln != changedData.staffeln) {
-                buttonAcceptChanges.Visibility = Visibility.Visible;
-            }
-
             checkIfAllOriginal();
 
             showStaffeln();
         }
 
         private void textChangeName(object sender, TextChangedEventArgs e) {
-            if (oneAnime.name != textBoxName.Text) {
-                buttonAcceptChanges.Visibility = Visibility.Visible;
-                if (changedData.name != textBoxName.Text) {
-                    changedData.name = textBoxName.Text;
-                }
-            }
+            changedData.name = textBoxName.Text;
 
             checkIfAllOriginal();
         }
