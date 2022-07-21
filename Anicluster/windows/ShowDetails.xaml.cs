@@ -155,12 +155,60 @@ namespace Anicluster.windows {
         }
 
         private void checkIfAllOriginal() {
-            if (oneAnime == changedData) {
-                buttonAcceptChanges.Visibility = Visibility.Hidden;
-            }
-            else {
+            if (oneAnime.name != changedData.name) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
             }
+            if (oneAnime.originalName != changedData.originalName) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.favorite != changedData.favorite) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.rating != changedData.rating) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.tags != changedData.tags) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.urlAnimePlanet != changedData.urlAnimePlanet) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.status != changedData.status) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.staffeln != changedData.staffeln) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.episodesTotal != changedData.episodesTotal) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.movies != changedData.movies) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.ovh != changedData.ovh) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.thirdPartyRecommendation != changedData.thirdPartyRecommendation) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.tier != changedData.tier) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+
+            buttonAcceptChanges.Visibility = Visibility.Hidden;
         }
 
         private void toggleFavorite(object sender, RoutedEventArgs e) {
