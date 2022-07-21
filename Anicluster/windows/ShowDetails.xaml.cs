@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Anicluster.windows {
 
@@ -226,6 +227,41 @@ namespace Anicluster.windows {
             }
 
             checkIfAllOriginal();
+        }
+
+        private void clickChangeTierS(object sender, MouseButtonEventArgs e) {
+            changedData.tier = AnimeTier.S;
+
+            checkIfAllOriginal();
+            showTier();
+        }
+
+        private void clickChangeTierA(object sender, MouseButtonEventArgs e) {
+            changedData.tier = AnimeTier.A;
+
+            checkIfAllOriginal();
+            showTier();
+        }
+
+        private void clickChangeTierB(object sender, MouseButtonEventArgs e) {
+            changedData.tier = AnimeTier.B;
+
+            checkIfAllOriginal();
+            showTier();
+        }
+
+        private void clickChangeTierC(object sender, MouseButtonEventArgs e) {
+            changedData.tier = AnimeTier.C;
+
+            checkIfAllOriginal();
+            showTier();
+        }
+
+        private void clickChangeTierD(object sender, MouseButtonEventArgs e) {
+            changedData.tier = AnimeTier.D;
+
+            checkIfAllOriginal();
+            showTier();
         }
     }
 }

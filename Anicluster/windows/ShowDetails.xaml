@@ -89,11 +89,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
-                <Label x:Name="labelTierS" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="#FF00D4D4" BorderBrush="Black">S</Label>
-                <Label x:Name="labelTierA" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="#FF3FFF2F" BorderBrush="Black">A</Label>
-                <Label x:Name="labelTierB" Grid.Column="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Yellow" BorderBrush="Black">B</Label>
-                <Label x:Name="labelTierC" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Orange" BorderBrush="Black">C</Label>
-                <Label x:Name="labelTierD" Grid.Column="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Red" BorderBrush="Black">D</Label>
+                <Label x:Name="labelTierS" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="#FF00D4D4" BorderBrush="Black" MouseLeftButtonUp="clickChangeTierS">S</Label>
+                <Label x:Name="labelTierA" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="#FF3FFF2F" BorderBrush="Black" MouseLeftButtonUp="clickChangeTierA">A</Label>
+                <Label x:Name="labelTierB" Grid.Column="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Yellow" BorderBrush="Black" MouseLeftButtonUp="clickChangeTierB">B</Label>
+                <Label x:Name="labelTierC" Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Orange" BorderBrush="Black" MouseLeftButtonUp="clickChangeTierC">C</Label>
+                <Label x:Name="labelTierD" Grid.Column="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Background="Red" BorderBrush="Black" MouseLeftButtonUp="clickChangeTierD">D</Label>
             </Grid>
 
             <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">original Name</Label>
