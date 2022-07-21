@@ -37,7 +37,6 @@
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Bearbeiten" Click="clickEditEnitity" />
             <MenuItem Header="Löschen" Click="clickRemoveEntity" />
         </Menu>
         <Grid Margin="10" DockPanel.Dock="Top">
@@ -77,7 +76,7 @@
                 <Label VerticalAlignment="Center" Grid.Column="2" FontSize="22" FontWeight="Bold" >- Daten</Label>
             </Grid>
             <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Name</Label>
-            <TextBox x:Name="textBoxName" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" IsReadOnly="False"/>
+            <TextBox x:Name="textBoxName" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" IsReadOnly="False" TextChanged="textChangeName" />
 
             <Grid Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Margin="15,5,15,5" >
                 <Grid.ColumnDefinitions>
@@ -98,16 +97,16 @@
             </Grid>
 
             <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">original Name</Label>
-            <TextBox x:Name="textBoxOriginalName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" IsReadOnly="False"/>
+            <TextBox x:Name="textBoxOriginalName" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" IsReadOnly="False" TextChanged="textChangeOriginalName"/>
 
             <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Favorit</Label>
-            <CheckBox x:Name="checkBoxNotFavorit" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True" IsEnabled="False">
+            <CheckBox x:Name="checkBoxNotFavorit" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True" Click="toggleFavorite">
                 <CheckBox.LayoutTransform>
                     <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
                 </CheckBox.LayoutTransform>
                 × Nein
             </CheckBox>
-            <CheckBox x:Name="checkBoxFavorit" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False">
+            <CheckBox x:Name="checkBoxFavorit" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="toggleFavorite">
                 <CheckBox.LayoutTransform>
                     <ScaleTransform ScaleX="1.25" ScaleY="1.25"/>
                 </CheckBox.LayoutTransform>
@@ -115,10 +114,10 @@
             </CheckBox>
 
             <Label Grid.Row="3" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold">Empfehlung</Label>
-            <TextBox x:Name="textBoxRecommendation" Grid.Row="3" Grid.Column="5" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="False"/>
+            <TextBox x:Name="textBoxRecommendation" Grid.Row="3" Grid.Column="5" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextChanged="textChangeRecomendation" />
 
             <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">URL-AnimePlanet</Label>
-            <TextBox x:Name="textBoxUrlAnimePlanet" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" IsReadOnly="False"/>
+            <TextBox x:Name="textBoxUrlAnimePlanet" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" IsReadOnly="False" TextChanged="textChangeUrl"/>
             <Button Grid.Row="4" Grid.Column="4" Margin="35,10,35,10" Click="clickCallLink">↗ Link aufrufen</Button>
 
             <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Bewertung</Label>
@@ -167,6 +166,7 @@
             </Grid>
 
             <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Status</Label>
+            <Label x:Name="labelStatus" Grid.Row="8" Grid.Column="1" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             
             <TextBlock x:Name="textBlockForStaffelPrint" Background="Beige" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Margin="20,10,20,10"></TextBlock>
             
@@ -177,24 +177,43 @@
 
             <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Gesamt-Episoden</Label>
             <TextBlock x:Name="textBoxTotalEpisodes" Background="Beige" Grid.Row="10" Grid.Column="1" Margin="20,10,20,10"/>
+            <Button x:Name="buttonChangeStaffeln" Grid.Row="10" Grid.Column="2" Margin="30,10,30,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="changeStaffeln">
+                Staffeln Ändern
+            </Button>
 
             <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">OVH-Episoden</Label>
             <TextBox x:Name="textBoxOvhs" Grid.Row="10" Grid.Column="4" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="False"/>
 
             <Label Grid.Row="12" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Tags</Label>
             <Button Grid.Row="12" Grid.Column="1" Margin="30,10,30,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="clickChoosenTags">
-                Tags ansehen
+                Tags
             </Button>
 
-            <Button Grid.Row="12" Grid.Column="4" Grid.ColumnSpan="2" x:Name="buttonConfirm" Click="clickCloseButton" FontSize="18">
-                <Button.Background>
-                    <RadialGradientBrush>
-                        <GradientStop Color="#FFB7FFB8" Offset="1"/>
-                        <GradientStop Color="#FF00FF04" Offset="0"/>
-                    </RadialGradientBrush>
-                </Button.Background>
-                Schließen
-            </Button>
+            <Grid Grid.Row="12" Grid.Column="3" Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="buttonAcceptChanges" Click="clickCloseButton" FontSize="18" Visibility="Hidden">
+                    <Button.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFF8FFB7" Offset="1"/>
+                            <GradientStop Color="#FFE6FF00" Offset="0"/>
+                        </RadialGradientBrush>
+                    </Button.Background>
+                    Änderungen übernehmen?
+                </Button>
+                <Button Grid.Column="2" x:Name="buttonConfirm" Click="clickCloseButton" FontSize="18">
+                    <Button.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#FFB7FFB8" Offset="1"/>
+                            <GradientStop Color="#FF00FF04" Offset="0"/>
+                        </RadialGradientBrush>
+                    </Button.Background>
+                    Schließen
+                </Button>
+            </Grid>            
         </Grid>
     </DockPanel>
 </Window>

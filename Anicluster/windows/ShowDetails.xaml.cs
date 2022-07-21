@@ -1,30 +1,69 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Anicluster.windows {
+
     /// <summary>
     /// Interaktionslogik für ShowDetails.xaml
     /// </summary>
     public partial class ShowDetails : Window {
 
-        public AnimeData oneAnime;
+        public AnimeData oneAnime = new AnimeData();
+        private AnimeData changedData = new AnimeData();
 
         public Action<bool> shouldViewUpdated;
 
         databaseController dbController = new databaseController();
 
-        public ShowDetails(AnimeData oneAnime) {
+        public ShowDetails(AnimeData givenAnime) {
             InitializeComponent();
-            this.oneAnime = oneAnime;
-            labelNameHeadLine.Content = oneAnime.name;
+
+            this.oneAnime = new AnimeData() {
+                id = givenAnime.id,
+                favorite = givenAnime.favorite,
+                name = givenAnime.name,
+                originalName = givenAnime.originalName,
+                rating = givenAnime.rating,
+                staffeln = givenAnime.staffeln,
+                status = givenAnime.status,
+                tier = givenAnime.tier,
+                tags = givenAnime.tags,
+                thirdPartyRecommendation = givenAnime.thirdPartyRecommendation,
+                urlAnimePlanet = givenAnime.urlAnimePlanet,
+                episodesTotal = givenAnime.episodesTotal,
+                movies = givenAnime.movies,
+                ovh = givenAnime.ovh
+            };
+
+            labelNameHeadLine.Content = givenAnime.name;
+
+            this.changedData = new AnimeData() { 
+                //id = givenAnime.id,
+                //favorite = givenAnime.favorite,
+                //name = givenAnime.name,
+                //originalName = givenAnime.originalName,
+                //rating = givenAnime.rating,
+                //staffeln = givenAnime.staffeln,
+                //status = givenAnime.status,
+                //tier = givenAnime.tier,
+                //tags = givenAnime.tags,
+                //thirdPartyRecommendation = givenAnime.thirdPartyRecommendation,
+                //urlAnimePlanet = givenAnime.urlAnimePlanet,
+                //episodesTotal = givenAnime.episodesTotal,
+                //movies = givenAnime.movies,
+                //ovh = givenAnime.ovh
+            };
 
             setDisplay();
             showTier();
             showRating();
             showStaffeln();
+            labelStatus.Content = oneAnime.status.ToString();
         }
 
         private void setDisplay() {
@@ -39,6 +78,7 @@ namespace Anicluster.windows {
                 checkBoxNotFavorit.IsChecked = true;
             }
             textBoxUrlAnimePlanet.Text = oneAnime.urlAnimePlanet;
+            textBoxRecommendation.Text = oneAnime.thirdPartyRecommendation;
         }
 
         private void clickCallLink(object sender, RoutedEventArgs e) {
@@ -50,10 +90,6 @@ namespace Anicluster.windows {
 
         private void clickCloseButton(object sender, RoutedEventArgs e) {
             this.Close();
-        }
-
-        private void clickEditEnitity(object sender, RoutedEventArgs e) {
-
         }
 
         private void clickRemoveEntity(object sender, RoutedEventArgs e) {
@@ -133,6 +169,9 @@ namespace Anicluster.windows {
 
         private void showStaffeln() {
 
+            textBlockForStaffelPrint.Text = "";
+            textBoxTotalEpisodes.Text = "";
+
             if (oneAnime.staffeln != null) {
                 for (int i = 0; i < oneAnime.staffeln.Count; i += 1) {
                     if (i != (oneAnime.staffeln.Count - 1)) {
@@ -145,6 +184,90 @@ namespace Anicluster.windows {
 
                 textBoxTotalEpisodes.Text = oneAnime.episodesTotal.ToString();
             }
+        }
+
+        private void checkIfAllOriginal() {
+            buttonAcceptChanges.Visibility = Visibility.Hidden;
+            //if (oneAnime == changedData) {
+            //    buttonAcceptChanges.Visibility = Visibility.Hidden;
+            //}
+        }
+
+        private void toggleFavorite(object sender, RoutedEventArgs e) {
+            buttonAcceptChanges.Visibility = Visibility.Visible;
+
+            changedData.favorite = !changedData.favorite;
+
+            if (changedData.favorite) {
+                checkBoxNotFavorit.IsChecked = false;
+                checkBoxFavorit.IsChecked = true;
+            }
+            else {
+                checkBoxNotFavorit.IsChecked = true;
+                checkBoxFavorit.IsChecked = false;
+            }
+
+            checkIfAllOriginal();
+        }
+
+        private void changeStaffeln(object sender, RoutedEventArgs e) {
+
+            StaffelManager staffelManagerWindow = new StaffelManager(changedData.staffeln); // changed, so any multi-Changes will be recognised
+            staffelManagerWindow.ShowDialog();
+
+            changedData.staffeln = staffelManagerWindow.getManagerStaffeln();
+
+            if (oneAnime.staffeln != changedData.staffeln) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+            }
+
+            checkIfAllOriginal();
+
+            showStaffeln();
+        }
+
+        private void textChangeName(object sender, TextChangedEventArgs e) {
+            if (oneAnime.name != textBoxName.Text) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                if (changedData.name != textBoxName.Text) {
+                    changedData.name = textBoxName.Text;
+                }
+            }
+
+            checkIfAllOriginal();
+        }
+
+        private void textChangeOriginalName(object sender, TextChangedEventArgs e) {
+            if (oneAnime.originalName != textBoxOriginalName.Text) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                if (changedData.originalName != textBoxOriginalName.Text) {
+                    changedData.originalName = textBoxOriginalName.Text;
+                }
+            }
+
+            checkIfAllOriginal();
+        }
+
+        private void textChangeUrl(object sender, TextChangedEventArgs e) {
+            if (oneAnime.urlAnimePlanet != textBoxUrlAnimePlanet.Text) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                if (changedData.urlAnimePlanet != textBoxUrlAnimePlanet.Text) {
+                    changedData.urlAnimePlanet = textBoxUrlAnimePlanet.Text;
+                }
+            }
+
+            checkIfAllOriginal();
+        }
+
+        private void textChangeRecomendation(object sender, TextChangedEventArgs e) {
+            if (oneAnime.thirdPartyRecommendation != textBoxRecommendation.Text) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                if (changedData.thirdPartyRecommendation != textBoxRecommendation.Text) {
+                    changedData.thirdPartyRecommendation = textBoxRecommendation.Text;
+                }
+            }
+
+            checkIfAllOriginal();
         }
     }
 }

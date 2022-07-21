@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -26,48 +27,239 @@ namespace Anicluster {
         public MainWindow() {
             InitializeComponent();
 
+            //-----------
+            List<AnimeTag> animeTags = new List<AnimeTag>();
+
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Mecha"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Krieg"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Fantasy"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Sci-Fiction"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Romanze"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Harem"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Apokalypse"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Post-Apokalypse"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Action"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Magie"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Komödie"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Schwertkampf"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Demonen"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Drachen"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Over-Powered (OP)"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Reincarnation"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Mysterik"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Abenteuer"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Drama"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Tragödie"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Isekai"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Monster"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Mittelalter"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Virtuelle Realität (VR)"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Dungeon"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Übermäßige Gewaltdarstellung"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Politik"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Royal"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Management"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Gott"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Religion"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Ecchi"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Zombie"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Slice-Of-Life"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Horror"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Androiden"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Krimi"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Katzen"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Hunde"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Elfen"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Gott"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Medizin"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Militär"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Rivalität"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Gefängniss"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Geheime Identität"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Skelette"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Vampire"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Polizei"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Krankenhaus"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Feuerwehr"
+            });
+            animeTags.Add(new AnimeTag() {
+                id = Guid.NewGuid(),
+                tagDesignator = "Zeitreise"
+            });
+
+            animeTags = animeTags.OrderBy(x => x.tagDesignator).ToList();
+
+            List<AnimeTag> indexeToDelete = new List<AnimeTag>();
+            for (int i = 0; i < animeTags.Count; i += 1) {
+                if (dbController.checkIfTagExistsByDesignator(animeTags[i])) {
+                    indexeToDelete.Add(animeTags[i]);
+                }
+            }
+
+            for (int i = 0; i < indexeToDelete.Count; i += 1) {
+                animeTags.Remove(indexeToDelete[i]);
+            }
+
+            dbController.addImportedTags(animeTags);
+            //-----------
+
             dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
         public void OnWindowClosing(object sender, CancelEventArgs e) {
             // close the application after all orders are done.
             Application.Current.Shutdown();
-        }
-
-        private void click_DummyDaten(object sender, RoutedEventArgs e) {
-
-            databaseController dbController = new databaseController();
-
-            Rating rating = new Rating(
-                story: 74,
-                sound: 98,
-                animation: 14,
-                specialEffect: 42,
-                germanDub: 0
-            );
-            List<AnimeTag> tags = new List<AnimeTag> {
-                new AnimeTag() { tagDesignator = "Romanze" },
-                new AnimeTag() { tagDesignator = "Militär" }
-            };
-
-            List<Staffel> staffeln = new List<Staffel> {
-                new Staffel() { counter = 1 , episodes = 12},
-                new Staffel() { counter = 2 , episodes = 24},
-                new Staffel() { counter = 3 , episodes = 12},
-            };
-
-            AnimeData dummyAnime = new AnimeData {
-                id = Guid.NewGuid(),
-                favorite = true,
-                name = "Girls & Panzer",
-                rating = rating,
-                status = AnimeStatus.Fertig,
-                tags = tags,
-                tier = AnimeTier.A,
-                staffeln = staffeln,
-            };
-            dbController.addAnimeToDB(dummyAnime);
-
-            updateDataGrid();
         }
 
         private void updateDataGrid() {
@@ -102,11 +294,6 @@ namespace Anicluster {
                     updateDataGrid();
                 }
             }
-        }
-
-        private void click_UpdateView(object sender, RoutedEventArgs e) {
-            dataGridAnimeList.ItemsSource = null;
-            dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
 
         private void click_AddNewAnime(object sender, RoutedEventArgs e) {
