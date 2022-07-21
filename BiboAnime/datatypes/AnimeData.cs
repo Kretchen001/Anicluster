@@ -1,4 +1,6 @@
-﻿namespace BiboAnime.datatypes {
+﻿using System.Text.Json;
+
+namespace BiboAnime.datatypes {
 
     public class AnimeData : IEquatable<AnimeData> {
 
@@ -21,6 +23,10 @@
             return this.id == other.id &&
                 this.favorite == other.favorite &&
                 this.name == other.name;
+        }
+
+        public AnimeData DeepClone() {
+            return JsonSerializer.Deserialize<AnimeData>(JsonSerializer.Serialize(this, this.GetType()));
         }
     }
 
