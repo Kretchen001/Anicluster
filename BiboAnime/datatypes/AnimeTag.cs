@@ -13,5 +13,11 @@
             this.id = id;
             this.tagDesignator = tagDesignator;
         }
+
+        public bool Equals(AnimeTag a, AnimeTag b) {
+            return
+                a.id == b.id &&
+                a.tagDesignator == b.tagDesignator;
+        }
     }
 }

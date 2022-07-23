@@ -1,6 +1,7 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,8 +31,11 @@ namespace Anicluster.windows {
             showTier();
             showRating();
             showStaffeln();
+            showTagsInDataGrid();
             labelStatus.Content = oneAnime.status.ToString();
             labelNameHeadLine.Content = givenAnime.name;
+
+            checkIfAllOriginal();
         }
 
         private void setDisplay() {
@@ -120,6 +124,18 @@ namespace Anicluster.windows {
             }
         }
 
+        private void showTagsInDataGrid() {
+
+            List<string> tagNames = new List<string>();
+            for (int i = 0; i < changedData.tags.Count; i += 1) {
+                tagNames.Add(changedData.tags[i].tagDesignator);
+            }
+            tagNames.Sort();
+
+            dataGridTagsShowDetails.ItemsSource = null;
+            dataGridTagsShowDetails.ItemsSource = tagNames;
+        }
+
         private void clickCallLink(object sender, RoutedEventArgs e) {
             Process.Start(new ProcessStartInfo {
                 FileName = oneAnime.urlAnimePlanet,
@@ -150,8 +166,15 @@ namespace Anicluster.windows {
         }
 
         private void clickChoosenTags(object sender, RoutedEventArgs e) {
-            ShowDetailsTags showDetailsTagsWindows = new ShowDetailsTags(changedData.tags);
-            showDetailsTagsWindows.ShowDialog();
+            //ShowDetailsTags showDetailsTagsWindows = new ShowDetailsTags(changedData.tags);
+            //showDetailsTagsWindows.ShowDialog();
+
+            TagList tagListWindow = new TagList(changedData.tags);
+            tagListWindow.ShowDialog();
+
+            changedData.tags = tagListWindow.selectedTagList;
+
+            showTagsInDataGrid();
         }
 
         private void checkIfAllOriginal() {
@@ -167,11 +190,11 @@ namespace Anicluster.windows {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
                 return;
             }
-            if (oneAnime.rating != changedData.rating) {
+            if (!oneAnime.rating.Equals(oneAnime.rating, changedData.rating)) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
                 return;
             }
-            if (oneAnime.tags != changedData.tags) {
+            if (oneAnime.tags.Equals(changedData.tags)) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
                 return;
             }
@@ -183,7 +206,7 @@ namespace Anicluster.windows {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
                 return;
             }
-            if (oneAnime.staffeln != changedData.staffeln) {
+            if (oneAnime.staffeln.Equals(changedData.staffeln)) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
                 return;
             }

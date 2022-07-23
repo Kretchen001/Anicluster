@@ -23,5 +23,14 @@
                 this.general = (int)((story * 0.4) + (sound * 0.1) + (animation * 0.3) + (specialEffect * 0.1) + (germanDub * 0.1));
             }
         }
+
+        public bool Equals(Rating a, Rating b) {
+            return 
+                a.animation == b.animation &&
+                a.sound == b.sound &&
+                a.story == b.story &&
+                a.general == b.general &&
+                a.germanDub == b.germanDub;
+        }
     }
 }
