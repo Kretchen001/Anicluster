@@ -34,8 +34,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "..\TagAddInstall\bin\publish\TagAddInstall.exe"; DestDir: "{app}\prog"; Flags: ignoreversion deleteafterinstall
-
 Source: "..\Anicluster\bin\Publish\System.Xml.Serialization.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
 Source: "..\Anicluster\bin\Publish\System.Xml.ReaderWriter.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
 Source: "..\Anicluster\bin\Publish\System.Xml.Linq.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
@@ -323,6 +321,8 @@ Source: "..\Anicluster\bin\Publish\System.Xml.XmlDocument.dll"; DestDir: "{app}\
 Source: "..\Anicluster\bin\Publish\System.Xml.XDocument.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "Anicluster.bat"; DestDir: "{app}"
+; Datenbank
+Source: "..\LiteDB\database.liteDB"; DestDir: "{app}\prog\databaseLiteDB"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -331,7 +331,6 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 
 [Run]
-Filename: "{app}\prog\TagAddInstall.exe"; 
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Dirs]

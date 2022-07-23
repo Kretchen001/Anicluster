@@ -151,6 +151,9 @@ namespace BiboAnime.databaseLiteDB {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeTag>("Tags");
                 AnimeTag tempTag = new AnimeTag() { tagDesignator = tag.tagDesignator }; // without id
+                if (checkIfTagExistsByDesignator(tempTag)) {
+                    return;
+                }
                 col.Insert(tempTag);
                 col.EnsureIndex(x => x.id);
             }
