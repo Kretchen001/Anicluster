@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Anicluster.windows"
         mc:Ignorable="d"
-        Title="Details" Height="576" Width="1024">
+        Title="Details" Height="720" Width="1280">
 
     <Window.Resources>
         <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
