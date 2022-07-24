@@ -3,6 +3,7 @@ using BiboAnime.datatypes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,6 +23,8 @@ namespace Anicluster.windows {
         databaseController dbController = new databaseController();
 
         private bool isShiftPressed = false;
+
+        private bool changed = false;
 
         public ShowDetails(AnimeData givenAnime) {
             InitializeComponent();
@@ -137,7 +140,9 @@ namespace Anicluster.windows {
             textBoxTotalEpisodes.Text = "";
 
             if (changedData.staffeln != null) {
+                int x = 0;
                 for (int i = 0; i < changedData.staffeln.Count; i += 1) {
+                    x += changedData.staffeln[i].episodes;
                     if (i != (changedData.staffeln.Count - 1)) {
                         textBlockForStaffelPrint.Text += "St." + (i + 1) + " : " + changedData.staffeln[i].episodes + " | ";
                     }
@@ -146,6 +151,7 @@ namespace Anicluster.windows {
                     }
                 }
 
+                changedData.episodesTotal = x;
                 textBoxTotalEpisodes.Text = changedData.episodesTotal.ToString();
             }
         }
@@ -170,7 +176,24 @@ namespace Anicluster.windows {
         }
 
         private void clickCloseButton(object sender, RoutedEventArgs e) {
-            this.Close();
+            if (changed == true) {
+                if (MessageBox.Show("Es wurden Änderungen vorgenommen.\n" +
+                    "Beenden um sie zu verwerfen?",
+                    "Änderungen verwerfen?",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning) == MessageBoxResult.Yes) {
+                    this.Close();
+                }
+            }
+            else {
+                this.Close();
+            }
+        }
+
+        private void clickAcceptChanges(object sender, RoutedEventArgs e) {
+            dbController.updateAnime(changedData);
+            changed = false;
+            shouldViewUpdated(true);
         }
 
         private void clickRemoveEntity(object sender, RoutedEventArgs e) {
@@ -204,66 +227,81 @@ namespace Anicluster.windows {
         private void checkIfAllOriginal() {
             if (oneAnime.name != changedData.name) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.originalName != changedData.originalName) {
                 if ((oneAnime.originalName is null) && (changedData.originalName != "")) {
                     buttonAcceptChanges.Visibility = Visibility.Visible;
+                    changed = true;
                     return;
                 }
                 if (oneAnime.originalName is not null) {
                     buttonAcceptChanges.Visibility = Visibility.Visible;
+                    changed = true;
                     return;
                 }
             }
             if (oneAnime.favorite != changedData.favorite) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (!oneAnime.rating.Equals(oneAnime.rating, changedData.rating)) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.tags.Equals(changedData.tags)) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.urlAnimePlanet != changedData.urlAnimePlanet) {
                 if ((oneAnime.urlAnimePlanet is null) && (changedData.urlAnimePlanet != "")) {
                     buttonAcceptChanges.Visibility = Visibility.Visible;
+                    changed = true;
                     return;
                 }
             }
             if (oneAnime.status != changedData.status) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.staffeln.Equals(changedData.staffeln)) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.episodesTotal != changedData.episodesTotal) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.movies != changedData.movies) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.ovh != changedData.ovh) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.thirdPartyRecommendation != changedData.thirdPartyRecommendation) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
             if (oneAnime.tier != changedData.tier) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
+                changed = true;
                 return;
             }
 
             buttonAcceptChanges.Visibility = Visibility.Hidden;
+            changed = false;
         }
 
         private void toggleFavorite(object sender, RoutedEventArgs e) {
@@ -375,6 +413,11 @@ namespace Anicluster.windows {
 
             checkIfAllOriginal();
             showTier();
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
 
         // Rating-Code ----------------------------------------------------------------------------

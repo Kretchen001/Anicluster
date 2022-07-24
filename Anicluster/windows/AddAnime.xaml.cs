@@ -3,7 +3,7 @@ using BiboAnime.datatypes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -79,6 +79,11 @@ namespace Anicluster.windows {
             checkBoxStatus2.Content = AnimeStatus.Fertig;
             checkBoxStatus3.Content = AnimeStatus.Unterbrochen;
             checkBoxStatus4.Content = AnimeStatus.Abgebrochen;
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
 
         private void mouseWheelSrollStory(object sender, MouseWheelEventArgs e) {
@@ -221,6 +226,9 @@ namespace Anicluster.windows {
             }
             if (animeStaffeln.Count > 0) {
                 temp.staffeln = animeStaffeln;
+            }
+            else {
+                temp.staffeln = new List<Staffel>();
             }
             if (animeTotalEpisodes != 0) {
                 temp.episodesTotal = animeTotalEpisodes;

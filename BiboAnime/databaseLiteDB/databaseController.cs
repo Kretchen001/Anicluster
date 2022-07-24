@@ -151,7 +151,7 @@ namespace BiboAnime.databaseLiteDB {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeTag>("Tags");
                 AnimeTag tempTag = new AnimeTag() { tagDesignator = tag.tagDesignator }; // without id
-                if (checkIfTagExistsByDesignator(tempTag)) {
+                if (checkIfTagExistsByDesignator(tempTag, db)) {
                     return;
                 }
                 col.Insert(tempTag);
@@ -221,6 +221,24 @@ namespace BiboAnime.databaseLiteDB {
                     return true;
                 }
                 //return (result is null);
+            }
+        }
+
+        /// <summary>
+        /// Same Function as checkIfTagExistsByDesignator, only with a given Database. (no IOException).
+        /// </summary>
+        /// <param name="animeTag"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public bool checkIfTagExistsByDesignator(AnimeTag animeTag, LiteDatabase db) {
+            var col = db.GetCollection<AnimeTag>("Tags");
+            var result = col.Query()
+                .Where(x => x.tagDesignator == animeTag.tagDesignator);
+            if (result.Count() == 0) {
+                return false;
+            }
+            else {
+                return true;
             }
         }
 

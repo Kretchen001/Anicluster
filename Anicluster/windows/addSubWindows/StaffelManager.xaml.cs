@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Anicluster.windows {
     /// <summary>
@@ -31,7 +32,7 @@ namespace Anicluster.windows {
             dataGridStaffeln.ItemsSource = managerStaffeln;
         }
 
-        private void textChangeEpisodes(object sender, System.Windows.Controls.TextChangedEventArgs e) {
+        private void textChangeEpisodes(object sender, TextChangedEventArgs e) {
 
             if (int.TryParse(textBoxGivenEpisodes.Text, out int numericValue)) {
                 epi = numericValue;

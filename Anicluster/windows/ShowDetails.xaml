@@ -259,7 +259,7 @@
             <Label Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Staffeln</Label>
 
             <Label Grid.Row="9" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Filme</Label>
-            <TextBox x:Name="textBoxMovies" Grid.Row="9" Grid.Column="4" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="False"/>
+            <TextBox x:Name="textBoxMovies" Grid.Row="9" Grid.Column="4" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationTextBox"/>
 
             <Label Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Gesamt-Episoden</Label>
             <TextBlock x:Name="textBoxTotalEpisodes" Background="Beige" Grid.Row="10" Grid.Column="1" Margin="20,10,20,10"/>
@@ -267,8 +267,8 @@
                 Staffeln Ändern
             </Button>
 
-            <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">OVH-Episoden</Label>
-            <TextBox x:Name="textBoxOvhs" Grid.Row="10" Grid.Column="4" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="False"/>
+            <Label Grid.Row="10" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">OVH's</Label>
+            <TextBox x:Name="textBoxOvhs" Grid.Row="10" Grid.Column="4" Margin="20,10,20,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationTextBox" />
 
             <Label Grid.Row="11" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Tags</Label>
             <Button Grid.Row="11" Grid.Column="1" Margin="30,10,30,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="clickChoosenTags">
@@ -286,7 +286,7 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="10*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" x:Name="buttonAcceptChanges" Click="clickCloseButton" FontSize="18" Visibility="Hidden">
+                <Button Grid.Column="0" x:Name="buttonAcceptChanges" Click="clickAcceptChanges" FontSize="18" Visibility="Hidden">
                     <Button.Background>
                         <RadialGradientBrush>
                             <GradientStop Color="#FFF8FFB7" Offset="1"/>
