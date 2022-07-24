@@ -29,6 +29,7 @@
                 a.animation == b.animation &&
                 a.sound == b.sound &&
                 a.story == b.story &&
+                a.specialEffect == b.specialEffect &&
                 a.general == b.general &&
                 a.germanDub == b.germanDub;
         }

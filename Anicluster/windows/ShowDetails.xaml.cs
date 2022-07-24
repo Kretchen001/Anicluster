@@ -21,8 +21,13 @@ namespace Anicluster.windows {
 
         databaseController dbController = new databaseController();
 
+        private bool isShiftPressed = false;
+
         public ShowDetails(AnimeData givenAnime) {
             InitializeComponent();
+            
+            AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
+            AddHandler(Keyboard.KeyUpEvent, (KeyEventHandler)HandleKeyUpEvent);
 
             oneAnime = givenAnime.DeepClone();
             changedData = givenAnime.DeepClone();
@@ -36,6 +41,17 @@ namespace Anicluster.windows {
             labelNameHeadLine.Content = givenAnime.name;
 
             checkIfAllOriginal();
+        }
+        private void HandleKeyDownEvent(object sender, KeyEventArgs e) {
+            if ((e.Key == Key.LeftShift) && (isShiftPressed == false)) {
+                isShiftPressed = true;
+            }
+        }
+
+        private void HandleKeyUpEvent(object sender, KeyEventArgs e) {
+            if ((e.Key == Key.LeftShift) && (isShiftPressed == true)) {
+                isShiftPressed = false;
+            }
         }
 
         private void setDisplay() {
@@ -61,6 +77,14 @@ namespace Anicluster.windows {
                 case AnimeTier.B: B = 2; break;
                 case AnimeTier.C: C = 2; break;
                 case AnimeTier.D: D = 2; break;
+                case AnimeTier.Dummy: {
+                        S = 0;
+                        A = 0; 
+                        B = 0;
+                        C = 0;
+                        D = 0;
+                        break;
+                    }
                 default: break;
             }
             labelTierS.BorderThickness = new Thickness(S);
@@ -103,6 +127,8 @@ namespace Anicluster.windows {
             }
             labelGeneralRating.Content = ratingGeneral;
             progressBarGeneralRating.Value = ratingGeneral;
+
+            checkIfAllOriginal();
         }
 
         private void showStaffeln() {
@@ -166,8 +192,6 @@ namespace Anicluster.windows {
         }
 
         private void clickChoosenTags(object sender, RoutedEventArgs e) {
-            //ShowDetailsTags showDetailsTagsWindows = new ShowDetailsTags(changedData.tags);
-            //showDetailsTagsWindows.ShowDialog();
 
             TagList tagListWindow = new TagList(changedData.tags);
             tagListWindow.ShowDialog();
@@ -183,8 +207,14 @@ namespace Anicluster.windows {
                 return;
             }
             if (oneAnime.originalName != changedData.originalName) {
-                buttonAcceptChanges.Visibility = Visibility.Visible;
-                return;
+                if ((oneAnime.originalName is null) && (changedData.originalName != "")) {
+                    buttonAcceptChanges.Visibility = Visibility.Visible;
+                    return;
+                }
+                if (oneAnime.originalName is not null) {
+                    buttonAcceptChanges.Visibility = Visibility.Visible;
+                    return;
+                }
             }
             if (oneAnime.favorite != changedData.favorite) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
@@ -199,8 +229,10 @@ namespace Anicluster.windows {
                 return;
             }
             if (oneAnime.urlAnimePlanet != changedData.urlAnimePlanet) {
-                buttonAcceptChanges.Visibility = Visibility.Visible;
-                return;
+                if ((oneAnime.urlAnimePlanet is null) && (changedData.urlAnimePlanet != "")) {
+                    buttonAcceptChanges.Visibility = Visibility.Visible;
+                    return;
+                }
             }
             if (oneAnime.status != changedData.status) {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
@@ -268,71 +300,310 @@ namespace Anicluster.windows {
         }
 
         private void textChangeOriginalName(object sender, TextChangedEventArgs e) {
-            if (oneAnime.originalName != textBoxOriginalName.Text) {
-                buttonAcceptChanges.Visibility = Visibility.Visible;
-                if (changedData.originalName != textBoxOriginalName.Text) {
-                    changedData.originalName = textBoxOriginalName.Text;
-                }
-            }
+            changedData.originalName = textBoxOriginalName.Text;
 
             checkIfAllOriginal();
         }
 
         private void textChangeUrl(object sender, TextChangedEventArgs e) {
-            if (oneAnime.urlAnimePlanet != textBoxUrlAnimePlanet.Text) {
-                buttonAcceptChanges.Visibility = Visibility.Visible;
-                if (changedData.urlAnimePlanet != textBoxUrlAnimePlanet.Text) {
-                    changedData.urlAnimePlanet = textBoxUrlAnimePlanet.Text;
-                }
-            }
+            changedData.urlAnimePlanet = textBoxUrlAnimePlanet.Text;
 
             checkIfAllOriginal();
         }
 
         private void textChangeRecomendation(object sender, TextChangedEventArgs e) {
-            if (oneAnime.thirdPartyRecommendation != textBoxRecommendation.Text) {
-                buttonAcceptChanges.Visibility = Visibility.Visible;
-                if (changedData.thirdPartyRecommendation != textBoxRecommendation.Text) {
-                    changedData.thirdPartyRecommendation = textBoxRecommendation.Text;
-                }
-            }
+            changedData.thirdPartyRecommendation = textBoxRecommendation.Text;
 
             checkIfAllOriginal();
         }
 
         private void clickChangeTierS(object sender, MouseButtonEventArgs e) {
-            changedData.tier = AnimeTier.S;
+            if (changedData.tier != AnimeTier.S) {
+                changedData.tier = AnimeTier.S;
+            }
+            else {
+                changedData.tier = AnimeTier.Dummy;
+            }
 
             checkIfAllOriginal();
             showTier();
         }
 
         private void clickChangeTierA(object sender, MouseButtonEventArgs e) {
-            changedData.tier = AnimeTier.A;
+            if (changedData.tier != AnimeTier.A) {
+                changedData.tier = AnimeTier.A;
+            }
+            else {
+                changedData.tier = AnimeTier.Dummy;
+            }
 
             checkIfAllOriginal();
             showTier();
         }
 
         private void clickChangeTierB(object sender, MouseButtonEventArgs e) {
-            changedData.tier = AnimeTier.B;
+            if (changedData.tier != AnimeTier.B) {
+                changedData.tier = AnimeTier.B;
+            }
+            else {
+                changedData.tier = AnimeTier.Dummy;
+            }
 
             checkIfAllOriginal();
             showTier();
         }
 
         private void clickChangeTierC(object sender, MouseButtonEventArgs e) {
-            changedData.tier = AnimeTier.C;
+            if (changedData.tier != AnimeTier.C) {
+                changedData.tier = AnimeTier.C;
+            }
+            else {
+                changedData.tier = AnimeTier.Dummy;
+            }
 
             checkIfAllOriginal();
             showTier();
         }
 
         private void clickChangeTierD(object sender, MouseButtonEventArgs e) {
-            changedData.tier = AnimeTier.D;
+            if (changedData.tier != AnimeTier.D) {
+                changedData.tier = AnimeTier.D;
+            }
+            else {
+                changedData.tier = AnimeTier.Dummy;
+            }
 
             checkIfAllOriginal();
             showTier();
+        }
+
+        // Rating-Code ----------------------------------------------------------------------------
+        private void ratingStoryIncDec(int e) {
+            if ((e > 0) && (changedData.rating.story <= 100)) {
+                if (changedData.rating.story != 100) {
+                    if (isShiftPressed && changedData.rating.story < 90) {
+                        changedData.rating.story += 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.story >= 90) {
+                        changedData.rating.story = 100;
+                    }
+                    else {
+                        changedData.rating.story += 1;
+                    }
+                }
+            }
+            else {
+                if (changedData.rating.story > 0) {
+                    if (isShiftPressed && changedData.rating.story > 10) {
+                        changedData.rating.story -= 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.story <= 10) {
+                        changedData.rating.story = 0;
+                    }
+                    else {
+                        changedData.rating.story -= 1;
+                    }
+                }
+            }
+            labelStoryRating.Content = changedData.rating.story.ToString();
+            progressBarStoryRating.Value = changedData.rating.story;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void ratingAnimationIncDec(int e) {
+            if ((e > 0) && (changedData.rating.animation <= 100)) {
+                if (changedData.rating.animation != 100) {
+                    if (isShiftPressed && changedData.rating.animation < 90) {
+                        changedData.rating.animation += 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.animation >= 90) {
+                        changedData.rating.animation = 100;
+                    }
+                    else {
+                        changedData.rating.animation += 1;
+                    }
+                }
+            }
+            else {
+                if (changedData.rating.animation > 0) {
+                    if (isShiftPressed && changedData.rating.animation > 10) {
+                        changedData.rating.animation -= 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.animation <= 10) {
+                        changedData.rating.animation = 0;
+                    }
+                    else {
+                        changedData.rating.animation -= 1;
+                    }
+                }
+            }
+            labelAnimationRating.Content = changedData.rating.animation.ToString();
+            progressBarAnimationRating.Value = changedData.rating.animation;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void ratingSpecialEffectsIncDec(int e) {
+            if ((e > 0) && (changedData.rating.specialEffect <= 100)) {
+                if (changedData.rating.specialEffect != 100) {
+                    if (isShiftPressed && changedData.rating.specialEffect < 90) {
+                        changedData.rating.specialEffect += 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.specialEffect >= 90) {
+                        changedData.rating.specialEffect = 100;
+                    }
+                    else {
+                        changedData.rating.specialEffect += 1;
+                    }
+                }
+            }
+            else {
+                if (changedData.rating.specialEffect > 0) {
+                    if (isShiftPressed && changedData.rating.specialEffect > 10) {
+                        changedData.rating.specialEffect -= 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.specialEffect <= 10) {
+                        changedData.rating.specialEffect = 0;
+                    }
+                    else {
+                        changedData.rating.specialEffect -= 1;
+                    }
+                }
+            }
+            labelSpecialEffectsRating.Content = changedData.rating.specialEffect.ToString();
+            progressBarSpecialEffectsRating.Value = changedData.rating.specialEffect;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void ratingSoundIncDec(int e) {
+            if ((e > 0) && (changedData.rating.sound <= 100)) {
+                if (changedData.rating.sound != 100) {
+                    if (isShiftPressed && changedData.rating.sound < 90) {
+                        changedData.rating.sound += 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.sound >= 90) {
+                        changedData.rating.sound = 100;
+                    }
+                    else {
+                        changedData.rating.sound += 1;
+                    }
+                }
+            }
+            else {
+                if (changedData.rating.sound > 0) {
+                    if (isShiftPressed && changedData.rating.sound > 10) {
+                        changedData.rating.sound -= 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.sound <= 10) {
+                        changedData.rating.sound = 0;
+                    }
+                    else {
+                        changedData.rating.sound -= 1;
+                    }
+                }
+            }
+            labelSoundRating.Content = changedData.rating.sound.ToString();
+            progressBarSoundRating.Value = changedData.rating.sound;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void ratingGermanDubIncDec(int e) {
+            if ((e > 0) && (changedData.rating.germanDub <= 100)) {
+                if (changedData.rating.germanDub != 100) {
+                    if (isShiftPressed && changedData.rating.germanDub < 90) {
+                        changedData.rating.germanDub += 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.germanDub >= 90) {
+                        changedData.rating.germanDub = 100;
+                    }
+                    else {
+                        changedData.rating.germanDub += 1;
+                    }
+                }
+            }
+            else {
+                if (changedData.rating.germanDub > 0) {
+                    if (isShiftPressed && changedData.rating.germanDub > 10) {
+                        changedData.rating.germanDub -= 10;
+                    }
+                    else if (isShiftPressed && changedData.rating.germanDub <= 10) {
+                        changedData.rating.germanDub = 0;
+                    }
+                    else {
+                        changedData.rating.germanDub -= 1;
+                    }
+                }
+            }
+            labelGermanDubRating.Content = changedData.rating.germanDub.ToString();
+            progressBarGermanDubRating.Value = changedData.rating.germanDub;
+            // generalRating recalculate
+            calculateAndPrintGeneralRating();
+        }
+
+        private void click_RatingStoryPlus(object sender, RoutedEventArgs e) {
+            ratingStoryIncDec(1);
+        }
+
+        private void click_RatingStoryMinus(object sender, RoutedEventArgs e) {
+            ratingStoryIncDec(-1);
+        }
+
+        private void click_RatingAnimationPlus(object sender, RoutedEventArgs e) {
+            ratingAnimationIncDec(1);
+        }
+
+        private void click_RatingAnimationMinus(object sender, RoutedEventArgs e) {
+            ratingAnimationIncDec(-1);
+        }
+
+        private void click_RatingSpecialEffectsPlus(object sender, RoutedEventArgs e) {
+            ratingSpecialEffectsIncDec(1);
+        }
+
+        private void click_RatingSpecialEffectsMinus(object sender, RoutedEventArgs e) {
+            ratingSpecialEffectsIncDec(-1);
+        }
+
+        private void click_RatingSoundPlus(object sender, RoutedEventArgs e) {
+            ratingSoundIncDec(1);
+        }
+
+        private void click_RatingSoundMinus(object sender, RoutedEventArgs e) {
+            ratingSoundIncDec(-1);
+        }
+
+        private void click_RatingGermanDubPlus(object sender, RoutedEventArgs e) {
+            ratingGermanDubIncDec(1);
+        }
+
+        private void click_RatingGermanDubMinus(object sender, RoutedEventArgs e) {
+            ratingGermanDubIncDec(-1);
+        }
+
+        private void click_RatingGermanDubMinus(object sender, MouseButtonEventArgs e) {
+            ratingGermanDubIncDec(-1);
+        }
+        private void mouseWheelSrollStory(object sender, MouseWheelEventArgs e) {
+            ratingStoryIncDec(e.Delta);
+        }
+
+        private void mouseWheelScrollAnimation(object sender, MouseWheelEventArgs e) {
+            ratingAnimationIncDec(e.Delta);
+        }
+
+        private void mouseWheelScrollSpecialEffects(object sender, MouseWheelEventArgs e) {
+            ratingSpecialEffectsIncDec(e.Delta);
+        }
+
+        private void mouseWheelScrollSound(object sender, MouseWheelEventArgs e) {
+            ratingSoundIncDec(e.Delta);
+        }
+
+        private void mouseWheelScrollGermanDub(object sender, MouseWheelEventArgs e) {
+            ratingGermanDubIncDec(e.Delta);
         }
     }
 }
