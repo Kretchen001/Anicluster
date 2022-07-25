@@ -518,6 +518,7 @@ namespace Anicluster.windows.filter {
             List<AnimeData> listOfTagSelection = new List<AnimeData>();
             listOfTagSelection.AddRange(dbFilterController.dbFilterByTag(tagListInclusive));
 
+            // count, if a Anime is multiple time's in the list
             int c = 0;
             for (int i = 0; i < listOfTagSelection.Count; i += 1) {
                 int cc = listOfTagSelection.Count(x => x.id == listOfTagSelection[i].id);
@@ -525,21 +526,29 @@ namespace Anicluster.windows.filter {
                     c = cc;
                 }
             }
-            List<AnimeData> tempListForDelete = new List<AnimeData>();
+            // only add Anime's, that are c-times in the list.
+            List<AnimeData> tempListForRemember = new List<AnimeData>();
             for (int i = 0; i < listOfTagSelection.Count; i += 1) {
                 if (listOfTagSelection.Count(x => x.id == listOfTagSelection[i].id) == c) {
-                    tempListForDelete.Add(listOfTagSelection[i]);
+                    tempListForRemember.Add(listOfTagSelection[i]);
                 }
             }
-            listOfTagSelection = tempListForDelete;
 
-            List<AnimeData> listOfTagSelectionEx = dbFilterController.dbFilterWithoutTag(tagListExclusive);
+            // write the tempListForRemeber to the listOfTagSelection, so now the real inclusive Tags are recogniced
+            listOfTagSelection = tempListForRemember;
+
+            List<AnimeData> listOfTagSelectionEx = dbFilterController.dbFilterByTag(tagListExclusive);
+            
+            // remove the Animes, that have the exclusive Tag(s)
             for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
                 if (listOfTagSelection.Contains(listOfTagSelectionEx[i])) {
                     listOfTagSelection.Remove(listOfTagSelectionEx[i]);
                 }
             }
-            if ((listOfTagSelection.Count == 0) && (listOfTagSelectionEx.Count != 0)) {
+
+            // if there ONLY exclusive Tags, than List show all Animes, that haven't this tags
+            if ((listOfTagSelection.Count == 0) && (tagListExclusive.Count != 0)) {
+                listOfTagSelectionEx = dbFilterController.dbFilterWithoutTag(tagListExclusive);
                 c = 0;
                 for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
                     int cc = listOfTagSelectionEx.Count(x => x.id == listOfTagSelectionEx[i].id);
@@ -547,13 +556,13 @@ namespace Anicluster.windows.filter {
                         c = cc;
                     }
                 }
-                tempListForDelete.Clear();
+                tempListForRemember.Clear();
                 for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
                     if (listOfTagSelectionEx.Count(x => x.id == listOfTagSelectionEx[i].id) == c) {
-                        tempListForDelete.Add(listOfTagSelectionEx[i]);
+                        tempListForRemember.Add(listOfTagSelectionEx[i]);
                     }
                 }
-                listOfTagSelection.AddRange(tempListForDelete);
+                listOfTagSelection.AddRange(tempListForRemember);
             }
 
             // Min Max Episodes
