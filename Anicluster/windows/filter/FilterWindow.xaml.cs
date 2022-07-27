@@ -674,7 +674,7 @@ namespace Anicluster.windows.filter {
         }
 
         private void fillTagView() {
-            animeTags = dbController.getAllAnimeTags();
+            animeTags = dbController.getAllUsedTags();
 
             animeTags = animeTags.OrderBy(x => x.tagDesignator).ToList();
 

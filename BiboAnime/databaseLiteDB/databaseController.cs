@@ -197,6 +197,26 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
+        public List<AnimeTag> getAllUsedTags() {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> listOfAnimes = new List<AnimeData>();
+                listOfAnimes = col.Query()
+                    .ToList();
+
+                List<AnimeTag> listOfTags = new List<AnimeTag>();
+                for (int i = 0; i < listOfAnimes.Count; i += 1) {
+                    for (int j = 0; j < listOfAnimes[i].tags.Count; j += 1) {
+                        if (!listOfTags.Contains(listOfAnimes[i].tags[j])) {
+                            listOfTags.Add(listOfAnimes[i].tags[j]);
+                        }
+                    }
+                }
+
+                return listOfTags;
+            }
+        }
+
         public int getTagDbCountForIdPlusOne() {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeTag>("Tags");
