@@ -152,6 +152,9 @@ namespace Anicluster.windows {
                 changedData.episodesTotal = x;
                 textBoxTotalEpisodes.Text = changedData.episodesTotal.ToString();
             }
+
+            textBoxMovies.Text = changedData.movies.ToString();
+            textBoxOvhs.Text = changedData.ovh.ToString();
         }
 
         private void showTagsInDataGrid() {
@@ -287,6 +290,14 @@ namespace Anicluster.windows {
                 buttonAcceptChanges.Visibility = Visibility.Visible;
                 return;
             }
+            if (oneAnime.movies != changedData.movies) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
+            if (oneAnime.ovh != changedData.ovh) {
+                buttonAcceptChanges.Visibility = Visibility.Visible;
+                return;
+            }
 
             buttonAcceptChanges.Visibility = Visibility.Hidden;
         }
@@ -338,6 +349,18 @@ namespace Anicluster.windows {
 
         private void textChangeRecomendation(object sender, TextChangedEventArgs e) {
             changedData.thirdPartyRecommendation = textBoxRecommendation.Text;
+
+            checkIfAllOriginal();
+        }
+
+        private void textChangedOvh(object sender, TextChangedEventArgs e) {
+            changedData.ovh = int.Parse(textBoxOvhs.Text);
+
+            checkIfAllOriginal();
+        }
+
+        private void textChangedMovies(object sender, TextChangedEventArgs e) {
+            changedData.movies = int.Parse(textBoxMovies.Text);
 
             checkIfAllOriginal();
         }

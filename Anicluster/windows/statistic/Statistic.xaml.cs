@@ -93,34 +93,39 @@ namespace Anicluster.windows.statistic {
         }
 
         private void loadTagUsage() {
-            Dictionary<string, int> tagDictionary = new Dictionary<string, int>();
+            if (animes.Count == 0) {
+                dataGridTags.ItemsSource = null;
+            }
+            else {
+                Dictionary<string, int> tagDictionary = new Dictionary<string, int>();
 
 
-            for (int i = 0; i < animes.Count; i += 1) {
-                for (int j = 0; j < animes[i].tags.Count; j += 1) {
-                    if (tagDictionary.ContainsKey(animes[i].tags[j].tagDesignator)) {
-                        tagDictionary[animes[i].tags[j].tagDesignator] += 1;
-                    }
-                    else {
-                        tagDictionary.Add(animes[i].tags[j].tagDesignator, 1);
+                for (int i = 0; i < animes.Count; i += 1) {
+                    for (int j = 0; j < animes[i].tags.Count; j += 1) {
+                        if (tagDictionary.ContainsKey(animes[i].tags[j].tagDesignator)) {
+                            tagDictionary[animes[i].tags[j].tagDesignator] += 1;
+                        }
+                        else {
+                            tagDictionary.Add(animes[i].tags[j].tagDesignator, 1);
+                        }
                     }
                 }
+
+                int maxTag = tagDictionary.Values.Max();
+
+                List<DatatypForTable> tempListForTable = new List<DatatypForTable>();
+                for (int i = 0; i < tagDictionary.Count; i += 1) {
+                    tempListForTable.Add(new DatatypForTable() {
+                        id = i + 1,
+                        name = tagDictionary.ElementAt(i).Key,
+                        value = tagDictionary.ElementAt(i).Value,
+                        maxTag = maxTag
+                    });
+                }
+
+                dataGridTags.ItemsSource = null;
+                dataGridTags.ItemsSource = tempListForTable;
             }
-
-            int maxTag = tagDictionary.Values.Max();
-
-            List<DatatypForTable> tempListForTable = new List<DatatypForTable>();
-            for (int i = 0; i < tagDictionary.Count; i += 1) {
-                tempListForTable.Add(new DatatypForTable() {
-                    id = i + 1,
-                    name = tagDictionary.ElementAt(i).Key,
-                    value = tagDictionary.ElementAt(i).Value,
-                    maxTag = maxTag
-                });
-            }
-
-            dataGridTags.ItemsSource = null;
-            dataGridTags.ItemsSource = tempListForTable;
         }
 
         internal class DatatypForTable {
