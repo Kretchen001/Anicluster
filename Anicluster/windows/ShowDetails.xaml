@@ -253,6 +253,13 @@
 
             <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Status</Label>
             <Label x:Name="labelStatus" Grid.Row="8" Grid.Column="1" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <ComboBox x:Name="comboBoxStatus" Margin="10" Grid.Row="8" Grid.Column="2" SelectionChanged="comboBoxStatusChanged">
+                <ComboBoxItem Content="Wunschliste" /> 
+                <ComboBoxItem Content="Angefangen"/>
+                <ComboBoxItem Content="Fertig"/>
+                <ComboBoxItem Content="Unterbrochen"/>
+                <ComboBoxItem Content="Abgebrochen"/>
+            </ComboBox>
             
             <TextBlock x:Name="textBlockForStaffelPrint" Background="Beige" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Margin="20,10,20,10"></TextBlock>
             

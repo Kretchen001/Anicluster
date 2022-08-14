@@ -24,6 +24,8 @@ namespace Anicluster.windows {
 
         private bool isShiftPressed = false;
 
+        public const int MaxInt32Value = 2147483647;
+
         public ShowDetails(AnimeData givenAnime) {
             InitializeComponent();
             
@@ -194,6 +196,8 @@ namespace Anicluster.windows {
         private void clickAcceptChanges(object sender, RoutedEventArgs e) {
             dbController.updateAnime(changedData);
             shouldViewUpdated(true);
+            buttonAcceptChanges.Visibility = Visibility.Hidden;
+            labelStatus.Content = changedData.status.ToString();
         }
 
         private void clickRemoveEntity(object sender, RoutedEventArgs e) {
@@ -354,13 +358,28 @@ namespace Anicluster.windows {
         }
 
         private void textChangedOvh(object sender, TextChangedEventArgs e) {
-            changedData.ovh = int.Parse(textBoxOvhs.Text);
-
+            if (textBoxOvhs.Text.Length != 0) {
+                try {
+                    changedData.movies = int.Parse(textBoxOvhs.Text);
+                }
+                catch (Exception ex) {
+                    textBoxOvhs.Text = textBoxOvhs.Text.Replace(" ", "");
+                    Console.WriteLine(ex.ToString());
+                }
+            }
             checkIfAllOriginal();
         }
 
         private void textChangedMovies(object sender, TextChangedEventArgs e) {
-            changedData.movies = int.Parse(textBoxMovies.Text);
+            if (textBoxMovies.Text.Length != 0) {
+                try {
+                    changedData.movies = int.Parse(textBoxMovies.Text);
+                }
+                catch (Exception ex) {
+                    textBoxMovies.Text = textBoxMovies.Text.Replace(" ", "");
+                    Console.WriteLine(ex.ToString());
+                }
+            }
 
             checkIfAllOriginal();
         }
@@ -657,6 +676,22 @@ namespace Anicluster.windows {
 
         private void mouseWheelScrollGermanDub(object sender, MouseWheelEventArgs e) {
             ratingGermanDubIncDec(e.Delta);
+        }
+
+        private void comboBoxStatusChanged(object sender, SelectionChangedEventArgs e) {
+            if (comboBoxStatus.SelectedItem != null) {
+                ComboBoxItem cbi = (ComboBoxItem)comboBoxStatus.SelectedItem;
+                switch (cbi.Content.ToString()) {
+                    case "Wunschliste": changedData.status = AnimeStatus.Wunschliste; break;
+                    case "Angefangen": changedData.status = AnimeStatus.Angefangen; break;
+                    case "Fertig": changedData.status = AnimeStatus.Fertig; break;
+                    case "Unterbrochen": changedData.status = AnimeStatus.Unterbrochen; break;
+                    case "Abgebrochen": changedData.status = AnimeStatus.Abgebrochen; break;
+                    default: break;
+                }
+
+                checkIfAllOriginal();
+            }
         }
     }
 }
