@@ -238,17 +238,34 @@ INSERT INTO Tags
             tagDesignator: "Tiere"};
 			
 INSERT INTO Tags
-    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000056"},
+    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000059"},
             tagDesignator: "Engel"};
 			
 INSERT INTO Tags
-    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000057"},
+    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000060"},
             tagDesignator: "Crossover"};
 			
 INSERT INTO Tags
-    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000058"},
+    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000061"},
             tagDesignator: "Wirtschaft"};
 			
 INSERT INTO Tags
-    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000059"},
+    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000062"},
             tagDesignator: "Samurai"};
+
+INSERT INTO Tags
+    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000063"},
+            tagDesignator: "Seinen"};
+
+INSERT INTO Tags
+    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000064"},
+            tagDesignator: "Dark-Fantasy"};
+
+INSERT INTO Tags
+    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000065"},
+            tagDesignator: "Psychothriller"};
+
+INSERT INTO Tags
+    VALUES {_id: {"$guid": "00000000-0000-0000-0000-000000000066"},
+            tagDesignator: "Thriller"};
+            
