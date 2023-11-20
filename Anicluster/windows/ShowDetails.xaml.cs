@@ -360,7 +360,7 @@ namespace Anicluster.windows {
         private void textChangedOvh(object sender, TextChangedEventArgs e) {
             if (textBoxOvhs.Text.Length != 0) {
                 try {
-                    changedData.movies = int.Parse(textBoxOvhs.Text);
+                    changedData.ovh = int.Parse(textBoxOvhs.Text);
                 }
                 catch (Exception ex) {
                     textBoxOvhs.Text = textBoxOvhs.Text.Replace(" ", "");
