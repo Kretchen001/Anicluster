@@ -86,17 +86,19 @@ namespace Anicluster.windows {
 
             SaveFileDialog saveFileDialogWindow = new SaveFileDialog() {
                 InitialDirectory = dir,
-                FileName = "tags.csv",
-                Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*"
+                FileName = "tags.json",
+                Filter = "json files (*.json)|*.json|All files (*.*)|*.*"
             };
 
-            saveFileDialogWindow.ShowDialog();
+            if (saveFileDialogWindow.ShowDialog() == false) {
+                return;
+            }
 
-            if (!Export.exportAnimeTags(saveFileDialogWindow.FileName)) {
-                MessageBox.Show("Da ist was beim Import schief gelaufen", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (!Export.ExportTagListJson(saveFileDialogWindow.FileName)) {
+                MessageBox.Show("Tags exportiert", "Meldung", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else {
-                MessageBox.Show("Tags importiert", "Meldung", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Da ist was beim Export schief gelaufen", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
