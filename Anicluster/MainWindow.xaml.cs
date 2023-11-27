@@ -139,34 +139,101 @@ namespace Anicluster {
         }
 
         private void clickImportDataAnimes(object sender, RoutedEventArgs e) {
-            unimplementetYet();
-        }
-
-        private void clickImporDataTags(object sender, RoutedEventArgs e) {
             string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
 
             if (!Directory.Exists(dir)) {
-                dir = AppDomain.CurrentDomain.BaseDirectory;
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory);
             }
 
             OpenFileDialog openFileDialogWindow = new OpenFileDialog() {
                 InitialDirectory = dir,
-                FileName = "tags.csv",
+                FileName = "animes.json",
+                Filter = "json files (*.json)|*.json|All files (*.*)|*.*"
             };
 
             openFileDialogWindow.ShowDialog();
 
-            if (Import.checkTagListValid(openFileDialogWindow.FileName)) {
-                Import.importAnimeTags(openFileDialogWindow.FileName, true);
-            }
-            else {
-                var mail = MessageBox.Show("Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
-                    "Importfehler",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                if (mail == MessageBoxResult.Yes) { 
-                    // TODO: mailto einrichten?
+            MessageBoxResult resultAddOrReset = MessageBox.Show(
+                "Datenbank um die Animes erweitern?\nJa ist erweitern!\nNein ist Ersetzten! <- Dies löscht die aktuellen Daten!",
+                "Datenbankaktion",
+                MessageBoxButton.YesNoCancel);
+
+            if (resultAddOrReset == MessageBoxResult.Yes) {
+                if (!Import.importAnimeList(openFileDialogWindow.FileName, true)) {
+                    var mail = MessageBox.Show(
+                        "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
+                        "Importfehler",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    if (mail == MessageBoxResult.Yes) {
+                        // TODO: mailto einrichten?
+                    }
                 }
+            }
+            else if (resultAddOrReset == MessageBoxResult.No) {
+                if (!Import.importAnimeList(openFileDialogWindow.FileName, false)) {
+                    var mail = MessageBox.Show(
+                        "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
+                        "Importfehler",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    if (mail == MessageBoxResult.Yes) {
+                        // TODO: mailto einrichten?
+                    }
+                }
+            }
+            else { //resultAddOrReset == MessageBoxResult.Cancel
+                return;
+            }
+            updateDataGrid();
+        }
+
+        private void clickImportDataTags(object sender, RoutedEventArgs e) {
+            string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
+
+            if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            }
+
+            OpenFileDialog openFileDialogWindow = new OpenFileDialog() {
+                InitialDirectory = dir,
+                FileName = "tags.json",
+                Filter = "json files (*.json)|*.json|All files (*.*)|*.*"
+            };
+
+            openFileDialogWindow.ShowDialog();
+
+            MessageBoxResult resultAddOrReset = MessageBox.Show(
+                "Datenbank um Tags erweitern?\nJa ist erweitern!\nNein ist Ersetzten!",
+                "Datenbankaktion",
+                MessageBoxButton.YesNoCancel);
+
+            if (resultAddOrReset == MessageBoxResult.Yes) {
+                if (!Import.importAnimeTags(openFileDialogWindow.FileName, true)) {
+                    var mail = MessageBox.Show(
+                        "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
+                        "Importfehler",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    if (mail == MessageBoxResult.Yes) {
+                        // TODO: mailto einrichten?
+                    }
+                }
+            }
+            else if (resultAddOrReset == MessageBoxResult.No) {
+                if (!Import.importAnimeTags(openFileDialogWindow.FileName, false)) {
+                    var mail = MessageBox.Show(
+                        "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
+                        "Importfehler",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    if (mail == MessageBoxResult.Yes) {
+                        // TODO: mailto einrichten?
+                    }
+                }
+            }
+            else { //resultAddOrReset == MessageBoxResult.Cancel
+                return;
             }
         }
 

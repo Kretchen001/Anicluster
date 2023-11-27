@@ -77,7 +77,6 @@ namespace Anicluster.windows {
         }
 
         private void clickExport(object sender, RoutedEventArgs e) {
-
             string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
 
             if (!Directory.Exists(dir)) {
@@ -103,7 +102,6 @@ namespace Anicluster.windows {
         }
 
         private void clickImport(object sender, RoutedEventArgs e) {
-
             string dir = AppDomain.CurrentDomain.BaseDirectory + "backup";
 
             if (!Directory.Exists(dir)) {
@@ -112,13 +110,26 @@ namespace Anicluster.windows {
 
             OpenFileDialog openFileDialogWindow = new OpenFileDialog() {
                 InitialDirectory = dir,
-                FileName = "tags.csv",
-                Filter = "csv files (*.csv)|*.csv|All files (*.*)|*.*"
+                FileName = "tags.json",
+                Filter = "json files (*.json)|*.json|All files (*.*)|*.*"
             };
 
             openFileDialogWindow.ShowDialog();
 
-            Import.importAnimeTags(openFileDialogWindow.FileName, false);
+            MessageBoxResult resultAddOrReset = MessageBox.Show(
+                "Datenbank um Tags erweitern?\nJa ist erweitern!\nNein ist Ersetzten!",
+                "Datenbankaktion",
+                MessageBoxButton.YesNoCancel);
+
+            if (resultAddOrReset == MessageBoxResult.Yes) {
+                Import.importAnimeTags(openFileDialogWindow.FileName, true);
+            }
+            else if (resultAddOrReset == MessageBoxResult.No) {
+                Import.importAnimeTags(openFileDialogWindow.FileName, false);
+            }
+            else { //resultAddOrReset == MessageBoxResult.Cancel
+                return;
+            }
         }
     }
 }

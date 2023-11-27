@@ -15,7 +15,7 @@
                 </MenuItem>
                 <MenuItem Header="Daten importieren">
                     <MenuItem Header="Animes" Click="clickImportDataAnimes"/>
-                    <MenuItem Header="Tags" Click="clickImporDataTags"/>
+                    <MenuItem Header="Tags" Click="clickImportDataTags"/>
                 </MenuItem>
                 <MenuItem Header="Impressum" />
             </MenuItem>

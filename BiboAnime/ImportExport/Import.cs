@@ -1,16 +1,55 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using Newtonsoft.Json;
 
 namespace BiboAnime {
 
     public static class Import {
 
-        public static bool importAnimeList() {
+        public static bool importAnimeList(string filePath, bool importAddToDatabase) {
+            try {
+                string json = File.ReadAllText(filePath);
+                List<AnimeData> animesToImport = JsonConvert.DeserializeObject<List<AnimeData>>(json);
+                
+                databaseController dbController = new databaseController();
+                if (importAddToDatabase) { // hinzufügen
+                    dbController.addImportedAnimes(animesToImport);
+                    return true;
+                }
+                else { // sonst ersetzten
+                    dbController.resetDataBaseAnimes();
+                    dbController.addImportedAnimes(animesToImport);
+                    return true;
+                }
+            }
+            catch {
+                return false;
+            }
+        }
+        public static bool importAnimeTags(string filePath, bool importAddToDatabase) {
+            try {
+                string json = File.ReadAllText(filePath);
+                List<AnimeTag> animesToImport = JsonConvert.DeserializeObject<List<AnimeTag>>(json);
 
-            return false;
+                databaseController dbController = new databaseController();
+                if (importAddToDatabase) { // hinzufügen
+                    dbController.addImportedTags(animesToImport);
+                    return true;
+                }
+                else { // sonst ersetzten
+                    dbController.resetDataBaseTags();
+                    dbController.addImportedTags(animesToImport);
+                    return true;
+                }
+            }
+            catch {
+                return false;
+            }
         }
 
-        public static void importAnimeTags(string filePath, bool importToDataBase) {
+        #region Ungenutzter Code
+        /*
+        public static void importAnimeTags(string filePath, bool importToDatabase) {
 
             databaseController dbController = new databaseController();
 
@@ -59,5 +98,7 @@ namespace BiboAnime {
 
             return tagList;
         }
+        */
+        #endregion
     }
 }
