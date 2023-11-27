@@ -105,7 +105,12 @@ namespace Anicluster {
                 return;
             }
 
-            Export.ExportTagListJson(saveFileDialogWindow.FileName);
+            if (Export.ExportTagListJson(saveFileDialogWindow.FileName)) {
+                MessageBox.Show("Tags exportiert", "Meldung", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else {
+                MessageBox.Show("Da ist was beim Export schief gelaufen", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void clickExportDataAnimes(object sender, RoutedEventArgs e) {
@@ -216,6 +221,11 @@ namespace Anicluster {
             Impressum impressumWindow = new Impressum();
             impressumWindow.Owner = this;
             impressumWindow.Show();
+        }
+
+        private void clickExportAll(object sender, RoutedEventArgs e) {
+            clickExportDataAnimes(sender, e);
+            clickExportDataTags(sender, e);
         }
     }
 }

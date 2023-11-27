@@ -9,7 +9,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Start" Click="clickImpressum">
                 <MenuItem Header="Daten exportieren">
-                    <MenuItem Header="Alles (unimplementiert!)"/>
+                    <MenuItem Header="Alles" Click="clickExportAll"/>
                     <MenuItem Header="Animes" Click="clickExportDataAnimes" />
                     <MenuItem Header="Tags" Click="clickExportDataTags"/>
                 </MenuItem>
