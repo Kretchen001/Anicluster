@@ -37,7 +37,7 @@ namespace BiboAnime {
                     return true;
                 }
                 else { // sonst ersetzten
-                    dbController.resetDataBaseAnimes();
+                    dbController.resetDataBaseTags();
                     dbController.addImportedTags(animesToImport);
                     return true;
                 }
