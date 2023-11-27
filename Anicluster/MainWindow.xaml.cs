@@ -97,12 +97,15 @@ namespace Anicluster {
 
             SaveFileDialog saveFileDialogWindow = new SaveFileDialog() {
                 InitialDirectory = dir,
-                FileName = "tags.csv",
+                FileName = "tags.json",
+                Filter = "json files (*.json)|*.json|All files (*.*)|*.*"
             };
 
-            saveFileDialogWindow.ShowDialog();
+            if (saveFileDialogWindow.ShowDialog() == false) {
+                return;
+            }
 
-            Export.exportAnimeTags(saveFileDialogWindow.FileName);
+            Export.ExportTagListJson(saveFileDialogWindow.FileName);
         }
 
         private void clickExportDataAnimes(object sender, RoutedEventArgs e) {
@@ -114,12 +117,20 @@ namespace Anicluster {
 
             SaveFileDialog saveFileDialogWindow = new SaveFileDialog() {
                 InitialDirectory = dir,
-                FileName = "animes.csv",
+                FileName = "animes.json",
+                Filter = "json files (*.json)|*.json|All files (*.*)|*.*"
             };
 
-            saveFileDialogWindow.ShowDialog();
+            if (saveFileDialogWindow.ShowDialog() == false) {
+                return;
+            }
 
-            Export.exportAnimeList(saveFileDialogWindow.FileName);
+            if (Export.ExportAnimeListJson(saveFileDialogWindow.FileName)) {
+                MessageBox.Show("Animes exportiert", "Meldung", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else {
+                MessageBox.Show("Da ist was beim Export schief gelaufen", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void clickImportDataAnimes(object sender, RoutedEventArgs e) {

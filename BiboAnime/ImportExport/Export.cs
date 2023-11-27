@@ -1,10 +1,47 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using Newtonsoft.Json;
 
 namespace BiboAnime {
 
     public static class Export {
 
+        public static bool ExportAnimeListJson(string filePath) {
+            databaseController dbController = new databaseController();
+
+            List<AnimeData> animesToExport = dbController.getAllAnimes();
+
+            string jsonString = JsonConvert.SerializeObject(animesToExport, Formatting.Indented);
+
+            try {
+                File.WriteAllText(filePath, jsonString);
+            }
+            catch {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool ExportTagListJson(string filePath) {
+            databaseController dbController = new databaseController();
+
+            List<AnimeTag> animeTagsToExport = dbController.getAllAnimeTags();
+        
+            string jsonString = JsonConvert.SerializeObject(animeTagsToExport, Formatting.Indented);
+
+            try {
+                File.WriteAllText(filePath, jsonString);
+            }
+            catch {
+                return false;
+            }
+
+            return true;
+        }
+
+        #region Ungenutzter Code
+        /*
         public static bool exportAnimeList(string filePath) {
 
             databaseController dbController = new databaseController();
@@ -74,5 +111,7 @@ namespace BiboAnime {
                 return line;
             }
         }
+        */
+        #endregion
     }
 }
