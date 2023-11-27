@@ -20,6 +20,19 @@ namespace BiboAnime.databaseLiteDB {
             }
         }
 
+        public void addImportedAnimes(List<AnimeData> animesToImport) {
+            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                var col = db.GetCollection<AnimeData>("Animes");
+                foreach (var item in animesToImport) {
+                    if (col.Exists(x => x.id.Equals(item.id))) {
+                        item.id = Guid.NewGuid(); // damit keine Guid doppelt vorkommt
+                    }
+                    col.Insert(item);
+                    col.EnsureIndex(x => x.id);
+                }
+            }
+        }
+
         public bool deleteAnimeFromDB(AnimeData animeToDelete) {
             using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
                 var col = db.GetCollection<AnimeData>("Animes");
