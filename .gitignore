@@ -4,3 +4,4 @@
 Anicluster/Properties/PublishProfiles/FolderProfile.pubxml.user
 InnoSetup/*.exe
 *.snk
+*.user
