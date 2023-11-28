@@ -18,8 +18,8 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-InfoBeforeFile=C:\Users\Tim\Documents\Eigenes\Anicluster\InnoSetup\ReadMe.txt
-OutputDir=C:\Users\Tim\Documents\Eigenes\Anicluster\InnoSetup
+InfoBeforeFile=D:\Visual_Studio_C#\Anicluster\InnoSetup\ReadMe.txt
+OutputDir=D:\Visual_Studio_C#\Anicluster\InnoSetup
 OutputBaseFilename=setup_v1_1_0
 Password=Anicluster
 Encryption=yes
@@ -48,12 +48,12 @@ begin
   LabelText.Parent := CustomPage.Surface;
   LabelText.Left := 16;
   LabelText.Top := 16;
-  LabelText.Caption := 'Dieses Update benötigt zum Ausführen die Grundversion "Anicluster 1.0.x" oder';
+  LabelText.Caption := 'Dieses Update benÃ¶tigt zum AusfÃ¼hren die Grundversion "Anicluster 1.0.x" oder';
   LabelText2 := TLabel.Create(WizardForm);
   LabelText2.Parent := CustomPage.Surface;
   LabelText2.Left := 16;
   LabelText2.Top := LabelText.Top + LabelText.Height + 16;
-  LabelText2.Caption := 'eine vollständige Installation von dotNet 6.0!';
+  LabelText2.Caption := 'eine vollstÃ¤ndige Installation von dotNet 6.0!';
 end;
 
 [Files]
