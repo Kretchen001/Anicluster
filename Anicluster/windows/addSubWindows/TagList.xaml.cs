@@ -13,7 +13,10 @@ namespace Anicluster.windows {
     public partial class TagList : Window {
 
         private List<TagRow> tagRows = new List<TagRow>();
+        private List<TagRow> tagRowsBackup = new List<TagRow>();
         public List<AnimeTag> selectedTagList = new List<AnimeTag>();
+
+        private string filterText = string.Empty;
 
         internal class TagRow {
             public Guid id { get; set; }
@@ -46,7 +49,10 @@ namespace Anicluster.windows {
                 tagRows.Add(tempTagRow);
             }
 
-            updateDataGrid();
+            // save List for Background Work
+            tagRowsBackup.AddRange(tagRows);
+
+            updateDataGrid(false);
         }
 
         private void clickConfirmTagChoice(object sender, RoutedEventArgs e) {
@@ -68,13 +74,37 @@ namespace Anicluster.windows {
                 tagRows[currentRowIndex].isChecked = true;
                 selectedTagList.Add(tempTag);
             }
-            updateDataGrid();
+            updateDataGrid(false);
         }
 
-        private void updateDataGrid() {
-            tagRows = tagRows.OrderBy(x => x.tagDesignator).ToList();
-            dataGridTagList.ItemsSource = null;
-            dataGridTagList.ItemsSource = tagRows;
+        private void updateDataGrid(bool isFilterActive) {
+            if (isFilterActive) { // zeige den Filter
+                tagRows = tagRows.OrderBy(x => x.tagDesignator).ToList();
+                dataGridTagList.ItemsSource = null;
+                dataGridTagList.ItemsSource = tagRows;
+            }
+            else { // zeige alle an -> also Backup
+                tagRowsBackup = tagRowsBackup.OrderBy(x => x.tagDesignator).ToList();
+                dataGridTagList.ItemsSource = null;
+                dataGridTagList.ItemsSource = tagRowsBackup;
+            }
+        }
+
+        private void filterChanged (object sender, System.Windows.Controls.TextChangedEventArgs e) {
+            filterText = textBoxFilter.Text;
+
+            tagRows.Clear();
+            tagRows.AddRange(tagRowsBackup.Where(x => x.tagDesignator.StartsWith(filterText)).ToList());
+
+            updateDataGrid(true);
+        }
+
+        private void clickFilterReset (object sender, RoutedEventArgs e) {
+            filterText = string.Empty;
+            textBoxFilter.Text = filterText;
+            tagRows.Clear();
+            tagRows.AddRange(tagRowsBackup);
+            updateDataGrid(false);
         }
     }
 }
