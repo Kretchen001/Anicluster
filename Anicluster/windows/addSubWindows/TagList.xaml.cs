@@ -40,10 +40,8 @@ namespace Anicluster.windows {
                     isChecked = false
                 };
 
-                for (int j = 0; j < givenTagList.Count; j += 1) {
-                    if (givenTagList[j].id == tempTagRow.id) {
-                        tempTagRow.isChecked = true;
-                    }
+                if (givenTagList.Exists(x => x.id == tempTagRow.id)) {
+                    tempTagRow.isChecked = true;
                 }
 
                 tagRows.Add(tempTagRow);
@@ -52,7 +50,7 @@ namespace Anicluster.windows {
             // save List for Background Work
             tagRowsBackup.AddRange(tagRows);
 
-            updateDataGrid(false);
+            updateDataGrid();
         }
 
         private void clickConfirmTagChoice(object sender, RoutedEventArgs e) {
@@ -72,22 +70,17 @@ namespace Anicluster.windows {
             }
             else {
                 tagRows[currentRowIndex].isChecked = true;
-                selectedTagList.Add(tempTag);
+                if (!selectedTagList.Contains(tempTag)) {
+                    selectedTagList.Add(tempTag);
+                }
             }
-            updateDataGrid(false);
+            updateDataGrid();
         }
 
-        private void updateDataGrid(bool isFilterActive) {
-            if (isFilterActive) { // zeige den Filter
-                tagRows = tagRows.OrderBy(x => x.tagDesignator).ToList();
-                dataGridTagList.ItemsSource = null;
-                dataGridTagList.ItemsSource = tagRows;
-            }
-            else { // zeige alle an -> also Backup
-                tagRowsBackup = tagRowsBackup.OrderBy(x => x.tagDesignator).ToList();
-                dataGridTagList.ItemsSource = null;
-                dataGridTagList.ItemsSource = tagRowsBackup;
-            }
+        private void updateDataGrid() {
+            tagRows = tagRows.OrderBy(x => x.tagDesignator).ToList();
+            dataGridTagList.ItemsSource = null;
+            dataGridTagList.ItemsSource = tagRows;
         }
 
         private void filterChanged (object sender, System.Windows.Controls.TextChangedEventArgs e) {
@@ -96,7 +89,7 @@ namespace Anicluster.windows {
             tagRows.Clear();
             tagRows.AddRange(tagRowsBackup.Where(x => x.tagDesignator.StartsWith(filterText)).ToList());
 
-            updateDataGrid(true);
+            updateDataGrid();
         }
 
         private void clickFilterReset (object sender, RoutedEventArgs e) {
@@ -104,7 +97,7 @@ namespace Anicluster.windows {
             textBoxFilter.Text = filterText;
             tagRows.Clear();
             tagRows.AddRange(tagRowsBackup);
-            updateDataGrid(false);
+            updateDataGrid();
         }
     }
 }
