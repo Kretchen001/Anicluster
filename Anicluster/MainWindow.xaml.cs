@@ -26,9 +26,25 @@ namespace Anicluster {
 
         public MainWindow() {
             InitializeComponent();
+            CenterWindowOnScreen();
 
             dataGridAnimeList.ItemsSource = dbController.getAllAnimesAsRow();
         }
+
+        private void CenterWindowOnScreen() {
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = this.Width;
+            double windowHeight = this.Height;
+            if ((windowHeight > screenHeight) || (windowWidth > screenWidth)) {
+                WindowState = WindowState.Maximized;
+            }
+            else {
+                this.Left = (screenWidth / 2) - (windowWidth / 2);
+                this.Top = (screenHeight / 2) - (windowHeight / 2);
+            }
+        }
+
         public void OnWindowClosing(object sender, CancelEventArgs e) {
             // close the application after all orders are done.
             Application.Current.Shutdown();

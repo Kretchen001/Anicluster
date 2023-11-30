@@ -28,6 +28,8 @@ namespace Anicluster.windows {
 
         public ShowDetails(AnimeData givenAnime) {
             InitializeComponent();
+
+            CenterWindowOnScreen();
             
             AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
             AddHandler(Keyboard.KeyUpEvent, (KeyEventHandler)HandleKeyUpEvent);
@@ -45,6 +47,21 @@ namespace Anicluster.windows {
 
             checkIfAllOriginal();
         }
+
+        private void CenterWindowOnScreen() {
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = this.Width;
+            double windowHeight = this.Height;
+            if ((windowHeight > screenHeight) || (windowWidth > screenWidth)) {
+                WindowState = WindowState.Maximized;
+            }
+            else {
+                this.Left = (screenWidth / 2) - (windowWidth / 2);
+                this.Top = (screenHeight / 2) - (windowHeight / 2);
+            }
+        }
+
         private void HandleKeyDownEvent(object sender, KeyEventArgs e) {
             if ((e.Key == Key.LeftShift) && (isShiftPressed == false)) {
                 isShiftPressed = true;
