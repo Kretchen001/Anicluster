@@ -30,8 +30,25 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
 
         public TagSimpleSearch() {
             InitializeComponent();
+
+            CenterWindowOnScreen();
+
             animeTagList = dbController.getAllAnimeTags();
             updateTable();
+        }
+
+        private void CenterWindowOnScreen() {
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = this.Width;
+            double windowHeight = this.Height;
+            if ((windowHeight > screenHeight) || (windowWidth > screenWidth)) {
+                WindowState = WindowState.Maximized;
+            }
+            else {
+                this.Left = (screenWidth / 2) - (windowWidth / 2);
+                this.Top = (screenHeight / 2) - (windowHeight / 2);
+            }
         }
 
         private void textBoxTextChange(object sender, TextChangedEventArgs e) {

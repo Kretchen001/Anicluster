@@ -27,6 +27,8 @@ namespace Anicluster.windows {
         public TagList(List<AnimeTag> givenTagList) {
             InitializeComponent();
 
+            CenterWindowOnScreen();
+
             selectedTagList = givenTagList;
 
             databaseController dbController = new databaseController();
@@ -51,6 +53,20 @@ namespace Anicluster.windows {
             tagRowsBackup.AddRange(tagRows);
 
             updateDataGrid();
+        }
+
+        private void CenterWindowOnScreen() {
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = this.Width;
+            double windowHeight = this.Height;
+            if ((windowHeight > screenHeight) || (windowWidth > screenWidth)) {
+                WindowState = WindowState.Maximized;
+            }
+            else {
+                this.Left = (screenWidth / 2) - (windowWidth / 2);
+                this.Top = (screenHeight / 2) - (windowHeight / 2);
+            }
         }
 
         private void clickConfirmTagChoice(object sender, RoutedEventArgs e) {
