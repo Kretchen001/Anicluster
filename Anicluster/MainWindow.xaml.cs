@@ -176,7 +176,7 @@ namespace Anicluster {
 
             if (resultAddOrReset == MessageBoxResult.Yes) {
                 if (!Import.importAnimeList(openFileDialogWindow.FileName, true)) {
-                    var mail = MessageBox.Show(
+                    MessageBoxResult mail = MessageBox.Show(
                         "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
                         "Importfehler",
                         MessageBoxButton.OK,
@@ -188,7 +188,7 @@ namespace Anicluster {
             }
             else if (resultAddOrReset == MessageBoxResult.No) {
                 if (!Import.importAnimeList(openFileDialogWindow.FileName, false)) {
-                    var mail = MessageBox.Show(
+                    MessageBoxResult mail = MessageBox.Show(
                         "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
                         "Importfehler",
                         MessageBoxButton.OK,
@@ -226,7 +226,7 @@ namespace Anicluster {
 
             if (resultAddOrReset == MessageBoxResult.Yes) {
                 if (!Import.importAnimeTags(openFileDialogWindow.FileName, true)) {
-                    var mail = MessageBox.Show(
+                    MessageBoxResult mail = MessageBox.Show(
                         "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
                         "Importfehler",
                         MessageBoxButton.OK,
@@ -238,7 +238,7 @@ namespace Anicluster {
             }
             else if (resultAddOrReset == MessageBoxResult.No) {
                 if (!Import.importAnimeTags(openFileDialogWindow.FileName, false)) {
-                    var mail = MessageBox.Show(
+                    MessageBoxResult mail = MessageBox.Show(
                         "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
                         "Importfehler",
                         MessageBoxButton.OK,

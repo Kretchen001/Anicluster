@@ -6,9 +6,9 @@ namespace BiboAnime.databaseLiteDB {
     public class databaseFilterController {
 
         public List<AnimeData> dbFilterTier(AnimeTier tierToFilter) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                var result = col.Query()
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> result = col.Query()
                     .Where(x => x.tier == tierToFilter)
                     .ToList();
                 return result;
@@ -16,8 +16,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterByTag(List<AnimeTag> filterTags) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = col.Query().ToList();
                 List<AnimeData> returnResult = new List<AnimeData>();
                 for (int i = 0; i < filterTags.Count; i += 1) {
@@ -38,8 +38,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterWithoutTag(List<AnimeTag> filterTags) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> returnResult = new List<AnimeData>();
                 for (int i = 0; i < filterTags.Count; i += 1) {
                     AnimeTag tag = filterTags[i];
@@ -50,8 +50,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterTagAndTier(AnimeTier filterTier, List<AnimeTag> filterTags) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = col.Query()
                     .Where(x => x.tier == filterTier)   // filter tier | tags later
                     .ToList();
@@ -70,8 +70,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterRatingMinGeneral(int minGeneralRating) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = col.Query()
                     .Where(x => x.rating.general >= minGeneralRating)   // filter tier | tags later
                     .ToList();
@@ -80,8 +80,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterIsFav(bool fav) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = col.Query()
                     .Where(x => x.favorite == fav)
                     .ToList();
@@ -100,8 +100,8 @@ namespace BiboAnime.databaseLiteDB {
         /// <param name="minGermanDub">Rating -> German Dub</param>
         /// <returns>The List of hole Anime´s that have the min Ratings.</returns>
         public List<AnimeData> dbFilterRatingMinABCDE(int minGeneral = 0, int minStory = 0, int minSound = 0, int minAnimation = 0, int minSpecialEffect = 0, int minGermanDub = 0) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = new List<AnimeData>();
                 if (minGeneral == 0) {
                     result = col.Query()
@@ -122,8 +122,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterRatingCheckGermanDub(bool dub) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = new List<AnimeData>();
                 if (dub) {
                     result = col.Query()
@@ -140,8 +140,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterMinMaxStaffeln(bool max, int amount) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = new List<AnimeData>();
                 if (max) {
                     result = col.Query()
@@ -158,8 +158,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterMinMaxEpisodesTotal(bool max, int amount) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = new List<AnimeData>();
                 if (max) {
                     result = col.Query()
@@ -176,8 +176,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> dbFilterCheckRecommendation(bool exist, bool existnot) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = new List<AnimeData>();
                 if (exist) {
                     return result = col.Query()

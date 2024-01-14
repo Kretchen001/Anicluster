@@ -218,7 +218,7 @@ namespace Anicluster.windows {
         }
 
         private void clickRemoveEntity(object sender, RoutedEventArgs e) {
-            var yesNo = MessageBox.Show("Möchten Sie " + oneAnime.name + " wirklich löschen?",
+            MessageBoxResult yesNo = MessageBox.Show("Möchten Sie " + oneAnime.name + " wirklich löschen?",
                 "Löschen",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);

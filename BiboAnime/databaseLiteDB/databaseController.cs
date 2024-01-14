@@ -6,24 +6,24 @@ namespace BiboAnime.databaseLiteDB {
     public class databaseController {
 
         public int resetDataBaseAnimes() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 return col.DeleteAll(); // how many was deleted
             }
         }
 
         public void addAnimeToDB(AnimeData animeToAdd) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 col.Insert(animeToAdd);
                 col.EnsureIndex(x => x.id);
             }
         }
 
         public void addImportedAnimes(List<AnimeData> animesToImport) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                foreach (var item in animesToImport) {
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
+                foreach (AnimeData item in animesToImport) {
                     if (col.Exists(x => x.id.Equals(item.id))) {
                         item.id = Guid.NewGuid(); // damit keine Guid doppelt vorkommt
                     }
@@ -34,31 +34,31 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public bool deleteAnimeFromDB(AnimeData animeToDelete) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 return col.Delete(animeToDelete.id);
             }
         }
 
         public void updateAnime(AnimeData animeToUpdate) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 col.Update(animeToUpdate.id, animeToUpdate);
             }
         }
 
         public List<AnimeData> getAllAnimes() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                var result = col.Query()
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> result = col.Query()
                     .ToList();
                 return result;
             }
         }
 
         public List<AnimeRow> getAllAnimesAsRow() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = col.Query()
                     .ToList();
                 List<AnimeRow> rows = new List<AnimeRow>();
@@ -86,9 +86,9 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public AnimeData getAnimeById(Guid id) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                var result = col.Query()
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
+                AnimeData result = col.Query()
                     .Where(x => x.id.Equals(id))
                     .Single();
                 return result;
@@ -96,9 +96,9 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public AnimeData getAnimeByName(string name) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                var result = col.Query()
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
+                AnimeData result = col.Query()
                     .Where(x => x.name == name)
                     .Single();
                 return result;
@@ -106,9 +106,9 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> getByOneTag(AnimeTag tag) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                var result = col.Query()
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> result = col.Query()
                     .Where(x => x.tags.Contains(tag))
                     .ToList();
                 return result;
@@ -116,11 +116,11 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> getByListOfTags(List<AnimeTag> tags) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = new List<AnimeData>();
                 for (int i = 0; i < tags.Count; i += 1) {
-                    var tempResult = col.Query()
+                    List<AnimeData> tempResult = col.Query()
                         .Where(x => x.tags.Contains(tags[i]))
                         .ToList();
                     for (int j = 0; j < tempResult.Count; j += 1) {
@@ -132,8 +132,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeData> getByTier(AnimeTier animeTier) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> result = new List<AnimeData>();
                 result = col.Query()
                     .Where(x => x.tier == animeTier)
@@ -144,9 +144,9 @@ namespace BiboAnime.databaseLiteDB {
         
 
         public bool checkIfAnimeExist(string name) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
-                var result = col.Query()
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
+                List<AnimeData> result = col.Query()
                     .Where(x => x.name == name)
                     .ToList();
                 return (result.Count != 0);
@@ -161,8 +161,8 @@ namespace BiboAnime.databaseLiteDB {
         /// Add the given AnimeTag to the database.
         /// </summary>
         public void addOneTag(AnimeTag tag) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeTag>("Tags");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
                 AnimeTag tempTag = new AnimeTag() { tagDesignator = tag.tagDesignator }; // without id
                 if (checkIfTagExistsByDesignator(tempTag, db)) {
                     return;
@@ -173,8 +173,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public void addImportedTags(List<AnimeTag> tagList) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeTag>("Tags");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
                 for (int i = 0; i < tagList.Count; i += 1) {
                     AnimeTag tempTag = new AnimeTag() { tagDesignator = tagList[i].tagDesignator };
                     col.Insert(tempTag);
@@ -184,8 +184,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public AnimeTag getTagByDesignator(string designator) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeTag>("Tags");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
                 return col.Query()
                     .Where(x => x.tagDesignator == designator)
                     .Limit(1)
@@ -194,15 +194,15 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public int resetDataBaseTags() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeTag>("Tags");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
                 return col.DeleteAll(); // how many was deleted
             }
         }
 
         public List<AnimeTag> getAllAnimeTags() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeTag>("Tags");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
                 List<AnimeTag> result = new List<AnimeTag>();
                 result = col.Query()
                     .ToList();
@@ -211,8 +211,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public List<AnimeTag> getAllUsedTags() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeData>("Animes");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeData> col = db.GetCollection<AnimeData>("Animes");
                 List<AnimeData> listOfAnimes = new List<AnimeData>();
                 listOfAnimes = col.Query()
                     .ToList();
@@ -231,8 +231,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public int getTagDbCountForIdPlusOne() {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeTag>("Tags");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
                 return (col.Count() + 1);
             }
         }
@@ -243,9 +243,9 @@ namespace BiboAnime.databaseLiteDB {
         /// <param name="animeTag">the tag, which is checked</param>
         /// <returns>true -> Tag exists</returns>
         public bool checkIfTagExistsByDesignator(AnimeTag animeTag) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeTag>("Tags");
-                var result = col.Query()
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
+                ILiteQueryable<AnimeTag> result = col.Query()
                     .Where(x => x.tagDesignator == animeTag.tagDesignator);
                 if (result.Count() == 0) {
                     return false;
@@ -264,8 +264,8 @@ namespace BiboAnime.databaseLiteDB {
         /// <param name="db"></param>
         /// <returns></returns>
         public bool checkIfTagExistsByDesignator(AnimeTag animeTag, LiteDatabase db) {
-            var col = db.GetCollection<AnimeTag>("Tags");
-            var result = col.Query()
+            ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
+            ILiteQueryable<AnimeTag> result = col.Query()
                 .Where(x => x.tagDesignator == animeTag.tagDesignator);
             if (result.Count() == 0) {
                 return false;
@@ -276,8 +276,8 @@ namespace BiboAnime.databaseLiteDB {
         }
 
         public bool deleteOneTag(AnimeTag tagToDelete) {
-            using (var db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
-                var col = db.GetCollection<AnimeTag>("Tags");
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBase)) {
+                ILiteCollection<AnimeTag> col = db.GetCollection<AnimeTag>("Tags");
                 return (col.Delete(tagToDelete.id));
             }
         }
