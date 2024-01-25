@@ -636,5 +636,23 @@ namespace Anicluster.windows {
             animeTotalEpisodes = z;
             textBoxTotalEpisodes.Text = z.ToString();
         }
+
+        private void textBoxMovies_TextChanged (object sender, TextChangedEventArgs e) {
+            try {
+                animeMovies = int.Parse(textBoxMovies.Text);
+            }
+            catch {
+                MessageBox.Show("Kein Wert, der Konvertiert werden kann!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void textBoxOvhs_TextChanged (object sender, TextChangedEventArgs e) {
+            try {
+                animeOvh = int.Parse(textBoxOvhs.Text);
+            }
+            catch {
+                MessageBox.Show("Kein Wert, der Konvertiert werden kann!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }
