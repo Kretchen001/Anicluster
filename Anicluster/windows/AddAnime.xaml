@@ -274,7 +274,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <TextBox x:Name="textBoxMovies" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationTextBox" />
+            <TextBox x:Name="textBoxMovies" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationTextBox" TextChanged="textBoxMovies_TextChanged" />
             <Grid Grid.Row="0" Grid.Column="4" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
@@ -304,7 +304,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <TextBox x:Name="textBoxOvhs" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationTextBox" />
+            <TextBox x:Name="textBoxOvhs" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="2,10,2,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationTextBox" TextChanged="textBoxOvhs_TextChanged" />
             <Grid Grid.Row="0" Grid.Column="4" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
