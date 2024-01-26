@@ -1,12 +1,16 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace Anicluster.windows {
     /// <summary>
@@ -653,6 +657,31 @@ namespace Anicluster.windows {
             catch {
                 MessageBox.Show("Kein Wert, der Konvertiert werden kann!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void buttonImageAdd_Click(object sender, RoutedEventArgs e) {
+            OpenFileDialog odlg = new OpenFileDialog();
+            odlg.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            odlg.Filter = "Image files (*.jpg, *.png)|*.jpg;*.png|All Files (*.*)|*.*";
+            odlg.RestoreDirectory = true;
+            odlg.ShowDialog();
+
+            if (odlg.FileName.EndsWith(".jpg") || odlg.FileName.EndsWith(".png")) {
+                BitmapImage img = new BitmapImage();
+                img.BeginInit();
+                img.UriSource = new Uri(odlg.FileName);
+                img.EndInit();
+                imageShowImage.Source = img;
+            }
+            // fuer spaeter
+            //BitmapImage a = new BitmapImage();
+            //a.BeginInit();
+            //a.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+            //a.CacheOption = BitmapCacheOption.OnLoad;
+            //a.UriSource = null;
+            //a.StreamSource = new MemoryStream(new byte[0]);
+            //a.EndInit();
+            //a.Freeze();
         }
     }
 }

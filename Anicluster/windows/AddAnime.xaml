@@ -64,6 +64,9 @@
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Background="Azure"></Label>
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="26" FontWeight="Bold">Neuer Anime - Daten</Label>
 
+        <Button Grid.Row="0" Grid.Column="5" Margin="15" Content="Bild anfügen" x:Name="buttonImageAdd" Click="buttonImageAdd_Click" />
+        <Image Grid.Row="1" Grid.Column="3" Grid.RowSpan="3" Margin="25,10" x:Name="imageShowImage" />
+
         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">Name</Label>
         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#FFFFCEC6">[obligatorisch]</Label>
         <TextBox x:Name="textBoxName" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10" FontSize="14" TextChanged="textChangeName" />
@@ -324,7 +327,7 @@
                 <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding}" Width="1*"/>
             </DataGrid.Columns>
         </DataGrid>
-        
+
         <Button Grid.Row="13" Grid.Column="4" Grid.ColumnSpan="2" x:Name="buttonConfirm" Click="click_ConfirmButton" FontSize="18">
             <Button.Background>
                 <RadialGradientBrush>
