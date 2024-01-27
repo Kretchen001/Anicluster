@@ -1,11 +1,11 @@
 ﻿using BiboAnime.databaseLiteDB;
 using BiboAnime.datatypes;
+using LiteDB;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,6 +45,9 @@ namespace Anicluster.windows {
         private bool isShiftPressed = false;
 
         public Action<bool> shouldViewUpdated;
+
+        public BitmapImage img = new BitmapImage();
+        private bool imgToSave = false;
 
         public AddAnime() {
             InitializeComponent();
@@ -269,6 +272,19 @@ namespace Anicluster.windows {
             if (!dbController.checkIfAnimeExist(temp.name)) {
                 dbController.addAnimeToDB(temp);
                 shouldViewUpdated(true);
+
+                // pic
+                if (imgToSave) {
+                    using (MemoryStream stream = new MemoryStream()) {
+                        BitmapEncoder encoder = new PngBitmapEncoder();
+
+                        encoder.Frames.Add(BitmapFrame.Create(img));
+                        encoder.Save(stream);
+
+                        dbController.SavePicture(temp.id, stream.ToArray());
+                    }
+                }
+
                 this.Close();
             }
             else {
@@ -667,11 +683,12 @@ namespace Anicluster.windows {
             odlg.ShowDialog();
 
             if (odlg.FileName.EndsWith(".jpg") || odlg.FileName.EndsWith(".png")) {
-                BitmapImage img = new BitmapImage();
                 img.BeginInit();
                 img.UriSource = new Uri(odlg.FileName);
                 img.EndInit();
                 imageShowImage.Source = img;
+
+                imgToSave = true;
             }
             // fuer spaeter
             //BitmapImage a = new BitmapImage();

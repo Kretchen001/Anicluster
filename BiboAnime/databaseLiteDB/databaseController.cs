@@ -281,5 +281,20 @@ namespace BiboAnime.databaseLiteDB {
                 return (col.Delete(tagToDelete.id));
             }
         }
+
+        //-------------------------------------------------------------------------------------------------
+        //------------------------------------Images-------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------
+
+        public void SavePicture(Guid id, byte[] data) {
+
+            AnimePoster animePoster = new AnimePoster(id, data);
+
+            using (LiteDatabase db = new LiteDatabase(databaseConfigs.locationOfDataBasePicTest)) {
+                ILiteCollection<AnimePoster> col = db.GetCollection<AnimePoster>("Poster");
+                col.Insert(animePoster);
+                col.EnsureIndex(x => x.Id);
+            }
+        }
     }
 }
