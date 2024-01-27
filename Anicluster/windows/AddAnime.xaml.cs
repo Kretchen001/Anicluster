@@ -266,6 +266,7 @@ namespace Anicluster.windows {
                 dbController.addAnimeToDB(temp);
                 shouldViewUpdated(true);
                 this.Close();
+                this.Owner.Focus();
             }
             else {
                 MessageBox.Show("Name schon vorhanden!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
