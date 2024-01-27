@@ -21,7 +21,7 @@ namespace Anicluster.windows {
         }
 
         List<TagRowO> animeTags = new List<TagRowO>();
-        databaseController dbController = new databaseController();
+        DatabaseController dbController = new DatabaseController();
 
         public TagOrganisator() {
             InitializeComponent();
@@ -46,13 +46,13 @@ namespace Anicluster.windows {
         }
 
         private void fetchTags() {
-            List<AnimeTag> tempTags = dbController.getAllAnimeTags();
-            tempTags = tempTags.OrderBy(x => x.tagDesignator).ToList();
+            List<AnimeTag> tempTags = DatabaseController.GetAllAnimeTags();
+            tempTags = tempTags.OrderBy(x => x.TagDesignator).ToList();
             animeTags.Clear();
             for (int i = 0; i < tempTags.Count; i += 1) {
                 animeTags.Add(new TagRowO() {
                     numberOfTag = (i + 1),
-                    tagDesignator = tempTags[i].tagDesignator
+                    tagDesignator = tempTags[i].TagDesignator
                 });
             }
             dataGridTags.ItemsSource = null;
@@ -73,12 +73,12 @@ namespace Anicluster.windows {
                 TagRowO selectedTag = (TagRowO)dataGridTags.Items[currentRowIndex];
                 AnimeTag tempTag = dbController.getTagByDesignator(selectedTag.tagDesignator);
                 bool result = MessageBox.Show("Sind Sie sicher, dass sie folgenden Tag löschen wollen? \n \t"
-                    + selectedTag.tagDesignator + "[" + tempTag.id + "]",
+                    + selectedTag.tagDesignator + "[" + tempTag.Id + "]",
                     "Error", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
                 if (result) {
-                    if (dbController.deleteOneTag(tempTag)) {
+                    if (DatabaseController.DeleteOneTag(tempTag)) {
                         MessageBox.Show("Tag gelöschen: \n \t"
-                            + selectedTag.tagDesignator + " [" + tempTag.id + "]",
+                            + selectedTag.tagDesignator + " [" + tempTag.Id + "]",
                             "Error", MessageBoxButton.OK, MessageBoxImage.Information);
                         fetchTags();
                     }
@@ -138,10 +138,10 @@ namespace Anicluster.windows {
                 MessageBoxButton.YesNoCancel);
 
             if (resultAddOrReset == MessageBoxResult.Yes) {
-                Import.importAnimeTags(openFileDialogWindow.FileName, true);
+                Import.ImportAnimeTags(openFileDialogWindow.FileName, true);
             }
             else if (resultAddOrReset == MessageBoxResult.No) {
-                Import.importAnimeTags(openFileDialogWindow.FileName, false);
+                Import.ImportAnimeTags(openFileDialogWindow.FileName, false);
             }
             else { //resultAddOrReset == MessageBoxResult.Cancel
                 return;

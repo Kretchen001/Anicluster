@@ -2,10 +2,10 @@
 
     public class AnimeFilterTier {
 
-        public int id { get; set; }
-        public AnimeTier tier { get; set; }
-        public string name { get; set; }
-        public Rating rating { get; set; }
-        public List<AnimeTag> animeTag { get; set; }
+        public int Id { get; set; }
+        public AnimeTier Tier { get; set; }
+        public string Name { get; set; }
+        public Rating Rating { get; set; }
+        public List<AnimeTag> AnimeTag { get; set; }
     }
 }

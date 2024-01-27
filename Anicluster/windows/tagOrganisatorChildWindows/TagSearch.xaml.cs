@@ -18,7 +18,7 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
             public string tagDesignatorR { get; set; } = "";
         }
 
-        databaseController dbController = new databaseController();
+        DatabaseController dbController = new DatabaseController();
         List<AnimeTag> animeTagList = new List<AnimeTag>();
         List<ResultRow> resultList = new List<ResultRow>();
 
@@ -33,7 +33,7 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
 
             CenterWindowOnScreen();
 
-            animeTagList = dbController.getAllAnimeTags();
+            animeTagList = DatabaseController.GetAllAnimeTags();
             updateTable();
         }
 
@@ -60,10 +60,10 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
 
             inputToSearch = textBoxTagInputForSearch.Text;
 
-            animeTagList = animeTagList.OrderBy(q => q.tagDesignator).ToList();
+            animeTagList = animeTagList.OrderBy(q => q.TagDesignator).ToList();
 
             for (int i = 0; i < animeTagList.Count; i += 1) {
-                string tagDesginatorToCompare = animeTagList[i].tagDesignator;
+                string tagDesginatorToCompare = animeTagList[i].TagDesignator;
                 if (ignoreSpecialCharacters) {
                     Regex regex = new Regex("[^a-zA-Z]");
                     inputToSearch = regex.Replace(inputToSearch, "");
@@ -75,7 +75,7 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
                         if (tagDesginatorToCompare.ToLower().Contains(inputToSearch)) {
                             resultList.Add(new ResultRow() {
                                 nr = resultList.Count + 1,
-                                tagDesignatorR = animeTagList[i].tagDesignator,
+                                tagDesignatorR = animeTagList[i].TagDesignator,
                             });
                         }
                     }
@@ -83,7 +83,7 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
                         if (tagDesginatorToCompare.ToLower().StartsWith(inputToSearch)) {
                             resultList.Add(new ResultRow() {
                                 nr = resultList.Count + 1,
-                                tagDesignatorR = animeTagList[i].tagDesignator,
+                                tagDesignatorR = animeTagList[i].TagDesignator,
                             });
                         }
                     }
@@ -93,7 +93,7 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
                         if (tagDesginatorToCompare.Contains(inputToSearch)) {
                             resultList.Add(new ResultRow() {
                                 nr = resultList.Count + 1,
-                                tagDesignatorR = animeTagList[i].tagDesignator,
+                                tagDesignatorR = animeTagList[i].TagDesignator,
                             });
                         }
                     }
@@ -101,7 +101,7 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
                         if (tagDesginatorToCompare.StartsWith(inputToSearch)) {
                             resultList.Add(new ResultRow() {
                                 nr = resultList.Count + 1,
-                                tagDesignatorR = animeTagList[i].tagDesignator,
+                                tagDesignatorR = animeTagList[i].TagDesignator,
                             });
                         }
                     }

@@ -20,7 +20,7 @@ namespace Anicluster {
     /// </summary>
     public partial class MainWindow : Window {
 
-        private databaseController dbController = new databaseController();
+        private DatabaseController dbController = new DatabaseController();
 
         private bool showTagByColor = false;
 
@@ -73,7 +73,7 @@ namespace Anicluster {
                 AnimeRow selectedAnime = (AnimeRow)dataGridAnimeList.Items[currentRowIndex];
 
                 // give the anime to the ShowDetails-Window
-                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeByName(selectedAnime.name));
+                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeByName(selectedAnime.Name));
                 showDetailsScreen.shouldViewUpdated = updateAfterAddAnime;
                 showDetailsScreen.Owner = this;
                 showDetailsScreen.Show();
@@ -175,7 +175,7 @@ namespace Anicluster {
                 MessageBoxButton.YesNoCancel);
 
             if (resultAddOrReset == MessageBoxResult.Yes) {
-                if (!Import.importAnimeList(openFileDialogWindow.FileName, true)) {
+                if (!Import.ImportAnimeList(openFileDialogWindow.FileName, true)) {
                     var mail = MessageBox.Show(
                         "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
                         "Importfehler",
@@ -187,7 +187,7 @@ namespace Anicluster {
                 }
             }
             else if (resultAddOrReset == MessageBoxResult.No) {
-                if (!Import.importAnimeList(openFileDialogWindow.FileName, false)) {
+                if (!Import.ImportAnimeList(openFileDialogWindow.FileName, false)) {
                     var mail = MessageBox.Show(
                         "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
                         "Importfehler",
@@ -225,7 +225,7 @@ namespace Anicluster {
                 MessageBoxButton.YesNoCancel);
 
             if (resultAddOrReset == MessageBoxResult.Yes) {
-                if (!Import.importAnimeTags(openFileDialogWindow.FileName, true)) {
+                if (!Import.ImportAnimeTags(openFileDialogWindow.FileName, true)) {
                     var mail = MessageBox.Show(
                         "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
                         "Importfehler",
@@ -237,7 +237,7 @@ namespace Anicluster {
                 }
             }
             else if (resultAddOrReset == MessageBoxResult.No) {
-                if (!Import.importAnimeTags(openFileDialogWindow.FileName, false)) {
+                if (!Import.ImportAnimeTags(openFileDialogWindow.FileName, false)) {
                     var mail = MessageBox.Show(
                         "Import-Datei schadhaft.\nBitte an den Programmierer wenden!\nDatei bestenfalls mitsenden.",
                         "Importfehler",
@@ -279,7 +279,7 @@ namespace Anicluster {
         private void loadingRowDataGrid(object sender, System.Windows.Controls.DataGridRowEventArgs e) {
             if (showTagByColor) {
                 AnimeRow tempRow = (AnimeRow)e.Row.DataContext;
-                switch (dbController.getAnimeByName(tempRow.name).tier) {
+                switch (dbController.getAnimeByName(tempRow.Name).tier) {
                     case AnimeTier.S: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00D4D4")); break;
                     case AnimeTier.A: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF3FFF2F")); break;
                     case AnimeTier.B: e.Row.Background = new SolidColorBrush(Colors.Yellow); break;

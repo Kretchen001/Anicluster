@@ -24,7 +24,7 @@ namespace Anicluster.windows.filter {
 
             this.tagSelection = tagSelection;
 
-            textBloxkTagDesignator.Text = tagSelection.tagDesignator;
+            textBloxkTagDesignator.Text = tagSelection.TagDesignator;
         }
 
         private void clickInclusive(object sender, RoutedEventArgs e) {

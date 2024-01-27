@@ -2,7 +2,7 @@
 
     public static class databaseConfigs {
 
-        public static string locationOfDataBase {
+        public static string LocationOfDataBase {
             set { }
             get {
                 if(!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/databaseLiteDB/database.liteDB")) {

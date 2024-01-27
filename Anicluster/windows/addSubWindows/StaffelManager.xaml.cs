@@ -67,17 +67,17 @@ namespace Anicluster.windows {
             }
             int c = managerStaffeln.Count + 1;
             for (int i = 0; i < managerStaffeln.Count; i++) {
-                if (managerStaffeln[i].counter != (i + 1)) {
+                if (managerStaffeln[i].Counter != (i + 1)) {
                     c = i + 1;
                     break;
                 }
             }
             managerStaffeln.Add(new Staffel() {
-                counter = c,
-                episodes = epi
+                Counter = c,
+                Episodes = epi
             });
 
-            managerStaffeln = managerStaffeln.OrderBy(x => x.counter).ToList();
+            managerStaffeln = managerStaffeln.OrderBy(x => x.Counter).ToList();
             updateDataGrid();
 
         }
