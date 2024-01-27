@@ -6,19 +6,19 @@ namespace BiboAnime {
 
     public static class Import {
 
-        public static bool importAnimeList(string filePath, bool importAddToDatabase) {
+        public static bool ImportAnimeList(string filePath, bool importAddToDatabase) {
             try {
                 string json = File.ReadAllText(filePath);
-                List<AnimeData> animesToImport = JsonConvert.DeserializeObject<List<AnimeData>>(json);
+                List<AnimeData> animesToImport = JsonConvert.DeserializeObject<List<AnimeData>>(json)!;
                 
-                databaseController dbController = new databaseController();
+                DatabaseController dbController = new DatabaseController();
                 if (importAddToDatabase) { // hinzufügen
-                    dbController.addImportedAnimes(animesToImport);
+                    DatabaseController.AddImportedAnimes(animesToImport);
                     return true;
                 }
                 else { // sonst ersetzten
-                    dbController.resetDataBaseAnimes();
-                    dbController.addImportedAnimes(animesToImport);
+                    DatabaseController.ResetDataBaseAnimes();
+                    DatabaseController.AddImportedAnimes(animesToImport);
                     return true;
                 }
             }
@@ -26,19 +26,19 @@ namespace BiboAnime {
                 return false;
             }
         }
-        public static bool importAnimeTags(string filePath, bool importAddToDatabase) {
+        public static bool ImportAnimeTags(string filePath, bool importAddToDatabase) {
             try {
                 string json = File.ReadAllText(filePath);
-                List<AnimeTag> animesToImport = JsonConvert.DeserializeObject<List<AnimeTag>>(json);
+                List<AnimeTag> animesToImport = JsonConvert.DeserializeObject<List<AnimeTag>>(json)!;
 
-                databaseController dbController = new databaseController();
+                DatabaseController dbController = new DatabaseController();
                 if (importAddToDatabase) { // hinzufügen
-                    dbController.addImportedTags(animesToImport);
+                    dbController.AddImportedTags(animesToImport);
                     return true;
                 }
                 else { // sonst ersetzten
-                    dbController.resetDataBaseTags();
-                    dbController.addImportedTags(animesToImport);
+                    dbController.ResetDataBaseTags();
+                    dbController.AddImportedTags(animesToImport);
                     return true;
                 }
             }

@@ -1,43 +1,46 @@
-﻿using System.Text.Json;
+﻿using LiteDB;
+using JSeri = System.Text.Json.JsonSerializer;
 
 namespace BiboAnime.datatypes {
 
     public class AnimeData : IEquatable<AnimeData> {
 
-        public Guid id { get; set; }
-        public bool favorite { get; set; }
-        public string name { get; set; }
-        public string originalName { get; set; }
-        public Rating rating { get; set; }
-        public List<AnimeTag> tags { get; set; }
-        public string urlAnimePlanet { get; set; }
-        public AnimeStatus status { get; set; }
-        public List<Staffel> staffeln { get; set; }
-        public int episodesTotal { get; set; }
-        public int movies { get; set; }
-        public int ovh { get; set; }
-        public string thirdPartyRecommendation { get; set; }
-        public AnimeTier tier { get; set; }
+        [BsonId]
+        public Guid Id { get; set; }
+
+        public bool Favorite { get; set; } = false;
+        public string Name { get; set; }
+        public string OriginalName { get; set; }
+        public Rating Rating { get; set; }
+        public List<AnimeTag> Tags { get; set; }
+        public string UrlAnimePlanet { get; set; }
+        public AnimeStatus Status { get; set; }
+        public List<Staffel> Staffeln { get; set; }
+        public int EpisodesTotal { get; set; }
+        public int Movies { get; set; }
+        public int Ovh { get; set; }
+        public string ThirdPartyRecommendation { get; set; }
+        public AnimeTier Tier { get; set; }
 
         public bool Equals(AnimeData other) {
-            return this.id == other.id &&
-                this.favorite == other.favorite &&
-                this.name == other.name;
+            return this.Id == other.Id &&
+                this.Favorite == other.Favorite &&
+                this.Name == other.Name;
         }
 
         public AnimeData DeepClone() {
-            return JsonSerializer.Deserialize<AnimeData>(JsonSerializer.Serialize(this, this.GetType()));
+            return JSeri.Deserialize<AnimeData>(JSeri.Serialize(this, this.GetType()));
         }
     }
 
     public class ItemEqualityComparer : IEqualityComparer<AnimeData> {
         public bool Equals(AnimeData x, AnimeData y) {
             // Two items are equal if their keys are equal.
-            return x.id == y.id;
+            return x.Id == y.Id;
         }
 
         public int GetHashCode(AnimeData obj) {
-            return obj.id.GetHashCode();
+            return obj.Id.GetHashCode();
         }
     }
 }

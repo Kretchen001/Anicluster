@@ -52,11 +52,11 @@ namespace Anicluster.windows.tagOrganisatorChildWindows {
 
         private void addLogic() {
             if (tagDesignator != "") {
-                databaseController dbController = new databaseController();
+                DatabaseController dbController = new DatabaseController();
                 AnimeTag newTag = new AnimeTag() {
-                    tagDesignator = tagDesignator,
+                    TagDesignator = tagDesignator,
                 };
-                if (!dbController.checkIfTagExistsByDesignator(newTag)) {
+                if (!DatabaseController.CheckIfTagExistsByDesignator(newTag)) {
                     dbController.addOneTag(newTag);
                     this.Close();
                 }

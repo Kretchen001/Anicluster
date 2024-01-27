@@ -211,18 +211,18 @@ namespace Anicluster.windows {
         }
 
         private void click_ConfirmButton(object sender, RoutedEventArgs e) {
-            databaseController dbController = new databaseController();
+            DatabaseController dbController = new DatabaseController();
 
             AnimeData? temp = null;
             // the obligated data
             if (animeName != "" && ratingStory != 0 && ratingSound != 0 && ratingAnimation != 0 && ratingSpecialEffects != 0 && animeTagList.Count != 0) {
                 temp = new AnimeData {
-                    id = Guid.NewGuid(),
-                    name = animeName,
-                    favorite = favorite,
-                    status = animeStatus,
-                    rating = new Rating(ratingStory, ratingSound, ratingAnimation, ratingSpecialEffects, ratingGermanDub),
-                    tags = animeTagList,
+                    Id = Guid.NewGuid(),
+                    Name = animeName,
+                    Favorite = favorite,
+                    Status = animeStatus,
+                    Rating = new Rating(ratingStory, ratingSound, ratingAnimation, ratingSpecialEffects, ratingGermanDub),
+                    Tags = animeTagList,
                 };
             }
             else {
@@ -232,40 +232,41 @@ namespace Anicluster.windows {
 
             // optional data added
             if (originalName != "") {
-                temp.originalName = originalName;
+                temp.OriginalName = originalName;
             }
             if (animeRecomendation != "") {
-                temp.thirdPartyRecommendation = animeRecomendation;
+                temp.ThirdPartyRecommendation = animeRecomendation;
             }
             if (urlAnimePlanet != "") {
-                temp.urlAnimePlanet = urlAnimePlanet;
+                temp.UrlAnimePlanet = urlAnimePlanet;
             }
             if (animeStaffeln.Count > 0) {
-                temp.staffeln = animeStaffeln;
+                temp.Staffeln = animeStaffeln;
             }
             else {
-                temp.staffeln = new List<Staffel>();
+                temp.Staffeln = new List<Staffel>();
             }
             if (animeTotalEpisodes != 0) {
-                temp.episodesTotal = animeTotalEpisodes;
+                temp.EpisodesTotal = animeTotalEpisodes;
             }
             if (animeOvh != 0) {
-                temp.ovh = animeOvh;
+                temp.Ovh = animeOvh;
             }
             if (animeMovies != 0) {
-                temp.movies = animeMovies;
+                temp.Movies = animeMovies;
             }
             if (animeTier != AnimeTier.Dummy) {
-                temp.tier = animeTier;
+                temp.Tier = animeTier;
             }
             else {
-                temp.tier = AnimeTier.Dummy;
+                temp.Tier = AnimeTier.Dummy;
             }
 
-            if (!dbController.checkIfAnimeExist(temp.name)) {
-                dbController.addAnimeToDB(temp);
+            if (!dbController.CheckIfAnimeExist(temp.Name)) {
+                DatabaseController.AddAnimeToDB(temp);
                 shouldViewUpdated(true);
                 this.Close();
+                this.Owner.Focus();
             }
             else {
                 MessageBox.Show("Name schon vorhanden!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -603,7 +604,7 @@ namespace Anicluster.windows {
 
             List<string> tagNames = new List<string>();
             for (int i = 0; i < animeTagList.Count; i += 1) {
-                tagNames.Add(animeTagList[i].tagDesignator);
+                tagNames.Add(animeTagList[i].TagDesignator);
             }
             tagNames.Sort();
 
@@ -621,17 +622,17 @@ namespace Anicluster.windows {
             textBlockForStaffelPrint.Text = "";
             for (int i = 0; i < animeStaffeln.Count; i += 1) {
                 if (i != (animeStaffeln.Count - 1)) {
-                    textBlockForStaffelPrint.Text += "St." + (animeStaffeln[i].counter) + " : " + animeStaffeln[i].episodes + " | ";
+                    textBlockForStaffelPrint.Text += "St." + (animeStaffeln[i].Counter) + " : " + animeStaffeln[i].Episodes + " | ";
                 }
                 else {
-                    textBlockForStaffelPrint.Text += "St." + (animeStaffeln[i].counter) + " : " + animeStaffeln[i].episodes;
+                    textBlockForStaffelPrint.Text += "St." + (animeStaffeln[i].Counter) + " : " + animeStaffeln[i].Episodes;
                 }
             }
 
             // calculate and print total Episodes
             int z = 0;
             for (int i = 0; i < animeStaffeln.Count; i += 1) {
-                z += animeStaffeln[i].episodes;
+                z += animeStaffeln[i].Episodes;
             }
             animeTotalEpisodes = z;
             textBoxTotalEpisodes.Text = z.ToString();

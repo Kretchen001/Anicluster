@@ -7,7 +7,7 @@ namespace Anicluster.windows.filter {
         public bool inclusive { get; set; } = false;
         public bool exclusive { get; set; } = false;
 
-        public TagSelection(AnimeTag animeTag) : base(animeTag.id, animeTag.tagDesignator) {
+        public TagSelection(AnimeTag animeTag) : base(animeTag.Id, animeTag.TagDesignator) {
         }
     }
 }

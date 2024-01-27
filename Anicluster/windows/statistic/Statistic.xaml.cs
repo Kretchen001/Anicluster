@@ -10,7 +10,7 @@ namespace Anicluster.windows.statistic {
     /// </summary>
     public partial class Statistic : Window {
 
-        databaseController dbController = new databaseController();
+        DatabaseController dbController = new DatabaseController();
         List<AnimeData> animes = new List<AnimeData>();
 
         public Statistic() {
@@ -19,7 +19,7 @@ namespace Anicluster.windows.statistic {
             CenterWindowOnScreen();
 
             // load data
-            animes = dbController.getAllAnimes();
+            animes = DatabaseController.getAllAnimes();
 
             this.Show(); // this line makes ActualHeight work
 
@@ -51,7 +51,7 @@ namespace Anicluster.windows.statistic {
             double dummy = 0;
 
             for (int i = 0; i < animes.Count; i += 1) {
-                switch (animes[i].tier) {
+                switch (animes[i].Tier) {
                     case AnimeTier.S: s += 1; break;
                     case AnimeTier.A: a += 1; break;
                     case AnimeTier.B: b += 1; break;
@@ -91,7 +91,7 @@ namespace Anicluster.windows.statistic {
             double fav = 0;
 
             for (int i = 0; i < animes.Count; i += 1) {
-                switch (animes[i].favorite) {
+                switch (animes[i].Favorite) {
                     case true: fav += 1; break;
                     case false: nonFav += 1; break;
                 }
@@ -117,12 +117,12 @@ namespace Anicluster.windows.statistic {
 
 
                 for (int i = 0; i < animes.Count; i += 1) {
-                    for (int j = 0; j < animes[i].tags.Count; j += 1) {
-                        if (tagDictionary.ContainsKey(animes[i].tags[j].tagDesignator)) {
-                            tagDictionary[animes[i].tags[j].tagDesignator] += 1;
+                    for (int j = 0; j < animes[i].Tags.Count; j += 1) {
+                        if (tagDictionary.ContainsKey(animes[i].Tags[j].TagDesignator)) {
+                            tagDictionary[animes[i].Tags[j].TagDesignator] += 1;
                         }
                         else {
-                            tagDictionary.Add(animes[i].tags[j].tagDesignator, 1);
+                            tagDictionary.Add(animes[i].Tags[j].TagDesignator, 1);
                         }
                     }
                 }
@@ -164,7 +164,7 @@ namespace Anicluster.windows.statistic {
             double dropped = 0;
 
             for (int i = 0; i < animes.Count; i += 1) {
-                switch (animes[i].status) {
+                switch (animes[i].Status) {
                     case AnimeStatus.Wunschliste: wishList += 1; break;
                     case AnimeStatus.Angefangen: start += 1; break;
                     case AnimeStatus.Fertig: finish += 1; break;

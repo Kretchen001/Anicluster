@@ -7,9 +7,9 @@ namespace BiboAnime {
     public static class Export {
 
         public static bool ExportAnimeListJson(string filePath) {
-            databaseController dbController = new databaseController();
+            DatabaseController dbController = new DatabaseController();
 
-            List<AnimeData> animesToExport = dbController.getAllAnimes();
+            List<AnimeData> animesToExport = DatabaseController.GetAllAnimes();
 
             string jsonString = JsonConvert.SerializeObject(animesToExport, Formatting.Indented);
 
@@ -24,9 +24,9 @@ namespace BiboAnime {
         }
 
         public static bool ExportTagListJson(string filePath) {
-            databaseController dbController = new databaseController();
+            DatabaseController dbController = new DatabaseController();
 
-            List<AnimeTag> animeTagsToExport = dbController.getAllAnimeTags();
+            List<AnimeTag> animeTagsToExport = DatabaseController.GetAllAnimeTags();
         
             string jsonString = JsonConvert.SerializeObject(animeTagsToExport, Formatting.Indented);
 

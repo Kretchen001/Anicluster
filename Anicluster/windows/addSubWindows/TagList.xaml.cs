@@ -31,18 +31,18 @@ namespace Anicluster.windows {
 
             selectedTagList = givenTagList;
 
-            databaseController dbController = new databaseController();
+            DatabaseController dbController = new DatabaseController();
 
-            List<AnimeTag> tagListDB = dbController.getAllAnimeTags();
+            List<AnimeTag> tagListDB = DatabaseController.GetAllAnimeTags();
 
             for (int i = 0; i < tagListDB.Count; i += 1) {
                 TagRow tempTagRow = new TagRow() {
-                    id = tagListDB[i].id,
-                    tagDesignator = tagListDB[i].tagDesignator,
+                    id = tagListDB[i].Id,
+                    tagDesignator = tagListDB[i].TagDesignator,
                     isChecked = false
                 };
 
-                if (givenTagList.Exists(x => x.id == tempTagRow.id)) {
+                if (givenTagList.Exists(x => x.Id == tempTagRow.id)) {
                     tempTagRow.isChecked = true;
                 }
 
@@ -77,12 +77,12 @@ namespace Anicluster.windows {
             // get the id per clicked Details-Button
             int currentRowIndex = dataGridTagList.Items.IndexOf(dataGridTagList.CurrentItem); // begin by 0. Give the rowNumber | NOT THE ID
             AnimeTag tempTag = new AnimeTag() {
-                id = tagRows[currentRowIndex].id,
-                tagDesignator = tagRows[currentRowIndex].tagDesignator
+                Id = tagRows[currentRowIndex].id,
+                TagDesignator = tagRows[currentRowIndex].tagDesignator
             };
             if (tagRows[currentRowIndex].isChecked) {
                 tagRows[currentRowIndex].isChecked = false;
-                selectedTagList.RemoveAll(x => x.id == tempTag.id);
+                selectedTagList.RemoveAll(x => x.Id == tempTag.Id);
             }
             else {
                 tagRows[currentRowIndex].isChecked = true;

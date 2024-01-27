@@ -54,7 +54,7 @@ namespace Anicluster.windows.filter {
         private int minEpisodes = 0;
         private int maxEpisodes = 0;
 
-        private databaseController dbController = new databaseController();
+        private DatabaseController dbController = new DatabaseController();
         private databaseFilterController dbFilterController = new databaseFilterController();
         private List<AnimeData> animeList = new List<AnimeData>();
         private List<AnimeTag> animeTags = new List<AnimeTag>();
@@ -70,7 +70,7 @@ namespace Anicluster.windows.filter {
 
             fillTagView();
 
-            animeList = dbController.getAllAnimes();
+            animeList = DatabaseController.getAllAnimes();
             updateFilterTable();
         }
 
@@ -112,7 +112,7 @@ namespace Anicluster.windows.filter {
                 AnimeRow selectedAnime = (AnimeRow)dataGridFilterAnimeList.Items[currentRowIndex];
 
                 // give the anime to the ShowDetails-Window
-                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeByName(selectedAnime.name));
+                ShowDetails showDetailsScreen = new ShowDetails(dbController.getAnimeByName(selectedAnime.Name));
                 showDetailsScreen.Show();
             }
         }
@@ -411,21 +411,21 @@ namespace Anicluster.windows.filter {
             List<AnimeRow> rows = new List<AnimeRow>();
             for (int i = 0; i < oList.Count; i += 1) {
                 string tagString = "";
-                for (int j = 0; j < oList[i].tags.Count; j += 1) {
-                    if (j != (oList[i].tags.Count - 1)) {
-                        tagString += oList[i].tags[j].tagDesignator + ", ";
+                for (int j = 0; j < oList[i].Tags.Count; j += 1) {
+                    if (j != (oList[i].Tags.Count - 1)) {
+                        tagString += oList[i].Tags[j].TagDesignator + ", ";
                     }
                     else {
-                        tagString += oList[i].tags[j].tagDesignator;
+                        tagString += oList[i].Tags[j].TagDesignator;
                     }
                 }
                 rows.Add(new AnimeRow {
-                    id = (i + 1),
-                    favorite = oList[i].favorite,
-                    name = oList[i].name,
-                    status = oList[i].status,
-                    tags = tagString,
-                    generalRating = oList[i].rating.general,
+                    Id = (i + 1),
+                    Favorite = oList[i].Favorite,
+                    Name = oList[i].Name,
+                    Status = oList[i].Status,
+                    Tags = tagString,
+                    GeneralRating = oList[i].Rating.General,
                 });
             }
             return rows;
@@ -437,49 +437,49 @@ namespace Anicluster.windows.filter {
             // favorite
             List<AnimeData> tempListFavorite = new List<AnimeData>();
             if (favoriteBool) {
-                tempListFavorite = dbFilterController.dbFilterIsFav(true);
+                tempListFavorite = dbFilterController.DbFilterIsFav(true);
                 haveFilter = true;
             }
             else if (noFavoriteBool) {
-                tempListFavorite = dbFilterController.dbFilterIsFav(false);
+                tempListFavorite = dbFilterController.DbFilterIsFav(false);
                 haveFilter = true;
             }
 
             // tier
             List<AnimeData> tempListTier = new List<AnimeData>();
             if (animeTierS) {
-                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.S));
+                tempListTier.AddRange(dbFilterController.DbFilterTier(AnimeTier.S));
                 haveFilter = true;
             }
             if (animeTierA) {
-                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.A));
+                tempListTier.AddRange(dbFilterController.DbFilterTier(AnimeTier.A));
                 haveFilter = true;
             }
             if (animeTierB) {
-                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.B));
+                tempListTier.AddRange(dbFilterController.DbFilterTier(AnimeTier.B));
                 haveFilter = true;
             }
             if (animeTierC) {
-                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.C));
+                tempListTier.AddRange(dbFilterController.DbFilterTier(AnimeTier.C));
                 haveFilter = true;
             }
             if (animeTierD) {
-                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.D));
+                tempListTier.AddRange(dbFilterController.DbFilterTier(AnimeTier.D));
                 haveFilter = true;
             }
             if (animeTierDummy) {
-                tempListTier.AddRange(dbFilterController.dbFilterTier(AnimeTier.Dummy));
+                tempListTier.AddRange(dbFilterController.DbFilterTier(AnimeTier.Dummy));
                 haveFilter = true;
             }
 
             // check if anime has german dub
             List<AnimeData> tempListDubCheck = new List<AnimeData>();
             if (existGermanDub) {
-                tempListDubCheck = dbFilterController.dbFilterRatingCheckGermanDub(true);
+                tempListDubCheck = dbFilterController.DbFilterRatingCheckGermanDub(true);
                 haveFilter = true;
             }
             if (withoutGermanDub) {
-                tempListDubCheck = dbFilterController.dbFilterRatingCheckGermanDub(false);
+                tempListDubCheck = dbFilterController.DbFilterRatingCheckGermanDub(false);
                 haveFilter = true;
             }
 
@@ -487,27 +487,27 @@ namespace Anicluster.windows.filter {
             List<AnimeData> tempListRating = new List<AnimeData>();
 
             if (ratingGeneralBool) {
-                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minGeneral: ratingGeneral));
+                tempListRating.AddRange(dbFilterController.DbFilterRatingMinABCDE(minGeneral: ratingGeneral));
                 haveFilter = true;
             }
             if (ratingStoryBool) {
-                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minStory: ratingStory));
+                tempListRating.AddRange(dbFilterController.DbFilterRatingMinABCDE(minStory: ratingStory));
                 haveFilter = true;
             }
             if (ratingAnimationBool) {
-                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minAnimation: ratingAnimation));
+                tempListRating.AddRange(dbFilterController.DbFilterRatingMinABCDE(minAnimation: ratingAnimation));
                 haveFilter = true;
             }
             if (ratingSoundBool) {
-                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minSound: ratingSound));
+                tempListRating.AddRange(dbFilterController.DbFilterRatingMinABCDE(minSound: ratingSound));
                 haveFilter = true;
             }
             if (ratingSpecialEffectsBool) {
-                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minSpecialEffect: ratingSpecialEffects));
+                tempListRating.AddRange(dbFilterController.DbFilterRatingMinABCDE(minSpecialEffect: ratingSpecialEffects));
                 haveFilter = true;
             }
             if (ratingGermanDubBool) {
-                tempListRating.AddRange(dbFilterController.dbFilterRatingMinABCDE(minGeneral: ratingGermanDub));
+                tempListRating.AddRange(dbFilterController.DbFilterRatingMinABCDE(minGeneral: ratingGermanDub));
                 haveFilter = true;
             }
 
@@ -517,27 +517,27 @@ namespace Anicluster.windows.filter {
             for (int i = 0; i < animeTags.Count; i += 1) {
                 if (tagUserControllList[i].tagSelection.inclusive) {
                     tagListInclusive.Add(new AnimeTag() {
-                        id = tagUserControllList[i].tagSelection.id,
-                        tagDesignator = tagUserControllList[i].tagSelection.tagDesignator
+                        Id = tagUserControllList[i].tagSelection.Id,
+                        TagDesignator = tagUserControllList[i].tagSelection.TagDesignator
                     });
                     haveFilter = true;
                 }
                 if (tagUserControllList[i].tagSelection.exclusive) {
                     tagListExclusive.Add(new AnimeTag() {
-                        id = tagUserControllList[i].tagSelection.id,
-                        tagDesignator = tagUserControllList[i].tagSelection.tagDesignator
+                        Id = tagUserControllList[i].tagSelection.Id,
+                        TagDesignator = tagUserControllList[i].tagSelection.TagDesignator
                     });
                     haveFilter = true;
                 }
             }
 
             List<AnimeData> listOfTagSelection = new List<AnimeData>();
-            listOfTagSelection.AddRange(dbFilterController.dbFilterByTag(tagListInclusive));
+            listOfTagSelection.AddRange(dbFilterController.DbFilterByTag(tagListInclusive));
 
             // count, if a Anime is multiple time's in the list
             int c = 0;
             for (int i = 0; i < listOfTagSelection.Count; i += 1) {
-                int cc = listOfTagSelection.Count(x => x.id == listOfTagSelection[i].id);
+                int cc = listOfTagSelection.Count(x => x.Id == listOfTagSelection[i].Id);
                 if (cc > c) {
                     c = cc;
                 }
@@ -545,7 +545,7 @@ namespace Anicluster.windows.filter {
             // only add Anime's, that are c-times in the list.
             List<AnimeData> tempListForRemember = new List<AnimeData>();
             for (int i = 0; i < listOfTagSelection.Count; i += 1) {
-                if (listOfTagSelection.Count(x => x.id == listOfTagSelection[i].id) == c) {
+                if (listOfTagSelection.Count(x => x.Id == listOfTagSelection[i].Id) == c) {
                     tempListForRemember.Add(listOfTagSelection[i]);
                 }
             }
@@ -553,7 +553,7 @@ namespace Anicluster.windows.filter {
             // write the tempListForRemeber to the listOfTagSelection, so now the real inclusive Tags are recogniced
             listOfTagSelection = tempListForRemember;
 
-            List<AnimeData> listOfTagSelectionEx = dbFilterController.dbFilterByTag(tagListExclusive);
+            List<AnimeData> listOfTagSelectionEx = dbFilterController.DbFilterByTag(tagListExclusive);
             
             // remove the Animes, that have the exclusive Tag(s)
             for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
@@ -564,17 +564,17 @@ namespace Anicluster.windows.filter {
 
             // if there ONLY exclusive Tags, than List show all Animes, that haven't this tags
             if ((listOfTagSelection.Count == 0) && (tagListExclusive.Count != 0)) {
-                listOfTagSelectionEx = dbFilterController.dbFilterWithoutTag(tagListExclusive);
+                listOfTagSelectionEx = dbFilterController.DbFilterWithoutTag(tagListExclusive);
                 c = 0;
                 for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
-                    int cc = listOfTagSelectionEx.Count(x => x.id == listOfTagSelectionEx[i].id);
+                    int cc = listOfTagSelectionEx.Count(x => x.Id == listOfTagSelectionEx[i].Id);
                     if (cc > c) {
                         c = cc;
                     }
                 }
                 tempListForRemember.Clear();
                 for (int i = 0; i < listOfTagSelectionEx.Count; i += 1) {
-                    if (listOfTagSelectionEx.Count(x => x.id == listOfTagSelectionEx[i].id) == c) {
+                    if (listOfTagSelectionEx.Count(x => x.Id == listOfTagSelectionEx[i].Id) == c) {
                         tempListForRemember.Add(listOfTagSelectionEx[i]);
                     }
                 }
@@ -585,24 +585,24 @@ namespace Anicluster.windows.filter {
             List<AnimeData> minMaxList = new List<AnimeData>();
 
             if (maxEpisodeBool && !minEpisodeBool) {
-                minMaxList = dbFilterController.dbFilterMinMaxEpisodesTotal(true, maxEpisodes);
+                minMaxList = dbFilterController.DbFilterMinMaxEpisodesTotal(true, maxEpisodes);
                 haveFilter = true;
             }
             if (minEpisodeBool && !maxEpisodeBool) {
-                minMaxList = dbFilterController.dbFilterMinMaxEpisodesTotal(false, minEpisodes);
+                minMaxList = dbFilterController.DbFilterMinMaxEpisodesTotal(false, minEpisodes);
                 haveFilter = true;
             }
             if (maxEpisodeBool && minEpisodeBool) {
                 if (!(maxEpisodes <= minEpisodes)) {
-                    List<AnimeData> maxList = dbFilterController.dbFilterMinMaxEpisodesTotal(true, maxEpisodes);
-                    List<AnimeData> minList = dbFilterController.dbFilterMinMaxEpisodesTotal(false, minEpisodes);
+                    List<AnimeData> maxList = dbFilterController.DbFilterMinMaxEpisodesTotal(true, maxEpisodes);
+                    List<AnimeData> minList = dbFilterController.DbFilterMinMaxEpisodesTotal(false, minEpisodes);
                     minMaxList = minList.Where(x => maxList.Contains(x)).ToList();
                 }
                 haveFilter = true;
             }
 
             // third Party recommandation
-            List<AnimeData> tempListRecommendation = dbFilterController.dbFilterCheckRecommendation(withThirdPartyRecomandation, withoutThirdPartyRecomandation);
+            List<AnimeData> tempListRecommendation = dbFilterController.DbFilterCheckRecommendation(withThirdPartyRecomandation, withoutThirdPartyRecomandation);
 
             // merge Lists
             animeList.Clear();
@@ -644,7 +644,7 @@ namespace Anicluster.windows.filter {
             animeList = animeList.Distinct(new ItemEqualityComparer()).ToList();
 
             if (animeList.Count == 0 && !haveFilter) {
-                animeList = dbController.getAllAnimes();
+                animeList = DatabaseController.getAllAnimes();
             }
             else if (animeList.Count == 0 && haveFilter) { // have filter
                 animeList.Clear();
@@ -692,7 +692,7 @@ namespace Anicluster.windows.filter {
         private void fillTagView() {
             animeTags = dbController.getAllUsedTags();
 
-            animeTags = animeTags.OrderBy(x => x.tagDesignator).ToList();
+            animeTags = animeTags.OrderBy(x => x.TagDesignator).ToList();
 
             for (int i = 0; i < animeTags.Count; i += 1) {
                 TagUserControll tempControll = new TagUserControll(new TagSelection(animeTags[i]));
@@ -704,7 +704,7 @@ namespace Anicluster.windows.filter {
         private void loadingRowFilterDataGrid(object sender, DataGridRowEventArgs e) {
             try {
                 AnimeRow tempRow = (AnimeRow)e.Row.DataContext;
-                switch (dbController.getAnimeByName(tempRow.name).tier) {
+                switch (dbController.getAnimeByName(tempRow.Name).tier) {
                     case AnimeTier.S: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF00D4D4")); break;
                     case AnimeTier.A: e.Row.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF3FFF2F")); break;
                     case AnimeTier.B: e.Row.Background = new SolidColorBrush(Colors.Yellow); break;
@@ -766,7 +766,7 @@ namespace Anicluster.windows.filter {
 
         private void resetButtonClick(object sender, RoutedEventArgs e) {
             animeList.Clear();
-            animeList = dbController.getAllAnimes();
+            animeList = DatabaseController.getAllAnimes();
             updateFilterTable();
 
             for (int i = 0; i < tagUserControllList.Count; i += 1) {
