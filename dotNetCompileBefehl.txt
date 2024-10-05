@@ -1,1 +1,0 @@
-dotnet publish -r win-x86 --configuration release --self-contained true --no-dependencies
