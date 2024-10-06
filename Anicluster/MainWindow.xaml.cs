@@ -14,5 +14,10 @@ namespace Anicluster {
             SeasonGenerator a = new SeasonGenerator();
             a.Show();
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e) {
+            RatingGenerator a = new RatingGenerator();
+            a.Show();
+        }
     }
 }

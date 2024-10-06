@@ -1,0 +1,80 @@
+﻿<Window x:Class="Anicluster.windows.RatingGenerator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows"
+        xmlns:uc="clr-namespace:Anicluster.userControls"
+        mc:Ignorable="d"
+        Title="RatingGenerator" Height="350" Width="600">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Auswertung">
+                <Grid Background="#FFE5E5E5">
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Bereiche">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <Label Height="30" VerticalContentAlignment="Center">
+                            Geschichte
+                        </Label>
+                        <Label Height="30" VerticalContentAlignment="Center">
+                            Animation
+                        </Label>
+                        <Label Height="30" VerticalContentAlignment="Center">
+                            Spezialeffekte
+                        </Label>
+                        <Label Height="30" VerticalContentAlignment="Center">
+                            Soundtrack
+                        </Label>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <ProgressBar Height="24" Value="19" Margin="3"/>
+                        <ProgressBar Height="24" Value="9" Margin="3"/>
+                        <ProgressBar Height="24" Value="97" Margin="3"/>
+                        <ProgressBar Height="24" Value="48" Margin="3"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Opening(s)">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0">
+                        <StackPanel x:Name="StackPanelOpening"></StackPanel>
+                    </ScrollViewer>
+                    <Button x:Name="btnOpeningAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="btnOpeningAdd_Click">
+                        Hinzufügen
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Ending(s)">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0">
+                        <StackPanel x:Name="StackPanelEnding"></StackPanel>
+                    </ScrollViewer>
+                    <Button x:Name="btnEndAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="btnEndingAdd_Click">
+                        Hinzufügen
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Syncro(s)">
+                <Grid Background="#FFE5E5E5">
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
