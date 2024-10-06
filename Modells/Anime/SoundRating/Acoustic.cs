@@ -3,20 +3,31 @@
 
         public int General {
             get {
-                int temp = Opening + Ending + (Soundtrack * 4);
-                int s = 0, c = 0;
+                int temp = Soundtrack * 4;
+                int s0 = 0, s1 = 0, s2 = 0;
+                int c0 = 0, c1 = 0, c2 = 0;
+                foreach (MusicPiece x in Opening) {
+                    s0 += x.General;
+                    c0 += 1;
+                }
+                foreach (MusicPiece x in Ending) {
+                    s1 += x.General;
+                    c1 += 1;
+                }
                 foreach (Syncro x in Syncro) {
                     if (x.IsAssessed) {
-                        s += x.General;
-                        c += 1;
+                        s2 += x.General;
+                        c2 += 1;
                     }
                 }
-                temp += (s / c) * 4;
+                temp += (s0 / c0); // Opening
+                temp += (s1 / c1); // Ending
+                temp += (s2 / c2) * 4; // Syncro
                 return (temp / 10);
             }
         }
-        public int Opening { get; set; } = -1;
-        public int Ending { get; set; } = -1;
+        public List<MusicPiece> Opening { get; set; } = [];
+        public List<MusicPiece> Ending { get; set; } = [];
         public int Soundtrack { get; set; } = -1;
         public List<Syncro> Syncro { get; set; } = [];
         public string? Comment { get; set; }
