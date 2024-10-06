@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Anicluster.windows;
+using System.Windows;
 
 namespace Anicluster {
     /// <summary>
@@ -7,6 +8,11 @@ namespace Anicluster {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e) {
+            SeasonGenerator a = new SeasonGenerator();
+            a.Show();
         }
     }
 }

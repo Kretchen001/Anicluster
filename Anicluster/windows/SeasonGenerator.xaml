@@ -1,0 +1,79 @@
+﻿<Window x:Class="Anicluster.windows.SeasonGenerator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows"
+        mc:Ignorable="d"
+        Title="Staffel Generator" Height="375" Width="800" ResizeMode="NoResize">    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <ListView d:ItemsSource="{d:SampleData ItemCount=100}" Margin="10" Grid.Column="0" x:Name="ListViewSeasons">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nr." Width="25">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock>
+                                        x
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Episoden" Width="55" x:Name="ListViewGridColumnCounter">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Episodes.Count}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Startjahr" Width="75">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding PublishingTime.DisplayStartYear}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Endjahr" Width="75">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding PublishingTime.DisplayEndYear}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Kommentar" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Comment}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Button x:Name="btnHinzufügen" Content="Hinzufügen" Margin="55,0,55,10" Grid.Column="1" Height="25" VerticalAlignment="Bottom" Click="BtnHinzufuegen_Click"/>
+        <Label x:Name="LabelAnzahlEpisoden" Content="Anzahl der Episoden*" Margin="5,15,150,0" FontWeight="Bold" Height="30" Grid.Column="1" VerticalAlignment="Top"/>
+        <Label Content="Startjahr" Margin="5,50,216,0" FontWeight="Bold" Height="29" Grid.Column="1" VerticalAlignment="Top"/>
+        <Label Content="Endjahr" Margin="5,85,222,0" FontWeight="Bold" Height="29" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label x:Name="LabelKommentar" Content="Kommentar" Margin="5,120,212,0" VerticalAlignment="Top" Height="29" Grid.Column="1" FontWeight="Bold"/>
+        <TextBox x:Name="TextBoxKommentar" Margin="10,150,10,50" Grid.Column="1" TextWrapping="Wrap"/>
+        <TextBox x:Name="TextBoxEpisodenAnzahl" Margin="10,20,15,0" TextWrapping="Wrap" Width="150" VerticalAlignment="Top" Grid.Column="1" AutomationProperties.HelpText="Anzahl der Episoden in Zahlen" Height="21" HorizontalAlignment="Right"/>
+        <TextBox x:Name="TextBoxStartdatum" Margin="10,55,15,0" TextWrapping="Wrap" Width="150" VerticalAlignment="Top" Grid.Column="1" AutomationProperties.HelpText="Anzahl der Episoden in Zahlen" Height="21" HorizontalAlignment="Right"/>
+        <TextBox x:Name="TextBoxEnddatum" Margin="10,90,15,0" TextWrapping="Wrap" Width="150" VerticalAlignment="Top" Grid.Column="1" AutomationProperties.HelpText="Anzahl der Episoden in Zahlen" Height="21" HorizontalAlignment="Right"/>
+    </Grid>
+</Window>
