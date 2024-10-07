@@ -12,16 +12,14 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
-        <ListView d:ItemsSource="{d:SampleData ItemCount=100}" Margin="10" Grid.Column="0" x:Name="ListViewSeasons">
+        <ListView d:ItemsSource="{d:SampleData ItemCount=100}" Margin="10" Grid.Column="0" x:Name="ListViewSeasons" KeyDown="ListViewSeasons_KeyDown" AllowDrop="True" Drop="ListViewSeasons_Drop" DragOver="ListViewSeasons_DragOver" PreviewMouseLeftButtonDown="ListViewSeasons_PreviewMouseLeftButtonDown">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Nr." Width="25">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock>
-                                        x
-                                    </TextBlock>
+                                    <TextBlock Text="{Binding SeasonNr}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -30,7 +28,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding Episodes.Count}"/>
+                                    <TextBlock Text="{Binding Season.Episodes.Count}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -39,7 +37,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding PublishingTime.DisplayStartYear}"/>
+                                    <TextBlock Text="{Binding Season.PublishingTime.DisplayStartYear}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -48,7 +46,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding PublishingTime.DisplayEndYear}"/>
+                                    <TextBlock Text="{Binding Season.PublishingTime.DisplayEndYear}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -57,7 +55,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding Comment}"/>
+                                    <TextBlock Text="{Binding Season.Comment}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
