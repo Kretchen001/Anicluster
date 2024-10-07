@@ -7,10 +7,12 @@ namespace Anicluster.userControls {
     /// </summary>
     public partial class UcMusicPiece : UserControl {
 
-        MusicPiece musicPiece = new MusicPiece();
+        public MusicPiece musicPiece = new MusicPiece();
 
         public UcMusicPiece(MusicPieceType musicPieceType) {
             musicPiece.Type = musicPieceType;
+            DataContext = musicPiece;
+            musicPiece.Comment = "lorem";
             InitializeComponent();
         }
     }

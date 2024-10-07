@@ -5,10 +5,39 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Anicluster.userControls"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="250">
-    <Grid>
-        <Label>
-            Hallo David
-        </Label>
-    </Grid>
+             d:DesignHeight="155" d:DesignWidth="250">
+    <UserControl.Resources>
+        <Style x:Key="RoundedBorder" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#FF000000" BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource RoundedBorder}">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,6">Name: </TextBlock>
+                <TextBox Grid.Column="1" Text="{Binding Name}" FontSize="16" FontWeight="Bold" Margin="0,0,0,5"/>
+            </Grid>
+            <ProgressBar Value="{Binding General}" 
+                          Maximum="100" 
+                          Height="20" 
+                          Margin="0,0,0,5"/>
+            <TextBox Text="{Binding Comment}" 
+                     Height="60" 
+                     TextWrapping="Wrap" 
+                     AcceptsReturn="True"/>
+        </StackPanel>
+    </Border>
 </UserControl>

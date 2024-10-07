@@ -51,7 +51,7 @@
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelOpening"></StackPanel>
                     </ScrollViewer>
-                    <Button x:Name="btnOpeningAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="btnOpeningAdd_Click">
+                    <Button x:Name="btnOpeningAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="BtnOpeningAdd_Click">
                         Hinzufügen
                     </Button>
                 </Grid>
@@ -65,7 +65,7 @@
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelEnding"></StackPanel>
                     </ScrollViewer>
-                    <Button x:Name="btnEndAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="btnEndingAdd_Click">
+                    <Button x:Name="btnEndAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="BtnEndingAdd_Click">
                         Hinzufügen
                     </Button>
                 </Grid>
