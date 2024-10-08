@@ -72,6 +72,16 @@
             </TabItem>
             <TabItem Header="Syncro(s)">
                 <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0">
+                        <StackPanel x:Name="StackPanelSyncro"></StackPanel>
+                    </ScrollViewer>
+                    <Button x:Name="btnSyncroAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="BtnSyncorAdd_Click">
+                        Hinzufügen
+                    </Button>
                 </Grid>
             </TabItem>
         </TabControl>

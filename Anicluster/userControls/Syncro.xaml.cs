@@ -1,28 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Anicluster.windows;
+using Modells.Anime.SoundRating;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using AnimeSR = Modells.Anime.SoundRating;
 
-namespace Anicluster.userControls
-{
+namespace Anicluster.userControls {
     /// <summary>
     /// Interaktionslogik für Syncro.xaml
     /// </summary>
-    public partial class Syncro : UserControl
-    {
-        public Syncro()
-        {
+    public partial class Syncro : UserControl {
+
+        private static Dictionary<SyncroLanuage, string> TranslationOfLanguage = new Dictionary<SyncroLanuage, string>() {
+            { SyncroLanuage.en, "Englisch" },
+            { SyncroLanuage.jp, "Japanisch" },
+            { SyncroLanuage.de, "Deutsch" },
+            { SyncroLanuage.es, "Spanisch" },
+            { SyncroLanuage.ru, "Russisch" },
+            { SyncroLanuage.ko, "Koreanisch" },
+            { SyncroLanuage.ch, "Chinesisch" },
+        };
+        public ObservableCollection<KeyValuePair<SyncroLanuage, string>> Languages { get; set; } = [];
+
+        public AnimeSR.Syncro NewSyncro { get; set; } = new AnimeSR.Syncro();
+
+        public Syncro() {
             InitializeComponent();
+            DataContext = this;
+            foreach (KeyValuePair<SyncroLanuage, string> x in TranslationOfLanguage) {
+                Languages.Add(x);
+            }
+            ProgBarGeneral.Value = 0;
+            CBLanguageSelection.SelectedIndex = 0;
+        }
+
+        private void ProgBarGeneral_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
+            if (e.Delta > 0) {
+                NewSyncro.General = Math.Min(NewSyncro.General + 1, 100);
+            }
+            else {
+                NewSyncro.General = Math.Max(NewSyncro.General - 1, 0);
+            }
+            ProgBarGeneral.Value = NewSyncro.General; // Update ProgressBar
+        }
+
+        private void ProgBarGeneral_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+            NumberInputDialog inputDialog = new NumberInputDialog();
+            if (inputDialog.ShowDialog() == true) {
+                NewSyncro.General = inputDialog.Result;
+                ProgBarGeneral.Value = inputDialog.Result;
+            }
         }
     }
 }
