@@ -1,10 +1,6 @@
-﻿using Anicluster.windows;
+﻿using Anicluster.dialogs;
 using Modells.Anime.SoundRating;
-using System.Globalization;
-using System.Printing;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace Anicluster.userControls {
     /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Anicluster.windows;
+using Anicluster.dialogs;
 using Modells.Anime.SoundRating;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
@@ -31,6 +32,7 @@ namespace Anicluster.userControls {
             }
             ProgBarGeneral.Value = 0;
             CBLanguageSelection.SelectedIndex = 0;
+            NewSyncro.General = 0;
         }
 
         private void ProgBarGeneral_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {

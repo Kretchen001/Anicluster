@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace Anicluster.windows {
+namespace Anicluster.dialogs {
     /// <summary>
     /// Interaktionslogik für NumberInputDialog.xaml
     /// </summary>
@@ -11,6 +11,7 @@ namespace Anicluster.windows {
         
         public NumberInputDialog() {
             InitializeComponent();
+            TBInputNumber.Focus();
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e) {
@@ -24,7 +25,7 @@ namespace Anicluster.windows {
         }
 
         private void CheckInput() {
-            if (int.TryParse(InputTextBox.Text, out int result) && result <= 100 && result >= 0) {
+            if (int.TryParse(TBInputNumber.Text, out int result) && result <= 100 && result >= 0) {
                 Result = result;
                 DialogResult = true;
                 Close();
