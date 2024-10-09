@@ -18,7 +18,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!--<local:ValueToWidthConverter x:Key="ValueToWidthConverter" />-->
     </UserControl.Resources>
 
     <Border Style="{StaticResource RoundedBorder}">
@@ -32,8 +31,8 @@
                 <ComboBox x:Name="CBLanguageSelection" Grid.Column="1" Margin="0,0,0,5" VerticalAlignment="Center" ItemsSource="{Binding Languages}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding NewSyncro.Language}"/>
             </Grid>
             <Grid>
-                <ProgressBar x:Name="ProgBarGeneral" Value="{Binding General}" Maximum="100" Height="20" Margin="0,0,0,5" ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden" MouseWheel="ProgBarGeneral_MouseWheel" MouseLeftButtonDown="ProgBarGeneral_MouseLeftButtonDown" />
-                <Label Content="{Binding General}" Margin="0,0,0,4" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                <ProgressBar x:Name="ProgBarGeneral" Value="{Binding NewSyncro.General}" Maximum="100" Height="20" Margin="0,0,0,5" ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden" MouseWheel="ProgBarGeneral_MouseWheel" MouseLeftButtonDown="ProgBarGeneral_MouseLeftButtonDown" />
+                <Label Content="{Binding NewSyncro.General}" Margin="0,0,0,4" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
             </Grid>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                 <TextBlock Margin="0,0,5,0">
@@ -41,7 +40,7 @@
                 </TextBlock>
                 <CheckBox HorizontalAlignment="Right" IsChecked="{Binding NewSyncro.IsAssessed}"></CheckBox>
             </StackPanel>
-            <TextBox Text="{Binding Comment}" Height="60" TextWrapping="Wrap" AcceptsReturn="True" ToolTip="Kommentarfeld" />
+            <TextBox Text="{Binding NewSyncro.Comment}" Height="60" TextWrapping="Wrap" AcceptsReturn="True" ToolTip="Kommentarfeld" />
         </StackPanel>
     </Border>
 </UserControl>

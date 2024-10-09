@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:Anicluster.windows"
         xmlns:uc="clr-namespace:Anicluster.userControls"
         mc:Ignorable="d"
-        Title="RatingGenerator" Height="350" Width="600">
+        WindowStartupLocation="CenterScreen"
+        Title="Bewertung" Height="350" Width="600">
     <Grid>
         <TabControl>
             <TabItem Header="Auswertung">
                 <Grid Background="#FFE5E5E5">
-
                 </Grid>
             </TabItem>
             <TabItem Header="Bereiche">
@@ -35,10 +35,22 @@
                         </Label>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        <ProgressBar Height="24" Value="19" Margin="3"/>
-                        <ProgressBar Height="24" Value="9" Margin="3"/>
-                        <ProgressBar Height="24" Value="97" Margin="3"/>
-                        <ProgressBar Height="24" Value="48" Margin="3"/>
+                        <Grid>
+                            <ProgressBar x:Name="ProgBarHistory" Maximum="100" Height="24" Value="{Binding History}" Margin="3" ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden" MouseWheel="ProgBarHistory_MouseWheel" MouseLeftButtonDown="ProgBarHistory_MouseLeftButtonDown"/>
+                            <Label x:Name="LbHistory" Content="{Binding History}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                        </Grid>
+                        <Grid>
+                            <ProgressBar x:Name="ProgBarAnimation" Height="24" Value="{Binding Animation}" Margin="3" MouseWheel="ProgBarAnimation_MouseWheel" MouseLeftButtonDown="ProgBarAnimation_MouseLeftButtonDown"/>
+                            <Label x:Name="LbAnimation" Content="{Binding Animation}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                        </Grid>
+                        <Grid>
+                            <ProgressBar x:Name="ProgBarSpecialEffects" Height="24" Value="{Binding SpecialEffects}" Margin="3" MouseWheel="ProgBarSpecialEffects_MouseWheel" MouseLeftButtonDown="ProgBarSpecialEffects_MouseLeftButtonDown"/>
+                            <Label x:Name="LbSpecialEffects" Content="{Binding SpecialEffects}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                        </Grid>
+                        <Grid>
+                            <ProgressBar x:Name="ProgBarSoundtrack" Height="24" Value="{Binding Soundtrack}" Margin="3" MouseWheel="ProgBarSoundtrack_MouseWheel" MouseLeftButtonDown="ProgBarSoundtrack_MouseLeftButtonDown"/>
+                            <Label x:Name="LbSoundtrack" Content="{Binding Soundtrack}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                        </Grid>
                     </StackPanel>
                 </Grid>
             </TabItem>
