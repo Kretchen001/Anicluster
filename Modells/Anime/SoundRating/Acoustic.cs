@@ -3,6 +3,9 @@
 
         public int General {
             get {
+                if (Opening.Count == 0 || Ending.Count == 0 || Syncro.Count == 0 || Soundtrack == -1) {
+                    return 0;
+                }
                 int temp = Soundtrack * 4;
                 int s0 = 0, s1 = 0, s2 = 0;
                 int c0 = 0, c1 = 0, c2 = 0;
@@ -32,6 +35,6 @@
         public List<Syncro> Syncro { get; set; } = [];
         public string? Comment { get; set; }
 
-        public Acoustic() {}
+        public Acoustic() { }
     }
 }

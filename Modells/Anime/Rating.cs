@@ -12,6 +12,7 @@ namespace Modells.Anime {
         public int Animation { get; set; }
         public int SpecialEffects { get; set; }
         public Acoustic Acoustic { get; set; } = new Acoustic();
+        public bool IsRated { get; set; } = false;
 
         public Rating() {}
     }

@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml.Linq;
 
 namespace Anicluster.windows {
     /// <summary>
@@ -17,6 +16,9 @@ namespace Anicluster.windows {
             this.DataContext = this;
             TBName.Visibility = Visibility.Visible;
             TBName.Focus();
+            if (!NewAnime.Rating.IsRated) {
+                LbGeneral.Content = "n/a";
+            }
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
@@ -50,7 +52,7 @@ namespace Anicluster.windows {
 
         private void StarPath_MouseDown(object sender, MouseButtonEventArgs e) {
             if (NewAnime.Favorite) {
-                StarPath.Fill = Brushes.Gray;
+                StarPath.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAFAFAF")); ;
             }
             else {
                 StarPath.Fill = Brushes.Yellow;
