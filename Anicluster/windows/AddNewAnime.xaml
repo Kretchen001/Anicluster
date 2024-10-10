@@ -11,23 +11,29 @@
     <Border MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid>
             <!-- Hintergrund und runde Ecken -->
-            <Border CornerRadius="20" Background="#FF545454" Padding="10">
+            <Border CornerRadius="20" Background="#FF7F7F7F" Padding="10">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="75"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
                     <Border CornerRadius="20" Grid.Row="0" Background="LightBlue">
                         <Grid>
-                            <Label x:Name="LbName" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="25,0,0,0" Height="40" FontWeight="Bold" VerticalContentAlignment="Center" MinWidth="300" MouseLeftButtonDown="LbName_MouseLeftButtonDown" FontSize="18" Background="Transparent"></Label>
-                            <TextBox x:Name="TBName" Visibility="Collapsed" Text="{Binding NewAnime.Name, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="25,0,0,0" Height="40" VerticalContentAlignment="Center" KeyDown="EditableTextBox_KeyDown" FontSize="18"/>
+                            <Label x:Name="LbName" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="25,0,0,0" Height="40" FontWeight="Bold" VerticalContentAlignment="Center" MinWidth="300" MouseLeftButtonDown="LbName_MouseLeftButtonDown" FontSize="20" Background="Transparent"></Label>
+                            <TextBox x:Name="TBName" Visibility="Collapsed" Text="{Binding NewAnime.Name, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="25,0,0,0" Height="40" VerticalContentAlignment="Center" KeyDown="TBName_KeyDown" FontSize="20" LostFocus="TBName_LostFocus" Background="Transparent" BorderThickness="0" Foreground="Black"/>
+                            <Viewbox VerticalAlignment="Center" HorizontalAlignment="Right"  Margin="10,10,25,10" ToolTip="Favorisieren?">
+                                <Canvas Height="50" Width="50">
+                                    <Path x:Name="StarPath" Fill="Gray" Stretch="Uniform" Data="M 25,0 L 31,20 H 50 L 34,31 L 40,50 L 25,39 L 10,50 L 16,31 L 0,20 H 19 Z"  MouseDown="StarPath_MouseDown"/>
+                                </Canvas>
+                            </Viewbox>
                         </Grid>
                     </Border>
-                    <Grid Grid.Row="5">
+                    <Grid Grid.Row="1" Margin="10">
+                        <StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>

@@ -1,5 +1,4 @@
 ﻿using Modells.Anime.SoundRating;
-using System.Text;
 
 namespace Modells.Anime {
     public class Rating {

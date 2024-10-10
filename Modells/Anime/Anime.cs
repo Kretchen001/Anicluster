@@ -29,9 +29,9 @@
         public MediaInfo MediaInfo { get; set; } = new MediaInfo();
         /// <summary></summary>
         public string? RecommendedFrom { get; set; }
-        /// <summary>thematic anime before this one</summary>
+        /// <summary>thematic anime before this one, identified by his id</summary>
         public int Predecessor { get; set; } = -1;
-        /// <summary>thematic anime after this one</summary>
+        /// <summary>thematic anime after this one, identified by his id</summary>
         public int Successor { get; set; } = -1;
         public string? Comment { get; set; }
     }
