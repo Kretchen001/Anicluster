@@ -42,14 +42,22 @@
                                         <Label Height="30" VerticalContentAlignment="Center">Url (Anime-Planet z.B.)</Label>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
-                                        <TextBox Height="30" Margin="0,0,0,5"></TextBox>
+                                        <TextBox Text="{Binding NewAnime.OriginalName}" Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center"></TextBox>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBox Grid.Column="0" Height="30" Margin="0,0,5,0"></TextBox>
-                                            <Button Grid.Column="1" Padding="3,0,3,0">Auto-Generation</Button>
+                                            <TextBox Grid.Column="0" Height="30" Margin="0,0,5,0" Text="{Binding NewAnime.Url}" VerticalContentAlignment="Center"></TextBox>
+                                            <Button Grid.Column="1" Padding="3,0,3,0">
+                                                Auto-Generation
+                                                <Button.ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock>Bitte Link überprüfen.</TextBlock>
+                                                        <TextBlock>Keine Garantie auf Korrektheit aufgrund der Benutzereingaben!</TextBlock>
+                                                    </StackPanel>
+                                                </Button.ToolTip>
+                                            </Button>
                                         </Grid>
                                     </StackPanel>
                                 </Grid>
@@ -61,13 +69,13 @@
                                         <ColumnDefinition Width="3*"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="5">
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Wunschliste" Margin="5"/>
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Begonnen" Margin="5"/>
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Fertig" Margin="5"/>
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Unterbrochen" Margin="5"/>
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Abgebrochen" Margin="5"/>
+                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Wunschliste" Margin="5" Checked="RBtn_Checked"/>
+                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Begonnen" Margin="5" Checked="RBtn_Checked"/>
+                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Fertig" Margin="5" Checked="RBtn_Checked"/>
+                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Unterbrochen" Margin="5" Checked="RBtn_Checked"/>
+                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Abgebrochen" Margin="5" Checked="RBtn_Checked"/>
                                     </StackPanel>
-                                    <TextBox Grid.Column="1" Margin="7" AcceptsReturn="True" TextWrapping="Wrap" ToolTip="Kommentarfeld"/>
+                                    <TextBox Grid.Column="1" Margin="7" AcceptsReturn="True" TextWrapping="Wrap" ToolTip="Kommentarfeld" VerticalScrollBarVisibility="Auto" MaxHeight="134.1"/>
                                 </Grid>
                             </GroupBox>
                             <GroupBox Header="Bewertung" FontSize="14" Padding="5" Margin="0,10,0,0">
@@ -85,16 +93,16 @@
                                             <ProgressBar x:Name="ProgBarGeneral" Maximum="100" Height="24" Margin="3"/>
                                             <Label x:Name="LbGeneral" Content="{Binding NewAnime.Rating.General}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
                                         </Grid>
-                                        <Button Grid.Column="1" Padding="5,0,5,0" Margin="5,0,5,0">Bewerten</Button>
+                                        <Button x:Name="BtnRatingGenerator" Grid.Column="1" Padding="5,0,5,0" Margin="5,0,5,0">Bewerten</Button>
                                     </Grid>
                                     <Grid Grid.Row="1" Margin="0,5,0,0">
                                         <StackPanel Orientation="Horizontal" Height="50">
-                                            <Button Width="75" Margin="3,0,5,0">S</Button>
-                                            <Button Width="75" Margin="5,0,5,0">A</Button>
-                                            <Button Width="75" Margin="5,0,5,0">B</Button>
-                                            <Button Width="75" Margin="5,0,5,0">C</Button>
-                                            <Button Width="75" Margin="5,0,5,0">D</Button>
-                                            <Button Width="75" Margin="5,0,5,0">E</Button>
+                                            <Button Width="75" Margin="3,0,5,0" x:Name="BtnTierS">S</Button>
+                                            <Button Width="75" Margin="5,0,5,0" x:Name="BtnTierA">A</Button>
+                                            <Button Width="75" Margin="5,0,5,0" x:Name="BtnTierB">B</Button>
+                                            <Button Width="75" Margin="5,0,5,0" x:Name="BtnTierC">C</Button>
+                                            <Button Width="75" Margin="5,0,5,0" x:Name="BtnTierD">D</Button>
+                                            <Button Width="75" Margin="5,0,5,0" x:Name="BtnTierE">E</Button>
                                         </StackPanel>
                                     </Grid>
                                 </Grid>

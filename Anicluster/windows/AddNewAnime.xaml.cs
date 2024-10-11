@@ -1,5 +1,6 @@
 ﻿using Modells.Anime;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -58,6 +59,25 @@ namespace Anicluster.windows {
                 StarPath.Fill = Brushes.Yellow;
             }
             NewAnime.Favorite = !NewAnime.Favorite;
+        }
+
+        private void RBtn_Checked(object sender, RoutedEventArgs e) {
+            if (sender is RadioButton radioBtn) {
+                List<RadioButton> radioButtons = ((StackPanel)radioBtn.Parent).Children.OfType<RadioButton>().ToList();
+                int selectedIndex = radioButtons.IndexOf(radioBtn);
+                if (selectedIndex >= 0 && selectedIndex < Enum.GetValues(typeof(State)).Length) {
+                    NewAnime.Status.State = (State)selectedIndex;
+                }
+                if (NewAnime.Status.State.Equals(State.Wishlist)) {
+                    BtnRatingGenerator.IsEnabled = false;
+                    BtnTierS.IsEnabled = false;
+                    BtnTierA.IsEnabled = false;
+                    BtnTierB.IsEnabled = false;
+                    BtnTierC.IsEnabled = false;
+                    BtnTierD.IsEnabled = false;
+                    BtnTierE.IsEnabled = false;
+                }
+            }
         }
     }
 }
