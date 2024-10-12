@@ -68,7 +68,7 @@ namespace Anicluster.windows {
                 if (selectedIndex >= 0 && selectedIndex < Enum.GetValues(typeof(State)).Length) {
                     NewAnime.Status.State = (State)selectedIndex;
                 }
-                if (NewAnime.Status.State.Equals(State.Wishlist)) {
+                if (NewAnime.Status.State.Equals(State.Wishlist)) { // if Wishlist is selected, disable Rating
                     BtnRatingGenerator.IsEnabled = false;
                     BtnTierS.IsEnabled = false;
                     BtnTierA.IsEnabled = false;
@@ -77,7 +77,81 @@ namespace Anicluster.windows {
                     BtnTierD.IsEnabled = false;
                     BtnTierE.IsEnabled = false;
                 }
+                else {
+                    BtnRatingGenerator.IsEnabled = true;
+                    BtnTierS.IsEnabled = true;
+                    BtnTierA.IsEnabled = true;
+                    BtnTierB.IsEnabled = true;
+                    BtnTierC.IsEnabled = true;
+                    BtnTierD.IsEnabled = true;
+                    BtnTierE.IsEnabled = true;
+                }
             }
+        }
+
+        private void ChangeTierButtonBorder(Tier oldTier, Tier newTier) {
+            BtnTierS.BorderThickness = new Thickness(0.5);
+            BtnTierA.BorderThickness = new Thickness(0.5);
+            BtnTierB.BorderThickness = new Thickness(0.5);
+            BtnTierC.BorderThickness = new Thickness(0.5);
+            BtnTierD.BorderThickness = new Thickness(0.5);
+            BtnTierE.BorderThickness = new Thickness(0.5);
+            switch (newTier) {
+                case Tier.S: {
+                        BtnTierS.BorderThickness = new Thickness(5);
+                        return;
+                    }
+                case Tier.A: {
+                        BtnTierA.BorderThickness = new Thickness(5);
+                        return;
+                    }
+                case Tier.B: {
+                        BtnTierB.BorderThickness = new Thickness(5);
+                        return;
+                    }
+                case Tier.C: {
+                        BtnTierC.BorderThickness = new Thickness(5);
+                        return;
+                    }
+                case Tier.D: {
+                        BtnTierD.BorderThickness = new Thickness(5);
+                        return;
+                    }
+                case Tier.E: {
+                        BtnTierE.BorderThickness = new Thickness(5);
+                        return;
+                    }
+            }
+        }
+
+        private void BtnTierS_Click(object sender, RoutedEventArgs e) {
+            ChangeTierButtonBorder(oldTier: NewAnime.Tier, newTier: Tier.S);
+            NewAnime.Tier = Tier.S;
+        }
+
+        private void BtnTierA_Click(object sender, RoutedEventArgs e) {
+            ChangeTierButtonBorder(oldTier: NewAnime.Tier, newTier: Tier.A);
+            NewAnime.Tier = Tier.A;
+        }
+
+        private void BtnTierB_Click(object sender, RoutedEventArgs e) {
+            ChangeTierButtonBorder(oldTier: NewAnime.Tier, newTier: Tier.B);
+            NewAnime.Tier = Tier.B;
+        }
+
+        private void BtnTierC_Click(object sender, RoutedEventArgs e) {
+            ChangeTierButtonBorder(oldTier: NewAnime.Tier, newTier: Tier.C);
+            NewAnime.Tier = Tier.C;
+        }
+
+        private void BtnTierD_Click(object sender, RoutedEventArgs e) {
+            ChangeTierButtonBorder(oldTier: NewAnime.Tier, newTier: Tier.D);
+            NewAnime.Tier = Tier.D;
+        }
+
+        private void BtnTierE_Click(object sender, RoutedEventArgs e) {
+            ChangeTierButtonBorder(oldTier: NewAnime.Tier, newTier: Tier.E);
+            NewAnime.Tier = Tier.E;
         }
     }
 }
