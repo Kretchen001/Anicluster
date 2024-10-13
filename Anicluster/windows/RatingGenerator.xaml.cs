@@ -1,6 +1,7 @@
 ﻿using Anicluster.dialogs;
 using Anicluster.userControls;
 using Modells.Anime.SoundRating;
+using Modells.Anime;
 using System.Windows;
 using UC = Anicluster.userControls;
 
@@ -22,6 +23,11 @@ namespace Anicluster.windows {
         public RatingGenerator() {
             InitializeComponent();
             DataContext = this;
+        }
+
+        public Rating GenerateRating() {
+            Rating x = new Rating();
+            return x;
         }
 
         private void BtnOpeningAdd_Click(object sender, RoutedEventArgs e) {
@@ -98,7 +104,7 @@ namespace Anicluster.windows {
                 LbSpecialEffects.Content = inputDialog.Result;
             }
         }
-        
+
         private void ProgBarSoundtrack_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
             if (e.Delta > 0) {
                 Soundtrack = Math.Min(Soundtrack + 1, 100);

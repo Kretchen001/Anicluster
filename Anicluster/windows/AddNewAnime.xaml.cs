@@ -12,6 +12,9 @@ namespace Anicluster.windows {
 
         public Anime NewAnime { get; set; } = new Anime();
 
+        private RatingGenerator window_RatingGenerator { get; set; } = new RatingGenerator();
+        private SeasonGenerator window_SeasonGenerator { get; set; } = new SeasonGenerator();
+
         public AddNewAnime() {
             InitializeComponent();
             this.DataContext = this;
@@ -152,6 +155,42 @@ namespace Anicluster.windows {
         private void BtnTierE_Click(object sender, RoutedEventArgs e) {
             ChangeTierButtonBorder(oldTier: NewAnime.Tier, newTier: Tier.E);
             NewAnime.Tier = Tier.E;
+        }
+
+        private void BtnRatingGenerator_Click(object sender, RoutedEventArgs e) {
+            if (!window_RatingGenerator.IsVisible) {
+                window_RatingGenerator.Closed += BtnRatingGeneratorClosed!;
+                window_RatingGenerator.Show();
+            }
+        }
+
+        private void BtnRatingGeneratorClosed(object sender, EventArgs e) {
+            NewAnime.Rating = window_RatingGenerator.GenerateRating();
+            window_RatingGenerator.Closed -= BtnRatingGeneratorClosed!;
+        }
+
+        private void BtnSeasonGenerator_Click(object sender, RoutedEventArgs e) {
+            if (!window_SeasonGenerator.IsVisible) {
+                window_SeasonGenerator.Closed += SeasonGeneratorClosed!;
+                window_SeasonGenerator.Show();
+            }
+        }
+
+        private void SeasonGeneratorClosed(object sender, EventArgs e) {
+            NewAnime.Season = new List<Season>(window_SeasonGenerator.Seasons);
+            window_SeasonGenerator.Closed -= SeasonGeneratorClosed!;
+        }
+
+        private void BtnOvaGenerator_Click(object sender, RoutedEventArgs e) {
+        }
+
+        private void OvaGeneratorClosed(object sender, EventArgs e) {
+        }
+
+        private void BtnTagsSelector_Click(object sender, RoutedEventArgs e) {
+        }
+
+        private void TagsSelectorClosed(object sender, EventArgs e) {
         }
     }
 }

@@ -114,7 +114,7 @@
                                             <ProgressBar x:Name="ProgBarGeneral" Maximum="100" Height="24" Margin="3"/>
                                             <Label x:Name="LbGeneral" Content="{Binding NewAnime.Rating.General}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
                                         </Grid>
-                                        <Button x:Name="BtnRatingGenerator" Grid.Column="1" Padding="5,0,5,0" Margin="5,0,5,0">Bewerten</Button>
+                                        <Button x:Name="BtnRatingGenerator" Grid.Column="1" Padding="5,0,5,0" Margin="5,0,5,0" Click="BtnRatingGenerator_Click">Bewerten</Button>
                                     </Grid>
                                     <Grid Grid.Row="1" Margin="0,5,0,0">
                                         <UniformGrid Columns="6" Height="50">
@@ -140,14 +140,14 @@
                                         <Label Content="Staffeln (aktuell eingetragen):"/>
                                         <Label Content="{Binding NewAnime.Season.Count}"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Margin="20,2,20,2">
+                                    <Button x:Name="BtnSeasonGenerator" Grid.Column="1" Margin="20,2,20,2" Click="BtnSeasonGenerator_Click">
                                         Staffelgenerator
                                     </Button>
                                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                                         <Label Content="Sonstige OVAs:"/>
                                         <Label Content="{Binding NewAnime.Ovas.Count}"/>
                                     </StackPanel>
-                                    <Button Grid.Column="3" Margin="20,2,20,2">
+                                    <Button x:Name="BtnOvaGenerator" Grid.Column="3" Margin="20,2,20,2" Click="BtnOvaGenerator_Click">
                                         OVA-Generator
                                     </Button>
                                 </Grid>
@@ -168,7 +168,7 @@
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
                                         </ListView>
-                                        <Button Grid.Column="1" Margin="15,20">
+                                        <Button x:Name="BtnTagsSelector" Grid.Column="1" Margin="15,20" Click="BtnTagsSelector_Click">
                                             <StackPanel>
                                                 <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">Tags</Label>
                                                 <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">verwalten</Label>
