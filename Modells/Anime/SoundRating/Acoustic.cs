@@ -36,5 +36,12 @@
         public string? Comment { get; set; }
 
         public Acoustic() { }
+
+        public Acoustic(List<MusicPiece> opening, List<MusicPiece> ending, int soundtrack, List<Syncro> syncros, string? comment) {
+            Opening = opening;
+            Ending = ending;
+            Syncro = syncros;
+            Comment = comment;
+        }
     }
 }

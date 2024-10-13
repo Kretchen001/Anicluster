@@ -14,6 +14,7 @@ namespace Anicluster.windows {
         public List<UcMusicPiece> MusicPiecesO = [];
         public List<UcMusicPiece> MusicPiecesE = [];
         public List<UC.Syncro> Syncros = [];
+        public string? CommentAcoustic {  get; set; }
 
         public int History { get; set; } = 0;
         public int Animation { get; set; } = 0;
@@ -26,8 +27,31 @@ namespace Anicluster.windows {
         }
 
         public Rating GenerateRating() {
-            Rating x = new Rating();
-            return x;
+            List<MusicPiece> o = [];
+            foreach (UcMusicPiece piece in MusicPiecesO) {
+                o.Add(piece.MusicPiece);
+            }
+            List<MusicPiece> e = [];
+            foreach (UcMusicPiece piece in MusicPiecesE) {
+                e.Add(piece.MusicPiece);
+            }
+            List<Modells.Anime.SoundRating.Syncro> s = [];
+            foreach (UC.Syncro piece in Syncros) {
+                s.Add(piece.NewSyncro);
+            }
+            return new Rating(
+                story: History,
+                animation: Animation,
+                specialEffects: SpecialEffects,
+                acoustic: new Acoustic(
+                    opening: o,
+                    ending: e,
+                    soundtrack: Soundtrack,
+                    syncros: s,
+                    comment: CommentAcoustic
+                    ),
+                isRated: true
+                );
         }
 
         private void BtnOpeningAdd_Click(object sender, RoutedEventArgs e) {

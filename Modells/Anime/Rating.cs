@@ -15,5 +15,13 @@ namespace Modells.Anime {
         public bool IsRated { get; set; } = false;
 
         public Rating() {}
+
+        public Rating(int story, int animation, int specialEffects, Acoustic acoustic, bool isRated) {
+            Story = story;
+            Animation = animation;
+            SpecialEffects = specialEffects;
+            Acoustic = acoustic;
+            IsRated = isRated;
+        }
     }
 }
