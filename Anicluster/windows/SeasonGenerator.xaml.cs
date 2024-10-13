@@ -11,23 +11,11 @@ namespace Anicluster.windows {
     /// </summary>
     public partial class SeasonGenerator : Window {
 
-        public record SeasonWithId {
-
-            private int _nr;
-            public int SeasonNr {
-                get => _nr;
-                set {
-                    _nr = value;
-                }
-            }
-            public Season Season { get; set; } = new Season();
-        }
-
-        public ObservableCollection<SeasonWithId> Seasons { get; set; }
+        public ObservableCollection<Season> Seasons { get; set; }
 
         public SeasonGenerator() {
             InitializeComponent();
-            Seasons = new ObservableCollection<SeasonWithId>();
+            Seasons = new ObservableCollection<Season>();
             ListViewSeasons.ItemsSource = Seasons;
         }
 
@@ -46,16 +34,14 @@ namespace Anicluster.windows {
                 MessageBox.Show("Start- und Endjahr sind zu hoch!", "Fehlerhafte eingabe", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            Seasons.Add(new SeasonWithId() {
-                SeasonNr = Seasons.Count + 1,
-                Season = new Season() {
+            Seasons.Add(new Season() {
+                    Number = Seasons.Count + 1,
                     Episodes = list,
                     PublishingTime = new PublishingTime() {
                         StartDate = new DateTime(startYear, 1, 1),
                         EndDate = new DateTime(endYear, 1, 1)
                     },
                     Comment = null
-                }
             });
         }
 
@@ -71,14 +57,14 @@ namespace Anicluster.windows {
             if (e.Key == Key.Delete) {
                 object selectedItem = ListViewSeasons.SelectedItem;
                 if (selectedItem != null) {
-                    Seasons.Remove((SeasonWithId)selectedItem);
+                    Seasons.Remove((Season)selectedItem);
                     UpdateNumbers();
                 }
             }
         }
 
         private void ListViewSeasons_DragOver(object sender, DragEventArgs e) {
-            if (e.Data.GetDataPresent(typeof(SeasonWithId))) {
+            if (e.Data.GetDataPresent(typeof(Season))) {
                 e.Effects = DragDropEffects.Move;
             }
             else {
@@ -88,8 +74,8 @@ namespace Anicluster.windows {
         }
 
         private void ListViewSeasons_Drop(object sender, DragEventArgs e) {
-            if (e.Data.GetDataPresent(typeof(SeasonWithId))) {
-                SeasonWithId droppedData = (SeasonWithId)e.Data.GetData(typeof(SeasonWithId));
+            if (e.Data.GetDataPresent(typeof(Season))) {
+                Season droppedData = (Season)e.Data.GetData(typeof(Season));
                 ListViewItem targetItem = FindAncestor<ListViewItem>((DependencyObject)e.OriginalSource)!;
 
                 if (targetItem != null) {
@@ -110,12 +96,10 @@ namespace Anicluster.windows {
         }
 
         private void UpdateNumbers() {
-            List<SeasonWithId> s = [];
+            List<Season> s = [];
             for (int i = 0; i < Seasons.Count; i += 1) {
-                s.Add(new SeasonWithId() {
-                    SeasonNr = i + 1,
-                    Season = Seasons[i].Season
-                });
+                s.Add(s[i]);
+                s[i].Number = i + 1;
             }
             Seasons.Clear();
             s.ForEach(s => { Seasons.Add(s); });
