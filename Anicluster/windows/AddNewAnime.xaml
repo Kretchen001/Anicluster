@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
-        Title="AddNewAnime" Height="920" Width="1200">
+        Title="AddNewAnime" Height="960" Width="1200">
     <Window.Resources>
         <Style x:Key="RoundedButton" TargetType="Button">
             <Setter Property="Template">
@@ -63,7 +63,7 @@
                                         <Label Height="30" VerticalContentAlignment="Center">Url (Anime-Planet z.B.)</Label>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1">
-                                        <TextBox Text="{Binding NewAnime.OriginalName}" Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center"></TextBox>
+                                        <TextBox Text="{Binding NewAnime.OriginalName}" Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" />
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -152,9 +152,9 @@
                                     </Button>
                                 </Grid>
                             </GroupBox>
-                            <UniformGrid x:Name="UniGridTagsAndMediaInfo">
+                            <UniformGrid x:Name="UniGridTagsAndMediaInfo" Rows="1">
                                 <GroupBox Header="Tags" FontSize="14" Margin="0,10,10,10" Padding="5">
-                                    <Grid Height="100">
+                                    <Grid Margin="0,5,0,5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="3*"/>
                                             <ColumnDefinition Width="1*"/>
@@ -168,7 +168,7 @@
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
                                         </ListView>
-                                        <Button x:Name="BtnTagsSelector" Grid.Column="1" Margin="15,20" Click="BtnTagsSelector_Click">
+                                        <Button x:Name="BtnTagsSelector" Grid.Column="1" Margin="15,25" Click="BtnTagsSelector_Click">
                                             <StackPanel>
                                                 <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">Tags</Label>
                                                 <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">verwalten</Label>
@@ -177,6 +177,58 @@
                                     </Grid>
                                 </GroupBox>
                                 <GroupBox Header="Media-Infos" FontSize="14" Margin="10,10,0,10" Padding="5">
+                                    <StackPanel>
+                                        <Grid x:Name="GridMediaInfoAutor">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
+                                                Autor
+                                            </Label>
+                                            <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid x:Name="GridMediaInfoProducer">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
+                                                Produzent
+                                            </Label>
+                                            <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid x:Name="GridMediaInfoPublisher">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="3*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
+                                                Veröffentlicher
+                                            </Label>
+                                            <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                        </Grid>
+                                        <Button Height="30" Margin="5">
+                                            Veröffentlichungszeitraum/-räume
+                                        </Button>
+                                    </StackPanel>
+                                </GroupBox>
+                            </UniformGrid>
+                            <UniformGrid x:Name="UniGridButtom" Columns="3" Rows="1">
+                                <GroupBox Header="Vorgänger" FontSize="14" Padding="5">
+                                    <TextBox Height="30">
+                                        Dummy-Bereich
+                                    </TextBox>
+                                </GroupBox>
+                                <GroupBox Header="Nachfolger" FontSize="14" Padding="5">
+                                    <TextBox Height="30">
+                                        Dummy-Bereich
+                                    </TextBox>
+                                </GroupBox>
+                                <GroupBox Header="Kommentar" FontSize="14" Padding="5">
+                                    <TextBox Height="50">
+                                        
+                                    </TextBox>
                                 </GroupBox>
                             </UniformGrid>
                         </StackPanel>
