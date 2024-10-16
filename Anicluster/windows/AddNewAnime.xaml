@@ -216,14 +216,10 @@
                             </UniformGrid>
                             <UniformGrid x:Name="UniGridButtom" Columns="3" Rows="1">
                                 <GroupBox Header="Vorgänger" FontSize="14" Padding="5">
-                                    <TextBox Height="30">
-                                        Dummy-Bereich
-                                    </TextBox>
+                                    <ComboBox x:Name="CBoxPredecessor" Height="30"/>
                                 </GroupBox>
                                 <GroupBox Header="Nachfolger" FontSize="14" Padding="5">
-                                    <TextBox Height="30">
-                                        Dummy-Bereich
-                                    </TextBox>
+                                    <ComboBox x:Name="CBoxSuccessor" Height="30"/>
                                 </GroupBox>
                                 <GroupBox Header="Kommentar" FontSize="14" Padding="5">
                                     <TextBox Height="50">
@@ -245,9 +241,9 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" 
-                                        BorderBrush="{TemplateBinding BorderBrush}" 
-                                        BorderThickness="{TemplateBinding BorderThickness}" 
-                                        CornerRadius="20">
+                                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                        CornerRadius="20">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                             </ControlTemplate>

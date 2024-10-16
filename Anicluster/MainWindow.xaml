@@ -6,9 +6,14 @@
         xmlns:local="clr-namespace:Anicluster"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Button Content="Staffelgenerator aufrufen (Test)" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
-        <Button Content="Bewertung aufrufen (Test)" HorizontalAlignment="Center" Margin="0,239,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
-        <Button Content="Hinzufügen" HorizontalAlignment="Center" Margin="0,269,0,0" VerticalAlignment="Top" Click="Button_Click_2"/>
-    </Grid>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="MenuItemNewAnime" Header="Neuer Anime" Click="MenuItemNewAnime_Click"/>
+            <MenuItem Header="Tags"/>
+        </Menu>
+        <Grid>
+            <Button Content="Staffelgenerator aufrufen (Test)" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
+            <Button Content="Bewertung aufrufen (Test)" HorizontalAlignment="Center" Margin="0,239,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+        </Grid>
+    </DockPanel>
 </Window>

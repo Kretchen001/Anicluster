@@ -20,7 +20,7 @@ namespace Anicluster {
             a.Show();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e) {
+        private void MenuItemNewAnime_Click(object sender, RoutedEventArgs e) {
             AddNewAnime addNewAnime = new AddNewAnime();
             addNewAnime.ShowDialog();
         }
