@@ -13,9 +13,9 @@ namespace Anicluster.windows {
 
         public ObservableCollection<Season> Seasons { get; set; }
 
-        public SeasonGenerator() {
+        public SeasonGenerator(List<Season>? seasons = null) {
             InitializeComponent();
-            Seasons = new ObservableCollection<Season>();
+            Seasons = new ObservableCollection<Season>(seasons ?? new List<Season>());
             ListViewSeasons.ItemsSource = Seasons;
         }
 
@@ -35,13 +35,13 @@ namespace Anicluster.windows {
                 return;
             }
             Seasons.Add(new Season() {
-                    Number = Seasons.Count + 1,
-                    Episodes = list,
-                    PublishingTime = new PublishingTime() {
-                        StartDate = new DateTime(startYear, 1, 1),
-                        EndDate = new DateTime(endYear, 1, 1)
-                    },
-                    Comment = null
+                Number = Seasons.Count + 1,
+                Episodes = list,
+                PublishingTime = new PublishingTime() {
+                    StartDate = new DateTime(startYear, 1, 1),
+                    EndDate = new DateTime(endYear, 1, 1)
+                },
+                Comment = null
             });
         }
 

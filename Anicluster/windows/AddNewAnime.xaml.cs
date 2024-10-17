@@ -1,4 +1,5 @@
 ﻿using Modells.Anime;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,8 +13,8 @@ namespace Anicluster.windows {
 
         public Anime NewAnime { get; set; } = new Anime();
 
-        private RatingGenerator window_RatingGenerator { get; set; } = new RatingGenerator();
-        private SeasonGenerator window_SeasonGenerator { get; set; } = new SeasonGenerator();
+        private RatingGenerator window_RatingGenerator = new RatingGenerator();
+        private SeasonGenerator window_SeasonGenerator = new SeasonGenerator();
 
         public AddNewAnime() {
             InitializeComponent();
@@ -167,6 +168,7 @@ namespace Anicluster.windows {
         private void BtnRatingGeneratorClosed(object sender, EventArgs e) {
             NewAnime.Rating = window_RatingGenerator.GenerateRating();
             window_RatingGenerator.Closed -= BtnRatingGeneratorClosed!;
+            throw new NotImplementedException();
         }
 
         private void BtnSeasonGenerator_Click(object sender, RoutedEventArgs e) {
@@ -179,6 +181,7 @@ namespace Anicluster.windows {
         private void SeasonGeneratorClosed(object sender, EventArgs e) {
             NewAnime.Season = new List<Season>(window_SeasonGenerator.Seasons);
             window_SeasonGenerator.Closed -= SeasonGeneratorClosed!;
+            window_SeasonGenerator = new SeasonGenerator(NewAnime.Season);
         }
 
         private void BtnOvaGenerator_Click(object sender, RoutedEventArgs e) {

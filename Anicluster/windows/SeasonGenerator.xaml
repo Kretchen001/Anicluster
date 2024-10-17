@@ -19,7 +19,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding SeasonNr}"/>
+                                    <TextBlock Text="{Binding Number}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -28,7 +28,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding Season.Episodes.Count}"/>
+                                    <TextBlock Text="{Binding Episodes.Count}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -37,7 +37,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding Season.PublishingTime.DisplayStartYear}"/>
+                                    <TextBlock Text="{Binding PublishingTime.DisplayStartYear}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -45,9 +45,7 @@
                     <GridViewColumn Header="Endjahr" Width="75">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding Season.PublishingTime.DisplayEndYear}"/>
-                                </StackPanel>
+                                <TextBlock Text="{Binding PublishingTime.DisplayEndYear}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -55,7 +53,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Center">
-                                    <TextBlock Text="{Binding Season.Comment}"/>
+                                    <TextBlock Text="{Binding Comment}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

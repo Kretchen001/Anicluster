@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
-        Title="AddNewAnime" Height="960" Width="1200">
+        Title="AddNewAnime" Height="800" Width="1200">
     <Window.Resources>
         <Style x:Key="RoundedButton" TargetType="Button">
             <Setter Property="Template">
@@ -51,183 +51,185 @@
                         </Grid>
                     </Border>
                     <Grid Grid.Row="1" Margin="10">
-                        <StackPanel>
-                            <GroupBox Header="Zusätzliche Informationen" FontSize="14" Padding="5">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                        <Label Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center">Original Name</Label>
-                                        <Label Height="30" VerticalContentAlignment="Center">Url (Anime-Planet z.B.)</Label>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1">
-                                        <TextBox Text="{Binding NewAnime.OriginalName}" Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" />
-                                        <Grid>
+                        <ScrollViewer Padding="0,0,10,0" VerticalScrollBarVisibility="auto">
+                            <StackPanel>
+                                <GroupBox Header="Zusätzliche Informationen" FontSize="14" Padding="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                            <Label Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center">Original Name</Label>
+                                            <Label Height="30" VerticalContentAlignment="Center">Url (Anime-Planet z.B.)</Label>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBox Text="{Binding NewAnime.OriginalName}" Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" />
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0" Height="30" Margin="0,0,5,0" Text="{Binding NewAnime.Url}" VerticalContentAlignment="Center"></TextBox>
+                                                <Button Grid.Column="1" Padding="3,0,3,0">
+                                                    Auto-Generation
+                                                    <Button.ToolTip>
+                                                        <StackPanel>
+                                                            <TextBlock>Bitte Link überprüfen.</TextBlock>
+                                                            <TextBlock>Keine Garantie auf Korrektheit aufgrund der Benutzereingaben!</TextBlock>
+                                                        </StackPanel>
+                                                    </Button.ToolTip>
+                                                </Button>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox x:Name="GrBoxStatus" Header="Zustand" FontSize="14" Margin="0,10,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="3*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="5">
+                                            <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Wunschliste" Margin="5" Checked="RBtn_Checked"/>
+                                            <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Begonnen" Margin="5" Checked="RBtn_Checked"/>
+                                            <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Fertig" Margin="5" Checked="RBtn_Checked"/>
+                                            <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Unterbrochen" Margin="5" Checked="RBtn_Checked"/>
+                                            <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Abgebrochen" Margin="5" Checked="RBtn_Checked"/>
+                                        </StackPanel>
+                                        <TextBox Grid.Column="1" Margin="7" AcceptsReturn="True" TextWrapping="Wrap" ToolTip="Kommentarfeld" VerticalScrollBarVisibility="Auto" MaxHeight="134.1"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Header="Bewertung" FontSize="14" Padding="5" Margin="0,10,0,0">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBox Grid.Column="0" Height="30" Margin="0,0,5,0" Text="{Binding NewAnime.Url}" VerticalContentAlignment="Center"></TextBox>
-                                            <Button Grid.Column="1" Padding="3,0,3,0">
-                                                Auto-Generation
-                                                <Button.ToolTip>
-                                                    <StackPanel>
-                                                        <TextBlock>Bitte Link überprüfen.</TextBlock>
-                                                        <TextBlock>Keine Garantie auf Korrektheit aufgrund der Benutzereingaben!</TextBlock>
-                                                    </StackPanel>
-                                                </Button.ToolTip>
+                                            <Grid Grid.Column="0">
+                                                <ProgressBar x:Name="ProgBarGeneral" Maximum="100" Height="24" Margin="5,3"/>
+                                                <Label x:Name="LbGeneral" Content="{Binding NewAnime.Rating.General}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                                            </Grid>
+                                            <Button x:Name="BtnRatingGenerator" Grid.Column="1" Padding="5,0,5,0" Margin="5,0,5,0" Click="BtnRatingGenerator_Click">Bewerten</Button>
+                                        </Grid>
+                                        <Grid Grid.Row="1" Margin="0,5,0,0">
+                                            <UniformGrid Columns="6" Height="50">
+                                                <Button x:Name="BtnTierS" Style="{StaticResource RoundedButton}" Background="DeepSkyBlue" Foreground="Black" Content="S" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierS_Click" />
+                                                <Button x:Name="BtnTierA" Style="{StaticResource RoundedButton}" Background="#FF00BD00" Foreground="Black" Content="A" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierA_Click" />
+                                                <Button x:Name="BtnTierB" Style="{StaticResource RoundedButton}" Background="Yellow" Foreground="Black" Content="B" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierB_Click" />
+                                                <Button x:Name="BtnTierC" Style="{StaticResource RoundedButton}" Background="Orange" Foreground="Black" Content="C" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierC_Click" />
+                                                <Button x:Name="BtnTierD" Style="{StaticResource RoundedButton}" Background="Red" Content="D" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierD_Click" />
+                                                <Button x:Name="BtnTierE" Style="{StaticResource RoundedButton}" Background="DarkRed" Content="E" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierE_Click" />
+                                            </UniformGrid>
+                                        </Grid>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Header="Staffeln &#38; OVAs" FontSize="14" Margin="0,10,0,0" Padding="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <Label Content="Staffeln (aktuell eingetragen):"/>
+                                            <Label Content="{Binding NewAnime.Season.Count}"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnSeasonGenerator" Grid.Column="1" Margin="20,2,20,2" Click="BtnSeasonGenerator_Click">
+                                            Staffelgenerator
+                                        </Button>
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Label Content="Sonstige OVAs:"/>
+                                            <Label Content="{Binding NewAnime.Ovas.Count}"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnOvaGenerator" Grid.Column="3" Margin="20,2,20,2" Click="BtnOvaGenerator_Click">
+                                            OVA-Generator
+                                        </Button>
+                                    </Grid>
+                                </GroupBox>
+                                <UniformGrid x:Name="UniGridTagsAndMediaInfo" Rows="1">
+                                    <GroupBox Header="Tags" FontSize="14" Margin="0,10,10,10" Padding="5">
+                                        <Grid Margin="0,5,0,5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <ListView x:Name="ListViewTags" ItemsSource="{Binding NewAnime.Tags}">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="0.5">
+                                                            <TextBlock Text="{Binding Path=Designation, StringFormat='- {0}'}" FontSize="12" Margin="1" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                            <Button x:Name="BtnTagsSelector" Grid.Column="1" Margin="15,25" Click="BtnTagsSelector_Click">
+                                                <StackPanel>
+                                                    <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">Tags</Label>
+                                                    <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">verwalten</Label>
+                                                </StackPanel>
                                             </Button>
                                         </Grid>
-                                    </StackPanel>
-                                </Grid>
-                            </GroupBox>
-                            <GroupBox x:Name="GrBoxStatus" Header="Zustand" FontSize="14" Margin="0,10,0,0">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Margin="5">
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Wunschliste" Margin="5" Checked="RBtn_Checked"/>
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Begonnen" Margin="5" Checked="RBtn_Checked"/>
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Fertig" Margin="5" Checked="RBtn_Checked"/>
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Unterbrochen" Margin="5" Checked="RBtn_Checked"/>
-                                        <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Abgebrochen" Margin="5" Checked="RBtn_Checked"/>
-                                    </StackPanel>
-                                    <TextBox Grid.Column="1" Margin="7" AcceptsReturn="True" TextWrapping="Wrap" ToolTip="Kommentarfeld" VerticalScrollBarVisibility="Auto" MaxHeight="134.1"/>
-                                </Grid>
-                            </GroupBox>
-                            <GroupBox Header="Bewertung" FontSize="14" Padding="5" Margin="0,10,0,0">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid Grid.Column="0">
-                                            <ProgressBar x:Name="ProgBarGeneral" Maximum="100" Height="24" Margin="3"/>
-                                            <Label x:Name="LbGeneral" Content="{Binding NewAnime.Rating.General}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
-                                        </Grid>
-                                        <Button x:Name="BtnRatingGenerator" Grid.Column="1" Padding="5,0,5,0" Margin="5,0,5,0" Click="BtnRatingGenerator_Click">Bewerten</Button>
-                                    </Grid>
-                                    <Grid Grid.Row="1" Margin="0,5,0,0">
-                                        <UniformGrid Columns="6" Height="50">
-                                            <Button x:Name="BtnTierS" Style="{StaticResource RoundedButton}" Background="DeepSkyBlue" Foreground="Black" Content="S" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierS_Click" />
-                                            <Button x:Name="BtnTierA" Style="{StaticResource RoundedButton}" Background="#FF00BD00" Foreground="Black" Content="A" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierA_Click" />
-                                            <Button x:Name="BtnTierB" Style="{StaticResource RoundedButton}" Background="Yellow" Foreground="Black" Content="B" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierB_Click" />
-                                            <Button x:Name="BtnTierC" Style="{StaticResource RoundedButton}" Background="Orange" Foreground="Black" Content="C" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierC_Click" />
-                                            <Button x:Name="BtnTierD" Style="{StaticResource RoundedButton}" Background="Red" Content="D" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierD_Click" />
-                                            <Button x:Name="BtnTierE" Style="{StaticResource RoundedButton}" Background="DarkRed" Content="E" BorderBrush="Black" BorderThickness="0.5" Click="BtnTierE_Click" />
-                                        </UniformGrid>
-                                    </Grid>
-                                </Grid>
-                            </GroupBox>
-                            <GroupBox Header="Staffeln &#38; OVAs" FontSize="14" Margin="0,10,0,0" Padding="5">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <Label Content="Staffeln (aktuell eingetragen):"/>
-                                        <Label Content="{Binding NewAnime.Season.Count}"/>
-                                    </StackPanel>
-                                    <Button x:Name="BtnSeasonGenerator" Grid.Column="1" Margin="20,2,20,2" Click="BtnSeasonGenerator_Click">
-                                        Staffelgenerator
-                                    </Button>
-                                    <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                        <Label Content="Sonstige OVAs:"/>
-                                        <Label Content="{Binding NewAnime.Ovas.Count}"/>
-                                    </StackPanel>
-                                    <Button x:Name="BtnOvaGenerator" Grid.Column="3" Margin="20,2,20,2" Click="BtnOvaGenerator_Click">
-                                        OVA-Generator
-                                    </Button>
-                                </Grid>
-                            </GroupBox>
-                            <UniformGrid x:Name="UniGridTagsAndMediaInfo" Rows="1">
-                                <GroupBox Header="Tags" FontSize="14" Margin="0,10,10,10" Padding="5">
-                                    <Grid Margin="0,5,0,5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <ListView x:Name="ListViewTags" ItemsSource="{Binding NewAnime.Tags}">
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid Margin="0.5">
-                                                        <TextBlock Text="{Binding Path=Designation, StringFormat='- {0}'}" FontSize="12" Margin="1" />
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
-                                        </ListView>
-                                        <Button x:Name="BtnTagsSelector" Grid.Column="1" Margin="15,25" Click="BtnTagsSelector_Click">
-                                            <StackPanel>
-                                                <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">Tags</Label>
-                                                <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">verwalten</Label>
-                                            </StackPanel>
-                                        </Button>
-                                    </Grid>
-                                </GroupBox>
-                                <GroupBox Header="Media-Infos" FontSize="14" Margin="10,10,0,10" Padding="5">
-                                    <StackPanel>
-                                        <Grid x:Name="GridMediaInfoAutor">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="3*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
-                                                Autor
-                                            </Label>
-                                            <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
-                                        </Grid>
-                                        <Grid x:Name="GridMediaInfoProducer">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="3*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
-                                                Produzent
-                                            </Label>
-                                            <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
-                                        </Grid>
-                                        <Grid x:Name="GridMediaInfoPublisher">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="3*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
-                                                Veröffentlicher
-                                            </Label>
-                                            <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
-                                        </Grid>
-                                        <Button Height="30" Margin="5">
-                                            Veröffentlichungszeitraum/-räume
-                                        </Button>
-                                    </StackPanel>
-                                </GroupBox>
-                            </UniformGrid>
-                            <UniformGrid x:Name="UniGridButtom" Columns="3" Rows="1">
-                                <GroupBox Header="Vorgänger" FontSize="14" Padding="5">
-                                    <ComboBox x:Name="CBoxPredecessor" Height="30"/>
-                                </GroupBox>
-                                <GroupBox Header="Nachfolger" FontSize="14" Padding="5">
-                                    <ComboBox x:Name="CBoxSuccessor" Height="30"/>
-                                </GroupBox>
-                                <GroupBox Header="Kommentar" FontSize="14" Padding="5">
-                                    <TextBox Height="50">
-                                        
-                                    </TextBox>
-                                </GroupBox>
-                            </UniformGrid>
-                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Header="Media-Infos" FontSize="14" Margin="10,10,0,10" Padding="5">
+                                        <StackPanel>
+                                            <Grid x:Name="GridMediaInfoAutor">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
+                                                    Autor
+                                                </Label>
+                                                <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                            </Grid>
+                                            <Grid x:Name="GridMediaInfoProducer">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
+                                                    Produzent
+                                                </Label>
+                                                <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                            </Grid>
+                                            <Grid x:Name="GridMediaInfoPublisher">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="3*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
+                                                    Veröffentlicher
+                                                </Label>
+                                                <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                            </Grid>
+                                            <Button Height="30" Margin="5">
+                                                Veröffentlichungszeitraum/-räume
+                                            </Button>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </UniformGrid>
+                                <UniformGrid x:Name="UniGridButtom" Columns="3" Rows="1">
+                                    <GroupBox Header="Vorgänger" FontSize="14" Padding="5">
+                                        <ComboBox x:Name="CBoxPredecessor" Height="30"/>
+                                    </GroupBox>
+                                    <GroupBox Header="Nachfolger" FontSize="14" Padding="5">
+                                        <ComboBox x:Name="CBoxSuccessor" Height="30"/>
+                                    </GroupBox>
+                                    <GroupBox Header="Kommentar" FontSize="14" Padding="5">
+                                        <TextBox Height="50" TextWrapping="Wrap" ToolTip="Kommentarfeld" VerticalScrollBarVisibility="Auto">
+
+                                        </TextBox>
+                                    </GroupBox>
+                                </UniformGrid>
+                            </StackPanel>
+                        </ScrollViewer>
                     </Grid>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
