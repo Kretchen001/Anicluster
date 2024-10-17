@@ -1,28 +1,25 @@
 ﻿using Anicluster.windows;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Anicluster {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+
         public MainWindow() {
             InitializeComponent();
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.New, OpenAddNewAnime)); // bound Strg + N
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) {
-            SeasonGenerator a = new SeasonGenerator();
-            a.Show();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e) {
-            RatingGenerator a = new RatingGenerator();
-            a.Show();
+        private void OpenAddNewAnime(object sender, ExecutedRoutedEventArgs? e) {
+            AddNewAnime addNewAnime = new AddNewAnime();
+            addNewAnime.ShowDialog();
         }
 
         private void MenuItemNewAnime_Click(object sender, RoutedEventArgs e) {
-            AddNewAnime addNewAnime = new AddNewAnime();
-            addNewAnime.ShowDialog();
+            OpenAddNewAnime(sender, null);
         }
     }
 }
