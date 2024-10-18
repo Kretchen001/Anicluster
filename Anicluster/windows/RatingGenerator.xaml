@@ -49,7 +49,24 @@
                         </Grid>
                         <Grid>
                             <ProgressBar x:Name="ProgBarSoundtrack" Height="24" Value="{Binding Soundtrack}" Margin="3" MouseWheel="ProgBarSoundtrack_MouseWheel" MouseLeftButtonDown="ProgBarSoundtrack_MouseLeftButtonDown"/>
-                            <Label x:Name="LbSoundtrack" Content="{Binding Soundtrack}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                            <Label x:Name="LbSoundtrack" Content="{Binding Soundtrack}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent">
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Setter Property="Content" Value="{Binding Soundtrack}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Soundtrack}" Value="0">
+                                                <Setter Property="Content" Value="0"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Soundtrack}" Value="-1">
+                                                <Setter Property="Content" Value="0"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Soundtrack}">
+                                                <Setter Property="Content" Value="{Binding Soundtrack}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
                         </Grid>
                     </StackPanel>
                 </Grid>
