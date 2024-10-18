@@ -167,8 +167,12 @@ namespace Anicluster.windows {
 
         private void BtnRatingGeneratorClosed(object sender, EventArgs e) {
             NewAnime.Rating = window_RatingGenerator.GenerateRating();
+            if (NewAnime.Rating.IsRated) {
+                ProgBarGeneral.Value = NewAnime.Rating.General;
+                LbGeneral.Content = NewAnime.Rating.General;
+            }
             window_RatingGenerator.Closed -= BtnRatingGeneratorClosed!;
-            throw new NotImplementedException();
+            window_RatingGenerator = new RatingGenerator(NewAnime.Rating);
         }
 
         private void BtnSeasonGenerator_Click(object sender, RoutedEventArgs e) {
@@ -194,6 +198,10 @@ namespace Anicluster.windows {
         }
 
         private void TagsSelectorClosed(object sender, EventArgs e) {
+        }
+
+        private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
+            
         }
     }
 }

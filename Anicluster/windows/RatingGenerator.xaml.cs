@@ -21,8 +21,20 @@ namespace Anicluster.windows {
         public int SpecialEffects { get; set; } = 0;
         public int Soundtrack { get; set; } = 0;
 
-        public RatingGenerator() {
+        public RatingGenerator(Rating? rating = null) {
             InitializeComponent();
+            if (rating is not null) {
+                History = rating.Story;
+                Animation = rating.Animation;
+                SpecialEffects = rating.SpecialEffects;
+                Soundtrack = rating.Acoustic.Soundtrack;
+                rating.Acoustic.Opening.ForEach(x => MusicPiecesO.Add(new UcMusicPiece(x.Type, x)));
+                rating.Acoustic.Ending.ForEach(x => MusicPiecesE.Add(new UcMusicPiece(x.Type, x)));
+                rating.Acoustic.Syncro.ForEach(x => Syncros.Add(new UC.Syncro(x)));
+                MusicPiecesO.ForEach(x => StackPanelOpening.Children.Add(x));
+                MusicPiecesE.ForEach(x => StackPanelEnding.Children.Add(x));
+                Syncros.ForEach(x => StackPanelSyncro.Children.Add(x));
+            }
             DataContext = this;
         }
 

@@ -24,7 +24,10 @@ namespace Anicluster.userControls {
 
         public AnimeSR.Syncro NewSyncro { get; set; } = new AnimeSR.Syncro();
 
-        public Syncro() {
+        public Syncro(AnimeSR.Syncro? syncro = null) {
+            if (syncro is not null) {
+                NewSyncro = syncro;
+            }
             InitializeComponent();
             DataContext = this;
             foreach (KeyValuePair<SyncroLanuage, string> x in TranslationOfLanguage) {

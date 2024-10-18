@@ -113,7 +113,7 @@
                                             </Grid.ColumnDefinitions>
                                             <Grid Grid.Column="0">
                                                 <ProgressBar x:Name="ProgBarGeneral" Maximum="100" Height="24" Margin="5,3"/>
-                                                <Label x:Name="LbGeneral" Content="{Binding NewAnime.Rating.General}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                                                <Label x:Name="LbGeneral" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
                                             </Grid>
                                             <Button x:Name="BtnRatingGenerator" Grid.Column="1" Padding="5,0,5,0" Margin="5,0,5,0" Click="BtnRatingGenerator_Click">Bewerten</Button>
                                         </Grid>
@@ -236,7 +236,7 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Margin="25,5,25,5" Background="#FF86DE83" FontSize="14">
+                        <Button x:Name="BtnAddAnimeAsNew" Grid.Column="0" Margin="25,5,25,5" Background="#FF86DE83" FontSize="14" Click="BtnAddAnimeAsNew_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">

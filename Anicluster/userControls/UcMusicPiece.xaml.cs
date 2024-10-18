@@ -10,12 +10,17 @@ namespace Anicluster.userControls {
 
         public MusicPiece MusicPiece = new MusicPiece();
 
-        public UcMusicPiece(MusicPieceType musicPieceType) {
-            MusicPiece.Type = musicPieceType;
+        public UcMusicPiece(MusicPieceType musicPieceType, MusicPiece? musicPiece = null) {
+            if (musicPiece is not null) {
+                MusicPiece = musicPiece;
+            }
+            else {
+                MusicPiece.Type = musicPieceType;
+                MusicPiece.Comment = "";
+            }
             DataContext = MusicPiece;
-            MusicPiece.Comment = "lorem";
             InitializeComponent();
-            ProgBarGeneral.Value = 0;
+            ProgBarGeneral.Value = MusicPiece.General != -1 ? MusicPiece.General : 0;
         }
 
         private void ProgBarGeneral_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
