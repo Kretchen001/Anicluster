@@ -194,7 +194,7 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="3*" />
                                                 </Grid.ColumnDefinitions>
-                                                <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
+                                                <Label Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
                                                     Produzent
                                                 </Label>
                                                 <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
@@ -216,18 +216,21 @@
                                     </GroupBox>
                                 </UniformGrid>
                                 <UniformGrid x:Name="UniGridButtom" Columns="3" Rows="1">
-                                    <GroupBox Header="Vorgänger" FontSize="14" Padding="5">
+                                    <GroupBox Header="Vorgänger" FontSize="14" Padding="5" Margin="0,0,2,0">
                                         <ComboBox x:Name="CBoxPredecessor" Height="30"/>
                                     </GroupBox>
-                                    <GroupBox Header="Nachfolger" FontSize="14" Padding="5">
+                                    <GroupBox Header="Nachfolger" FontSize="14" Padding="5" Margin="2,0,2,0">
                                         <ComboBox x:Name="CBoxSuccessor" Height="30"/>
                                     </GroupBox>
-                                    <GroupBox Header="Kommentar" FontSize="14" Padding="5">
-                                        <TextBox Height="50" TextWrapping="Wrap" ToolTip="Kommentarfeld" VerticalScrollBarVisibility="Auto">
-
-                                        </TextBox>
+                                    <GroupBox Header="Sonstig zusammenhängender Anime" FontSize="14" Padding="5" Margin="2,0,2,0">
+                                        <ComboBox x:Name="CBoxRelatedAnime" Height="30"/>
                                     </GroupBox>
                                 </UniformGrid>
+                                <GroupBox Header="Kommentar" FontSize="14" Padding="5"  Margin="2,0,0,0">
+                                    <TextBox MinHeight="150" TextWrapping="Wrap" AcceptsReturn="True" ToolTip="Kommentarfeld" VerticalScrollBarVisibility="Auto">
+
+                                    </TextBox>
+                                </GroupBox>
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>

@@ -34,10 +34,18 @@
                 Filter leeren
             </Button>
         </Grid>
-        <DataGrid Name="DataGridTagList" AutoGenerateColumns="False" Grid.Row="1" MouseDoubleClick="DataGridTagList_MouseDoubleClick" CanUserAddRows="False" HeadersVisibility="Column">
+        <DataGrid Name="DataGridTagList" ItemsSource="{Binding AllTags}" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" IsReadOnly="True" Binding="{Binding tagDesignator}" Width="20*"/>
-                <DataGridCheckBoxColumn x:Name="dgCheckBoxColumnAddTag" Header="Ausgewählt" Binding="{Binding isChecked}" IsReadOnly="False" Width="4*"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Designation}" Width="20*" />
+                <DataGridTemplateColumn Header="Ausgewählt" Width="4*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Margin="1" VerticalAlignment="Center">
+                                <CheckBox IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DataContext.IsTagSelected(Tag)}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="CheckBoxSelection_Click" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         <Button Grid.Row="2" Margin="0,5,0,0" HorizontalAlignment="Right" MinWidth="100">

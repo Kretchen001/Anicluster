@@ -15,6 +15,7 @@ namespace Anicluster.windows {
 
         private RatingGenerator window_RatingGenerator = new RatingGenerator();
         private SeasonGenerator window_SeasonGenerator = new SeasonGenerator();
+        private AddTagToAnime window_AddTagToAnime = new AddTagToAnime();
 
         public AddNewAnime() {
             InitializeComponent();
@@ -195,9 +196,17 @@ namespace Anicluster.windows {
         }
 
         private void BtnTagsSelector_Click(object sender, RoutedEventArgs e) {
+            if (!window_AddTagToAnime.IsVisible) {
+                window_AddTagToAnime.Closed += TagsSelectorClosed!;
+                window_AddTagToAnime.Owner = this;
+                window_AddTagToAnime.Show();
+            }
         }
 
         private void TagsSelectorClosed(object sender, EventArgs e) {
+            NewAnime.Tags = new List<Tag>(window_AddTagToAnime.SelectedTags);
+            window_AddTagToAnime.Closed -= TagsSelectorClosed!;
+            window_AddTagToAnime = new AddTagToAnime(NewAnime.Tags);
         }
 
         private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {

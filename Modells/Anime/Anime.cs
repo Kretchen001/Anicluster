@@ -33,6 +33,8 @@
         public int Predecessor { get; set; } = -1;
         /// <summary>thematic anime after this one, identified by his id</summary>
         public int Successor { get; set; } = -1;
+        /// <summary>related anime to this one, identified by his id</summary>
+        public int Related { get; set; } = -1;
         public string? Comment { get; set; }
     }
 }
