@@ -187,7 +187,7 @@
                                                 <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
                                                     Autor
                                                 </Label>
-                                                <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                                <TextBox Text="{Binding Path=NewAnime.MediaInfo.Author}" Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
                                             </Grid>
                                             <Grid x:Name="GridMediaInfoProducer">
                                                 <Grid.ColumnDefinitions>
@@ -197,7 +197,7 @@
                                                 <Label Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
                                                     Produzent
                                                 </Label>
-                                                <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                                <TextBox Text="{Binding Path=NewAnime.MediaInfo.Producer}" Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
                                             </Grid>
                                             <Grid x:Name="GridMediaInfoPublisher">
                                                 <Grid.ColumnDefinitions>
@@ -207,7 +207,7 @@
                                                 <Label  Height="30" Margin="0,0,0,5" VerticalContentAlignment="Center" Grid.Column="0">
                                                     Veröffentlicher
                                                 </Label>
-                                                <TextBox Height="30" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
+                                                <TextBox Height="30" Text="{Binding Path=NewAnime.MediaInfo.Publisher}" Margin="0,2,0,5" VerticalContentAlignment="Center" Grid.Column="1" />
                                             </Grid>
                                             <Button Height="30" Margin="5">
                                                 Veröffentlichungszeitraum/-räume

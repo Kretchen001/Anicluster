@@ -1,5 +1,4 @@
 ﻿using Modells.Anime;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -210,7 +209,7 @@ namespace Anicluster.windows {
         }
 
         private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
-            
+            //zw string json = JsonSerializer.Serialize(myObject, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
         }
     }
 }
