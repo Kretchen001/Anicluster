@@ -29,19 +29,19 @@
             <Label Grid.Column="0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14">
                 Filter:
             </Label>
-            <TextBox x:Name="textBoxFilter" Margin="10,0,10,0" Grid.Column="1" VerticalAlignment="Center" FontSize="14"/>
-            <Button x:Name="FilterLeeren" Grid.Column="2" Padding="2,3" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14">
+            <TextBox x:Name="TBFilter" Margin="10,0,10,0" Grid.Column="1" VerticalAlignment="Center" FontSize="14" TextChanged="TBFilter_TextChanged" />
+            <Button x:Name="BtnFilterLeeren" Grid.Column="2" Padding="2,3" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Click="BtnFilterLeeren_Click">
                 Filter leeren
             </Button>
         </Grid>
         <DataGrid Name="DataGridTagList" ItemsSource="{Binding AllTags}" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Designation}" Width="20*" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Tag.Designation}" Width="20*" />
                 <DataGridTemplateColumn Header="Ausgewählt" Width="4*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid Margin="1" VerticalAlignment="Center">
-                                <CheckBox IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=DataContext.IsTagSelected(Tag)}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="CheckBoxSelection_Click" />
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="CheckBoxSelection_Click" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
