@@ -1,0 +1,43 @@
+﻿<Window x:Class="Anicluster.windows.TagOrganisator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows"
+        mc:Ignorable="d"
+        Title="TagOrganisator" Height="450" Width="800">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="↳" Background="Beige">
+                <MenuItem Header="Export List" />
+                <MenuItem Header="Import List" />
+            </MenuItem>
+            <MenuItem Header="Tag hinzufügen" Click="MenuItemAddTag_Click" />
+            <MenuItem Header="Ausgewählten Tag Löschen (einer!)" />
+            <MenuItem Header="Tag suchen" />
+            <MenuItem Header="" Name="AnzeigeDummy"/>
+        </Menu>
+        <Grid Margin="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <DataGrid Name="dataGridTags" ItemsSource="{Binding Path=Tags}" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false" HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="dataGridTextNumber" Header="Nr." IsReadOnly="True" Binding="{Binding numberOfTag}" Width="Auto"/>
+                    <DataGridTextColumn Header="Tag" IsReadOnly="True" Binding="{Binding Designation}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Popup x:Name="PopupInputNewTag" Placement="Mouse" StaysOpen="False">
+            <Border BorderBrush="Black" BorderThickness="1" Background="White" Padding="10">
+                <StackPanel>
+                    <TextBox x:Name="InputTextBox" Width="200" Margin="0,0,0,10"/>
+                    <Button x:Name="BtnPopUp" Content="OK" Click="BtnPopUp_Click"/>
+                </StackPanel>
+            </Border>            
+        </Popup>
+    </DockPanel>
+</Window>

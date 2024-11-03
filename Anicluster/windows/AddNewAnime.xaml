@@ -91,7 +91,7 @@
                                             <ColumnDefinition Width="3*"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0" Margin="5">
-                                            <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Wunschliste" Margin="5" Checked="RBtn_Checked"/>
+                                            <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Wunschliste" Margin="5" Checked="RBtn_Checked" IsChecked="true"/>
                                             <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Begonnen" Margin="5" Checked="RBtn_Checked"/>
                                             <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Fertig" Margin="5" Checked="RBtn_Checked"/>
                                             <RadioButton GroupName="Options" VerticalContentAlignment="Center" Content="Unterbrochen" Margin="5" Checked="RBtn_Checked"/>

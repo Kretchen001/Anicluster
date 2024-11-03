@@ -21,5 +21,10 @@ namespace Anicluster {
         private void MenuItemNewAnime_Click(object sender, RoutedEventArgs e) {
             OpenAddNewAnime(sender, null);
         }
+
+        private void MenuItemTags_Click(object sender, RoutedEventArgs e) {
+            TagOrganisator tagOrga = new TagOrganisator();
+            tagOrga.ShowDialog();
+        }
     }
 }

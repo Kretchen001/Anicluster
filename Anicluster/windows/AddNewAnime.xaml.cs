@@ -209,6 +209,10 @@ namespace Anicluster.windows {
         }
 
         private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
+            if (NewAnime.Name != "" &&
+                NewAnime.Season.Count != 0) {
+                
+            }
             //zw string json = JsonSerializer.Serialize(myObject, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
         }
     }
