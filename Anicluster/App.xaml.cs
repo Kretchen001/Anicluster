@@ -1,3 +1,6 @@
+﻿using Anicluster.Database;
+using Anicluster.Database.Services;
+using Microsoft.Data.Sqlite;
 using Serilog;
 using System.IO;
 using System.Windows;
@@ -20,6 +23,28 @@ namespace Anicluster {
                 .CreateLogger();
 
             Log.Information("Application started.");
+            Log.Information("Test SQLite-DB connection");
+            try {
+                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "db")) {
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "db");
+                }
+                DatabaseManager dbManager = new DatabaseManager($"Data Source=db/data.sqlite");
+                using (SqliteConnection connection = dbManager.GetConnection()) {
+                    connection.Open();
+                    connection.Close();
+                }
+                AnimeService animeService = new AnimeService(dbManager);
+                if (animeService.TableExists() == false) {
+                    animeService.InitializeAnimeTable();
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex.StackTrace ?? "Error without stacktrace...");
+                MessageBox.Show("Fehler beim Start der Anwendung!");
+                base.Shutdown();
+                return;
+            }
+            Log.Information("Connection to SQLite-DB available");
 
             base.OnStartup(e);
 
