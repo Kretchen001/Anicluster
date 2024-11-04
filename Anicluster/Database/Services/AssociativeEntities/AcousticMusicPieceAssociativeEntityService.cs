@@ -1,24 +1,25 @@
 ﻿using Microsoft.Data.Sqlite;
-using Modells.Anime.SoundRating;
 using Serilog;
 
-namespace Anicluster.Database.Services {
+namespace Anicluster.Database.Services.AssociativeEntities {
 
-    public class AcousticService {
+    public class AcousticMusicPieceAssociativeEntityService {
 
         private readonly DatabaseManager _databaseManager;
 
-        public AcousticService(DatabaseManager databaseManager) {
+        public AcousticMusicPieceAssociativeEntityService(DatabaseManager databaseManager) {
             _databaseManager = databaseManager;
         }
 
-        public bool InitializeAcousticTable() {
+        public bool InitializeAcousticMusicPieceAssociativeEntitiesTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Acoustic (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    Soundtrack INTEGER," +
-                    "    Comment TEXT" +
+                    "CREATE TABLE IF NOT EXISTS AcousticMusicPieceAssociativeEntities (" +
+                    "    AcousticId INTEGER," +
+                    "    MusicPieceId INTEGER," +
+                    "    FOREIGN KEY(AcousticId) REFERENCES Acoustic(Id)," +
+                    "    FOREIGN KEY(MusicPieceId) REFERENCES MusicPiece(Id)," +
+                    "    PRIMARY KEY(AcousticId, MusicPieceId)" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
@@ -27,7 +28,7 @@ namespace Anicluster.Database.Services {
                         connection.Close();
                     }
                     catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Acoustic table not created!");
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- AcousticMusicPieceAssociativeEntities table not created!");
                         return false;
                     }
                 }
@@ -41,7 +42,7 @@ namespace Anicluster.Database.Services {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "Acoustic");
+                    cmd.Parameters.AddWithValue("@tableName", "AcousticMusicPieceAssociativeEntities");
                     object? result = cmd.ExecuteScalar();
 
                     connection.Close();
@@ -50,33 +51,30 @@ namespace Anicluster.Database.Services {
             }
         }
 
-        public int InsertAcoustic(Acoustic acousticToInsert) {
-            int acousticId = 0;
+        public bool InsertAcousticMusicPieceAssociativeEntity(int acousticId, int musicPieceId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     try {
-                        string insertAcoustic = "" +
-                            "INSERT INTO Acoustic (Soundtrack, Comment) " +
-                            "    VALUES (@soundtrack, @comment)";
-                        using (SqliteCommand cmd = new SqliteCommand(insertAcoustic, connection)) {
+                        string insertAcousticMusicPieceAssociativeEntities = "" +
+                            "INSERT INTO AcousticMusicPieceAssociativeEntities (AcousticId, MusicPieceId) " +
+                            "    VALUES (@acousticId, @musicPieceId)";
+                        using (SqliteCommand cmd = new SqliteCommand(insertAcousticMusicPieceAssociativeEntities, connection)) {
+                            cmd.Parameters.AddWithValue("@acousticId", acousticId);
+                            cmd.Parameters.AddWithValue("@musicPieceId", musicPieceId);
                             cmd.ExecuteScalar();
-                        }
-                        using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
-                            object? result = cmd.ExecuteScalar();
-                            _ = int.TryParse(result as string, out acousticId);
                         }
                         transaction.Commit();
                     }
                     catch (Exception ex) {
                         transaction.Rollback();
-                        Log.Error(ex.StackTrace ?? "Error while inserting acousticToInsert data");
-                        return -1;
+                        Log.Error(ex.StackTrace ?? "Error while inserting AcousticMusicPieceAssociativeEntity data");
+                        return false;
                     }
                 }
                 connection.Close();
             }
-            return acousticId;
+            return true;
         }
     }
 }

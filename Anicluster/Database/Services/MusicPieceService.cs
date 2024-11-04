@@ -25,6 +25,7 @@ namespace Anicluster.Database.Services {
                     try {
                         connection.Open();
                         cmd.ExecuteNonQuery();
+                        connection.Close();
                     }
                     catch (Exception ex) {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- MusicPiece table not created!");

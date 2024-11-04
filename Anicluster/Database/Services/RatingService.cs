@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
+using Modells.Anime;
 using Serilog;
+using System.Windows.Controls.Primitives;
 
 namespace Anicluster.Database.Services {
     
@@ -49,6 +51,38 @@ namespace Anicluster.Database.Services {
                     return result != null;
                 }
             }
+        }
+
+        public int InsertRating(Rating ratingToInsert) {
+            // First Insert the Acoustic and get this Id
+            int acousticId = new AcousticService(_databaseManager).InsertAcoustic(ratingToInsert.Acoustic);
+            if (acousticId.Equals(-1)) {
+                Log.Error("Break by inserting Rating...");
+                return -1;
+            }
+
+            // Insert now the Rating
+            int ratingId = 0;
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
+                using (SqliteTransaction transaction = connection.BeginTransaction()) {
+                    try {
+                        using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
+                            object? result = cmd.ExecuteScalar();
+                            _ = int.TryParse(result as string, out ratingId);
+                        }
+                        
+                        transaction.Commit();
+                    }
+                    catch (Exception ex) {
+                        transaction.Rollback();
+                        Log.Error(ex.StackTrace ?? "Error while inserting ratingToInsert data");
+                        return -1;
+                    }
+                }
+                connection.Close();
+            }
+            return ratingId;
         }
     }
 }

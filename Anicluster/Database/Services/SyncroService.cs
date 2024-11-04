@@ -20,13 +20,13 @@ namespace Anicluster.Database.Services {
                     "    Language INTEGER," +
                     "    IsAssessed BOOLEAN," +
                     "    Comment TEXT," +
-                    "    AcousticId INTEGER," +
-                    "    FOREIGN KEY(AcousticId) REFERENCES Acoustic(Id)" +
+                    "    AcousticId INTEGER" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
                         cmd.ExecuteNonQuery();
+                        connection.Close();
                     }
                     catch (Exception ex) {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Syncro table not created!");
