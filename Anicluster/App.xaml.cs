@@ -44,6 +44,8 @@ namespace Anicluster {
                     if (acousticSyncroAssociativeEntitiesService.TableExist() == false) { acousticSyncroAssociativeEntitiesService.InitializeAcousticSyncroAssociativeEntityTable(); }
                     AnimeService animeService = new AnimeService(dbManager);
                     if (animeService.TableExist() == false) { animeService.InitializeAnimeTable(); }
+                    AnimeTagAssociativeEntityService animeTagAssociativeEntity = new AnimeTagAssociativeEntityService(dbManager);
+                    if (animeTagAssociativeEntity.TableExist() == false) { animeTagAssociativeEntity.InitializeAnimeTagAssociativeEntityTable(); }
                     InterruptionService interruptionService = new InterruptionService(dbManager);
                     if (interruptionService.TableExist() == false) { interruptionService.InitializeInterruptionTable(); }
                     MediaInfoService mediaInfoService = new MediaInfoService(dbManager);
@@ -66,6 +68,7 @@ namespace Anicluster {
                     if (videoAnimationService.TableExist() == false) { videoAnimationService.InitializeVideoAnimationTable(); }
                     AnimeTagAssociativeEntityService animeTagAssociativeEntityService = new AnimeTagAssociativeEntityService(dbManager);
                     if (animeTagAssociativeEntityService.TableExist() == false) { animeTagAssociativeEntityService.InitializeAnimeTagAssociativeEntityTable(); }
+                    tagService.InsertTagList([new Tag("a"), new Tag("b"), new Tag("c")]);
                 }
             }
             catch (Exception ex) {
