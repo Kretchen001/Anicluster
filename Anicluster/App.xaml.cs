@@ -68,7 +68,6 @@ namespace Anicluster {
                     if (videoAnimationService.TableExist() == false) { videoAnimationService.InitializeVideoAnimationTable(); }
                     AnimeTagAssociativeEntityService animeTagAssociativeEntityService = new AnimeTagAssociativeEntityService(dbManager);
                     if (animeTagAssociativeEntityService.TableExist() == false) { animeTagAssociativeEntityService.InitializeAnimeTagAssociativeEntityTable(); }
-                    tagService.InsertTagList([new Tag("a"), new Tag("b"), new Tag("c")]);
                 }
             }
             catch (Exception ex) {

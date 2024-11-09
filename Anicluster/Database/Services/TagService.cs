@@ -77,14 +77,28 @@ namespace Anicluster.Database.Services {
             }
         }
 
+        /// <summary>
+        /// Insert a List of Tags and return the ids from the Insert.<br></br>
+        /// If Tag is already exist, it <b>added twice</b> by this function!
+        /// </summary>
+        /// <param name="tagList"></param>
+        /// <returns></returns>
         public List<int> InsertTagList(List<Tag> tagList) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "INSERT INTO Tag (Designation) \n" +
                     "VALUES ";
-                for (int i=0; i < tagList.Count; i += 1) {
+                for (int i = 0; i < tagList.Count; i += 1) {
                     queryInsert += $"(@Designation{i})";
                     queryInsert += i != tagList.Count - 1 ? ", \n" : ";";
+                }
+                string querySelectIds = "" +
+                            "SELECT Id \n" +
+                            "FROM Tag \n" +
+                            "WHERE Designation LIKE @Designation0";
+                for (int i = 1; i < tagList.Count; i += 1) { // start by 1 because of string before
+                    querySelectIds += $"\n\tOR Designation LIKE @Designation{i}";
+                    if (i == tagList.Count - 1) { querySelectIds += ";"; }
                 }
                 using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
                     try {
@@ -94,21 +108,50 @@ namespace Anicluster.Database.Services {
                         connection.Open();
                         cmd.ExecuteNonQuery();
                         // Request the id's
-                        // DemoString; TODO: Zusammensetzen
-                        // SELECT Designation FROM Tag WHERE Designation LIKE @designation_Design1 OR Designation LIKE @designation_Design2 OR Designation LIKE @designation_Design3;
-                        string querySelectIds = "";
                         cmd.CommandText = querySelectIds;
+                        // use the same Parameters from insert
                         List<int> ids = [];
                         using (SqliteDataReader reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
-                                ids.Add((int)reader["Designation"]);
+                                ids.Add((int)((long)reader["Id"]));
                             }
+                            reader.Close();
                         }
                         connection.Close();
                         return ids;
                     }
                     catch (Exception ex) {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tags not inserted or queryable!");
+                        return [];
+                    }
+                }
+            }
+        }
+
+        public List<Tag> SelectAllTags() {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                string queryInsert = "" +
+                    "SELECT *\n" +
+                    "FROM Tag;";
+                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
+                    try {
+                        connection.Open();
+                        cmd.ExecuteNonQuery(); 
+                        List<Tag> tags = [];
+                        using (SqliteDataReader reader = cmd.ExecuteReader()) {
+                            while (reader.Read()) {
+                                tags.Add(new Tag () {
+                                    Id = (int)((long)reader["Id"]),
+                                    Designation = reader["Designation"].ToString() ?? "n/a"
+                                });
+                            }
+                            reader.Close();
+                        }
+                        connection.Close();
+                        return tags;
+                    }
+                    catch (Exception ex) {
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tags Selection (all)!");
                         return [];
                     }
                 }
