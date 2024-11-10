@@ -1,8 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
-using System.Data;
-using System.Security.Cryptography.Pkcs;
 
 namespace Anicluster.Database.Services {
 
@@ -67,7 +65,7 @@ namespace Anicluster.Database.Services {
                         cmd.CommandText = $"SELECT Id FROM Tag WHERE Designation Like '{tag.Designation}'";
                         object? insertedId = cmd.ExecuteScalar();
                         connection.Close();
-                        return insertedId is not null ? (int)insertedId : -1;
+                        return insertedId is not null ? (int)((long)insertedId) : -1;
                     }
                     catch (Exception ex) {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tag not inserted or queryable!");
@@ -128,6 +126,8 @@ namespace Anicluster.Database.Services {
             }
         }
 
+        /// <summary></summary>
+        /// <returns></returns>
         public List<Tag> SelectAllTags() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string queryInsert = "" +
@@ -135,9 +135,9 @@ namespace Anicluster.Database.Services {
                     "FROM Tag;";
                 using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
                     try {
+                        List<Tag> tags = [];
                         connection.Open();
                         cmd.ExecuteNonQuery(); 
-                        List<Tag> tags = [];
                         using (SqliteDataReader reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 tags.Add(new Tag () {
@@ -153,6 +153,64 @@ namespace Anicluster.Database.Services {
                     catch (Exception ex) {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tags Selection (all)!");
                         return [];
+                    }
+                }
+            }
+        }
+
+        /// <summary></summary>
+        /// <param name="count"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public List<Tag> SelectAmountOfTags(int count = 50, int offset = 0) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                string queryInsert = "" +
+                    "SELECT *\n" +
+                    "FROM Tag\n" +
+                    $"LIMIT {count} OFFSET {offset}";
+                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
+                    try {
+                        List<Tag> tags = new List<Tag>(count + 1);
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        using (SqliteDataReader reader = cmd.ExecuteReader()) {
+                            while (reader.Read()) {
+                                tags.Add(new Tag() {
+                                    Id = (int)((long)reader["Id"]),
+                                    Designation = reader["Designation"].ToString() ?? "n/a"
+                                });
+                            }
+                            reader.Close();
+                        }
+                        connection.Close();
+                        return tags;
+                    }
+                    catch (Exception ex) {
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tags Selection (Amount with Offset)!");
+                        return [];
+                    }
+                }
+            }
+        }
+
+        /// <summary></summary>
+        /// <param name="tagToDelete"></param>
+        /// <returns></returns>
+        public bool DeleteTagById(Tag tagToDelete) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                string queryInsert = "" +
+                    "DELETE FROM Tag\n" +
+                    $"WHERE Id LIKE {tagToDelete.Id}";
+                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
+                    try {
+                        connection.Open();
+                        cmd.ExecuteNonQuery();                        
+                        connection.Close();
+                        return true;
+                    }
+                    catch (Exception ex) {
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- DeleteTagById!");
+                        return false;
                     }
                 }
             }

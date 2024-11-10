@@ -24,9 +24,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <DataGrid Name="dataGridTags" ItemsSource="{Binding Path=Tags}" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false" HeadersVisibility="Column">
+            <DataGrid Name="dataGridTags" ItemsSource="{Binding Path=Tags}" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false" HeadersVisibility="Column" Margin="0,0,0,5">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="dataGridTextNumber" Header="Nr." IsReadOnly="True" Binding="{Binding numberOfTag}" Width="Auto"/>
+                    <DataGridTextColumn x:Name="dataGridTextNumber" Header="Nr." IsReadOnly="True" Binding="{Binding Id}" Width="Auto"/>
                     <DataGridTextColumn Header="Tag" IsReadOnly="True" Binding="{Binding Designation}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
@@ -34,7 +34,7 @@
         <Popup x:Name="PopupInputNewTag" Placement="Mouse" StaysOpen="False">
             <Border BorderBrush="Black" BorderThickness="1" Background="White" Padding="10">
                 <StackPanel>
-                    <TextBox x:Name="InputTextBox" Width="200" Margin="0,0,0,10"/>
+                    <TextBox x:Name="InTxtBoxNewTag" Background="LightGreen" Width="200" Margin="0,0,0,10" TextChanged="InputTextBox_TextChanged"/>
                     <Button x:Name="BtnPopUp" Content="OK" Click="BtnPopUp_Click"/>
                 </StackPanel>
             </Border>            
