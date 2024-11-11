@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
+using System.Security.Cryptography;
 
 namespace Anicluster.Database.Services {
 
@@ -98,10 +99,10 @@ namespace Anicluster.Database.Services {
                         //    cmd.Parameters.AddWithValue("@Acoustic", JsonConvert.SerializeObject(animeToInsert.Rating.Acoustic)); // JSON-Format für Acoustic
                         //    cmd.Parameters.AddWithValue("@IsRated", animeToInsert.Rating.IsRated);
                         //    cmd.ExecuteNonQuery();
+                        //    // Holen der letzt eingefügten ID
+                        //    cmd.CommandText = "SELECT last_insert_rowid();";
+                        //    ratingId = (int)((long)cmd.ExecuteScalar());
                         //}
-
-                        //// Holen Sie sich die letzte eingefügte ID
-                        //ratingId = (int)connection.LastInsertRowId();
 
                         //// 2. Anime einfügen
                         //string insertAnime = "INSERT INTO Anime (Id, Name, OriginalName, Url, Favorite, RatingId, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment) " +

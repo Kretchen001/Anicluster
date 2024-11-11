@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Anicluster.windows"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="TagOrganisator" Height="450" Width="800">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -13,7 +14,7 @@
                 <MenuItem Header="Import List" />
             </MenuItem>
             <MenuItem Header="Tag hinzufügen" Click="MenuItemAddTag_Click" />
-            <MenuItem Header="Ausgewählten Tag Löschen (einer!)" />
+            <MenuItem Header="Ausgewählten Tag Löschen (einer!)" x:Name="MenuItemDeleteSelectedTag" Click="MenuItemDeleteSelectedTag_Click" />
             <MenuItem Header="Tag suchen" />
             <MenuItem Header="" Name="AnzeigeDummy"/>
         </Menu>
@@ -24,9 +25,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <DataGrid Name="dataGridTags" ItemsSource="{Binding Path=Tags}" AutoGenerateColumns="False" Grid.Row="0" CanUserAddRows="false" HeadersVisibility="Column" Margin="0,0,0,5">
+            <DataGrid Name="DataGridTags" ItemsSource="{Binding Path=Tags}" AutoGenerateColumns="False" 
+                      Grid.Row="0" CanUserAddRows="false" HeadersVisibility="Column" Margin="0,0,0,5"
+                      SelectedItem="{Binding SelectedTag, Mode=TwoWay}" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="dataGridTextNumber" Header="Nr." IsReadOnly="True" Binding="{Binding Id}" Width="Auto"/>
+                    <DataGridTextColumn x:Name="dataGridTextNumber" Header="Id" IsReadOnly="True" Binding="{Binding Id}" Width="Auto"/>
                     <DataGridTextColumn Header="Tag" IsReadOnly="True" Binding="{Binding Designation}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
