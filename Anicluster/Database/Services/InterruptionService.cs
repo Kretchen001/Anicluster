@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Modells.Anime;
 using Serilog;
 
 namespace Anicluster.Database.Services {
@@ -14,14 +15,11 @@ namespace Anicluster.Database.Services {
         public bool InitializeInterruptionTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Interruption (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    MediaInfoId INTEGER," +
-                    "    StartDate DATETIME," +
-                    "    EndDate DATETIME," +
-                    "    DisplayStartYear TEXT," +
-                    "    DisplayEndYear TEXT," +
-                    "    FOREIGN KEY(MediaInfoId) REFERENCES MediaInfo(Id)" +
+                    "CREATE TABLE IF NOT EXISTS Interruption (\n" +
+                    "    Id INTEGER PRIMARY KEY,\n" +
+                    "    StartDate DATETIME,\n" +
+                    "    EndDate DATETIME,\n" +
+                    "    Comment TEXT\n" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
@@ -47,6 +45,31 @@ namespace Anicluster.Database.Services {
                     object? result = cmd.ExecuteScalar();
 
                     return result != null;
+                }
+            }
+        }
+
+        public int Insert(Interruption interruption) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                string queryInsert = "" +
+                    "INSERT INTO Tag (StartDate, EndDate, Comment) \n" +
+                    "    VALUES (@StartDate, @EndDate, @Comment);";
+                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
+                    try {
+                        cmd.Parameters.AddWithValue("@StartDate", interruption.Start.ToString("G"));
+                        cmd.Parameters.AddWithValue("@EndDate", interruption.End.ToString("G"));
+                        cmd.Parameters.AddWithValue("@Comment", interruption.Comment ?? "");
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = $"SELECT Id FROM Tag WHERE StartDate Like '{interruption.Start:G}' AND EndDate Like '{interruption.End:G}'";
+                        object? insertedId = cmd.ExecuteScalar();
+                        connection.Close();
+                        return insertedId is not null ? (int)((long)insertedId) : -1;
+                    }
+                    catch (Exception ex) {
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Interruption not inserted or queryable!");
+                        return -1;
+                    }
                 }
             }
         }

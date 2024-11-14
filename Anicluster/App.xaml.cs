@@ -54,6 +54,8 @@ namespace Anicluster {
                     if (musicPieceService.TableExist() == false) { musicPieceService.InitializeMusicPieceTable(); }
                     PublishingTimeService publishingTimeService = new PublishingTimeService(dbManager);
                     if (publishingTimeService.TableExist() == false) { publishingTimeService.InitializePublishingTimeTable(); }
+                    PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(dbManager);
+                    if (publishingTimeInterruptionAssociativeEntityService.TableExist() == false) { publishingTimeInterruptionAssociativeEntityService.InitializePublishingTimeTable(); }
                     RatingService ratingService = new RatingService(dbManager);
                     if (ratingService.TableExist() == false) { ratingService.InitializeRatingTable(); }
                     SeasonService seasonService = new SeasonService(dbManager);

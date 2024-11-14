@@ -51,7 +51,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             }
         }
 
-        public bool InsertAcousticSyncroAssociativeEntity(int acousticId, int syncroId) {
+        public bool InsertAcousticSyncro(int acousticId, int syncroId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
@@ -68,7 +68,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                     }
                     catch (Exception ex) {
                         transaction.Rollback();
-                        Log.Error(ex.StackTrace ?? "Error while inserting AcousticSyncroAssociativeEntity data");
+                        Log.Error(ex.StackTrace ?? "Error while inserting Acoustic-Syncro data");
                         return false;
                     }
                 }

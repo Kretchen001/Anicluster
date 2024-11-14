@@ -8,5 +8,6 @@
         public string DisplayStartYear => StartDate.Year.ToString("D4");
         public string DisplayEndYear => EndDate.Year.ToString("D4");
 
+        public PublishingTime() {}
     }
 }

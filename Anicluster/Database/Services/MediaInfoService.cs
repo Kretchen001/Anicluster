@@ -21,7 +21,6 @@ namespace Anicluster.Database.Services {
                     "    Author TEXT," +
                     "    Producer TEXT," +
                     "    Publisher TEXT," +
-                    "    FOREIGN KEY(AnimeId) REFERENCES Anime(Id)," +
                     "    FOREIGN KEY (PublishingTimeId) REFERENCES PublishingTime(Id)" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {

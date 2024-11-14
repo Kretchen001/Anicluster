@@ -49,19 +49,18 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             }
         }
 
-        // Merke
-        //public void AddTagToAnime(int animeId, int tagId) {
-        //    using (var connection = _databaseManager.GetConnection()) {
-        //        connection.Open();
-        //        string query = "INSERT INTO AnimeTag (AnimeId, TagId) VALUES (@AnimeId, @TagId);";
+        public void AddTagToAnime(int animeId, int tagId) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
+                string query = "INSERT INTO AnimeTag (AnimeId, TagId) VALUES (@AnimeId, @TagId);";
 
-        //        using (var cmd = new SqliteCommand(query, connection)) {
-        //            cmd.Parameters.AddWithValue("@AnimeId", animeId);
-        //            cmd.Parameters.AddWithValue("@TagId", tagId);
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    cmd.Parameters.AddWithValue("@AnimeId", animeId);
+                    cmd.Parameters.AddWithValue("@TagId", tagId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         //public void RemoveTagFromAnime(int animeId, int tagId) {
         //    using (var connection = _databaseManager.GetConnection()) {
