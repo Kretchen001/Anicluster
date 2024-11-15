@@ -53,10 +53,10 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         public bool InsertPublishingInterruption(int interId, int pubId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 try {
-                    connection.Open();
-                    string query = "INSERT INTO AnimeTag (PublishingId, InterruptionId)\n " +
+                    string query = "" +
+                        "INSERT INTO PublishingTimeInterruptionAssociativeEntity (PublishingId, InterruptionId)\n " +
                         "    VALUES (@PublishingId, @InterruptionId);";
-
+                    connection.Open();
                     using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                         cmd.Parameters.AddWithValue("@InterruptionId", interId);
                         cmd.Parameters.AddWithValue("@PublishingId", pubId);
@@ -68,6 +68,34 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 catch (Exception ex) {
                     Log.Error(ex.StackTrace ?? "Error while inserting Interruption-Publishing data");
                     return false;
+                }
+            }
+        }
+
+        public List<int> SelectInterruptionsFromPublishing(int pubId) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                try {
+                    string query = "" +
+                        "SELECT InterruptionId\n" +
+                        "FROM PublishingTimeInterruptionAssociativeEntity\n" +
+                        $"WHERE PublishingId LIKE '{pubId}'";
+                    connection.Open();
+                    using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                        object scalar = cmd.ExecuteScalar() ?? new object();
+                        connection.Close();
+                        List<int> res = [];
+                        using (SqliteDataReader reader = cmd.ExecuteReader()) {
+                            while (reader.Read()) {
+                                res.Add((int)((long)reader["InterruptionId"]));
+                            }
+                            reader.Close();
+                        }
+                        return res;
+                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting Interruption-Publishing data");
+                    return [];
                 }
             }
         }

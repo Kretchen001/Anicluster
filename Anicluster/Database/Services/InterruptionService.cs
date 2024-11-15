@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
+using System.Diagnostics;
 
 namespace Anicluster.Database.Services {
 
@@ -70,6 +71,42 @@ namespace Anicluster.Database.Services {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Interruption not inserted or queryable!");
                         return -1;
                     }
+                }
+            }
+        }
+
+        public List<Interruption> SelectInterruptionsById(List<int> ids) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                try {
+                    string querySelect = "" +
+                        "SELECT StartDate, EndDate, Comment\n" +
+                        "FROM Tag \n" +
+                        "WHERE Designation LIKE @Id0";
+                    for (int i = 1; i < ids.Count; i += 1) { // start by 1 because of string before
+                        querySelect += $"\n\tOR Designation LIKE @Id{i}";
+                        if (i == ids.Count - 1) { querySelect += ";"; }
+                    }
+                    connection.Open();
+                    using (SqliteCommand cmd = new SqliteCommand(querySelect, connection)) {
+                        object scalar = cmd.ExecuteScalar() ?? new object();
+                        connection.Close();
+                        List<Interruption> res = [];
+                        using (SqliteDataReader reader = cmd.ExecuteReader()) {
+                            while (reader.Read()) {
+                                res.Add(new Interruption() {
+                                    Start = (DateTime)reader["StartDate"],
+                                    End = (DateTime)reader["EndDate"],
+                                    Comment = reader["Comment"].ToString()
+                                });
+                            }
+                            reader.Close();
+                        }
+                        return res;
+                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting Interruption-Publishing data");
+                    return [];
                 }
             }
         }

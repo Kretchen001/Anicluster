@@ -109,6 +109,10 @@ namespace Anicluster.Database.Services {
                         }
                         connection.Close();
                         // Request Interruption(s)
+                        PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(_databaseManager);
+                        List<int> piIds = publishingTimeInterruptionAssociativeEntityService.SelectInterruptionsFromPublishing(id);
+                        InterruptionService interruptionService = new InterruptionService(_databaseManager);
+                        publishingTime.Interruptions.AddRange(interruptionService.SelectInterruptionsById(piIds));
 
                         return publishingTime;
                     }

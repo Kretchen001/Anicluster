@@ -59,7 +59,7 @@ namespace Anicluster.Database.Services {
                     try {
                         using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
                             object? result = cmd.ExecuteScalar();
-                            _ = int.TryParse(result as string, out mediaInfoId);
+                            mediaInfoId = (int)((long)result!);
                         }
 
                         transaction.Commit();
