@@ -51,7 +51,7 @@ namespace Anicluster.Database.Services {
 
         /// <summary></summary>
         /// <param name="publishingTime"></param>
-        /// <returns>The (new, correct) id of the inserted Anime</returns>
+        /// <returns>The (new, correct) id of the inserted PublishingTime</returns>
         public int Insert(PublishingTime publishingTime) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string queryInsert = "" +

@@ -17,10 +17,10 @@ namespace Anicluster.Database.Services {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS MediaInfo (" +
                     "    Id INTEGER PRIMARY KEY," +
-                    "    AnimeId INTEGER," +
                     "    Author TEXT," +
                     "    Producer TEXT," +
                     "    Publisher TEXT," +
+                    "    PublishingTimeId INTEGER" +
                     "    FOREIGN KEY (PublishingTimeId) REFERENCES PublishingTime(Id)" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
@@ -54,14 +54,26 @@ namespace Anicluster.Database.Services {
         public int InsertMediaInfo(MediaInfo mediaInfoToInsert) {
             int mediaInfoId = 0;
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     try {
-                        using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
+                        PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
+                        int pubId = publishingTimeService.Insert(mediaInfoToInsert.PublishingTime);
+                        string insertQuery = "" +
+                            "INSERT INTO MediaInfo (Author, Producer, Publisher, PublishingTimeId)\n" +
+                            "VALUES (@Author, @Producer, @Publisher, @PublishingTimeId)";
+                        using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
+                            cmd.Parameters.AddWithValue("@Author", mediaInfoToInsert.Author);
+                            cmd.Parameters.AddWithValue("@Producer", mediaInfoToInsert.Producer);
+                            cmd.Parameters.AddWithValue("@Publisher", mediaInfoToInsert.Publisher);
+                            cmd.Parameters.AddWithValue("@AutPublishingTimeIdhor", mediaInfoId);
+                            connection.Open();
+                            cmd.ExecuteNonQuery();
+                            cmd.Parameters.Clear();
+                            cmd.CommandText = "SELECT last_insert_rowid();";
                             object? result = cmd.ExecuteScalar();
+                            connection.Close();
                             mediaInfoId = (int)((long)result!);
                         }
-
                         transaction.Commit();
                     }
                     catch (Exception ex) {
@@ -70,7 +82,6 @@ namespace Anicluster.Database.Services {
                         return -1;
                     }
                 }
-                connection.Close();
             }
             return mediaInfoId;
         }

@@ -1,10 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
-using System.Windows.Controls.Primitives;
 
 namespace Anicluster.Database.Services {
-    
+
     public class RatingService {
 
         private readonly DatabaseManager _databaseManager;

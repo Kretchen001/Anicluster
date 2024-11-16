@@ -82,29 +82,21 @@ namespace Anicluster.Database.Services {
                 Log.Error("Break by inserting Status...");
                 return false;
             }
-            
+
             // Insert the Anime and get the Id for the Other Key's
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     try {
-                        //// 1. Rating einfügen und die generierte ID abrufen
-                        //int ratingId;
-                        //string insertRating = "INSERT INTO Rating (Story, Animation, SpecialEffects, Acoustic, IsRated) " +
-                        //                      "VALUES (@Story, @Animation, @SpecialEffects, @Acoustic, @IsRated);";
-                        //using (var cmd = new SqliteCommand(insertRating, connection, transaction)) {
-                        //    cmd.Parameters.AddWithValue("@Story", animeToInsert.Rating.Story);
-                        //    cmd.Parameters.AddWithValue("@Animation", animeToInsert.Rating.Animation);
-                        //    cmd.Parameters.AddWithValue("@SpecialEffects", animeToInsert.Rating.SpecialEffects);
-                        //    cmd.Parameters.AddWithValue("@Acoustic", JsonConvert.SerializeObject(animeToInsert.Rating.Acoustic)); // JSON-Format für Acoustic
-                        //    cmd.Parameters.AddWithValue("@IsRated", animeToInsert.Rating.IsRated);
-                        //    cmd.ExecuteNonQuery();
-                        //    // Holen der letzt eingefügten ID
-                        //    cmd.CommandText = "SELECT last_insert_rowid();";
-                        //    ratingId = (int)((long)cmd.ExecuteScalar());
-                        //}
+                        // Anime einfügen und ID abfragen
+                        //   -> FOREIGN KEYs von davor verwenden (da ist ja kein Mapping notwendig
+                        // Seasons einzufügen
+                        // AnimeId und SeasonIds mappen
+                        // VideoAnimation einfügen
+                        // AnimeId und VideoAnimationIds mappen
+                        // Tags per Id auf die Animes mappen (die Tags sind ja schon da, also die nicht mehr einfügen!
 
-                        //// 2. Anime einfügen
+                        #region Anime
                         //string insertAnime = "INSERT INTO Anime (Id, Name, OriginalName, Url, Favorite, RatingId, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment) " +
                         //                     "VALUES (@Id, @Name, @OriginalName, @Url, @Favorite, @RatingId, @Tier, @RecommendedFrom, @Predecessor, @Successor, @Related, @Comment);";
                         //using (var cmd = new SqliteCommand(insertAnime, connection, transaction)) {
@@ -122,64 +114,9 @@ namespace Anicluster.Database.Services {
                         //    cmd.Parameters.AddWithValue("@Comment", animeToInsert.Comment ?? (object)DBNull.Value);
                         //    cmd.ExecuteNonQuery();
                         //}
-
-                        //// 3. MediaInfo einfügen
-                        //string insertMediaInfo = "INSERT INTO MediaInfo (AnimeId, Author, Producer, Publisher) " +
-                        //                          "VALUES (@AnimeId, @Author, @Producer, @Publisher);";
-                        //using (var cmd = new SqliteCommand(insertMediaInfo, connection, transaction)) {
-                        //    cmd.Parameters.AddWithValue("@AnimeId", animeToInsert.Id);
-                        //    cmd.Parameters.AddWithValue("@Author", animeToInsert.MediaInfo.Author ?? (object)DBNull.Value);
-                        //    cmd.Parameters.AddWithValue("@Producer", animeToInsert.MediaInfo.Producer ?? (object)DBNull.Value);
-                        //    cmd.Parameters.AddWithValue("@Publisher", animeToInsert.MediaInfo.Publisher ?? (object)DBNull.Value);
-                        //    cmd.ExecuteNonQuery();
-                        //}
-
-                        //// 4. Seasons einfügen
-                        //foreach (var season in animeToInsert.Season) {
-                        //    string insertSeason = "INSERT INTO Season (AnimeId, Number, Comment) " +
-                        //                          "VALUES (@AnimeId, @Number, @Comment);";
-                        //    using (var cmd = new SqliteCommand(insertSeason, connection, transaction)) {
-                        //        cmd.Parameters.AddWithValue("@AnimeId", animeToInsert.Id);
-                        //        cmd.Parameters.AddWithValue("@Number", season.Number);
-                        //        cmd.Parameters.AddWithValue("@Comment", season.Comment ?? (object)DBNull.Value);
-                        //        cmd.ExecuteNonQuery();
-
-                        //        // 5. VideoAnimation für die Season einfügen
-                        //        foreach (var videoAnimation in season.Episodes) {
-                        //            string insertVideoAnimation = "INSERT INTO VideoAnimation (SeasonId, AnimeId, VideoType, Comment) " +
-                        //                                          "VALUES (@SeasonId, @AnimeId, @VideoType, @Comment);";
-                        //            using (var cmd2 = new SqliteCommand(insertVideoAnimation, connection, transaction)) {
-                        //                cmd2.Parameters.AddWithValue("@SeasonId", season.Number); // Hier müsste die korrekte ID verwendet werden
-                        //                cmd2.Parameters.AddWithValue("@AnimeId", animeToInsert.Id);
-                        //                cmd2.Parameters.AddWithValue("@VideoType", (int)videoAnimation.VideoType);
-                        //                cmd2.Parameters.AddWithValue("@Comment", videoAnimation.Comment ?? (object)DBNull.Value);
-                        //                cmd2.ExecuteNonQuery();
-                        //            }
-                        //        }
-                        //    }
-                        //}
-
-                        //// 6. Ovas einfügen
-                        //foreach (var ova in animeToInsert.Ovas) {
-                        //    string insertOva = "INSERT INTO VideoAnimation (AnimeId, VideoType, Comment) " +
-                        //                       "VALUES (@AnimeId, @VideoType, @Comment);";
-                        //    using (var cmd = new SqliteCommand(insertOva, connection, transaction)) {
-                        //        cmd.Parameters.AddWithValue("@AnimeId", animeToInsert.Id);
-                        //        cmd.Parameters.AddWithValue("@VideoType", (int)ova.VideoType);
-                        //        cmd.Parameters.AddWithValue("@Comment", ova.Comment ?? (object)DBNull.Value);
-                        //        cmd.ExecuteNonQuery();
-                        //    }
-                        //}
-
-                        //// 7. Tags einfügen
-                        //foreach (var tag in animeToInsert.Tags) {
-                        //    string insertTag = "INSERT INTO Tag (Designation) VALUES (@Designation);";
-                        //    using (var cmd = new SqliteCommand(insertTag, connection, transaction)) {
-                        //        cmd.Parameters.AddWithValue("@Designation", tag.Designation);
-                        //        cmd.ExecuteNonQuery();
-                        //    }
-
-                        //    // 8. Mapping von Anime und Tags einfügen
+                        #endregion
+                        #region "Mapping"
+                        //    // Mapping von Anime und Tags einfügen
                         //    string insertAnimeTag = "INSERT INTO AnimeTag (AnimeId, TagId) VALUES (@AnimeId, @TagId);";
                         //    using (var cmd = new SqliteCommand(insertAnimeTag, connection, transaction)) {
                         //        cmd.Parameters.AddWithValue("@AnimeId", animeToInsert.Id);
@@ -188,6 +125,7 @@ namespace Anicluster.Database.Services {
                         //        cmd.ExecuteNonQuery();
                         //    }
                         //}
+                        #endregion
 
                         // Commit der Transaktion
                         transaction.Commit();
