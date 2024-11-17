@@ -3,7 +3,7 @@ using Serilog;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
 
-    public class PublishingTimeInterruptionAssociativeEntityService {
+    public class PublishingTimeInterruptionAssociativeEntityService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -11,7 +11,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             _databaseManager = databaseManager;
         }
 
-        public bool InitializePublishingTimeTable() {
+        public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS PublishingTimeInterruptionAssociativeEntity (\n" +

@@ -37,37 +37,39 @@ namespace Anicluster {
                     connection.Close();
 
                     AcousticService acousticService = new AcousticService(dbManager);
-                    if (acousticService.TableExist() == false) { acousticService.InitializeAcousticTable(); }
+                    if (acousticService.TableExist() == false) { acousticService.InitializeTable(); }
                     AcousticMusicPieceAssociativeEntityService acousticMusicPieceAssociativeEntitiesService = new AcousticMusicPieceAssociativeEntityService(dbManager);
-                    if (acousticMusicPieceAssociativeEntitiesService.TableExist() == false) { acousticMusicPieceAssociativeEntitiesService.InitializeAcousticMusicPieceAssociativeEntitiesTable(); }
+                    if (acousticMusicPieceAssociativeEntitiesService.TableExist() == false) { acousticMusicPieceAssociativeEntitiesService.InitializeTable(); }
                     AcousticSyncroAssociativeEntityService acousticSyncroAssociativeEntitiesService = new AcousticSyncroAssociativeEntityService(dbManager);
-                    if (acousticSyncroAssociativeEntitiesService.TableExist() == false) { acousticSyncroAssociativeEntitiesService.InitializeAcousticSyncroAssociativeEntityTable(); }
+                    if (acousticSyncroAssociativeEntitiesService.TableExist() == false) { acousticSyncroAssociativeEntitiesService.InitializeTable(); }
                     AnimeService animeService = new AnimeService(dbManager);
-                    if (animeService.TableExist() == false) { animeService.InitializeAnimeTable(); }
+                    if (animeService.TableExist() == false) { animeService.InitializeTable(); }
                     AnimeTagAssociativeEntityService animeTagAssociativeEntity = new AnimeTagAssociativeEntityService(dbManager);
-                    if (animeTagAssociativeEntity.TableExist() == false) { animeTagAssociativeEntity.InitializeAnimeTagAssociativeEntityTable(); }
+                    if (animeTagAssociativeEntity.TableExist() == false) { animeTagAssociativeEntity.InitializeTable(); }
+                    AnimeSeasonAssociativeEntityService animeSeasonAssociativeEntityService = new AnimeSeasonAssociativeEntityService(dbManager);
+                    if (animeSeasonAssociativeEntityService.TableExist() == false) { animeSeasonAssociativeEntityService.InitializeTable(); }
                     InterruptionService interruptionService = new InterruptionService(dbManager);
-                    if (interruptionService.TableExist() == false) { interruptionService.InitializeInterruptionTable(); }
+                    if (interruptionService.TableExist() == false) { interruptionService.InitializeTable(); }
                     MediaInfoService mediaInfoService = new MediaInfoService(dbManager);
-                    if (mediaInfoService.TableExist() == false) { mediaInfoService.InitializeMediaInfoTable(); }
+                    if (mediaInfoService.TableExist() == false) { mediaInfoService.InitializeTable(); }
                     MusicPieceService musicPieceService = new MusicPieceService(dbManager);
-                    if (musicPieceService.TableExist() == false) { musicPieceService.InitializeMusicPieceTable(); }
+                    if (musicPieceService.TableExist() == false) { musicPieceService.InitializeTable(); }
                     PublishingTimeService publishingTimeService = new PublishingTimeService(dbManager);
-                    if (publishingTimeService.TableExist() == false) { publishingTimeService.InitializePublishingTimeTable(); }
+                    if (publishingTimeService.TableExist() == false) { publishingTimeService.InitializeTable(); }
                     PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(dbManager);
-                    if (publishingTimeInterruptionAssociativeEntityService.TableExist() == false) { publishingTimeInterruptionAssociativeEntityService.InitializePublishingTimeTable(); }
+                    if (publishingTimeInterruptionAssociativeEntityService.TableExist() == false) { publishingTimeInterruptionAssociativeEntityService.InitializeTable(); }
                     RatingService ratingService = new RatingService(dbManager);
-                    if (ratingService.TableExist() == false) { ratingService.InitializeRatingTable(); }
+                    if (ratingService.TableExist() == false) { ratingService.InitializeTable(); }
                     SeasonService seasonService = new SeasonService(dbManager);
-                    if (seasonService.TableExist() == false) { seasonService.InitializeSeasonTable(); }
+                    if (seasonService.TableExist() == false) { seasonService.InitializeTable(); }
                     SyncroService syncroService = new SyncroService(dbManager);
-                    if (syncroService.TableExist() == false) { syncroService.InitializeSyncroTable(); }
+                    if (syncroService.TableExist() == false) { syncroService.InitializeTable(); }
                     StatusService statusService = new StatusService(dbManager);
-                    if (statusService.TableExist() == false) { statusService.InitializeStatusTable(); }
+                    if (statusService.TableExist() == false) { statusService.InitializeTable(); }
                     TagService tagService = new TagService(dbManager);
-                    if (tagService.TableExist() == false) { tagService.InitializeTagTable(); }
+                    if (tagService.TableExist() == false) { tagService.InitializeTable(); }
                     VideoAnimationService videoAnimationService = new VideoAnimationService(dbManager);
-                    if (videoAnimationService.TableExist() == false) { videoAnimationService.InitializeVideoAnimationTable(); }
+                    if (videoAnimationService.TableExist() == false) { videoAnimationService.InitializeTable(); }
                 }
             }
             catch (Exception ex) {

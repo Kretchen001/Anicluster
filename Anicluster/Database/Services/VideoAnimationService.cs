@@ -2,7 +2,8 @@
 using Serilog;
 
 namespace Anicluster.Database.Services {
-    internal class VideoAnimationService {
+
+    internal class VideoAnimationService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -10,7 +11,7 @@ namespace Anicluster.Database.Services {
             _databaseManager = databaseManager;
         }
 
-        public bool InitializeVideoAnimationTable() {
+        public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS VideoAnimation (" +

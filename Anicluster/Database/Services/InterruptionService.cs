@@ -1,11 +1,10 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
-using System.Diagnostics;
 
 namespace Anicluster.Database.Services {
 
-    public class InterruptionService {
+    public class InterruptionService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -13,7 +12,7 @@ namespace Anicluster.Database.Services {
             _databaseManager = databaseManager;
         }
 
-        public bool InitializeInterruptionTable() {
+        public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS Interruption (\n" +

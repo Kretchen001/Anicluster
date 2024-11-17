@@ -5,7 +5,7 @@ using Serilog;
 
 namespace Anicluster.Database.Services {
 
-    public class PublishingTimeService {
+    public class PublishingTimeService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -13,7 +13,7 @@ namespace Anicluster.Database.Services {
             _databaseManager = databaseManager;
         }
 
-        public bool InitializePublishingTimeTable() {
+        public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS PublishingTime (" +

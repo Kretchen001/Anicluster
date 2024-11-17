@@ -4,7 +4,7 @@ using Serilog;
 
 namespace Anicluster.Database.Services {
 
-    public class RatingService {
+    public class RatingService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -12,7 +12,7 @@ namespace Anicluster.Database.Services {
             _databaseManager = databaseManager;
         }
 
-        public bool InitializeRatingTable() {
+        public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS Rating (" +

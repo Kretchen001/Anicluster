@@ -4,7 +4,7 @@ using Serilog;
 
 namespace Anicluster.Database.Services {
 
-    public class TagService {
+    public class TagService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -12,7 +12,7 @@ namespace Anicluster.Database.Services {
             _databaseManager = databaseManager;
         }
 
-        public bool InitializeTagTable() {
+        public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS Tag (" +

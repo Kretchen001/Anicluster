@@ -3,7 +3,7 @@ using Serilog;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
 
-    public class AnimeTagAssociativeEntityService {
+    public class AnimeTagAssociativeEntityService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -11,7 +11,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             _databaseManager = databaseManager;
         }
 
-        public bool InitializeAnimeTagAssociativeEntityTable() {
+        public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS AnimeTagAssociativeEntity (" +
@@ -52,7 +52,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         public void AddTagToAnime(int animeId, int tagId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                string query = "INSERT INTO AnimeTag (AnimeId, TagId) VALUES (@AnimeId, @TagId);";
+                string query = "INSERT INTO AnimeTagAssociativeEntity (AnimeId, TagId) VALUES (@AnimeId, @TagId);";
 
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@AnimeId", animeId);
