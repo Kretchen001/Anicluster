@@ -54,6 +54,7 @@ namespace Anicluster.Database.Services {
         public int InsertMediaInfo(MediaInfo mediaInfoToInsert) {
             int mediaInfoId = 0;
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     try {
                         PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
@@ -66,7 +67,6 @@ namespace Anicluster.Database.Services {
                             cmd.Parameters.AddWithValue("@Producer", mediaInfoToInsert.Producer);
                             cmd.Parameters.AddWithValue("@Publisher", mediaInfoToInsert.Publisher);
                             cmd.Parameters.AddWithValue("@AutPublishingTimeIdhor", mediaInfoId);
-                            connection.Open();
                             cmd.ExecuteNonQuery();
                             cmd.Parameters.Clear();
                             cmd.CommandText = "SELECT last_insert_rowid();";

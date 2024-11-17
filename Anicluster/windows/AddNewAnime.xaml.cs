@@ -183,9 +183,9 @@ namespace Anicluster.windows {
         }
 
         private void SeasonGeneratorClosed(object sender, EventArgs e) {
-            NewAnime.Season = new List<Season>(window_SeasonGenerator.Seasons);
+            NewAnime.Seasons = new List<Season>(window_SeasonGenerator.Seasons);
             window_SeasonGenerator.Closed -= SeasonGeneratorClosed!;
-            window_SeasonGenerator = new SeasonGenerator(NewAnime.Season);
+            window_SeasonGenerator = new SeasonGenerator(NewAnime.Seasons);
         }
 
         private void BtnOvaGenerator_Click(object sender, RoutedEventArgs e) {
@@ -210,7 +210,7 @@ namespace Anicluster.windows {
 
         private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
             if (NewAnime.Name != "" &&
-                NewAnime.Season.Count != 0) {
+                NewAnime.Seasons.Count != 0) {
                 
             }
             //zw string json = JsonSerializer.Serialize(myObject, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });

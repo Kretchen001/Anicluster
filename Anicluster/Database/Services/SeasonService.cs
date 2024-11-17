@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Modells.Anime;
 using Serilog;
 
 namespace Anicluster.Database.Services {
@@ -49,6 +50,13 @@ namespace Anicluster.Database.Services {
                     return result != null;
                 }
             }
+        }
+
+        public int Insert(Season seasonToInsert) {
+            // check if season exist, then return only its id
+
+            // else insert and return inserted id
+            return -1;
         }
     }
 }

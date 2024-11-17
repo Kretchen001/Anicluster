@@ -123,7 +123,7 @@ namespace Anicluster {
                 }
             };
             a.Tier = Tier.S;
-            a.Season = [new Season() {
+            a.Seasons = [new Season() {
                 Episodes = [
                     new VideoAnimation(videoType: VideoType.Episode, comment: "demo")
                 ],

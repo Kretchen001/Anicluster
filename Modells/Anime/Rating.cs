@@ -5,7 +5,7 @@ namespace Modells.Anime {
 
         public int General {
             get {
-                return ((Story * 40 + Animation * 25 + SpecialEffects * 10 + Acoustic.General * 25) / 100);
+                return CalcGeneral();
             }
         }
         public int Story { get; set; }
@@ -22,6 +22,14 @@ namespace Modells.Anime {
             SpecialEffects = specialEffects;
             Acoustic = acoustic;
             IsRated = isRated;
+        }
+
+        private int CalcGeneral() {
+            return ((Story * 40 + Animation * 25 + SpecialEffects * 10 + Acoustic.General * 25) / 100);
+        }
+
+        public static int CalcGeneral(int story, int animation, int specialEffects, int acousticGeneral) {
+            return ((story * 40 + animation * 25 + specialEffects * 10 + acousticGeneral * 25) / 100);
         }
     }
 }

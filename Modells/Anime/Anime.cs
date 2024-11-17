@@ -17,7 +17,7 @@
         /// <summary></summary>
         public Tier Tier { get; set; } = Tier.E;
         /// <summary></summary>
-        public List<Season> Season { get; set; } = [];
+        public List<Season> Seasons { get; set; } = [];
         /// <summary></summary>
         public List<VideoAnimation> Ovas { get; set; } = [];
 

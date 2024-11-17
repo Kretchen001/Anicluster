@@ -62,15 +62,24 @@ namespace Anicluster.Database.Services {
 
             // Insert now the Rating
             int ratingId = 0;
+            string insertQuery = "" +
+                "INSERT INTO Rating (Story, Animation, SpecialEffects, AcousticId, IsRated)\n" +
+                "    VALUES (@Story, @Animation, @SpecialEffects, @AcousticId, @IsRated)";
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     try {
+                        using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
+                            cmd.Parameters.AddWithValue("@Story", ratingToInsert.Story);
+                            cmd.Parameters.AddWithValue("@Animation", ratingToInsert.Animation);
+                            cmd.Parameters.AddWithValue("@SpecialEffects", ratingToInsert.SpecialEffects);
+                            cmd.Parameters.AddWithValue("@AcousticId", acousticId);
+                            cmd.Parameters.AddWithValue("@IsRated", ratingToInsert.IsRated);
+                        }
                         using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
                             object? result = cmd.ExecuteScalar();
-                            _ = int.TryParse(result as string, out ratingId);
-                        }
-                        
+                            ratingId = (int)((long)result!);
+                        }                        
                         transaction.Commit();
                     }
                     catch (Exception ex) {

@@ -57,7 +57,7 @@ namespace Anicluster.Database.Services {
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     try {
                         string insertAcoustic = "" +
-                            "INSERT INTO Acoustic (Soundtrack, Comment) " +
+                            "INSERT INTO Acoustic (Soundtrack, Comment)\n" +
                             "    VALUES (@soundtrack, @comment)";
                         using (SqliteCommand cmd = new SqliteCommand(insertAcoustic, connection)) {
                             cmd.ExecuteScalar();
