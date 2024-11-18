@@ -134,7 +134,7 @@ namespace Anicluster.Database.Services {
                         List<int> seasonIds = [];
                         foreach (Season x in animeToInsert.Seasons) {
                             SeasonService seasonService = new SeasonService(_databaseManager);
-                            seasonIds.Add(seasonService.Insert(x));
+                            seasonIds.Add(seasonService.Insert(x, animeToInsert.Id));
                         }
                         // AnimeId und SeasonIds mappen
                         foreach (int x in seasonIds) {

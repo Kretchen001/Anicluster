@@ -52,11 +52,29 @@ namespace Anicluster.Database.Services {
             }
         }
 
-        public int Insert(Season seasonToInsert) {
-            // check if season exist, then return only its id
+        public int Insert(Season seasonToInsert, int animeId) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                // check if season exist, then return only its id
+                string checkQuery = "" +
+                    "SELECT *\n" +
+                    "FROM Season\n" +
+                    $"WHERE AnimeId LIKE {animeId}\n" +
+                    $"Number LIKE {seasonToInsert.Number}\n" +
+                    $"Comment {seasonToInsert.Comment}";
+                using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
+                    SqliteDataReader reader = cmd.ExecuteReader();
+                    if(reader.HasRows) {
+                        return -1;
+                    }
+                }
 
-            // else insert and return inserted id
-            return -1;
+                // insert the PublishingTime
+                PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
+                publishingTimeService.Insert(seasonToInsert.PublishingTime);
+
+                // else insert and return inserted id
+                return -1;
+            }
         }
     }
 }
