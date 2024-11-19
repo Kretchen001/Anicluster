@@ -4,7 +4,7 @@ using Serilog;
 
 namespace Anicluster.Database.Services {
 
-    public class SeasonService : IDatabaseService {
+    public class SeasonService : IDatabaseService<Season> {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -63,16 +63,38 @@ namespace Anicluster.Database.Services {
                     $"Comment {seasonToInsert.Comment}";
                 using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
                     SqliteDataReader reader = cmd.ExecuteReader();
-                    if(reader.HasRows) {
+                    if (reader.HasRows) {
+                        return (int)((long)reader["Id"]);
+                    }
+                }
+                // not there, so insert the PublishingTime
+                PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
+                int pubId = publishingTimeService.Insert(seasonToInsert.PublishingTime);
+                // else insert and return inserted id
+                int insertedSeasonId = -1;
+                string querySeasonInsert = "" +
+                    "INSERT INTO PublishingTime (AnimeId, Number, Comment, PublishingTimeId) \n" +
+                    "VALUES (@AnimeId, @Number, @Comment, @PublishingTimeId);";
+                using (SqliteCommand cmd = new SqliteCommand(querySeasonInsert, connection)) {
+                    try {
+                        cmd.Parameters.AddWithValue("@AnimeId", animeId);
+                        cmd.Parameters.AddWithValue("@Number", seasonToInsert.Number);
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "SELECT last_insert_rowid();";
+                        object? insertedId = cmd.ExecuteScalar();
+                        connection.Close();
+                        insertedSeasonId = (int)((long)insertedId!);
+                    }
+                    catch (Exception ex) {
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Season not inserted or queryable!");
                         return -1;
                     }
                 }
+                // insert the episodes
 
-                // insert the PublishingTime
-                PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
-                publishingTimeService.Insert(seasonToInsert.PublishingTime);
+                // map the episodes
 
-                // else insert and return inserted id
                 return -1;
             }
         }

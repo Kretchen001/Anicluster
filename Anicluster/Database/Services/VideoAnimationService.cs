@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Modells.Anime;
 using Serilog;
 
 namespace Anicluster.Database.Services {
@@ -14,13 +15,10 @@ namespace Anicluster.Database.Services {
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS VideoAnimation (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    SeasonId INTEGER," +
-                    "    AnimeId INTEGER," +
-                    "    VideoType INTEGER," +
-                    "    Comment TEXT," +
-                    "    FOREIGN KEY(SeasonId) REFERENCES Season(Id)" +
+                    "CREATE TABLE IF NOT EXISTS VideoAnimation (\n" +
+                    "    Id INTEGER PRIMARY KEY,\n" +
+                    "    VideoType INTEGER,\n" +
+                    "    Comment TEXT\n" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
@@ -47,6 +45,25 @@ namespace Anicluster.Database.Services {
 
                     return result != null;
                 }
+            }
+        }
+
+        public int Insert(VideoAnimation videoAnimationToInsert, int animeId) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                // check if season exist, then return only its id
+                string checkQuery = "" +
+                    "SELECT *\n" +
+                    "FROM VideoAnimation\n" +
+                    $"WHERE VideoType LIKE {videoAnimationToInsert.VideoType}" +
+                    $"    Comment LIKE '{videoAnimationToInsert.Comment}'";
+                using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
+                    SqliteDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) {
+                        return (int)((long)reader["Id"]);
+                    }
+                }
+                // TODO:
+                return -1;
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿namespace Anicluster.Database.Services {
-    internal interface IDatabaseService {
+    internal interface IDatabaseService/*<T>*/ {
 
         public bool InitializeTable();
         public bool TableExist();
