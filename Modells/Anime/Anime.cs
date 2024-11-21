@@ -18,7 +18,7 @@
         public Tier Tier { get; set; } = Tier.E;
         /// <summary></summary>
         public List<Season> Seasons { get; set; } = [];
-        /// <summary></summary>
+        /// <summary>Mean is OVAs, Movies etc.</summary>
         public List<VideoAnimation> Ovas { get; set; } = [];
 
         /// <summary></summary>

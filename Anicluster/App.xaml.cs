@@ -38,8 +38,8 @@ namespace Anicluster {
 
                     AcousticService acousticService = new AcousticService(dbManager);
                     if (acousticService.TableExist() == false) { acousticService.InitializeTable(); }
-                    AcousticMusicPieceAssociativeEntityService acousticMusicPieceAssociativeEntitiesService = new AcousticMusicPieceAssociativeEntityService(dbManager);
-                    if (acousticMusicPieceAssociativeEntitiesService.TableExist() == false) { acousticMusicPieceAssociativeEntitiesService.InitializeTable(); }
+                    AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(dbManager);
+                    if (ampaes.TableExist() == false) { ampaes.InitializeTable(); }
                     AcousticSyncroAssociativeEntityService acousticSyncroAssociativeEntitiesService = new AcousticSyncroAssociativeEntityService(dbManager);
                     if (acousticSyncroAssociativeEntitiesService.TableExist() == false) { acousticSyncroAssociativeEntitiesService.InitializeTable(); }
                     AnimeService animeService = new AnimeService(dbManager);
@@ -48,6 +48,8 @@ namespace Anicluster {
                     if (animeTagAssociativeEntity.TableExist() == false) { animeTagAssociativeEntity.InitializeTable(); }
                     AnimeSeasonAssociativeEntityService animeSeasonAssociativeEntityService = new AnimeSeasonAssociativeEntityService(dbManager);
                     if (animeSeasonAssociativeEntityService.TableExist() == false) { animeSeasonAssociativeEntityService.InitializeTable(); }
+                    AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(dbManager);
+                    if (aoaes.TableExist() == false) { aoaes.InitializeTable(); }
                     InterruptionService interruptionService = new InterruptionService(dbManager);
                     if (interruptionService.TableExist() == false) { interruptionService.InitializeTable(); }
                     MediaInfoService mediaInfoService = new MediaInfoService(dbManager);
@@ -62,6 +64,8 @@ namespace Anicluster {
                     if (ratingService.TableExist() == false) { ratingService.InitializeTable(); }
                     SeasonService seasonService = new SeasonService(dbManager);
                     if (seasonService.TableExist() == false) { seasonService.InitializeTable(); }
+                    SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(dbManager);
+                    if (svaaes.TableExist() == false) { svaaes.InitializeTable(); }
                     SyncroService syncroService = new SyncroService(dbManager);
                     if (syncroService.TableExist() == false) { syncroService.InitializeTable(); }
                     StatusService statusService = new StatusService(dbManager);

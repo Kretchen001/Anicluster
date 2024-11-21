@@ -48,7 +48,7 @@ namespace Anicluster.Database.Services {
             }
         }
 
-        public int Insert(VideoAnimation videoAnimationToInsert, int animeId) {
+        public int Insert(VideoAnimation videoAnimationToInsert) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 // check if season exist, then return only its id
                 string checkQuery = "" +
@@ -62,8 +62,25 @@ namespace Anicluster.Database.Services {
                         return (int)((long)reader["Id"]);
                     }
                 }
-                // TODO:
-                return -1;
+                string queryInsert = "" +
+                    "INSERT INTO VideoAnimation (VideoType, Comment) \n" +
+                    "VALUES (@VideoType, @Comment);";
+                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
+                    try {
+                        cmd.Parameters.AddWithValue("@VideoType", videoAnimationToInsert.VideoType);
+                        cmd.Parameters.AddWithValue("@Comment", videoAnimationToInsert.Comment);
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "SELECT last_insert_rowid();";
+                        object? insertedId = cmd.ExecuteScalar();
+                        connection.Close();
+                        return (int)((long)insertedId!);
+                    }
+                    catch (Exception ex) {
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Season not inserted or queryable!");
+                        return -1;
+                    }
+                }
             }
         }
     }

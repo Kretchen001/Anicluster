@@ -15,11 +15,11 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS PublishingTimeInterruptionAssociativeEntity (\n" +
-                    "    PublishingId INTEGER,\n" +
+                    "    PublishingTimeId INTEGER,\n" +
                     "    InterruptionId INTEGER,\n" +
-                    "    FOREIGN KEY(PublishingId) REFERENCES Publishing(Id),\n" +
+                    "    FOREIGN KEY(PublishingTimeId) REFERENCES PublishingTime(Id),\n" +
                     "    FOREIGN KEY(InterruptionId) REFERENCES Interruption(Id),\n" +
-                    "    PRIMARY KEY(PublishingId, InterruptionId)\n" +
+                    "    PRIMARY KEY(PublishingTimeId, InterruptionId)\n" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
@@ -54,12 +54,12 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 try {
                     string query = "" +
-                        "INSERT INTO PublishingTimeInterruptionAssociativeEntity (PublishingId, InterruptionId)\n " +
-                        "    VALUES (@PublishingId, @InterruptionId);";
+                        "INSERT INTO PublishingTimeInterruptionAssociativeEntity (PublishingTimeId, InterruptionId)\n " +
+                        "    VALUES (@PublishingTimeId, @InterruptionId);";
                     connection.Open();
                     using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                         cmd.Parameters.AddWithValue("@InterruptionId", interId);
-                        cmd.Parameters.AddWithValue("@PublishingId", pubId);
+                        cmd.Parameters.AddWithValue("@PublishingTimeId", pubId);
                         cmd.ExecuteNonQuery();
                     }
                     connection.Close();

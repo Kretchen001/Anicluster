@@ -1,10 +1,11 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Anicluster.Database.Services.AssociativeEntities;
+using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
 
 namespace Anicluster.Database.Services {
 
-    public class SeasonService : IDatabaseService<Season> {
+    public class SeasonService : IDatabaseService/*<Season>*/ {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -17,11 +18,9 @@ namespace Anicluster.Database.Services {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS Season (" +
                     "    Id INTEGER PRIMARY KEY," +
-                    "    AnimeId INTEGER," +
                     "    Number INTEGER," +
                     "    Comment TEXT," +
                     "    PublishingTimeId INTEGER," +
-                    "    FOREIGN KEY(AnimeId) REFERENCES Anime(Id)," +
                     "    FOREIGN KEY(PublishingTimeId) REFERENCES PublishingTime(Id)" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
@@ -58,7 +57,6 @@ namespace Anicluster.Database.Services {
                 string checkQuery = "" +
                     "SELECT *\n" +
                     "FROM Season\n" +
-                    $"WHERE AnimeId LIKE {animeId}\n" +
                     $"Number LIKE {seasonToInsert.Number}\n" +
                     $"Comment {seasonToInsert.Comment}";
                 using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
@@ -73,11 +71,10 @@ namespace Anicluster.Database.Services {
                 // else insert and return inserted id
                 int insertedSeasonId = -1;
                 string querySeasonInsert = "" +
-                    "INSERT INTO PublishingTime (AnimeId, Number, Comment, PublishingTimeId) \n" +
-                    "VALUES (@AnimeId, @Number, @Comment, @PublishingTimeId);";
+                    "INSERT INTO PublishingTime (Number, Comment, PublishingTimeId) \n" +
+                    "VALUES (@Number, @Comment, @PublishingTimeId);";
                 using (SqliteCommand cmd = new SqliteCommand(querySeasonInsert, connection)) {
                     try {
-                        cmd.Parameters.AddWithValue("@AnimeId", animeId);
                         cmd.Parameters.AddWithValue("@Number", seasonToInsert.Number);
                         connection.Open();
                         cmd.ExecuteNonQuery();
@@ -92,10 +89,17 @@ namespace Anicluster.Database.Services {
                     }
                 }
                 // insert the episodes
-
-                // map the episodes
-
-                return -1;
+                List<int> videoAnimationIds = new List<int>(seasonToInsert.Episodes.Count);
+                foreach (VideoAnimation x in seasonToInsert.Episodes) {
+                    VideoAnimationService vas = new VideoAnimationService(_databaseManager);
+                    videoAnimationIds.Add(vas.Insert(x));
+                }
+                // map the episodes as VideoAnimation
+                foreach (int x in videoAnimationIds) {
+                    SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(_databaseManager);
+                    svaaes.Insert(insertedSeasonId, x);
+                }
+                return insertedSeasonId;
             }
         }
     }

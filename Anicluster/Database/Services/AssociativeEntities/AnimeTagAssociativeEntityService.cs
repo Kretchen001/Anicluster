@@ -14,12 +14,12 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS AnimeTagAssociativeEntity (" +
-                    "    AnimeId INTEGER," +
-                    "    TagId INTEGER," +
-                    "    PRIMARY KEY(AnimeId, TagId),  --Kombinierter Primärschlüssel" +
-                    "    FOREIGN KEY(AnimeId) REFERENCES Anime(Id)," +
-                    "    FOREIGN KEY(TagId) REFERENCES Tag(Id)" +
+                    "CREATE TABLE IF NOT EXISTS AnimeTagAssociativeEntity (\n" +
+                    "    AnimeId INTEGER,\n" +
+                    "    TagId INTEGER,\n" +
+                    "    PRIMARY KEY(AnimeId, TagId),\n" +
+                    "    FOREIGN KEY(AnimeId) REFERENCES Anime(Id),\n" +
+                    "    FOREIGN KEY(TagId) REFERENCES Tag(Id)\n" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {

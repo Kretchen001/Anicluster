@@ -1,6 +1,8 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Anicluster.Database.Services.AssociativeEntities;
+using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
+using System.Formats.Asn1;
 
 namespace Anicluster.Database.Services {
 
@@ -138,10 +140,21 @@ namespace Anicluster.Database.Services {
                         }
                         // AnimeId und SeasonIds mappen
                         foreach (int x in seasonIds) {
+                            AnimeSeasonAssociativeEntityService asaes = new AnimeSeasonAssociativeEntityService(_databaseManager);
+                            asaes.Insert(animeToInsert.Id, x);
+                        }
+                        // Movies, OVAs, etc. einfügen
+                        List<int> insertedVAIds = new List<int>(animeToInsert.Ovas.Count);
+                        foreach (VideoAnimation x in animeToInsert.Ovas) {
+                            VideoAnimationService vas = new VideoAnimationService(_databaseManager);
+                            insertedVAIds.Add(vas.Insert(x));
+                        }
+                        // AnimeId und VideoAnimationIds mappen
+                        foreach (int x in insertedVAIds) {
+                            AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(_databaseManager);
+                            aoaes.Insert(animeToInsert.Id, x);
                         }
 
-                        // VideoAnimation einfügen
-                        // AnimeId und VideoAnimationIds mappen
                         // Tags per Id auf die Animes mappen (die Tags sind ja schon da, also die nicht mehr einfügen!)
                         //    // Mapping von Anime und Tags einfügen
                         //    string insertAnimeTag = "INSERT INTO AnimeTag (AnimeId, TagId) VALUES (@AnimeId, @TagId);";

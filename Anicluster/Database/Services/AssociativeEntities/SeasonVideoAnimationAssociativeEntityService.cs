@@ -2,23 +2,24 @@
 using Serilog;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
-    public class AnimeSeasonAssociativeEntityService : IDatabaseService {
+
+    public class SeasonVideoAnimationAssociativeEntityService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
-        public AnimeSeasonAssociativeEntityService(DatabaseManager databaseManager) {
+        public SeasonVideoAnimationAssociativeEntityService(DatabaseManager databaseManager) {
             _databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS AnimeSeasonAssociativeEntity (\n" +
-                    "    AnimeId INTEGER,\n" +
+                    "CREATE TABLE IF NOT EXISTS SeasonVideoAnimationAssociativeEntityService (\n" +
                     "    SeasonId INTEGER,\n" +
-                    "    PRIMARY KEY(AnimeId, SeasonId),\n" +
-                    "    FOREIGN KEY(AnimeId) REFERENCES Anime(Id),\n" +
-                    "    FOREIGN KEY(SeasonId) REFERENCES Season(Id)\n" +
+                    "    VideoAnimationId INTEGER,\n" +
+                    "    PRIMARY KEY(SeasonId, VideoAnimationId),\n" +
+                    "    FOREIGN KEY(SeasonId) REFERENCES Season(Id),\n" +
+                    "    FOREIGN KEY(VideoAnimationId) REFERENCES VideoAnimation(Id)\n" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
@@ -26,12 +27,12 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                         cmd.ExecuteNonQuery();
                     }
                     catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- AnimeSeasonAssociativeEntity table not created!");
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- SeasonVideoAnimationAssociativeEntityService table not created!");
                         return false;
                     }
                 }
             }
-            Log.Information("AnimeSeasonAssociativeEntity table created.");
+            Log.Information("SeasonVideoAnimationAssociativeEntityService table created.");
             return true;
         }
 
@@ -40,7 +41,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "AnimeSeasonAssociativeEntity");
+                    cmd.Parameters.AddWithValue("@tableName", "SeasonVideoAnimationAssociativeEntityService");
                     object? result = cmd.ExecuteScalar();
 
                     return result != null;
@@ -48,14 +49,14 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             }
         }
 
-        public void Insert(int animeId, int seasonId) {
+        public void Insert(int seasonId, int videoAnimationId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                string query = "INSERT INTO AnimeSeasonAssociativeEntity (AnimeId, SeasonId)\n" +
-                "    VALUES (@AnimeId, @SeasonId);";
+                string query = "INSERT INTO SeasonVideoAnimationAssociativeEntityService (SeasonId, VideoAnimationId) VALUES (@SeasonId, @VideoAnimationId);";
+
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@AnimeId", animeId);
                     cmd.Parameters.AddWithValue("@SeasonId", seasonId);
+                    cmd.Parameters.AddWithValue("@VideoAnimation", videoAnimationId);
                     cmd.ExecuteNonQuery();
                 }
             }

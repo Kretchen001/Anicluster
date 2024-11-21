@@ -2,23 +2,23 @@
 using Serilog;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
-    public class AnimeSeasonAssociativeEntityService : IDatabaseService {
+    internal class AnimeOvaAssociativeEntityService : IDatabaseService {
 
         private readonly DatabaseManager _databaseManager;
 
-        public AnimeSeasonAssociativeEntityService(DatabaseManager databaseManager) {
+        public AnimeOvaAssociativeEntityService(DatabaseManager databaseManager) {
             _databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS AnimeSeasonAssociativeEntity (\n" +
+                    "CREATE TABLE IF NOT EXISTS AnimeOvaAssociativeEntityService (\n" +
                     "    AnimeId INTEGER,\n" +
-                    "    SeasonId INTEGER,\n" +
-                    "    PRIMARY KEY(AnimeId, SeasonId),\n" +
+                    "    VideoAnimationId INTEGER,\n" +
+                    "    PRIMARY KEY(AnimeId, VideoAnimationId),\n" +
                     "    FOREIGN KEY(AnimeId) REFERENCES Anime(Id),\n" +
-                    "    FOREIGN KEY(SeasonId) REFERENCES Season(Id)\n" +
+                    "    FOREIGN KEY(VideoAnimationId) REFERENCES VideoAnimation(Id)\n" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
@@ -26,12 +26,12 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                         cmd.ExecuteNonQuery();
                     }
                     catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- AnimeSeasonAssociativeEntity table not created!");
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- AnimeOvaAssociativeEntityService table not created!");
                         return false;
                     }
                 }
             }
-            Log.Information("AnimeSeasonAssociativeEntity table created.");
+            Log.Information("AnimeOvaAssociativeEntityService table created.");
             return true;
         }
 
@@ -40,7 +40,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "AnimeSeasonAssociativeEntity");
+                    cmd.Parameters.AddWithValue("@tableName", "AnimeOvaAssociativeEntityService");
                     object? result = cmd.ExecuteScalar();
 
                     return result != null;
@@ -48,14 +48,15 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             }
         }
 
-        public void Insert(int animeId, int seasonId) {
+        public void Insert(int animeId, int vaId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                string query = "INSERT INTO AnimeSeasonAssociativeEntity (AnimeId, SeasonId)\n" +
-                "    VALUES (@AnimeId, @SeasonId);";
+                string query = "INSERT INTO AnimeOvaAssociativeEntityService (AnimeId, VideoAnimationId)\n" +
+                    "VALUES (@AnimeId, @VideoAnimationId);";
+
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@AnimeId", animeId);
-                    cmd.Parameters.AddWithValue("@SeasonId", seasonId);
+                    cmd.Parameters.AddWithValue("@VideoAnimationId", vaId);
                     cmd.ExecuteNonQuery();
                 }
             }
