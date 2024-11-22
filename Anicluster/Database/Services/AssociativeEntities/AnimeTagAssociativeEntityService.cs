@@ -43,17 +43,25 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "AnimeTagAssociativeEntity");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'AnimeTagAssociativeEntity' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'AnimetagAssociativeEntity' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }
 
-        public void AddTagToAnime(int animeId, int tagId) {
+        public void Insert(int animeId, int tagId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                string query = "INSERT INTO AnimeTagAssociativeEntity (AnimeId, TagId) VALUES (@AnimeId, @TagId);";
-
+                string query = "" +
+                    "INSERT INTO AnimeTagAssociativeEntity (AnimeId, TagId)\n" +
+                    "    VALUES (@AnimeId, @TagId);";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@AnimeId", animeId);
                     cmd.Parameters.AddWithValue("@TagId", tagId);

@@ -42,8 +42,15 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "AnimeSeasonAssociativeEntity");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'AnimeSeasonAssociativeEntity' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'AnimeSeasonAssociativeEntity' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }

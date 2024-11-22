@@ -46,15 +46,22 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "Rating");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'Rating' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'Rating' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }
 
         public int InsertRating(Rating ratingToInsert) {
             // First Insert the Acoustic and get this Id
-            int acousticId = new AcousticService(_databaseManager).InsertAcoustic(ratingToInsert.Acoustic);
+            int acousticId = new AcousticService(_databaseManager).Insert(ratingToInsert.Acoustic);
             if (acousticId.Equals(-1)) {
                 Log.Error("Break by inserting Rating...");
                 return -1;
@@ -67,26 +74,22 @@ namespace Anicluster.Database.Services {
                 "    VALUES (@Story, @Animation, @SpecialEffects, @AcousticId, @IsRated)";
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                using (SqliteTransaction transaction = connection.BeginTransaction()) {
-                    try {
-                        using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
-                            cmd.Parameters.AddWithValue("@Story", ratingToInsert.Story);
-                            cmd.Parameters.AddWithValue("@Animation", ratingToInsert.Animation);
-                            cmd.Parameters.AddWithValue("@SpecialEffects", ratingToInsert.SpecialEffects);
-                            cmd.Parameters.AddWithValue("@AcousticId", acousticId);
-                            cmd.Parameters.AddWithValue("@IsRated", ratingToInsert.IsRated);
-                        }
-                        using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
-                            object? result = cmd.ExecuteScalar();
-                            ratingId = (int)((long)result!);
-                        }                        
-                        transaction.Commit();
+                try {
+                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@Story", ratingToInsert.Story);
+                        cmd.Parameters.AddWithValue("@Animation", ratingToInsert.Animation);
+                        cmd.Parameters.AddWithValue("@SpecialEffects", ratingToInsert.SpecialEffects);
+                        cmd.Parameters.AddWithValue("@AcousticId", acousticId);
+                        cmd.Parameters.AddWithValue("@IsRated", ratingToInsert.IsRated);
                     }
-                    catch (Exception ex) {
-                        transaction.Rollback();
-                        Log.Error(ex.StackTrace ?? "Error while inserting ratingToInsert data");
-                        return -1;
+                    using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
+                        object? result = cmd.ExecuteScalar();
+                        ratingId = (int)((long)result!);
                     }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting ratingToInsert data");
+                    return -1;
                 }
                 connection.Close();
             }

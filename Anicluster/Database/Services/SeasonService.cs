@@ -45,8 +45,15 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "Season");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'Season' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'Season' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }

@@ -2,7 +2,6 @@
 using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
-using System.Formats.Asn1;
 
 namespace Anicluster.Database.Services {
 
@@ -58,14 +57,21 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "Anime");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'Anime' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'Anime' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }
 
         // Insert Merke
-        public bool InsertAnime(Anime animeToInsert) {
+        public bool Insert(Anime animeToInsert) {
             // First get the Foreign-Key's
             // Rating
             int ratingId = new RatingService(_databaseManager).InsertRating(animeToInsert.Rating);
@@ -134,37 +140,31 @@ namespace Anicluster.Database.Services {
                         #region "Mapping"
                         // Seasons einfügen
                         List<int> seasonIds = [];
+                        SeasonService seasonService = new SeasonService(_databaseManager);
                         foreach (Season x in animeToInsert.Seasons) {
-                            SeasonService seasonService = new SeasonService(_databaseManager);
                             seasonIds.Add(seasonService.Insert(x, animeToInsert.Id));
                         }
                         // AnimeId und SeasonIds mappen
+                        AnimeSeasonAssociativeEntityService asaes = new AnimeSeasonAssociativeEntityService(_databaseManager);
                         foreach (int x in seasonIds) {
-                            AnimeSeasonAssociativeEntityService asaes = new AnimeSeasonAssociativeEntityService(_databaseManager);
                             asaes.Insert(animeToInsert.Id, x);
                         }
                         // Movies, OVAs, etc. einfügen
                         List<int> insertedVAIds = new List<int>(animeToInsert.Ovas.Count);
+                        VideoAnimationService vas = new VideoAnimationService(_databaseManager);
                         foreach (VideoAnimation x in animeToInsert.Ovas) {
-                            VideoAnimationService vas = new VideoAnimationService(_databaseManager);
                             insertedVAIds.Add(vas.Insert(x));
                         }
                         // AnimeId und VideoAnimationIds mappen
+                        AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(_databaseManager);
                         foreach (int x in insertedVAIds) {
-                            AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(_databaseManager);
                             aoaes.Insert(animeToInsert.Id, x);
                         }
-
                         // Tags per Id auf die Animes mappen (die Tags sind ja schon da, also die nicht mehr einfügen!)
-                        //    // Mapping von Anime und Tags einfügen
-                        //    string insertAnimeTag = "INSERT INTO AnimeTag (AnimeId, TagId) VALUES (@AnimeId, @TagId);";
-                        //    using (var cmd = new SqliteCommand(insertAnimeTag, connection, transaction)) {
-                        //        cmd.Parameters.AddWithValue("@AnimeId", animeToInsert.Id);
-                        //        // Hier müsste die korrekte ID des Tags verwendet werden, z.B. durch ein SELECT
-                        //        cmd.Parameters.AddWithValue("@TagId", /* ID des Tags hier */);
-                        //        cmd.ExecuteNonQuery();
-                        //    }
-                        //}
+                        AnimeTagAssociativeEntityService ataes = new AnimeTagAssociativeEntityService(_databaseManager);
+                        foreach (Tag x in animeToInsert.Tags) {
+                            ataes.Insert(animeToInsert.Id, x.Id);
+                        }
                         #endregion
 
                         // Commit der Transaktion

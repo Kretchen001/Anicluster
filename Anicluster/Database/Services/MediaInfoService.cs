@@ -46,8 +46,15 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "MediaInfo");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'MediaInfo' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'MediaInfo' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }

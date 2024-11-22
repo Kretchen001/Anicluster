@@ -43,9 +43,15 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "PublishingTimeInterruptionAssociativeEntity");
                     object? result = cmd.ExecuteScalar();
-
                     connection.Close();
-                    return result != null;
+                    if (result is not null) {
+                        Log.Information("Tabelle 'PublishingTimeInterruptionAssociativeEntity' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'PublishingTimeInterruptionAssociativeEntity' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }

@@ -44,14 +44,20 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "AcousticMusicPieceAssociativeEntities");
                     object? result = cmd.ExecuteScalar();
-
                     connection.Close();
-                    return result != null;
+                    if (result is not null) {
+                        Log.Information("Tabelle 'AcousticMusicPieceAssociativeEntities' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'AcousticMusicPieceAssociativeEntities' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }
 
-        public bool InsertAcousticMusicPieceAssociativeEntity(int acousticId, int musicPieceId) {
+        public bool Insert(int acousticId, int musicPieceId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {

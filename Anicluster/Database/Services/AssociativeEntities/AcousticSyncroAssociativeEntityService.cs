@@ -44,14 +44,20 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "AcousticSyncroAssociativeEntity");
                     object? result = cmd.ExecuteScalar();
-
                     connection.Close();
-                    return result != null;
+                    if (result is not null) {
+                        Log.Information("Tabelle 'AcousticSyncroAssociativeEntity' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'AcousticSyncroAssociativeEntity' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }
 
-        public bool InsertAcousticSyncro(int acousticId, int syncroId) {
+        public bool Insert(int acousticId, int syncroId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {

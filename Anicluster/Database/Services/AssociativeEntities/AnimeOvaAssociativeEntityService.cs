@@ -42,8 +42,15 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "AnimeOvaAssociativeEntityService");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'AnimeOvaAssociativeEntity' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'AnimeOvaAssociativeEntity' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }

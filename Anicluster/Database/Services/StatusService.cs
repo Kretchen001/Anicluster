@@ -42,8 +42,15 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "Status");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'Status' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'Status' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }

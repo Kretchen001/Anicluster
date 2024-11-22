@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Modells.Anime.SoundRating;
 using Serilog;
 
 namespace Anicluster.Database.Services {
@@ -19,8 +20,7 @@ namespace Anicluster.Database.Services {
                     "    General INTEGER," +
                     "    Language INTEGER," +
                     "    IsAssessed BOOLEAN," +
-                    "    Comment TEXT," +
-                    "    AcousticId INTEGER" +
+                    "    Comment TEXT" +
                     ");";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
@@ -45,10 +45,45 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "Syncro");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'Syncro' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'Syncro' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
+        }
+
+        public int Insert(Syncro syncroToInsert) {
+            int syncroId = -1;
+            string insertQuery = "" +
+                "INSERT INTO Syncro (General, Language, IsAssessed, Comment)\n" +
+                "    VALUES (@General, @Language, @IsAssessed, @Comment)";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
+                try {
+                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@General", syncroToInsert.General);
+                        cmd.Parameters.AddWithValue("@Language", syncroToInsert.Language);
+                        cmd.Parameters.AddWithValue("@IsAssessed", syncroToInsert.IsAssessed);
+                        cmd.Parameters.AddWithValue("@Comment", syncroToInsert.Comment);
+                    }
+                    using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
+                        object? result = cmd.ExecuteScalar();
+                        syncroId = (int)((long)result!);
+                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting syncroToInsert data");
+                    return -1;
+                }
+                connection.Close();
+            }
+            return syncroId;
         }
     }
 }

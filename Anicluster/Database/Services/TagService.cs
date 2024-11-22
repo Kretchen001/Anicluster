@@ -41,8 +41,15 @@ namespace Anicluster.Database.Services {
                     connection.Open();
                     cmd.Parameters.AddWithValue("@tableName", "Tag");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'Tag' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'Tag' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }

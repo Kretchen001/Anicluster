@@ -24,6 +24,7 @@ namespace Anicluster.Database.Services {
                     try {
                         connection.Open();
                         cmd.ExecuteNonQuery();
+                        connection.Close();
                     }
                     catch (Exception ex) {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- VideoAnimation table not created!");
@@ -31,8 +32,14 @@ namespace Anicluster.Database.Services {
                     }
                 }
             }
-            Log.Information("VideoAnimation table created.");
-            return true;
+            if (TableExist()) {
+                Log.Information("VideoAnimation table created.");
+                return true;
+            }
+            else {
+                Log.Information("VideoAnimation table NOT created.");
+                return false;
+            }
         }
 
         public bool TableExist() {
@@ -42,8 +49,15 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "VideoAnimation");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'VideoAnimation' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'VideoAnimation' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }

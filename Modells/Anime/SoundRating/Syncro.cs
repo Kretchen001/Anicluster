@@ -1,4 +1,5 @@
 ﻿namespace Modells.Anime.SoundRating {
+
     public class Syncro {
 
         public int General { get; set; } = -1;

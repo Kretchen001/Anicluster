@@ -58,8 +58,8 @@ namespace Anicluster {
                     if (musicPieceService.TableExist() == false) { musicPieceService.InitializeTable(); }
                     PublishingTimeService publishingTimeService = new PublishingTimeService(dbManager);
                     if (publishingTimeService.TableExist() == false) { publishingTimeService.InitializeTable(); }
-                    PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(dbManager);
-                    if (publishingTimeInterruptionAssociativeEntityService.TableExist() == false) { publishingTimeInterruptionAssociativeEntityService.InitializeTable(); }
+                    PublishingTimeInterruptionAssociativeEntityService ptiaes = new PublishingTimeInterruptionAssociativeEntityService(dbManager);
+                    if (ptiaes.TableExist() == false) { ptiaes.InitializeTable(); }
                     RatingService ratingService = new RatingService(dbManager);
                     if (ratingService.TableExist() == false) { ratingService.InitializeTable(); }
                     SeasonService seasonService = new SeasonService(dbManager);
@@ -84,7 +84,7 @@ namespace Anicluster {
             }
             Log.Information("Connection to SQLite-DB available");
 
-            //TestInsert();
+            TestInsert();
 
             base.OnStartup(e);
         }
@@ -173,7 +173,7 @@ namespace Anicluster {
             a.Successor = -1;
             a.Comment = "Bittö";
             AnimeService animeService = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite"));
-            animeService.InsertAnime(a);
+            animeService.Insert(a);
         }
 
         protected override void OnExit(ExitEventArgs e) {

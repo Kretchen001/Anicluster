@@ -43,8 +43,15 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@tableName", "SeasonVideoAnimationAssociativeEntityService");
                     object? result = cmd.ExecuteScalar();
-
-                    return result != null;
+                    connection.Close();
+                    if (result is not null) {
+                        Log.Information("Tabelle 'SeasonVideoAnimationAssociativeEntityService' existiert.");
+                        return true;
+                    }
+                    else {
+                        Log.Information("Tabelle 'SeasonVideoAnimationAssociativeEntityService' existiert NICHT!");
+                        return false;
+                    }
                 }
             }
         }
