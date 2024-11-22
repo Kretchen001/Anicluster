@@ -55,33 +55,27 @@ namespace Anicluster.Database.Services {
             }
         }
 
-        public int InsertStatus(Status statusToInsert) {
+        public int Insert(Status statusToInsert) {
             int statusId = 0;
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                using (SqliteTransaction transaction = connection.BeginTransaction()) {
-                    try {
-                        string insertCommand = "" +
-                            "INSERT INTO Status (State, Comment) " +
-                            "    VALUES (@state, @comment)";
-                        using (SqliteCommand command = new SqliteCommand(insertCommand, connection)) {
-                            command.Parameters.AddWithValue("@state", ((int)statusToInsert.State));
-                            command.Parameters.AddWithValue("@comment", statusToInsert.Comment ?? "");
-                            
-                            command.ExecuteNonQuery();
-                        }
-                        using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
-                            object? result = cmd.ExecuteScalar();
-                            _ = int.TryParse(result as string, out statusId);
-                        }
-
-                        transaction.Commit();
+                try {
+                    string insertCommand = "" +
+                        "INSERT INTO Status (State, Comment) " +
+                        "    VALUES (@state, @comment)";
+                    using (SqliteCommand cmd = new SqliteCommand(insertCommand, connection)) {
+                        cmd.Parameters.AddWithValue("@state", ((int)statusToInsert.State));
+                        cmd.Parameters.AddWithValue("@comment", statusToInsert.Comment ?? "");
+                        cmd.ExecuteNonQuery();
                     }
-                    catch (Exception ex) {
-                        transaction.Rollback();
-                        Log.Error(ex.StackTrace ?? "Error while inserting statusToInsert data");
-                        return -1;
+                    using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
+                        object? result = cmd.ExecuteScalar();
+                        statusId = (int)((long)result!);
                     }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting statusToInsert data");
+                    return -1;
                 }
                 connection.Close();
             }

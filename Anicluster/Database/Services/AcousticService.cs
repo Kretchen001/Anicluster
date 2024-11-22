@@ -72,7 +72,7 @@ namespace Anicluster.Database.Services {
                     }
                     using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
                         object? result = cmd.ExecuteScalar();
-                        _ = int.TryParse(result as string, out acousticId);
+                        acousticId = (int)((long)result!);
                     }
                     connection.Close();
                 }

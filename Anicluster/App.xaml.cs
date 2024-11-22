@@ -100,7 +100,7 @@ namespace Anicluster {
                 Story = 85,
                 Animation = 10,
                 SpecialEffects = 90,
-                Acoustic = new Modells.Anime.SoundRating.Acoustic() {
+                Acoustic = new Acoustic() {
                     Opening = [
                         new MusicPiece() {
                             Id = 1,

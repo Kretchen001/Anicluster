@@ -59,36 +59,32 @@ namespace Anicluster.Database.Services {
             }
         }
 
-        public int InsertMediaInfo(MediaInfo mediaInfoToInsert) {
+        public int Insert(MediaInfo mediaInfoToInsert) {
             int mediaInfoId = 0;
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                using (SqliteTransaction transaction = connection.BeginTransaction()) {
-                    try {
-                        PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
-                        int pubId = publishingTimeService.Insert(mediaInfoToInsert.PublishingTime);
-                        string insertQuery = "" +
-                            "INSERT INTO MediaInfo (Author, Producer, Publisher, PublishingTimeId)\n" +
-                            "VALUES (@Author, @Producer, @Publisher, @PublishingTimeId)";
-                        using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
-                            cmd.Parameters.AddWithValue("@Author", mediaInfoToInsert.Author);
-                            cmd.Parameters.AddWithValue("@Producer", mediaInfoToInsert.Producer);
-                            cmd.Parameters.AddWithValue("@Publisher", mediaInfoToInsert.Publisher);
-                            cmd.Parameters.AddWithValue("@AutPublishingTimeIdhor", mediaInfoId);
-                            cmd.ExecuteNonQuery();
-                            cmd.Parameters.Clear();
-                            cmd.CommandText = "SELECT last_insert_rowid();";
-                            object? result = cmd.ExecuteScalar();
-                            connection.Close();
-                            mediaInfoId = (int)((long)result!);
-                        }
-                        transaction.Commit();
+                try {
+                    PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
+                    int pubId = publishingTimeService.Insert(mediaInfoToInsert.PublishingTime);
+                    string insertQuery = "" +
+                        "INSERT INTO MediaInfo (Author, Producer, Publisher, PublishingTimeId)\n" +
+                        "    VALUES (@Author, @Producer, @Publisher, @PublishingTimeId)";
+                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@Author", mediaInfoToInsert.Author);
+                        cmd.Parameters.AddWithValue("@Producer", mediaInfoToInsert.Producer);
+                        cmd.Parameters.AddWithValue("@Publisher", mediaInfoToInsert.Publisher);
+                        cmd.Parameters.AddWithValue("@PublishingTimeId", pubId);
+                        cmd.ExecuteNonQuery();
+                        cmd.Parameters.Clear();
+                        cmd.CommandText = "SELECT last_insert_rowid();";
+                        object? result = cmd.ExecuteScalar();
+                        connection.Close();
+                        mediaInfoId = (int)((long)result!);
                     }
-                    catch (Exception ex) {
-                        transaction.Rollback();
-                        Log.Error(ex.StackTrace ?? "Error while inserting mediaInfoToInsert data");
-                        return -1;
-                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting mediaInfoToInsert data");
+                    return -1;
                 }
             }
             return mediaInfoId;

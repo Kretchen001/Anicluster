@@ -64,25 +64,30 @@ namespace Anicluster.Database.Services {
                 string checkQuery = "" +
                     "SELECT *\n" +
                     "FROM Season\n" +
-                    $"Number LIKE {seasonToInsert.Number}\n" +
-                    $"Comment {seasonToInsert.Comment}";
+                    "WHERE\n" +
+                    $"    Number={seasonToInsert.Number}\n" +
+                    $"    AND Comment MATCH '{seasonToInsert.Comment}';";
+                connection.Open();
                 using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
                     SqliteDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) {
                         return (int)((long)reader["Id"]);
                     }
                 }
+                connection.Close();
                 // not there, so insert the PublishingTime
                 PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
                 int pubId = publishingTimeService.Insert(seasonToInsert.PublishingTime);
                 // else insert and return inserted id
                 int insertedSeasonId = -1;
                 string querySeasonInsert = "" +
-                    "INSERT INTO PublishingTime (Number, Comment, PublishingTimeId) \n" +
-                    "VALUES (@Number, @Comment, @PublishingTimeId);";
+                    "INSERT INTO Season (Number, Comment, PublishingTimeId) \n" +
+                    "    VALUES (@Number, @Comment, @PublishingTimeId);";
                 using (SqliteCommand cmd = new SqliteCommand(querySeasonInsert, connection)) {
                     try {
                         cmd.Parameters.AddWithValue("@Number", seasonToInsert.Number);
+                        cmd.Parameters.AddWithValue("@Comment", seasonToInsert.Comment);
+                        cmd.Parameters.AddWithValue("@PublishingTimeId", pubId);
                         connection.Open();
                         cmd.ExecuteNonQuery();
                         cmd.CommandText = "SELECT last_insert_rowid();";
@@ -97,8 +102,8 @@ namespace Anicluster.Database.Services {
                 }
                 // insert the episodes
                 List<int> videoAnimationIds = new List<int>(seasonToInsert.Episodes.Count);
+                VideoAnimationService vas = new VideoAnimationService(_databaseManager);
                 foreach (VideoAnimation x in seasonToInsert.Episodes) {
-                    VideoAnimationService vas = new VideoAnimationService(_databaseManager);
                     videoAnimationIds.Add(vas.Insert(x));
                 }
                 // map the episodes as VideoAnimation

@@ -68,14 +68,17 @@ namespace Anicluster.Database.Services {
                 string checkQuery = "" +
                     "SELECT *\n" +
                     "FROM VideoAnimation\n" +
-                    $"WHERE VideoType LIKE {videoAnimationToInsert.VideoType}" +
-                    $"    Comment LIKE '{videoAnimationToInsert.Comment}'";
+                    $"WHERE\n" +
+                    $"    VideoType={videoAnimationToInsert.VideoType}\n" +
+                    $"    AND Comment MATCH '{videoAnimationToInsert.Comment}'";
+                connection.Open();
                 using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
                     SqliteDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) {
                         return (int)((long)reader["Id"]);
                     }
                 }
+                connection.Close();
                 string queryInsert = "" +
                     "INSERT INTO VideoAnimation (VideoType, Comment) \n" +
                     "VALUES (@VideoType, @Comment);";

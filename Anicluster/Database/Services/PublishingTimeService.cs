@@ -63,7 +63,7 @@ namespace Anicluster.Database.Services {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "INSERT INTO PublishingTime (StartDate, EndDate) \n" +
-                    "VALUES (@StartDate, @EndDate);";
+                    "    VALUES (@StartDate, @EndDate);";
                 using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
                     try {
                         cmd.Parameters.AddWithValue("@StartDate", publishingTime.StartDate);

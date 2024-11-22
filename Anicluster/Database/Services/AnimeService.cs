@@ -70,21 +70,20 @@ namespace Anicluster.Database.Services {
             }
         }
 
-        // Insert Merke
         public bool Insert(Anime animeToInsert) {
             // First get the Foreign-Key's
             // Rating
-            int ratingId = new RatingService(_databaseManager).InsertRating(animeToInsert.Rating);
+            int ratingId = new RatingService(_databaseManager).Insert(animeToInsert.Rating);
             if (ratingId.Equals(-1)) {
                 Log.Error("Break by inserting Rating...");
                 return false;
             }
-            int mediaInfoId = new MediaInfoService(_databaseManager).InsertMediaInfo(animeToInsert.MediaInfo);
+            int mediaInfoId = new MediaInfoService(_databaseManager).Insert(animeToInsert.MediaInfo);
             if (mediaInfoId.Equals(-1)) {
                 Log.Error("Break by inserting MediaInfo...");
                 return false;
             }
-            int statusId = new StatusService(_databaseManager).InsertStatus(animeToInsert.Status);
+            int statusId = new StatusService(_databaseManager).Insert(animeToInsert.Status);
             if (statusId.Equals(-1)) {
                 Log.Error("Break by inserting Status...");
                 return false;
@@ -93,88 +92,84 @@ namespace Anicluster.Database.Services {
             // Insert the Anime and get the Id for the Other Key's
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                using (SqliteTransaction transaction = connection.BeginTransaction()) {
-                    try {
-                        #region Anime
-                        // Anime einfügen und ID abfragen
-                        //   -> FOREIGN KEYs von davor verwenden (da ist ja kein Mapping notwendig)
-                        string insertAnimeQuery = "" +
-                            "INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment, RatingId, MediaInfoId, StatusId)\n" +
-                            "    VALUES (@Name,\n" +
-                            "            @OriginalName,\n" +
-                            "            @Url,\n" +
-                            "            @Favorite,\n" +
-                            "            @Tier,\n" +
-                            "            @RecommendedFrom,\n" +
-                            "            @Predecessor,\n" +
-                            "            @Successor,\n" +
-                            "            @Related,\n" +
-                            "            @Comment,\n" +
-                            "            @RatingId,\n" +
-                            "            @MediaInfoId,\n" +
-                            "            @StatusId\n" +
-                            "           );";
-                        using (SqliteCommand cmd = new SqliteCommand(insertAnimeQuery, connection)) {
-                            cmd.Parameters.AddWithValue("@Name", animeToInsert.Name);
-                            cmd.Parameters.AddWithValue("@OriginalName", animeToInsert.OriginalName ?? (object)DBNull.Value);
-                            cmd.Parameters.AddWithValue("@Url", animeToInsert.Url ?? (object)DBNull.Value);
-                            cmd.Parameters.AddWithValue("@Favorite", animeToInsert.Favorite);
-                            cmd.Parameters.AddWithValue("@Tier", animeToInsert.Tier);
-                            cmd.Parameters.AddWithValue("@RecommendedFrom", animeToInsert.RecommendedFrom ?? (object)DBNull.Value);
-                            cmd.Parameters.AddWithValue("@Predecessor", animeToInsert.Predecessor);
-                            cmd.Parameters.AddWithValue("@Successor", animeToInsert.Successor);
-                            cmd.Parameters.AddWithValue("@Related", animeToInsert.Related);
-                            cmd.Parameters.AddWithValue("@Comment", animeToInsert.Comment ?? (object)DBNull.Value);
-                            cmd.Parameters.AddWithValue("@RatingId", ratingId);
-                            cmd.Parameters.AddWithValue("@MediaInfoId", mediaInfoId);
-                            cmd.Parameters.AddWithValue("@StatusId", statusId);
-                            cmd.ExecuteNonQuery();
-                            // request the id
-                            cmd.Parameters.Clear();
-                            cmd.CommandText = "SELECT last_insert_rowid();";
-                            object? result = cmd.ExecuteScalar();
-                            connection.Close();
-                            animeToInsert.Id = (int)((long)result!);
-                        }
-                        #endregion
-                        #region "Mapping"
-                        // Seasons einfügen
-                        List<int> seasonIds = [];
-                        SeasonService seasonService = new SeasonService(_databaseManager);
-                        foreach (Season x in animeToInsert.Seasons) {
-                            seasonIds.Add(seasonService.Insert(x, animeToInsert.Id));
-                        }
-                        // AnimeId und SeasonIds mappen
-                        AnimeSeasonAssociativeEntityService asaes = new AnimeSeasonAssociativeEntityService(_databaseManager);
-                        foreach (int x in seasonIds) {
-                            asaes.Insert(animeToInsert.Id, x);
-                        }
-                        // Movies, OVAs, etc. einfügen
-                        List<int> insertedVAIds = new List<int>(animeToInsert.Ovas.Count);
-                        VideoAnimationService vas = new VideoAnimationService(_databaseManager);
-                        foreach (VideoAnimation x in animeToInsert.Ovas) {
-                            insertedVAIds.Add(vas.Insert(x));
-                        }
-                        // AnimeId und VideoAnimationIds mappen
-                        AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(_databaseManager);
-                        foreach (int x in insertedVAIds) {
-                            aoaes.Insert(animeToInsert.Id, x);
-                        }
-                        // Tags per Id auf die Animes mappen (die Tags sind ja schon da, also die nicht mehr einfügen!)
-                        AnimeTagAssociativeEntityService ataes = new AnimeTagAssociativeEntityService(_databaseManager);
-                        foreach (Tag x in animeToInsert.Tags) {
-                            ataes.Insert(animeToInsert.Id, x.Id);
-                        }
-                        #endregion
+                try {
+                    #region Anime
+                    // Anime einfügen und ID abfragen
+                    //   -> FOREIGN KEYs von davor verwenden (da ist ja kein Mapping notwendig)
+                    string insertAnimeQuery = "" +
+                        "INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment, RatingId, MediaInfoId, StatusId)\n" +
+                        "    VALUES (@Name,\n" +
+                        "            @OriginalName,\n" +
+                        "            @Url,\n" +
+                        "            @Favorite,\n" +
+                        "            @Tier,\n" +
+                        "            @RecommendedFrom,\n" +
+                        "            @Predecessor,\n" +
+                        "            @Successor,\n" +
+                        "            @Related,\n" +
+                        "            @Comment,\n" +
+                        "            @RatingId,\n" +
+                        "            @MediaInfoId,\n" +
+                        "            @StatusId\n" +
+                        "           );";
+                    using (SqliteCommand cmd = new SqliteCommand(insertAnimeQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@Name", animeToInsert.Name);
+                        cmd.Parameters.AddWithValue("@OriginalName", animeToInsert.OriginalName ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Url", animeToInsert.Url ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Favorite", animeToInsert.Favorite);
+                        cmd.Parameters.AddWithValue("@Tier", animeToInsert.Tier);
+                        cmd.Parameters.AddWithValue("@RecommendedFrom", animeToInsert.RecommendedFrom ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Predecessor", animeToInsert.Predecessor);
+                        cmd.Parameters.AddWithValue("@Successor", animeToInsert.Successor);
+                        cmd.Parameters.AddWithValue("@Related", animeToInsert.Related);
+                        cmd.Parameters.AddWithValue("@Comment", animeToInsert.Comment ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@RatingId", ratingId);
+                        cmd.Parameters.AddWithValue("@MediaInfoId", mediaInfoId);
+                        cmd.Parameters.AddWithValue("@StatusId", statusId);
+                        cmd.ExecuteNonQuery();
+                        // request the id
+                        cmd.Parameters.Clear();
+                        cmd.CommandText = "SELECT last_insert_rowid();";
+                        object? result = cmd.ExecuteScalar();
+                        connection.Close();
+                        animeToInsert.Id = (int)((long)result!);
+                    }
+                    #endregion
+                    #region "Mapping"
+                    // Seasons einfügen
+                    List<int> seasonIds = [];
+                    SeasonService seasonService = new SeasonService(_databaseManager);
+                    foreach (Season x in animeToInsert.Seasons) {
+                        seasonIds.Add(seasonService.Insert(x, animeToInsert.Id));
+                    }
+                    // AnimeId und SeasonIds mappen
+                    AnimeSeasonAssociativeEntityService asaes = new AnimeSeasonAssociativeEntityService(_databaseManager);
+                    foreach (int x in seasonIds) {
+                        asaes.Insert(animeToInsert.Id, x);
+                    }
+                    // Movies, OVAs, etc. einfügen
+                    List<int> insertedVAIds = new List<int>(animeToInsert.Ovas.Count);
+                    VideoAnimationService vas = new VideoAnimationService(_databaseManager);
+                    foreach (VideoAnimation x in animeToInsert.Ovas) {
+                        insertedVAIds.Add(vas.Insert(x));
+                    }
+                    // AnimeId und VideoAnimationIds mappen
+                    AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(_databaseManager);
+                    foreach (int x in insertedVAIds) {
+                        aoaes.Insert(animeToInsert.Id, x);
+                    }
+                    // Tags per Id auf die Animes mappen (die Tags sind ja schon da, also die nicht mehr einfügen!)
+                    AnimeTagAssociativeEntityService ataes = new AnimeTagAssociativeEntityService(_databaseManager);
+                    foreach (Tag x in animeToInsert.Tags) {
+                        ataes.Insert(animeToInsert.Id, x.Id);
+                    }
+                    #endregion
 
-                        // Commit der Transaktion
-                        transaction.Commit();
-                    }
-                    catch (Exception ex) {
-                        transaction.Rollback();
-                        Log.Error(ex.StackTrace ?? "Error while inserting animeToInsert data");
-                        return false;
-                    }
+                    // Commit der Transaktion
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting animeToInsert data");
+                    return false;
                 }
                 connection.Close();
             }

@@ -59,7 +59,7 @@ namespace Anicluster.Database.Services {
             }
         }
 
-        public int InsertRating(Rating ratingToInsert) {
+        public int Insert(Rating ratingToInsert) {
             // First Insert the Acoustic and get this Id
             int acousticId = new AcousticService(_databaseManager).Insert(ratingToInsert.Acoustic);
             if (acousticId.Equals(-1)) {
@@ -81,6 +81,7 @@ namespace Anicluster.Database.Services {
                         cmd.Parameters.AddWithValue("@SpecialEffects", ratingToInsert.SpecialEffects);
                         cmd.Parameters.AddWithValue("@AcousticId", acousticId);
                         cmd.Parameters.AddWithValue("@IsRated", ratingToInsert.IsRated);
+                        cmd.ExecuteScalar();
                     }
                     using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
                         object? result = cmd.ExecuteScalar();
