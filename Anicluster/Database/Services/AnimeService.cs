@@ -254,5 +254,10 @@ namespace Anicluster.Database.Services {
                         }
                     }
                     connection.Close();
+                }
+            }
+            return true;
+        }
+        #endregion
     }
 }
