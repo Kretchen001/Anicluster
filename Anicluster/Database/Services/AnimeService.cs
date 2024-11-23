@@ -195,7 +195,7 @@ namespace Anicluster.Database.Services {
 
         #region View(s)
         /// <summary>
-        /// Complete not include the Lists, only the id's that are neccassery for the Lists are included like pubId
+        /// Complete not include the Lists, only the id's that are neccassery for the Lists are included like pubId.
         /// </summary>
         /// <returns></returns>
         public bool CreateViewAnimeComplete() {
@@ -203,7 +203,7 @@ namespace Anicluster.Database.Services {
                 string animeView = $"SELECT name FROM sqlite_master WHERE type='view' AND name='vw_Anime';";
                 using (SqliteCommand cmd = new SqliteCommand(animeView, connection)) {
                     connection.Open();
-                    object? result = cmd.ExecuteNonQuery();
+                    object? result = cmd.ExecuteScalar();
                     if (result is null) {
                         string createViewQuery = @"
                             CREATE VIEW IF NOT EXISTS vw_Anime AS

@@ -26,55 +26,10 @@ namespace Anicluster {
                 .CreateLogger();
 
             Log.Information("Application started.");
-            Log.Information("Test SQLite-DB connection");
             try {
-                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "db")) {
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "db");
-                }
-                DatabaseManager dbManager = new DatabaseManager($"Data Source=db/data.sqlite");
-                using (SqliteConnection connection = dbManager.GetConnection()) {
-                    connection.Open();
-                    connection.Close();
-
-                    AcousticService acousticService = new AcousticService(dbManager);
-                    if (acousticService.TableExist() == false) { acousticService.InitializeTable(); }
-                    AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(dbManager);
-                    if (ampaes.TableExist() == false) { ampaes.InitializeTable(); }
-                    AcousticSyncroAssociativeEntityService acousticSyncroAssociativeEntitiesService = new AcousticSyncroAssociativeEntityService(dbManager);
-                    if (acousticSyncroAssociativeEntitiesService.TableExist() == false) { acousticSyncroAssociativeEntitiesService.InitializeTable(); }
-                    AnimeService animeService = new AnimeService(dbManager);
-                    if (animeService.TableExist() == false) { animeService.InitializeTable(); }
-                    AnimeTagAssociativeEntityService animeTagAssociativeEntity = new AnimeTagAssociativeEntityService(dbManager);
-                    if (animeTagAssociativeEntity.TableExist() == false) { animeTagAssociativeEntity.InitializeTable(); }
-                    AnimeSeasonAssociativeEntityService animeSeasonAssociativeEntityService = new AnimeSeasonAssociativeEntityService(dbManager);
-                    if (animeSeasonAssociativeEntityService.TableExist() == false) { animeSeasonAssociativeEntityService.InitializeTable(); }
-                    AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(dbManager);
-                    if (aoaes.TableExist() == false) { aoaes.InitializeTable(); }
-                    InterruptionService interruptionService = new InterruptionService(dbManager);
-                    if (interruptionService.TableExist() == false) { interruptionService.InitializeTable(); }
-                    MediaInfoService mediaInfoService = new MediaInfoService(dbManager);
-                    if (mediaInfoService.TableExist() == false) { mediaInfoService.InitializeTable(); }
-                    MusicPieceService musicPieceService = new MusicPieceService(dbManager);
-                    if (musicPieceService.TableExist() == false) { musicPieceService.InitializeTable(); }
-                    PublishingTimeService publishingTimeService = new PublishingTimeService(dbManager);
-                    if (publishingTimeService.TableExist() == false) { publishingTimeService.InitializeTable(); }
-                    PublishingTimeInterruptionAssociativeEntityService ptiaes = new PublishingTimeInterruptionAssociativeEntityService(dbManager);
-                    if (ptiaes.TableExist() == false) { ptiaes.InitializeTable(); }
-                    RatingService ratingService = new RatingService(dbManager);
-                    if (ratingService.TableExist() == false) { ratingService.InitializeTable(); }
-                    SeasonService seasonService = new SeasonService(dbManager);
-                    if (seasonService.TableExist() == false) { seasonService.InitializeTable(); }
-                    SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(dbManager);
-                    if (svaaes.TableExist() == false) { svaaes.InitializeTable(); }
-                    SyncroService syncroService = new SyncroService(dbManager);
-                    if (syncroService.TableExist() == false) { syncroService.InitializeTable(); }
-                    StatusService statusService = new StatusService(dbManager);
-                    if (statusService.TableExist() == false) { statusService.InitializeTable(); }
-                    TagService tagService = new TagService(dbManager);
-                    if (tagService.TableExist() == false) { tagService.InitializeTable(); }
-                    VideoAnimationService videoAnimationService = new VideoAnimationService(dbManager);
-                    if (videoAnimationService.TableExist() == false) { videoAnimationService.InitializeTable(); }
-                }
+                Log.Information("Test SQLite-DB connection");
+                CheckAndInitializeDb();
+                Log.Information("Connection to SQLite-DB available");
             }
             catch (Exception ex) {
                 Log.Error(ex.StackTrace ?? "Error without stacktrace...");
@@ -82,14 +37,73 @@ namespace Anicluster {
                 base.Shutdown();
                 return;
             }
-            Log.Information("Connection to SQLite-DB available");
 
-            TestInsert();
+            //TestInsert();
 
             base.OnStartup(e);
         }
 
-        private void TestInsert() {
+        protected override void OnExit(ExitEventArgs e) {
+            Log.Information("Application shutdown.");
+            Log.CloseAndFlush();
+            base.OnExit(e);
+        }
+
+        private void CheckAndInitializeDb() {
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "db")) {
+                Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "db");
+            }
+            DatabaseManager dbManager = new DatabaseManager($"Data Source=db/data.sqlite");
+            using (SqliteConnection connection = dbManager.GetConnection()) {
+                connection.Open();
+                connection.Close();
+
+                AcousticService acousticService = new AcousticService(dbManager);
+                if (acousticService.TableExist() == false) { acousticService.InitializeTable(); }
+                AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(dbManager);
+                if (ampaes.TableExist() == false) { ampaes.InitializeTable(); }
+                AcousticSyncroAssociativeEntityService acousticSyncroAssociativeEntitiesService = new AcousticSyncroAssociativeEntityService(dbManager);
+                if (acousticSyncroAssociativeEntitiesService.TableExist() == false) { acousticSyncroAssociativeEntitiesService.InitializeTable(); }
+                AnimeService animeService = new AnimeService(dbManager);
+                if (animeService.TableExist() == false) { animeService.InitializeTable(); }
+                AnimeTagAssociativeEntityService animeTagAssociativeEntity = new AnimeTagAssociativeEntityService(dbManager);
+                if (animeTagAssociativeEntity.TableExist() == false) { animeTagAssociativeEntity.InitializeTable(); }
+                AnimeSeasonAssociativeEntityService animeSeasonAssociativeEntityService = new AnimeSeasonAssociativeEntityService(dbManager);
+                if (animeSeasonAssociativeEntityService.TableExist() == false) { animeSeasonAssociativeEntityService.InitializeTable(); }
+                AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(dbManager);
+                if (aoaes.TableExist() == false) { aoaes.InitializeTable(); }
+                InterruptionService interruptionService = new InterruptionService(dbManager);
+                if (interruptionService.TableExist() == false) { interruptionService.InitializeTable(); }
+                MediaInfoService mediaInfoService = new MediaInfoService(dbManager);
+                if (mediaInfoService.TableExist() == false) { mediaInfoService.InitializeTable(); }
+                MusicPieceService musicPieceService = new MusicPieceService(dbManager);
+                if (musicPieceService.TableExist() == false) { musicPieceService.InitializeTable(); }
+                PublishingTimeService publishingTimeService = new PublishingTimeService(dbManager);
+                if (publishingTimeService.TableExist() == false) { publishingTimeService.InitializeTable(); }
+                PublishingTimeInterruptionAssociativeEntityService ptiaes = new PublishingTimeInterruptionAssociativeEntityService(dbManager);
+                if (ptiaes.TableExist() == false) { ptiaes.InitializeTable(); }
+                RatingService ratingService = new RatingService(dbManager);
+                if (ratingService.TableExist() == false) { ratingService.InitializeTable(); }
+                SeasonService seasonService = new SeasonService(dbManager);
+                if (seasonService.TableExist() == false) { seasonService.InitializeTable(); }
+                SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(dbManager);
+                if (svaaes.TableExist() == false) { svaaes.InitializeTable(); }
+                SyncroService syncroService = new SyncroService(dbManager);
+                if (syncroService.TableExist() == false) { syncroService.InitializeTable(); }
+                StatusService statusService = new StatusService(dbManager);
+                if (statusService.TableExist() == false) { statusService.InitializeTable(); }
+                TagService tagService = new TagService(dbManager);
+                if (tagService.TableExist() == false) { tagService.InitializeTable(); }
+                VideoAnimationService videoAnimationService = new VideoAnimationService(dbManager);
+                if (videoAnimationService.TableExist() == false) { videoAnimationService.InitializeTable(); }
+
+                if(animeService.CreateViewAnimeComplete()) {
+                    Log.Information("vw_Anime created");
+                }
+            }
+        }
+
+        private static void TestInsert() {
             Anime a = new Anime {
                 Id = 1,
                 Name = "test",
@@ -193,12 +207,6 @@ namespace Anicluster {
             };
             AnimeService animeService = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite"));
             animeService.Insert(a);
-        }
-
-        protected override void OnExit(ExitEventArgs e) {
-            Log.Information("Application shutdown.");
-            Log.CloseAndFlush();
-            base.OnExit(e);
         }
     }
 }

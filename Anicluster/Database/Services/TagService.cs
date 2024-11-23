@@ -145,7 +145,7 @@ namespace Anicluster.Database.Services {
                     try {
                         List<Tag> tags = [];
                         connection.Open();
-                        cmd.ExecuteNonQuery(); 
+                        cmd.ExecuteScalar(); 
                         using (SqliteDataReader reader = cmd.ExecuteReader()) {
                             while (reader.Read()) {
                                 tags.Add(new Tag () {
