@@ -180,5 +180,79 @@ namespace Anicluster.Database.Services {
             }
             return true;
         }
+
+        // TODO
+        //public Anime? SelectAnimeByX(int id = -1, string designation = "") {
+        //    if (id.Equals(-1) && designation.Equals("")) {
+        //        return null;
+        //    }
+
+        //    string selectByViewId = @"SELECT * FROM vw_Anime WHERE AnimeId = @AnimeName;";
+        //    string selectByViewDesigantion = @"SELECT * FROM vw_Anime WHERE AnimeName = @AnimeName;";
+
+        //    return new Anime();
+        //}
+
+        #region View(s)
+        /// <summary>
+        /// Complete not include the Lists, only the id's that are neccassery for the Lists are included like pubId
+        /// </summary>
+        /// <returns></returns>
+        public bool CreateViewAnimeComplete() {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                string animeView = $"SELECT name FROM sqlite_master WHERE type='view' AND name='vw_Anime';";
+                using (SqliteCommand cmd = new SqliteCommand(animeView, connection)) {
+                    connection.Open();
+                    object? result = cmd.ExecuteNonQuery();
+                    if (result is null) {
+                        string createViewQuery = @"
+                            CREATE VIEW IF NOT EXISTS vw_Anime AS
+                            SELECT
+                                a.Id AS AnimeId,
+                                a.Name AS AnimeName,
+                                a.OriginalName,
+                                a.Url,
+                                a.Favorite,
+                                a.Tier,
+                                a.RecommendedFrom,
+                                a.Predecessor,
+                                a.Successor,
+                                a.Related,
+                                a.Comment,
+                                r.Story AS RatingStory,
+                                r.Animation AS RatingAnimation,
+                                r.SpecialEffects AS RatingSpecialEffects,
+                                r.IsRated AS RatingIsRated,
+                                ac.Id AS AcousticId,
+                                ac.Soundtrack AS AcousticSoundtrack,
+                                ac.Comment AS AcousticComment,
+                                m.Author AS MediaInfoAuthor,
+                                m.Producer AS MediaInfoProducer,
+                                m.Publisher AS MediaInfoPublisher,
+                                pt.Id AS PublishingTimeId,
+                                pt.StartDate AS PublishingStartDate,
+                                pt.EndDate AS PublishingEndDate,
+                                s.Id AS StatusId,
+                                s.State AS StatusState,
+                                s.Comment AS StatusComment
+                            FROM Anime a
+                            LEFT JOIN Rating r ON a.RatingId = r.Id
+                            LEFT JOIN Acoustic ac ON r.AcousticId = ac.Id
+                            LEFT JOIN MediaInfo m ON a.MediaInfoId = m.Id
+                            LEFT JOIN PublishingTime pt ON m.PublishingTimeId = pt.Id
+                            LEFT JOIN Status s ON a.StatusId = s.Id;
+                        ";
+                        try {
+                            using (SqliteCommand createCmd = new SqliteCommand(createViewQuery, connection)) {
+                                createCmd.ExecuteNonQuery();
+                                Log.Information("View vw_Anime created.");
+                            }
+                        }
+                        catch (Exception ex) {
+                            Log.Error(ex.StackTrace ?? "Error while create view vw_Anime");
+                            return false;
+                        }
+                    }
+                    connection.Close();
     }
 }
