@@ -57,14 +57,15 @@ namespace Anicluster.Database.Services.AssociativeEntities {
 
         public void Insert(int animeId, int seasonId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                connection.Open();
                 string query = "INSERT INTO AnimeSeasonAssociativeEntity (AnimeId, SeasonId)\n" +
                 "    VALUES (@AnimeId, @SeasonId);";
+                connection.Open();
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@AnimeId", animeId);
                     cmd.Parameters.AddWithValue("@SeasonId", seasonId);
                     cmd.ExecuteNonQuery();
                 }
+                connection.Close();
             }
         }
     }

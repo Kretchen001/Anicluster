@@ -33,7 +33,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                     }
                 }
             }
-            Log.Information("Acoustic table created.");
+            Log.Information("AcousticSyncroAssociativeEntity table created.");
             return true;
         }
 
@@ -60,7 +60,6 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         public bool Insert(int acousticId, int syncroId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     try {
                         string insertAcousticSyncroAssociativeEntity = "" +
                             "INSERT INTO AcousticSyncroAssociativeEntity (AcousticId, SyncroId) " +
@@ -70,14 +69,11 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                             cmd.Parameters.AddWithValue("@syncroId", syncroId);
                             cmd.ExecuteScalar();
                         }
-                        transaction.Commit();
                     }
                     catch (Exception ex) {
-                        transaction.Rollback();
                         Log.Error(ex.StackTrace ?? "Error while inserting Acoustic-Syncro data");
                         return false;
                     }
-                }
                 connection.Close();
             }
             return true;

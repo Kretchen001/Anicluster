@@ -14,15 +14,16 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS MediaInfo (\n" +
-                    "    Id INTEGER PRIMARY KEY,\n" +
-                    "    Author TEXT,\n" +
-                    "    Producer TEXT,\n" +
-                    "    Publisher TEXT,\n" +
-                    "    PublishingTimeId INTEGER,\n" +
-                    "    FOREIGN KEY (PublishingTimeId) REFERENCES PublishingTime(Id)\n" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS MediaInfo (
+                        Id INTEGER PRIMARY KEY,
+                        Author TEXT,
+                        Producer TEXT,
+                        Publisher TEXT,
+                        PublishingTimeId INTEGER,
+                        FOREIGN KEY (PublishingTimeId) REFERENCES PublishingTime(Id)
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();

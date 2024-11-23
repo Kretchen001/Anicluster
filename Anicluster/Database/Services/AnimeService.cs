@@ -13,32 +13,38 @@ namespace Anicluster.Database.Services {
             _databaseManager = databaseManager;
         }
 
+        /// <summary>
+        /// Initialize (create) table. NO MORE
+        /// </summary>
+        /// <returns></returns>
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Anime (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    Name TEXT NOT NULL," +
-                    "    OriginalName TEXT," +
-                    "    Url TEXT," +
-                    "    Favorite BOOLEAN NOT NULL DEFAULT 0," +
-                    "    Tier INTEGER NOT NULL," +
-                    "    RecommendedFrom TEXT," +
-                    "    Predecessor INTEGER," +
-                    "    Successor INTEGER," +
-                    "    Related INTEGER," +
-                    "    Comment TEXT," +
-                    "    RatingId INTEGER," +
-                    "    MediaInfoId INTEGER," +
-                    "    StatusId INTEGER, " +
-                    "    FOREIGN KEY (RatingId) REFERENCES Rating(Id)," +
-                    "    FOREIGN KEY (MediaInfoId) REFERENCES MediaInfo(Id)," +
-                    "    FOREIGN KEY (StatusId) REFERENCES Status(Id)" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS Anime (
+                        Id INTEGER PRIMARY KEY,
+                        Name TEXT NOT NULL,
+                        OriginalName TEXT,
+                        Url TEXT,
+                        Favorite BOOLEAN NOT NULL DEFAULT 0,
+                        Tier INTEGER NOT NULL,
+                        RecommendedFrom TEXT,
+                        Predecessor INTEGER DEFAULT -1,
+                        Successor INTEGER DEFAULT -1,
+                        Related INTEGER DEFAULT -1,
+                        Comment TEXT,
+                        RatingId INTEGER,
+                        MediaInfoId INTEGER,
+                        StatusId INTEGER, 
+                        FOREIGN KEY (RatingId) REFERENCES Rating(Id),
+                        FOREIGN KEY (MediaInfoId) REFERENCES MediaInfo(Id),
+                        FOREIGN KEY (StatusId) REFERENCES Status(Id)
+                    );
+                    ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
                         cmd.ExecuteNonQuery();
+                        connection.Close();
                     }
                     catch (Exception ex) {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Anime table not created!");
@@ -96,22 +102,23 @@ namespace Anicluster.Database.Services {
                     #region Anime
                     // Anime einfügen und ID abfragen
                     //   -> FOREIGN KEYs von davor verwenden (da ist ja kein Mapping notwendig)
-                    string insertAnimeQuery = "" +
-                        "INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment, RatingId, MediaInfoId, StatusId)\n" +
-                        "    VALUES (@Name,\n" +
-                        "            @OriginalName,\n" +
-                        "            @Url,\n" +
-                        "            @Favorite,\n" +
-                        "            @Tier,\n" +
-                        "            @RecommendedFrom,\n" +
-                        "            @Predecessor,\n" +
-                        "            @Successor,\n" +
-                        "            @Related,\n" +
-                        "            @Comment,\n" +
-                        "            @RatingId,\n" +
-                        "            @MediaInfoId,\n" +
-                        "            @StatusId\n" +
-                        "           );";
+                    string insertAnimeQuery = @"
+                        INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment, RatingId, MediaInfoId, StatusId)
+                            VALUES (@Name,
+                                    @OriginalName,
+                                    @Url,
+                                    @Favorite,
+                                    @Tier,
+                                    @RecommendedFrom,
+                                    @Predecessor,
+                                    @Successor,
+                                    @Related,
+                                    @Comment,
+                                    @RatingId,
+                                    @MediaInfoId,
+                                    @StatusId
+                        );
+                    ";
                     using (SqliteCommand cmd = new SqliteCommand(insertAnimeQuery, connection)) {
                         cmd.Parameters.AddWithValue("@Name", animeToInsert.Name);
                         cmd.Parameters.AddWithValue("@OriginalName", animeToInsert.OriginalName ?? (object)DBNull.Value);
@@ -140,7 +147,7 @@ namespace Anicluster.Database.Services {
                     List<int> seasonIds = [];
                     SeasonService seasonService = new SeasonService(_databaseManager);
                     foreach (Season x in animeToInsert.Seasons) {
-                        seasonIds.Add(seasonService.Insert(x, animeToInsert.Id));
+                        seasonIds.Add(seasonService.Insert(x));
                     }
                     // AnimeId und SeasonIds mappen
                     AnimeSeasonAssociativeEntityService asaes = new AnimeSeasonAssociativeEntityService(_databaseManager);
@@ -164,8 +171,6 @@ namespace Anicluster.Database.Services {
                         ataes.Insert(animeToInsert.Id, x.Id);
                     }
                     #endregion
-
-                    // Commit der Transaktion
                 }
                 catch (Exception ex) {
                     Log.Error(ex.StackTrace ?? "Error while inserting animeToInsert data");

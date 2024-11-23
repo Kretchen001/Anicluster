@@ -14,14 +14,15 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS MusicPiece (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    Type INTEGER," +
-                    "    Name TEXT," +
-                    "    Comment TEXT," +
-                    "    General INTEGER" +
-                    ");";
+                string creationString = @"
+                   CREATE TABLE IF NOT EXISTS MusicPiece (
+                        Id INTEGER PRIMARY KEY,
+                        Type INTEGER,
+                        Name TEXT,
+                        Comment TEXT,
+                        General INTEGER
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -63,9 +64,10 @@ namespace Anicluster.Database.Services {
         /// <returns></returns>
         public int Insert(MusicPiece musicPiece) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string queryInsert = "" +
-                    "INSERT INTO MusicPiece (Type, Name, Comment, General) \n" +
-                    "VALUES (@Type, @Name, @Comment, @General);";
+                string queryInsert = @"
+                    INSERT INTO MusicPiece (Type, Name, Comment, General)
+                        VALUES (@Type, @Name, @Comment, @General);
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
                     try {
                         cmd.Parameters.AddWithValue("@Type", musicPiece.Type);
@@ -84,55 +86,6 @@ namespace Anicluster.Database.Services {
                         return -1;
                     }
                 }
-            }
-        }
-
-        /// <summary><b>NOT IMPLEMENTED</b><br></br>NOT to use</summary>
-        /// <param name="musicPieceList"></param>
-        /// <returns></returns>
-        public List<int> InsertMusicPieceList(List<MusicPiece> musicPieceList) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                //string queryInsert = "" +
-                //    "INSERT INTO Tag (Designation) \n" +
-                //    "VALUES ";
-                //for (int i = 0; i < musicPieceList.Count; i += 1) {
-                //    queryInsert += $"(@Designation{i})";
-                //    queryInsert += i != musicPieceList.Count - 1 ? ", \n" : ";";
-                //}
-                //string querySelectIds = "" +
-                //            "SELECT Id \n" +
-                //            "FROM Tag \n" +
-                //            "WHERE Designation LIKE @Designation0";
-                //for (int i = 1; i < musicPieceList.Count; i += 1) { // start by 1 because of string before
-                //    querySelectIds += $"\n\tOR Designation LIKE @Designation{i}";
-                //    if (i == musicPieceList.Count - 1) { querySelectIds += ";"; }
-                //}
-                //using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
-                //    try {
-                //        for (int i = 0; i < musicPieceList.Count; i += 1) {
-                //            cmd.Parameters.AddWithValue($"@Designation{i}", musicPieceList[i].Designation);
-                //        }
-                //        connection.Open();
-                //        cmd.ExecuteNonQuery();
-                //        // Request the id's
-                //        cmd.CommandText = querySelectIds;
-                //        // use the same Parameters from insert
-                //        List<int> ids = [];
-                //        using (SqliteDataReader reader = cmd.ExecuteReader()) {
-                //            while (reader.Read()) {
-                //                ids.Add((int)((long)reader["Id"]));
-                //            }
-                //            reader.Close();
-                //        }
-                //        connection.Close();
-                //        return ids;
-                //    }
-                //    catch (Exception ex) {
-                //        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tags not inserted or queryable!");
-                //        return [];
-                //    }
-                //}
-                return [];
             }
         }
 

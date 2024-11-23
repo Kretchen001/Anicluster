@@ -14,14 +14,15 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Syncro (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    General INTEGER," +
-                    "    Language INTEGER," +
-                    "    IsAssessed BOOLEAN," +
-                    "    Comment TEXT" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS Syncro (
+                        Id INTEGER PRIMARY KEY,
+                        General INTEGER,
+                        Language INTEGER,
+                        IsAssessed BOOLEAN,
+                        Comment TEXT
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -60,9 +61,10 @@ namespace Anicluster.Database.Services {
 
         public int Insert(Syncro syncroToInsert) {
             int syncroId = -1;
-            string insertQuery = "" +
-                "INSERT INTO Syncro (General, Language, IsAssessed, Comment)\n" +
-                "    VALUES (@General, @Language, @IsAssessed, @Comment)";
+            string insertQuery = @"
+                INSERT INTO Syncro (General, Language, IsAssessed, Comment)
+                    VALUES (@General, @Language, @IsAssessed, @Comment)
+            ";
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
                 try {
@@ -70,11 +72,11 @@ namespace Anicluster.Database.Services {
                         cmd.Parameters.AddWithValue("@General", syncroToInsert.General);
                         cmd.Parameters.AddWithValue("@Language", syncroToInsert.Language);
                         cmd.Parameters.AddWithValue("@IsAssessed", syncroToInsert.IsAssessed);
-                        cmd.Parameters.AddWithValue("@Comment", syncroToInsert.Comment);
+                        cmd.Parameters.AddWithValue("@Comment", syncroToInsert.Comment ?? "");
+                        cmd.ExecuteScalar();
                     }
                     using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
-                        object? result = cmd.ExecuteScalar();
-                        syncroId = (int)((long)result!);
+                        syncroId = (int)((long)cmd.ExecuteScalar()!);
                     }
                 }
                 catch (Exception ex) {

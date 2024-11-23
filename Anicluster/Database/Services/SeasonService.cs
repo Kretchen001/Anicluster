@@ -15,14 +15,15 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Season (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    Number INTEGER," +
-                    "    Comment TEXT," +
-                    "    PublishingTimeId INTEGER," +
-                    "    FOREIGN KEY(PublishingTimeId) REFERENCES PublishingTime(Id)" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS Season (
+                        Id INTEGER PRIMARY KEY,
+                        Number INTEGER,
+                        Comment TEXT,
+                        PublishingTimeId INTEGER,
+                        FOREIGN KEY(PublishingTimeId) REFERENCES PublishingTime(Id)
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -58,7 +59,7 @@ namespace Anicluster.Database.Services {
             }
         }
 
-        public int Insert(Season seasonToInsert, int animeId) {
+        public int Insert(Season seasonToInsert) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 // check if season exist, then return only its id
                 string checkQuery = "" +
@@ -66,11 +67,12 @@ namespace Anicluster.Database.Services {
                     "FROM Season\n" +
                     "WHERE\n" +
                     $"    Number={seasonToInsert.Number}\n" +
-                    $"    AND Comment MATCH '{seasonToInsert.Comment}';";
+                    $"    AND Comment LIKE '{seasonToInsert.Comment}';";
                 connection.Open();
                 using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
                     SqliteDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) {
+                        reader.Read();
                         return (int)((long)reader["Id"]);
                     }
                 }
@@ -90,10 +92,10 @@ namespace Anicluster.Database.Services {
                         cmd.Parameters.AddWithValue("@PublishingTimeId", pubId);
                         connection.Open();
                         cmd.ExecuteNonQuery();
+                        cmd.Parameters.Clear();
                         cmd.CommandText = "SELECT last_insert_rowid();";
-                        object? insertedId = cmd.ExecuteScalar();
+                        insertedSeasonId = (int)((long)cmd.ExecuteScalar()!);
                         connection.Close();
-                        insertedSeasonId = (int)((long)insertedId!);
                     }
                     catch (Exception ex) {
                         Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Season not inserted or queryable!");

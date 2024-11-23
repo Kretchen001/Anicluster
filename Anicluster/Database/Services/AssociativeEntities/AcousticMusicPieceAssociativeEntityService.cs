@@ -13,14 +13,15 @@ namespace Anicluster.Database.Services.AssociativeEntities {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS AcousticMusicPieceAssociativeEntities (" +
-                    "    AcousticId INTEGER," +
-                    "    MusicPieceId INTEGER," +
-                    "    FOREIGN KEY(AcousticId) REFERENCES Acoustic(Id)," +
-                    "    FOREIGN KEY(MusicPieceId) REFERENCES MusicPiece(Id)," +
-                    "    PRIMARY KEY(AcousticId, MusicPieceId)" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS AcousticMusicPieceAssociativeEntities (
+                        AcousticId INTEGER,
+                        MusicPieceId INTEGER,
+                        FOREIGN KEY(AcousticId) REFERENCES Acoustic(Id),
+                        FOREIGN KEY(MusicPieceId) REFERENCES MusicPiece(Id),
+                        PRIMARY KEY(AcousticId, MusicPieceId)
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -33,7 +34,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                     }
                 }
             }
-            Log.Information("Acoustic table created.");
+            Log.Information("AcousticMusicPieceAssociativeEntities table created.");
             return true;
         }
 
@@ -60,23 +61,19 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         public bool Insert(int acousticId, int musicPieceId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                using (SqliteTransaction transaction = connection.BeginTransaction()) {
-                    try {
-                        string insertAcousticMusicPieceAssociativeEntities = "" +
-                            "INSERT INTO AcousticMusicPieceAssociativeEntities (AcousticId, MusicPieceId) " +
-                            "    VALUES (@acousticId, @musicPieceId)";
-                        using (SqliteCommand cmd = new SqliteCommand(insertAcousticMusicPieceAssociativeEntities, connection)) {
-                            cmd.Parameters.AddWithValue("@acousticId", acousticId);
-                            cmd.Parameters.AddWithValue("@musicPieceId", musicPieceId);
-                            cmd.ExecuteScalar();
-                        }
-                        transaction.Commit();
+                try {
+                    string insertAcousticMusicPieceAssociativeEntities = "" +
+                        "INSERT INTO AcousticMusicPieceAssociativeEntities (AcousticId, MusicPieceId) " +
+                        "    VALUES (@acousticId, @musicPieceId)";
+                    using (SqliteCommand cmd = new SqliteCommand(insertAcousticMusicPieceAssociativeEntities, connection)) {
+                        cmd.Parameters.AddWithValue("@acousticId", acousticId);
+                        cmd.Parameters.AddWithValue("@musicPieceId", musicPieceId);
+                        cmd.ExecuteScalar();
                     }
-                    catch (Exception ex) {
-                        transaction.Rollback();
-                        Log.Error(ex.StackTrace ?? "Error while inserting AcousticMusicPieceAssociativeEntity data");
-                        return false;
-                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting AcousticMusicPieceAssociativeEntity data");
+                    return false;
                 }
                 connection.Close();
             }

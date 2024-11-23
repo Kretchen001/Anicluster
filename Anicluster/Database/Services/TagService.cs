@@ -14,11 +14,12 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Tag (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    Designation TEXT NOT NULL" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS Tag (
+                        Id INTEGER PRIMARY KEY,
+                        Designation TEXT NOT NULL
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -69,7 +70,7 @@ namespace Anicluster.Database.Services {
                         cmd.Parameters.AddWithValue("@Designation", tag.Designation);
                         connection.Open();
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = $"SELECT Id FROM Tag WHERE Designation Like '{tag.Designation}'";
+                        cmd.CommandText = $"SELECT Id FROM Tag WHERE Designation LIKE '{tag.Designation}'";
                         object? insertedId = cmd.ExecuteScalar();
                         connection.Close();
                         return insertedId is not null ? (int)((long)insertedId) : -1;

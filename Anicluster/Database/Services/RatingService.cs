@@ -14,16 +14,17 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Rating (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    Story INTEGER," +
-                    "    Animation INTEGER," +
-                    "    SpecialEffects INTEGER," +
-                    "    AcousticId INTEGER," +
-                    "    IsRated BOOLEAN," +
-                    "    FOREIGN KEY(AcousticId) REFERENCES Acoustic(Id)" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS Rating (
+                        Id INTEGER PRIMARY KEY,
+                        Story INTEGER,
+                        Animation INTEGER,
+                        SpecialEffects INTEGER,
+                        AcousticId INTEGER,
+                        IsRated BOOLEAN,
+                        FOREIGN KEY(AcousticId) REFERENCES Acoustic(Id)
+                    );
+                    ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();

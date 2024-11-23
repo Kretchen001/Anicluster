@@ -59,13 +59,14 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         public void Insert(int seasonId, int videoAnimationId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
-                string query = "INSERT INTO SeasonVideoAnimationAssociativeEntityService (SeasonId, VideoAnimationId) VALUES (@SeasonId, @VideoAnimationId);";
-
+                string query = "INSERT INTO SeasonVideoAnimationAssociativeEntityService (SeasonId, VideoAnimationId)\n" +
+                    "    VALUES (@SeasonId, @VideoAnimationId);";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@SeasonId", seasonId);
-                    cmd.Parameters.AddWithValue("@VideoAnimation", videoAnimationId);
+                    cmd.Parameters.AddWithValue("@VideoAnimationId", videoAnimationId);
                     cmd.ExecuteNonQuery();
                 }
+                connection.Close();
             }
         }
     }

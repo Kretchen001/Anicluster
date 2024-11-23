@@ -14,13 +14,14 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Interruption (\n" +
-                    "    Id INTEGER PRIMARY KEY,\n" +
-                    "    StartDate DATETIME,\n" +
-                    "    EndDate DATETIME,\n" +
-                    "    Comment TEXT\n" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS Interruption (
+                        Id INTEGER PRIMARY KEY,
+                        StartDate DATETIME,
+                        EndDate DATETIME,
+                        Comment TEXT
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -58,9 +59,10 @@ namespace Anicluster.Database.Services {
 
         public int Insert(Interruption interruption) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string queryInsert = "" +
-                    "INSERT INTO Tag (StartDate, EndDate, Comment) \n" +
-                    "    VALUES (@StartDate, @EndDate, @Comment);";
+                string queryInsert = @"
+                    INSERT INTO Interruption (StartDate, EndDate, Comment)
+                        VALUES (@StartDate, @EndDate, @Comment);
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
                     try {
                         cmd.Parameters.AddWithValue("@StartDate", interruption.Start.ToString("G"));
@@ -68,7 +70,8 @@ namespace Anicluster.Database.Services {
                         cmd.Parameters.AddWithValue("@Comment", interruption.Comment ?? "");
                         connection.Open();
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = $"SELECT Id FROM Tag WHERE StartDate Like '{interruption.Start:G}' AND EndDate Like '{interruption.End:G}'";
+                        cmd.Parameters.Clear();
+                        cmd.CommandText = $"SELECT Id FROM Interruption WHERE StartDate Like '{interruption.Start:G}' AND EndDate Like '{interruption.End:G}'";
                         object? insertedId = cmd.ExecuteScalar();
                         connection.Close();
                         return insertedId is not null ? (int)((long)insertedId) : -1;
@@ -84,10 +87,11 @@ namespace Anicluster.Database.Services {
         public List<Interruption> SelectInterruptionsById(List<int> ids) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 try {
-                    string querySelect = "" +
-                        "SELECT StartDate, EndDate, Comment\n" +
-                        "FROM Tag \n" +
-                        "WHERE Designation LIKE @Id0";
+                    string querySelect = @"
+                        SELECT StartDate, EndDate, Comment
+                        FROM Tag
+                        WHERE Designation LIKE @Id0
+                    ";
                     for (int i = 1; i < ids.Count; i += 1) { // start by 1 because of string before
                         querySelect += $"\n\tOR Designation LIKE @Id{i}";
                         if (i == ids.Count - 1) { querySelect += ";"; }

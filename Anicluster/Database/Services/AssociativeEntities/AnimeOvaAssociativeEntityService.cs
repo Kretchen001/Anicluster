@@ -57,15 +57,27 @@ namespace Anicluster.Database.Services.AssociativeEntities {
 
         public void Insert(int animeId, int vaId) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                string checkIfExist = $"" +
+                    $"SELECT *\n" +
+                    $"FROM AnimeOvaAssociativeEntityService\n" +
+                    $"WHERE\n" +
+                    $"    AnimeId={animeId}\n" +
+                    $"    AND VideoAnimationId={vaId}";
                 connection.Open();
+                using (SqliteCommand cmd = new SqliteCommand(checkIfExist, connection)) {
+                    SqliteDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) {
+                        return;
+                    }
+                }
                 string query = "INSERT INTO AnimeOvaAssociativeEntityService (AnimeId, VideoAnimationId)\n" +
-                    "VALUES (@AnimeId, @VideoAnimationId);";
-
+                    "    VALUES (@AnimeId, @VideoAnimationId);";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@AnimeId", animeId);
                     cmd.Parameters.AddWithValue("@VideoAnimationId", vaId);
                     cmd.ExecuteNonQuery();
                 }
+                connection.Close();
             }
         }
     }

@@ -15,12 +15,13 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS PublishingTime (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    StartDate DATETIME," +
-                    "    EndDate DATETIME" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS PublishingTime (
+                        Id INTEGER PRIMARY KEY,
+                        StartDate DATETIME,
+                        EndDate DATETIME
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -70,6 +71,7 @@ namespace Anicluster.Database.Services {
                         cmd.Parameters.AddWithValue("@EndDate", publishingTime.EndDate);
                         connection.Open();
                         cmd.ExecuteNonQuery();
+                        cmd.Parameters.Clear();
                         cmd.CommandText = "SELECT last_insert_rowid();";
                         object? insertedId = cmd.ExecuteScalar();
                         connection.Close();

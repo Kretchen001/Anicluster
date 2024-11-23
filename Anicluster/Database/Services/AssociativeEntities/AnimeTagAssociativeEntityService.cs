@@ -67,6 +67,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                     cmd.Parameters.AddWithValue("@TagId", tagId);
                     cmd.ExecuteNonQuery();
                 }
+                connection.Close();
             }
         }
 

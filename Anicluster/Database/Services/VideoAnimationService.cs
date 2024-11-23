@@ -14,12 +14,13 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS VideoAnimation (\n" +
-                    "    Id INTEGER PRIMARY KEY,\n" +
-                    "    VideoType INTEGER,\n" +
-                    "    Comment TEXT\n" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS VideoAnimation (
+                        Id INTEGER PRIMARY KEY,
+                        VideoType INTEGER,
+                        Comment TEXT
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -64,24 +65,26 @@ namespace Anicluster.Database.Services {
 
         public int Insert(VideoAnimation videoAnimationToInsert) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                // check if season exist, then return only its id
+                // check if va exist, then return only its id
                 string checkQuery = "" +
                     "SELECT *\n" +
                     "FROM VideoAnimation\n" +
                     $"WHERE\n" +
-                    $"    VideoType={videoAnimationToInsert.VideoType}\n" +
-                    $"    AND Comment MATCH '{videoAnimationToInsert.Comment}'";
+                    $"    VideoType={(int)videoAnimationToInsert.VideoType}\n" +
+                    $"    AND Comment LIKE '{videoAnimationToInsert.Comment ?? ""}'";
                 connection.Open();
                 using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
                     SqliteDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) {
+                        reader.Read();
                         return (int)((long)reader["Id"]);
                     }
                 }
                 connection.Close();
-                string queryInsert = "" +
-                    "INSERT INTO VideoAnimation (VideoType, Comment) \n" +
-                    "VALUES (@VideoType, @Comment);";
+                string queryInsert = @"
+                    INSERT INTO VideoAnimation (VideoType, Comment)
+                        VALUES (@VideoType, @Comment);
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
                     try {
                         cmd.Parameters.AddWithValue("@VideoType", videoAnimationToInsert.VideoType);

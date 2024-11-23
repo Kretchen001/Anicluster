@@ -90,18 +90,18 @@ namespace Anicluster {
         }
 
         private void TestInsert() {
-            Anime a = new Anime();
-            a.Id = 1;
-            a.Name = "test";
-            a.OriginalName = "testo";
-            a.Url = "";
-            a.Favorite = true;
-            a.Rating = new Rating() {
-                Story = 85,
-                Animation = 10,
-                SpecialEffects = 90,
-                Acoustic = new Acoustic() {
-                    Opening = [
+            Anime a = new Anime {
+                Id = 1,
+                Name = "test",
+                OriginalName = "testo",
+                Url = "",
+                Favorite = true,
+                Rating = new Rating() {
+                    Story = 85,
+                    Animation = 10,
+                    SpecialEffects = 90,
+                    Acoustic = new Acoustic() {
+                        Opening = [
                         new MusicPiece() {
                             Id = 1,
                             Name = "test",
@@ -110,7 +110,7 @@ namespace Anicluster {
                             General = 60
                         }
                     ],
-                    Ending = [
+                        Ending = [
                         new MusicPiece() {
                             Id = 1,
                             General = 67,
@@ -119,59 +119,78 @@ namespace Anicluster {
                             Comment = "test",
                         }
                     ],
-                    Soundtrack = 10,
-                    Syncro = [new Syncro() {
+                        Soundtrack = 10,
+                        Syncro = [new Syncro() {
                         General = 30,
                         IsAssessed = true,
                         Language = SyncroLanuage.jp
                     }],
-                    Comment = "doll"
-                }
-            };
-            a.Tier = Tier.S;
-            a.Seasons = [new Season() {
-                Episodes = [
-                    new VideoAnimation(videoType: VideoType.Episode, comment: "demo")
-                ],
-                PublishingTime = new PublishingTime() {
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now,
-                    Interruptions = [new Interruption() {
-                        Start = DateTime.Now,
-                        End = DateTime.Now,
-                        Comment = "adfjlaskdjfölaskdjf"
-                    }]
+                        Comment = "doll"
+                    }
                 },
-                Comment = "hallo"
-            }];
-            a.Ovas = [
-                new VideoAnimation(videoType: VideoType.Ova, comment: "demo"),
-                new VideoAnimation(videoType: VideoType.Movie, comment: "demo"),
-                new VideoAnimation(videoType: VideoType.Ova, comment: "demo")
-            ];
-            a.Status = new Status() {
-                State = State.Started,
-                Comment = "Danke Silberbaron"
-            };
-            a.Tags = [];
-            a.MediaInfo = new MediaInfo() {
-                Author = "David",
-                Producer = "Tim",
-                Publisher = "Konstantin",
-                PublishingTime = new PublishingTime() {
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now,
-                    Interruptions = [new Interruption() {
+                Tier = Tier.S,
+                Seasons = [new Season() {
+                    Episodes = [
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "demo"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "2"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "54"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "lorem"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "as"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "dao"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "de"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "mo"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "o"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "64543"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "aaegew"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "2t4 bw"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: ""),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "q23 b"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "kkopn45"),
+                        new VideoAnimation(videoType: VideoType.Episode, comment: "564415654156h34135456n413654n4156"),
+                    ],
+                    PublishingTime = new PublishingTime() {
+                            StartDate = DateTime.Now,
+                            EndDate = DateTime.Now,
+                            Interruptions = [new Interruption() {
+                                Start = DateTime.Now,
+                                End = DateTime.Now,
+                                Comment = "adfjlaskdjfölaskdjf"
+                            }]
+                        },
+                    Comment = "hallo"
+                }],
+                Ovas = [
+                    new VideoAnimation(videoType: VideoType.Ova, comment: "demo"),
+                    new VideoAnimation(videoType: VideoType.Movie, comment: "demo"),
+                    new VideoAnimation(videoType: VideoType.Ova, comment: "demo")
+                ],
+                Status = new Status() {
+                    State = State.Started,
+                    Comment = "Danke Silberbaron"
+                },
+                Tags = [
+                    //new Tag("a"),
+                    //new Tag("b"),
+                ],
+                MediaInfo = new MediaInfo() {
+                    Author = "David",
+                    Producer = "Tim",
+                    Publisher = "Konstantin",
+                    PublishingTime = new PublishingTime() {
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now,
+                        Interruptions = [new Interruption() {
                         Start = DateTime.Now,
                         End = DateTime.Now,
                         Comment = "2341"
                     }]
+                    },
                 },
+                RecommendedFrom = "Silberbaron höchst persönlich",
+                Predecessor = -1,
+                Successor = -1,
+                Comment = "Bittö"
             };
-            a.RecommendedFrom = "Silberbaron höchst persönlich";
-            a.Predecessor = -1;
-            a.Successor = -1;
-            a.Comment = "Bittö";
             AnimeService animeService = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite"));
             animeService.Insert(a);
         }

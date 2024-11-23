@@ -15,12 +15,13 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Acoustic (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    Soundtrack INTEGER," +
-                    "    Comment TEXT" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS Acoustic (
+                        Id INTEGER PRIMARY KEY,
+                        Soundtrack INTEGER,
+                        Comment TEXT
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -102,7 +103,7 @@ namespace Anicluster.Database.Services {
             List<int> sList = new List<int>(acousticToInsert.Syncro.Count);
             SyncroService syncroService = new SyncroService(_databaseManager);
             foreach (Syncro x in acousticToInsert.Syncro) {
-                syncroService.Insert(x);
+                sList.Add(syncroService.Insert(x));
             }
             AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(_databaseManager);
             foreach (int x in sList) {

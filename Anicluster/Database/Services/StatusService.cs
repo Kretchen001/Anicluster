@@ -14,12 +14,13 @@ namespace Anicluster.Database.Services {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS Status (" +
-                    "    Id INTEGER PRIMARY KEY," +
-                    "    State INTEGER NOT NULL," +
-                    "    Comment TEXT" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS Status (
+                        Id INTEGER PRIMARY KEY,
+                        State INTEGER NOT NULL,
+                        Comment TEXT
+                    );
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
