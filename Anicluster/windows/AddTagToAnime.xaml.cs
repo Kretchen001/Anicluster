@@ -1,4 +1,6 @@
-﻿using Modells.Anime;
+﻿using Anicluster.Database;
+using Anicluster.Database.Services;
+using Modells.Anime;
 using Modells.ViewModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace Anicluster.windows {
+
     /// <summary>
     /// Interaktionslogik für AddTagToAnime.xaml
     /// </summary>
@@ -16,11 +19,16 @@ namespace Anicluster.windows {
         public ObservableCollection<Tag> SelectedTags { get; set; } = [];
         public ICollectionView FilteredTags { get; set; }
 
-        public AddTagToAnime(List<Tag>? tags = null) {
-            if (tags is not null) {
-                foreach (Tag x in tags) {
+        public AddTagToAnime(List<Tag>? selectedTags = null) {
+            if (selectedTags is not null) {
+                foreach (Tag x in selectedTags) {
                     SelectedTags.Add(x);
                 }
+            }
+            TagService tagService = new TagService(new DatabaseManager($"Data Source=db/data.sqlite"));
+            List<Tag> tags = tagService.SelectAllTags();
+            foreach (Tag x in tags) {
+                AllTags.Add(new TagViewModel(x));
             }
             InitializeComponent();
             DataContext = this;
