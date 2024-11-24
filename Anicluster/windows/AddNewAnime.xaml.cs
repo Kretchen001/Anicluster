@@ -10,7 +10,7 @@ namespace Anicluster.windows {
     /// </summary>
     public partial class AddNewAnime : Window {
 
-        public Anime NewAnime { get; set; } = new Anime();
+        public Anime NewAnime { get; set; }
 
         private RatingGenerator window_RatingGenerator = new RatingGenerator();
         private SeasonGenerator window_SeasonGenerator = new SeasonGenerator();
@@ -18,6 +18,7 @@ namespace Anicluster.windows {
 
         public AddNewAnime() {
             InitializeComponent();
+            NewAnime = new Anime();
             this.DataContext = this;
             TBName.Visibility = Visibility.Visible;
             TBName.Focus();
@@ -67,6 +68,9 @@ namespace Anicluster.windows {
 
         private void RBtn_Checked(object sender, RoutedEventArgs e) {
             if (sender is RadioButton radioBtn) {
+                if (NewAnime is null) {
+                    return;
+                }
                 List<RadioButton> radioButtons = ((StackPanel)radioBtn.Parent).Children.OfType<RadioButton>().ToList();
                 int selectedIndex = radioButtons.IndexOf(radioBtn);
                 if (selectedIndex >= 0 && selectedIndex < Enum.GetValues(typeof(State)).Length) {
