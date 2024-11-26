@@ -1,20 +1,29 @@
 ﻿<UserControl x:Class="Anicluster.userControls.UcMusicPiece"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Anicluster.userControls"
-             mc:Ignorable="d" 
-             d:DesignHeight="155" d:DesignWidth="250">
+             mc:Ignorable="d"
+             d:DesignHeight="155"
+             d:DesignWidth="250">
     <UserControl.Resources>
-        <Style x:Key="RoundedBorder" TargetType="Border">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Padding" Value="10"/>
+        <Style x:Key="RoundedBorder"
+               TargetType="Border">
+            <Setter Property="Background"
+                    Value="White"/>
+            <Setter Property="CornerRadius"
+                    Value="10"/>
+            <Setter Property="Margin"
+                    Value="10"/>
+            <Setter Property="Padding"
+                    Value="10"/>
             <Setter Property="Effect">
                 <Setter.Value>
-                    <DropShadowEffect Color="#FF000000" BlurRadius="10" ShadowDepth="5" Opacity="0.5"/>
+                    <DropShadowEffect Color="#FF000000"
+                                      BlurRadius="10"
+                                      ShadowDepth="5"
+                                      Opacity="0.5"/>
                 </Setter.Value>
             </Setter>
         </Style>
@@ -27,14 +36,37 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,6">Name:</TextBlock>
-                <TextBox Grid.Column="1" Text="{Binding Name}" FontSize="16" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Margin="0,0,0,6">Name:</TextBlock>
+                <TextBox Grid.Column="1"
+                         Text="{Binding Name}"
+                         FontSize="16"
+                         FontWeight="Bold"
+                         Margin="0,0,0,5"/>
             </Grid>
             <Grid>
-                <ProgressBar x:Name="ProgBarGeneral" Value="{Binding General}" Maximum="100" Height="20" Margin="0,0,0,5" ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden" MouseWheel="ProgBarGeneral_MouseWheel" MouseLeftButtonDown="ProgBarGeneral_MouseLeftButtonDown" />
-                <Label x:Name="LbGeneral" Content="{Binding General}" Margin="0,0,0,4" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                <ProgressBar x:Name="ProgBarGeneral"
+                             Value="{Binding General}"
+                             Maximum="100"
+                             Height="20"
+                             Margin="0,0,0,5"
+                             ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden"
+                             MouseWheel="ProgBarGeneral_MouseWheel"
+                             MouseLeftButtonDown="ProgBarGeneral_MouseLeftButtonDown"/>
+                <Label x:Name="LbGeneral"
+                       Content="{Binding General}"
+                       Margin="0,0,0,4"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="Black"
+                       Background="Transparent"/>
             </Grid>
-            <TextBox Text="{Binding Comment}" Height="60" TextWrapping="Wrap" AcceptsReturn="True" ToolTip="Kommentarfeld" />
+            <TextBox Text="{Binding Comment}"
+                     Height="60"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     ToolTip="Kommentarfeld"/>
         </StackPanel>
     </Border>
 </UserControl>

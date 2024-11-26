@@ -7,7 +7,9 @@
         xmlns:uc="clr-namespace:Anicluster.userControls"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Bewertung" Height="350" Width="600">
+        Title="Bewertung"
+        Height="350"
+        Width="600">
     <Grid>
         <TabControl>
             <TabItem Header="Auswertung">
@@ -21,47 +23,103 @@
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <Label Height="30" VerticalContentAlignment="Center">
+                        <Label Height="30"
+                               VerticalContentAlignment="Center">
                             Geschichte
                         </Label>
-                        <Label Height="30" VerticalContentAlignment="Center">
+                        <Label Height="30"
+                               VerticalContentAlignment="Center">
                             Animation
                         </Label>
-                        <Label Height="30" VerticalContentAlignment="Center">
+                        <Label Height="30"
+                               VerticalContentAlignment="Center">
                             Spezialeffekte
                         </Label>
-                        <Label Height="30" VerticalContentAlignment="Center">
+                        <Label Height="30"
+                               VerticalContentAlignment="Center">
                             Soundtrack
                         </Label>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
                         <Grid>
-                            <ProgressBar x:Name="ProgBarHistory" Maximum="100" Height="24" Value="{Binding History}" Margin="3" ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden" MouseWheel="ProgBarHistory_MouseWheel" MouseLeftButtonDown="ProgBarHistory_MouseLeftButtonDown"/>
-                            <Label x:Name="LbHistory" Content="{Binding History}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                            <ProgressBar x:Name="ProgBarHistory"
+                                         Maximum="100"
+                                         Height="24"
+                                         Value="{Binding History}"
+                                         Margin="3"
+                                         ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden"
+                                         MouseWheel="ProgBarHistory_MouseWheel"
+                                         MouseLeftButtonDown="ProgBarHistory_MouseLeftButtonDown"/>
+                            <Label x:Name="LbHistory"
+                                   Content="{Binding History}"
+                                   Margin="0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="Black"
+                                   Background="Transparent"/>
                         </Grid>
                         <Grid>
-                            <ProgressBar x:Name="ProgBarAnimation" Height="24" Value="{Binding Animation}" Margin="3" MouseWheel="ProgBarAnimation_MouseWheel" MouseLeftButtonDown="ProgBarAnimation_MouseLeftButtonDown"/>
-                            <Label x:Name="LbAnimation" Content="{Binding Animation}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                            <ProgressBar x:Name="ProgBarAnimation"
+                                         Height="24"
+                                         Value="{Binding Animation}"
+                                         Margin="3"
+                                         MouseWheel="ProgBarAnimation_MouseWheel"
+                                         MouseLeftButtonDown="ProgBarAnimation_MouseLeftButtonDown"/>
+                            <Label x:Name="LbAnimation"
+                                   Content="{Binding Animation}"
+                                   Margin="0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="Black"
+                                   Background="Transparent"/>
                         </Grid>
                         <Grid>
-                            <ProgressBar x:Name="ProgBarSpecialEffects" Height="24" Value="{Binding SpecialEffects}" Margin="3" MouseWheel="ProgBarSpecialEffects_MouseWheel" MouseLeftButtonDown="ProgBarSpecialEffects_MouseLeftButtonDown"/>
-                            <Label x:Name="LbSpecialEffects" Content="{Binding SpecialEffects}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent" />
+                            <ProgressBar x:Name="ProgBarSpecialEffects"
+                                         Height="24"
+                                         Value="{Binding SpecialEffects}"
+                                         Margin="3"
+                                         MouseWheel="ProgBarSpecialEffects_MouseWheel"
+                                         MouseLeftButtonDown="ProgBarSpecialEffects_MouseLeftButtonDown"/>
+                            <Label x:Name="LbSpecialEffects"
+                                   Content="{Binding SpecialEffects}"
+                                   Margin="0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="Black"
+                                   Background="Transparent"/>
                         </Grid>
                         <Grid>
-                            <ProgressBar x:Name="ProgBarSoundtrack" Height="24" Value="{Binding Soundtrack}" Margin="3" MouseWheel="ProgBarSoundtrack_MouseWheel" MouseLeftButtonDown="ProgBarSoundtrack_MouseLeftButtonDown"/>
-                            <Label x:Name="LbSoundtrack" Content="{Binding Soundtrack}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black" Background="Transparent">
+                            <ProgressBar x:Name="ProgBarSoundtrack"
+                                         Height="24"
+                                         Value="{Binding Soundtrack}"
+                                         Margin="3"
+                                         MouseWheel="ProgBarSoundtrack_MouseWheel"
+                                         MouseLeftButtonDown="ProgBarSoundtrack_MouseLeftButtonDown"/>
+                            <Label x:Name="LbSoundtrack"
+                                   Content="{Binding Soundtrack}"
+                                   Margin="0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Foreground="Black"
+                                   Background="Transparent">
                                 <Label.Style>
                                     <Style TargetType="Label">
-                                        <Setter Property="Content" Value="{Binding Soundtrack}"/>
+                                        <Setter Property="Content"
+                                                Value="{Binding Soundtrack}"/>
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Soundtrack}" Value="0">
-                                                <Setter Property="Content" Value="0"/>
+                                            <DataTrigger Binding="{Binding Soundtrack}"
+                                                         Value="0">
+                                                <Setter Property="Content"
+                                                        Value="0"/>
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding Soundtrack}" Value="-1">
-                                                <Setter Property="Content" Value="0"/>
+                                            <DataTrigger Binding="{Binding Soundtrack}"
+                                                         Value="-1">
+                                                <Setter Property="Content"
+                                                        Value="0"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Soundtrack}">
-                                                <Setter Property="Content" Value="{Binding Soundtrack}"/>
+                                                <Setter Property="Content"
+                                                        Value="{Binding Soundtrack}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -80,7 +138,12 @@
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelOpening"></StackPanel>
                     </ScrollViewer>
-                    <Button x:Name="btnOpeningAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="BtnOpeningAdd_Click">
+                    <Button x:Name="btnOpeningAdd"
+                            Grid.Row="1"
+                            Width="150"
+                            Margin="5,2,5,2"
+                            HorizontalAlignment="Right"
+                            Click="BtnOpeningAdd_Click">
                         Hinzufügen
                     </Button>
                 </Grid>
@@ -94,7 +157,12 @@
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelEnding"></StackPanel>
                     </ScrollViewer>
-                    <Button x:Name="btnEndAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="BtnEndingAdd_Click">
+                    <Button x:Name="btnEndAdd"
+                            Grid.Row="1"
+                            Width="150"
+                            Margin="5,2,5,2"
+                            HorizontalAlignment="Right"
+                            Click="BtnEndingAdd_Click">
                         Hinzufügen
                     </Button>
                 </Grid>
@@ -108,7 +176,12 @@
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelSyncro"></StackPanel>
                     </ScrollViewer>
-                    <Button x:Name="btnSyncroAdd" Grid.Row="1" Width="150" Margin="5,2,5,2" HorizontalAlignment="Right" Click="BtnSyncorAdd_Click">
+                    <Button x:Name="btnSyncroAdd"
+                            Grid.Row="1"
+                            Width="150"
+                            Margin="5,2,5,2"
+                            HorizontalAlignment="Right"
+                            Click="BtnSyncorAdd_Click">
                         Hinzufügen
                     </Button>
                 </Grid>

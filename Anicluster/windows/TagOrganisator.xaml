@@ -6,41 +6,71 @@
         xmlns:local="clr-namespace:Anicluster.windows"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="TagOrganisator" Height="450" Width="800">
+        Title="TagOrganisator"
+        Height="450"
+        Width="800">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="↳" Background="Beige">
-                <MenuItem Header="Export List" />
-                <MenuItem Header="Import List" />
+            <MenuItem Header="↳"
+                      Background="Beige">
+                <MenuItem Header="Export List"/>
+                <MenuItem Header="Import List"/>
             </MenuItem>
-            <MenuItem Header="Tag hinzufügen" Click="MenuItemAddTag_Click" />
-            <MenuItem Header="Ausgewählten Tag Löschen (einer!)" x:Name="MenuItemDeleteSelectedTag" Click="MenuItemDeleteSelectedTag_Click" />
-            <MenuItem Header="Tag suchen" />
-            <MenuItem Header="" Name="AnzeigeDummy"/>
+            <MenuItem Header="Tag hinzufügen"
+                      Click="MenuItemAddTag_Click"/>
+            <MenuItem Header="Ausgewählten Tag Löschen (einer!)"
+                      x:Name="MenuItemDeleteSelectedTag"
+                      Click="MenuItemDeleteSelectedTag_Click"/>
+            <MenuItem Header="Tag suchen"/>
+            <MenuItem Header=""
+                      Name="AnzeigeDummy"/>
         </Menu>
         <Grid Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <DataGrid Name="DataGridTags" ItemsSource="{Binding Path=Tags}" AutoGenerateColumns="False" 
-                      Grid.Row="0" CanUserAddRows="false" HeadersVisibility="Column" Margin="0,0,0,5"
-                      SelectedItem="{Binding SelectedTag, Mode=TwoWay}" >
+            <DataGrid Name="DataGridTags"
+                      ItemsSource="{Binding Path=Tags}"
+                      AutoGenerateColumns="False"
+                      Grid.Row="0"
+                      CanUserAddRows="false"
+                      HeadersVisibility="Column"
+                      Margin="0,0,0,5"
+                      SelectedItem="{Binding SelectedTag, Mode=TwoWay}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="dataGridTextNumber" Header="Id" IsReadOnly="True" Binding="{Binding Id}" Width="Auto"/>
-                    <DataGridTextColumn Header="Tag" IsReadOnly="True" Binding="{Binding Designation}" Width="*"/>
+                    <DataGridTextColumn x:Name="dataGridTextNumber"
+                                        Header="Id"
+                                        IsReadOnly="True"
+                                        Binding="{Binding Id}"
+                                        Width="Auto"/>
+                    <DataGridTextColumn Header="Tag"
+                                        IsReadOnly="True"
+                                        Binding="{Binding Designation}"
+                                        Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <Popup x:Name="PopupInputNewTag" Placement="Mouse" StaysOpen="False">
-            <Border BorderBrush="Black" BorderThickness="1" Background="White" Padding="10">
+        <Popup x:Name="PopupInputNewTag"
+               Placement="Mouse"
+               StaysOpen="False">
+            <Border BorderBrush="Black"
+                    BorderThickness="1"
+                    Background="White"
+                    Padding="10">
                 <StackPanel>
-                    <TextBox x:Name="InTxtBoxNewTag" Background="LightGreen" Width="200" Margin="0,0,0,10" TextChanged="InputTextBox_TextChanged"/>
-                    <Button x:Name="BtnPopUp" Content="OK" Click="BtnPopUp_Click"/>
+                    <TextBox x:Name="InTxtBoxNewTag"
+                             Background="LightGreen"
+                             Width="200"
+                             Margin="0,0,0,10"
+                             TextChanged="InputTextBox_TextChanged"/>
+                    <Button x:Name="BtnPopUp"
+                            Content="OK"
+                            Click="BtnPopUp_Click"/>
                 </StackPanel>
-            </Border>            
+            </Border>
         </Popup>
     </DockPanel>
 </Window>
