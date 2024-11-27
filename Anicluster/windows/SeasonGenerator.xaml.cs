@@ -98,7 +98,7 @@ namespace Anicluster.windows {
         private void UpdateNumbers() {
             List<Season> s = [];
             for (int i = 0; i < Seasons.Count; i += 1) {
-                s.Add(s[i]);
+                s.Add(Seasons[i]);
                 s[i].Number = i + 1;
             }
             Seasons.Clear();

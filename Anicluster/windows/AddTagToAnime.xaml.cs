@@ -20,15 +20,18 @@ namespace Anicluster.windows {
         public ICollectionView FilteredTags { get; set; }
 
         public AddTagToAnime(List<Tag>? selectedTags = null) {
+            TagService tagService = new TagService(new DatabaseManager($"Data Source=db/data.sqlite"));
+            if (AllTags.Count.Equals(0)) {
+                List<Tag> tags = tagService.SelectAllTags();
+                foreach (Tag x in tags) {
+                    AllTags.Add(new TagViewModel(x));
+                }
+            }
             if (selectedTags is not null) {
                 foreach (Tag x in selectedTags) {
                     SelectedTags.Add(x);
+                    AllTags[AllTags.ToList().FindIndex(y => y.Tag.Id.Equals(x.Id))].IsSelected = true;
                 }
-            }
-            TagService tagService = new TagService(new DatabaseManager($"Data Source=db/data.sqlite"));
-            List<Tag> tags = tagService.SelectAllTags();
-            foreach (Tag x in tags) {
-                AllTags.Add(new TagViewModel(x));
             }
             InitializeComponent();
             DataContext = this;
@@ -77,5 +80,10 @@ namespace Anicluster.windows {
         private void BtnFilterLeeren_Click(object sender, RoutedEventArgs e) {
             TBFilter.Text = "";
         }
+
+        /// <summary></summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnFinish_Click(object sender, RoutedEventArgs e) => this.Close();
     }
 }

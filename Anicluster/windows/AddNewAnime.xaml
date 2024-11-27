@@ -323,7 +323,9 @@
                                                 <ColumnDefinition Width="1*"/>
                                             </Grid.ColumnDefinitions>
                                             <ListView x:Name="ListViewTags"
-                                                      ItemsSource="{Binding NewAnime.Tags}">
+                                                      ItemsSource="{Binding Path=NewAnime.Tags}"
+                                                      ScrollViewer.CanContentScroll="True"
+                                                      MaxHeight="145">
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate>
                                                         <Grid Margin="0.5">

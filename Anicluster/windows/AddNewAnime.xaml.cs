@@ -1,4 +1,6 @@
-﻿using Modells.Anime;
+﻿using Anicluster.Database;
+using Anicluster.Database.Services;
+using Modells.Anime;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -208,6 +210,7 @@ namespace Anicluster.windows {
 
         private void TagsSelectorClosed(object sender, EventArgs e) {
             NewAnime.Tags = new List<Tag>(window_AddTagToAnime.SelectedTags);
+            ListViewTags.ItemsSource = NewAnime.Tags;
             window_AddTagToAnime.Closed -= TagsSelectorClosed!;
             window_AddTagToAnime = new AddTagToAnime(NewAnime.Tags);
         }
@@ -215,7 +218,7 @@ namespace Anicluster.windows {
         private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
             if (NewAnime.Name != "" &&
                 NewAnime.Seasons.Count != 0) {
-                
+                new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).Insert(NewAnime);
             }
             //zw string json = JsonSerializer.Serialize(myObject, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
         }
