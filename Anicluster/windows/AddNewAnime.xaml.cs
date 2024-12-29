@@ -219,6 +219,7 @@ namespace Anicluster.windows {
             if (NewAnime.Name != "" &&
                 NewAnime.Seasons.Count != 0) {
                 new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).Insert(NewAnime);
+                this.Close();
             }
             //zw string json = JsonSerializer.Serialize(myObject, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
         }

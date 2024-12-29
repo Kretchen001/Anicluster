@@ -68,7 +68,7 @@ namespace Anicluster.Database.Services {
                     connection.Open();
                     using (SqliteCommand cmd = new SqliteCommand(insertAcoustic, connection)) {
                         cmd.Parameters.AddWithValue("@soundtrack", acousticToInsert.Soundtrack);
-                        cmd.Parameters.AddWithValue("@comment", acousticToInsert.Comment);
+                        cmd.Parameters.AddWithValue("@comment", acousticToInsert.Comment ?? DBNull.Value.ToString());
                         cmd.ExecuteScalar();
                     }
                     using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {

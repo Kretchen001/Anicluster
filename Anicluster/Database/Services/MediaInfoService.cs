@@ -71,9 +71,9 @@ namespace Anicluster.Database.Services {
                         "INSERT INTO MediaInfo (Author, Producer, Publisher, PublishingTimeId)\n" +
                         "    VALUES (@Author, @Producer, @Publisher, @PublishingTimeId)";
                     using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
-                        cmd.Parameters.AddWithValue("@Author", mediaInfoToInsert.Author);
-                        cmd.Parameters.AddWithValue("@Producer", mediaInfoToInsert.Producer);
-                        cmd.Parameters.AddWithValue("@Publisher", mediaInfoToInsert.Publisher);
+                        cmd.Parameters.AddWithValue("@Author", mediaInfoToInsert.Author ?? DBNull.Value.ToString());
+                        cmd.Parameters.AddWithValue("@Producer", mediaInfoToInsert.Producer ?? DBNull.Value.ToString());
+                        cmd.Parameters.AddWithValue("@Publisher", mediaInfoToInsert.Publisher ?? DBNull.Value.ToString());
                         cmd.Parameters.AddWithValue("@PublishingTimeId", pubId);
                         cmd.ExecuteNonQuery();
                         cmd.Parameters.Clear();
