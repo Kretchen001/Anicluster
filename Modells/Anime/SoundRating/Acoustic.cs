@@ -40,6 +40,7 @@
         public Acoustic(List<MusicPiece> opening, List<MusicPiece> ending, int soundtrack, List<Syncro> syncros, string? comment) {
             Opening = opening;
             Ending = ending;
+            Soundtrack = soundtrack;
             Syncro = syncros;
             Comment = comment;
         }
