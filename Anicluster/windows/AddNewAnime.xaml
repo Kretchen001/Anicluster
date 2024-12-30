@@ -36,6 +36,60 @@
             <Setter Property="Margin"
                     Value="3,0"/>
         </Style>
+        <!-- Goldener Button-Stil als benutzerdefinierte Ressource -->
+        <Style x:Key="GoldenButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="BorderBrush" Value="Goldenrod" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#FFD700" Offset="0" />
+                        <GradientStop Color="#FFB800" Offset="1" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Goldenrod" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.8"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!-- Effekt, wenn die Maus über dem Button ist -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#FFCC00" Offset="0" />
+                                <GradientStop Color="#FF8000" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="Goldenrod" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="1"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+                <!-- Effekt, wenn der Button gedrückt wird -->
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#A9A9A9" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="Gray" Direction="320" ShadowDepth="2" BlurRadius="5" Opacity="0.6"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="4" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Border MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid>
@@ -130,7 +184,8 @@
                                                          Text="{Binding NewAnime.Url}"
                                                          VerticalContentAlignment="Center"></TextBox>
                                                 <Button Grid.Column="1"
-                                                        Padding="3,0,3,0">
+                                                        Padding="3,0,3,0"
+                                                        Style="{StaticResource GoldenButtonStyle}">
                                                     Auto-Generation
                                                     <Button.ToolTip>
                                                         <StackPanel>
@@ -220,7 +275,10 @@
                                                     Grid.Column="1"
                                                     Padding="5,0,5,0"
                                                     Margin="5,0,5,0"
-                                                    Click="BtnRatingGenerator_Click">Bewerten</Button>
+                                                    Click="BtnRatingGenerator_Click"
+                                                    Style="{StaticResource GoldenButtonStyle}">
+                                                Bewerten
+                                            </Button>
                                         </Grid>
                                         <Grid Grid.Row="1"
                                               Margin="0,5,0,0">
@@ -295,7 +353,8 @@
                                         <Button x:Name="BtnSeasonGenerator"
                                                 Grid.Column="1"
                                                 Margin="20,2,20,2"
-                                                Click="BtnSeasonGenerator_Click">
+                                                Click="BtnSeasonGenerator_Click"
+                                                Style="{StaticResource GoldenButtonStyle}">
                                             Staffelgenerator
                                         </Button>
                                         <StackPanel Grid.Column="2"
@@ -306,7 +365,8 @@
                                         <Button x:Name="BtnOvaGenerator"
                                                 Grid.Column="3"
                                                 Margin="20,2,20,2"
-                                                Click="BtnOvaGenerator_Click">
+                                                Click="BtnOvaGenerator_Click"
+                                                Style="{StaticResource GoldenButtonStyle}">
                                             OVA-Generator
                                         </Button>
                                     </Grid>
@@ -338,8 +398,10 @@
                                             </ListView>
                                             <Button x:Name="BtnTagsSelector"
                                                     Grid.Column="1"
-                                                    Margin="15,25"
-                                                    Click="BtnTagsSelector_Click">
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                    Click="BtnTagsSelector_Click"
+                                                    Style="{StaticResource GoldenButtonStyle}">
                                                 <StackPanel>
                                                     <Label HorizontalAlignment="Center"
                                                            HorizontalContentAlignment="Center">
@@ -410,7 +472,8 @@
                                                          Grid.Column="1"/>
                                             </Grid>
                                             <Button Height="30"
-                                                    Margin="5">
+                                                    Margin="5"
+                                                    Style="{StaticResource GoldenButtonStyle}">
                                                 Veröffentlichungszeitraum/-räume
                                             </Button>
                                         </StackPanel>
