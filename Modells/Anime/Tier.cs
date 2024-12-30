@@ -5,6 +5,7 @@
         B,
         C,
         D,
-        E
+        E,
+        NotDefined
     }
 }

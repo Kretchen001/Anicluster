@@ -71,7 +71,7 @@ namespace Anicluster.Database.Services {
                     "FROM VideoAnimation\n" +
                     $"WHERE\n" +
                     $"    VideoType={(int)videoAnimationToInsert.VideoType}\n" +
-                    $"    AND Comment LIKE '{videoAnimationToInsert.Comment ?? ""}'";
+                    $"    AND Comment LIKE '{videoAnimationToInsert.Comment ?? ""}';";
                 connection.Open();
                 using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
                     SqliteDataReader reader = cmd.ExecuteReader();
@@ -88,7 +88,7 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
                     try {
                         cmd.Parameters.AddWithValue("@VideoType", videoAnimationToInsert.VideoType);
-                        cmd.Parameters.AddWithValue("@Comment", videoAnimationToInsert.Comment);
+                        cmd.Parameters.AddWithValue("@Comment", videoAnimationToInsert.Comment ?? DBNull.Value.ToString());
                         connection.Open();
                         cmd.ExecuteNonQuery();
                         cmd.CommandText = "SELECT last_insert_rowid();";

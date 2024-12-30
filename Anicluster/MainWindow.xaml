@@ -15,6 +15,10 @@
             <MenuItem x:Name="MenuItemNewAnime" Header="Neuer Anime" Click="MenuItemNewAnime_Click" ToolTip="Strg + N" />
             <MenuItem x:Name="MenuItemTags" Header="Tags" Click="MenuItemTags_Click"/>
         </Menu>
-        <Grid></Grid>
+        <Grid>
+            <StackPanel x:Name="StackPnlAnimes" Margin="5" CanVerticallyScroll="True" CanHorizontallyScroll="False">
+                
+            </StackPanel>            
+        </Grid>
     </DockPanel>
 </Window>

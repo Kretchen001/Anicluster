@@ -62,12 +62,12 @@ namespace Anicluster.Database.Services {
         public int Insert(Season seasonToInsert) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 // check if season exist, then return only its id
-                string checkQuery = "" +
-                    "SELECT *\n" +
-                    "FROM Season\n" +
-                    "WHERE\n" +
-                    $"    Number={seasonToInsert.Number}\n" +
-                    $"    AND Comment LIKE '{seasonToInsert.Comment}';";
+                string checkQuery = @$"
+                    SELECT *
+                    FROM Season
+                    WHERE
+                        Number={seasonToInsert.Number}
+                        AND Comment LIKE '{seasonToInsert.Comment}';";
                 connection.Open();
                 using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
                     SqliteDataReader reader = cmd.ExecuteReader();
@@ -88,7 +88,7 @@ namespace Anicluster.Database.Services {
                 using (SqliteCommand cmd = new SqliteCommand(querySeasonInsert, connection)) {
                     try {
                         cmd.Parameters.AddWithValue("@Number", seasonToInsert.Number);
-                        cmd.Parameters.AddWithValue("@Comment", seasonToInsert.Comment);
+                        cmd.Parameters.AddWithValue("@Comment", seasonToInsert.Comment ?? DBNull.Value.ToString());
                         cmd.Parameters.AddWithValue("@PublishingTimeId", pubId);
                         connection.Open();
                         cmd.ExecuteNonQuery();

@@ -13,14 +13,13 @@ namespace Anicluster.Database.Services.AssociativeEntities {
 
         public bool InitializeTable() {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                string creationString = "" +
-                    "CREATE TABLE IF NOT EXISTS SeasonVideoAnimationAssociativeEntityService (\n" +
-                    "    SeasonId INTEGER,\n" +
-                    "    VideoAnimationId INTEGER,\n" +
-                    "    PRIMARY KEY(SeasonId, VideoAnimationId),\n" +
-                    "    FOREIGN KEY(SeasonId) REFERENCES Season(Id),\n" +
-                    "    FOREIGN KEY(VideoAnimationId) REFERENCES VideoAnimation(Id)\n" +
-                    ");";
+                string creationString = @"
+                    CREATE TABLE IF NOT EXISTS SeasonVideoAnimationAssociativeEntityService (
+                        SeasonId INTEGER,
+                        VideoAnimationId INTEGER,
+                        FOREIGN KEY(SeasonId) REFERENCES Season(Id),
+                        FOREIGN KEY(VideoAnimationId) REFERENCES VideoAnimation(Id)
+                    );";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();

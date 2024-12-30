@@ -15,7 +15,7 @@
         /// <summary></summary>
         public Rating Rating { get; set; } = new Rating();
         /// <summary></summary>
-        public Tier Tier { get; set; } = Tier.E;
+        public Tier Tier { get; set; } = Tier.NotDefined;
         /// <summary></summary>
         public List<Season> Seasons { get; set; } = [];
         /// <summary>Mean is OVAs, Movies etc.</summary>
