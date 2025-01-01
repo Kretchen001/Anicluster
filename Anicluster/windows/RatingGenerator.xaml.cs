@@ -4,6 +4,7 @@ using Modells.Anime.SoundRating;
 using Modells.Anime;
 using System.Windows;
 using UC = Anicluster.userControls;
+using System.Windows.Documents;
 
 namespace Anicluster.windows {
     /// <summary>

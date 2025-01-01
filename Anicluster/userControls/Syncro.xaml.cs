@@ -1,5 +1,4 @@
-﻿using Anicluster.windows;
-using Anicluster.dialogs;
+﻿using Anicluster.dialogs;
 using Modells.Anime.SoundRating;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;

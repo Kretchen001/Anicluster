@@ -60,7 +60,7 @@ namespace Anicluster.windows {
 
         private void StarPath_MouseDown(object sender, MouseButtonEventArgs e) {
             if (NewAnime.Favorite) {
-                StarPath.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAFAFAF")); ;
+                StarPath.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAFAFAF"));
             }
             else {
                 StarPath.Fill = Brushes.Yellow;
