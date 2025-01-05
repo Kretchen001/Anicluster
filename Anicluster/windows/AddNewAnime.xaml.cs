@@ -221,6 +221,14 @@ namespace Anicluster.windows {
                 new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).Insert(NewAnime);
                 this.Close();
             }
+            else {
+                MessageBox.Show(
+                    "Pflichtfelder sind leider nicht ausgefüllt!", 
+                    "", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Warning
+                    );
+            }
             //zw string json = JsonSerializer.Serialize(myObject, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
         }
     }
