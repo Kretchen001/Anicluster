@@ -17,6 +17,7 @@ namespace Anicluster.windows {
         private RatingGenerator window_RatingGenerator = new RatingGenerator();
         private SeasonGenerator window_SeasonGenerator = new SeasonGenerator();
         private AddTagToAnime window_AddTagToAnime = new AddTagToAnime();
+        private PublishingTimeGenerator window_PublishingTime = new PublishingTimeGenerator();
 
         public AddNewAnime() {
             InitializeComponent();
@@ -215,9 +216,22 @@ namespace Anicluster.windows {
             window_AddTagToAnime = new AddTagToAnime(NewAnime.Tags);
         }
 
+        private void BtnPublishingTime_Click(object sender, RoutedEventArgs e) {
+            if (!window_PublishingTime.IsVisible) {
+                window_PublishingTime.Closed += PublishingTimeClosed!;
+                window_PublishingTime.Owner = this;
+                window_PublishingTime.Show();
+            }
+        }
+
+        private void PublishingTimeClosed(object sender, EventArgs e) {
+            NewAnime.MediaInfo.PublishingTime = window_PublishingTime.PublishingTime;
+            window_PublishingTime.Closed -= PublishingTimeClosed!;
+            window_PublishingTime = new PublishingTimeGenerator(NewAnime.MediaInfo.PublishingTime);
+        }
+
         private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
-            if (NewAnime.Name != "" &&
-                NewAnime.Seasons.Count != 0) {
+            if (NewAnime.Name != "") {
                 new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).Insert(NewAnime);
                 this.Close();
             }

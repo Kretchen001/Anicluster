@@ -13,8 +13,8 @@
         Width="600"
         ResizeMode="NoResize">
     <Grid>
-        <TabControl>
-            <TabItem Header="Auswertung">
+        <TabControl SelectionChanged="TabControl_SelectionChanged">
+            <TabItem x:Name="TabItemAuswertung" Header="Auswertung">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -22,7 +22,10 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Berechnung" Grid.Column="0" FontWeight="DemiBold"
                                Margin="5" Height="auto" VerticalAlignment="Top" HorizontalAlignment="Left" Width="auto"/>
-                    <wf:FormulaControl Scale="12" Grid.Column="1" Margin="10,5,5,5" Formula="\frac{Ge \cdot 40 + An \cdot 25 + SE \cdot 10 + A.G \cdot 25}{100}"/>
+                    <wf:FormulaControl Scale="14" Grid.Column="1" Margin="10,5,5,5" Formula="\frac{Ge \cdot 40 + An \cdot 25 + SE \cdot 10 + A.G \cdot 25}{100}" Height="auto"/>
+                    <TextBlock Text="Aktuelle Eingabe" Grid.Column="0" FontWeight="DemiBold"
+                               Margin="5,40,0,0" Height="auto" VerticalAlignment="Top" HorizontalAlignment="Left" Width="auto"/>
+                    <wf:FormulaControl x:Name="FormulaInsert" Scale="14" Grid.Column="1" Margin="10,40,5,5" Formula="\frac{Story \cdot 40 + Animation \cdot 25 + SpecialEffects \cdot 10 + Acoustic.General \cdot 25}{100} = General" Height="auto"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Bereiche">

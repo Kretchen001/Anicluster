@@ -471,9 +471,11 @@
                                                          VerticalContentAlignment="Center"
                                                          Grid.Column="1"/>
                                             </Grid>
-                                            <Button Height="30"
+                                            <Button x:Name="BtnPublishingTime"
+                                                    Height="30"
                                                     Margin="5"
-                                                    Style="{StaticResource GoldenButtonStyle}">
+                                                    Style="{StaticResource GoldenButtonStyle}"
+                                                    Click="BtnPublishingTime_Click">
                                                 Veröffentlichungszeitraum/-räume
                                             </Button>
                                         </StackPanel>

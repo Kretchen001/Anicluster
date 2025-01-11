@@ -13,6 +13,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem x:Name="MenuItemNewAnime" Header="Neuer Anime" Click="MenuItemNewAnime_Click" ToolTip="Strg + N" />
+            <MenuItem x:Name="MenuItemNewAnimeSmall" Header="Neuer Anime (kurz)" Click="MenuItemNewAnimeSmall_Click" />
             <MenuItem x:Name="MenuItemTags" Header="Tags" Click="MenuItemTags_Click"/>
         </Menu>
         <Grid>

@@ -63,5 +63,10 @@ namespace Anicluster {
             TagOrganisator tagOrga = new TagOrganisator();
             tagOrga.ShowDialog();
         }
+
+        private void MenuItemNewAnimeSmall_Click(object sender, RoutedEventArgs e) {
+            AddNewAnimeSmall addNewAnimeSmall = new AddNewAnimeSmall();
+            addNewAnimeSmall.ShowDialog();
+        }
     }
 }

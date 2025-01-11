@@ -15,7 +15,7 @@ namespace Anicluster.windows {
         public List<UcMusicPiece> MusicPiecesO = [];
         public List<UcMusicPiece> MusicPiecesE = [];
         public List<UC.Syncro> Syncros = [];
-        public string? CommentAcoustic {  get; set; }
+        public string? CommentAcoustic { get; set; }
 
         public int History { get; set; } = 0;
         public int Animation { get; set; } = 0;
@@ -158,6 +158,13 @@ namespace Anicluster.windows {
                 Soundtrack = inputDialog.Result;
                 ProgBarSoundtrack.Value = inputDialog.Result;
                 LbSoundtrack.Content = inputDialog.Result;
+            }
+        }
+
+        private void TabControl_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
+            if (TabItemAuswertung.IsSelected) {
+                Rating temp = GenerateRating();
+                FormulaInsert.Formula = $"\\frac{{{temp.Story} \\cdot 40 + {temp.Animation} \\cdot 25 + {temp.SpecialEffects} \\cdot 10 + {temp.Acoustic.General} \\cdot 25}}{{100}} = {temp.General}";
             }
         }
     }

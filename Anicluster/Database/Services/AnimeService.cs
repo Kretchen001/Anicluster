@@ -39,7 +39,7 @@ namespace Anicluster.Database.Services {
                         FOREIGN KEY (MediaInfoId) REFERENCES MediaInfo(Id),
                         FOREIGN KEY (StatusId) REFERENCES Status(Id)
                     );
-                    ";
+                ";
                 using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
                     try {
                         connection.Open();
@@ -174,6 +174,39 @@ namespace Anicluster.Database.Services {
                 }
                 catch (Exception ex) {
                     Log.Error(ex.StackTrace ?? "Error while inserting animeToInsert data");
+                    return false;
+                }
+                connection.Close();
+            }
+            return true;
+        }
+
+
+        public bool InsertFast(string animeName, bool animeFavorite, Tier animeTier) {
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
+                try {
+                    string insertAnimeQuery = @"
+                        INSERT INTO Anime (Name, Favorite, Tier)
+                            VALUES (@Name,
+                                    @Favorite,
+                                    @Tier
+                        );
+                    ";
+                    using (SqliteCommand cmd = new SqliteCommand(insertAnimeQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@Name", animeName);
+                        cmd.Parameters.AddWithValue("@Favorite", animeFavorite);
+                        cmd.Parameters.AddWithValue("@Tier", animeTier);
+                        cmd.ExecuteNonQuery();
+                        // request the id
+                        cmd.Parameters.Clear();
+                        cmd.CommandText = "SELECT last_insert_rowid();";
+                        object? result = cmd.ExecuteScalar();
+                        connection.Close();
+                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting a small Anime data");
                     return false;
                 }
                 connection.Close();
