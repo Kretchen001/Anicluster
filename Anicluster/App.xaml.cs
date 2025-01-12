@@ -7,6 +7,8 @@ using Modells.Anime;
 using Serilog;
 using System.IO;
 using System.Windows;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace Anicluster {
 
@@ -97,7 +99,7 @@ namespace Anicluster {
                 VideoAnimationService videoAnimationService = new VideoAnimationService(dbManager);
                 if (videoAnimationService.TableExist() == false) { videoAnimationService.InitializeTable(); }
 
-                if(animeService.CreateViewAnimeComplete()) {
+                if (animeService.CreateViewAnimeComplete()) {
                     Log.Information("vw_Anime created");
                 }
             }

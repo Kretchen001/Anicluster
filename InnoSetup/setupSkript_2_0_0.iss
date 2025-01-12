@@ -4,7 +4,7 @@
 #define MyAppName "Anicluster"
 #define MyAppVersion "2.0.0"
 #define MyAppPublisher "Kretchen001"
-#define MyAppExeName "Anicluster.bat"
+#define MyAppExeName "Anicluster.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -20,11 +20,12 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 InfoBeforeFile=D:\Visual_Studio_C#\Anicluster\InnoSetup\ReadMe.txt
 OutputDir=D:\Visual_Studio_C#\Anicluster\InnoSetup
-OutputBaseFilename=setup_v2_0_0
+OutputBaseFilename=setup_Anicluster_v2_0_0
 Password=Anicluster
 Encryption=yes
 Compression=lzma
 SolidCompression=yes
+PrivilegesRequired=none
 
 [Languages]
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
@@ -33,285 +34,16 @@ Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
-[Code]
-var
-  CustomPage: TWizardPage;
-  LabelText: TLabel;
-  LabelText2: TLabel;
-
-procedure InitializeWizard;
-begin
-  // Erstellen Sie eine benutzerdefinierte Seite
-  CustomPage := CreateCustomPage(wpWelcome, 'Hinweis', 'Dies ist Update!');
-
-  LabelText := TLabel.Create(WizardForm);
-  LabelText.Parent := CustomPage.Surface;
-  LabelText.Left := 16;
-  LabelText.Top := 16;
-  LabelText.Caption := 'Dieses Update benötigt zum Ausführen die Grundversion "Anicluster 1.0.x" oder';
-  LabelText2 := TLabel.Create(WizardForm);
-  LabelText2.Parent := CustomPage.Surface;
-  LabelText2.Left := 16;
-  LabelText2.Top := LabelText.Top + LabelText.Height + 16;
-  LabelText2.Caption := 'eine vollständige Installation von dotNet 6.0!';
-end;
-
 [Files]
-Source: "Anicluster.bat"; DestDir: "{app}"
-Source: "..\Anicluster\bin\Publish\Anicluster.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Anicluster.exe"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Anicluster.pdb"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Anicluster.runtimeconfig.json"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\clretwrc.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\clrgc.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\clrjit.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\coreclr.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\createdump.exe"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\D3DCompiler_47_cor3.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\DirectWriteForwarder.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\e_sqlite3.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\hostfxr.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\hostpolicy.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.CSharp.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.Data.Sqlite.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.DiaSymReader.Native.amd64.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.VisualBasic.Core.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.VisualBasic.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.VisualBasic.Forms.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.Win32.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.Win32.Registry.AccessControl.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.Win32.Registry.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Microsoft.Win32.SystemEvents.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Modells.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Modells.pdb"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\mscordaccore.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\mscordaccore_amd64_amd64_8.0.1124.51707.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\mscordbi.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\mscorlib.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\mscorrc.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\msquic.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\netstandard.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PenImc_cor3.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationCore.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework.Aero.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework.Aero2.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework.AeroLite.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework.Classic.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework.Luna.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework.Royale.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework-SystemCore.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework-SystemData.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework-SystemDrawing.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework-SystemXml.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationFramework-SystemXmlLinq.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationNative_cor3.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\PresentationUI.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\ReachFramework.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Serilog.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Serilog.Sinks.File.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\SQLitePCLRaw.batteries_v2.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\SQLitePCLRaw.core.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\SQLitePCLRaw.provider.e_sqlite3.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.AppContext.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Buffers.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.CodeDom.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Collections.Concurrent.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Collections.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Collections.Immutable.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Collections.NonGeneric.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Collections.Specialized.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ComponentModel.Annotations.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ComponentModel.DataAnnotations.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ComponentModel.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ComponentModel.EventBasedAsync.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ComponentModel.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ComponentModel.TypeConverter.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Configuration.ConfigurationManager.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Configuration.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Console.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Core.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Data.Common.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Data.DataSetExtensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Data.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Design.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.Contracts.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.Debug.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.DiagnosticSource.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.EventLog.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.EventLog.Messages.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.FileVersionInfo.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.PerformanceCounter.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.Process.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.StackTrace.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.TextWriterTraceListener.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.Tools.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.TraceSource.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Diagnostics.Tracing.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.DirectoryServices.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Drawing.Common.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Drawing.Design.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Drawing.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Drawing.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Dynamic.Runtime.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Formats.Asn1.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Formats.Tar.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Globalization.Calendars.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Globalization.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Globalization.Extensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.Compression.Brotli.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.Compression.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.Compression.FileSystem.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.Compression.Native.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.Compression.ZipFile.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.FileSystem.AccessControl.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.FileSystem.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.FileSystem.DriveInfo.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.FileSystem.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.FileSystem.Watcher.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.IsolatedStorage.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.MemoryMappedFiles.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.Packaging.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.Pipes.AccessControl.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.Pipes.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.IO.UnmanagedMemoryStream.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Linq.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Linq.Expressions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Linq.Parallel.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Linq.Queryable.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Memory.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Http.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Http.Json.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.HttpListener.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Mail.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.NameResolution.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.NetworkInformation.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Ping.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Quic.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Requests.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Security.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.ServicePoint.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.Sockets.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.WebClient.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.WebHeaderCollection.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.WebProxy.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.WebSockets.Client.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Net.WebSockets.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Numerics.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Numerics.Vectors.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ObjectModel.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Printing.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Private.CoreLib.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Private.DataContractSerialization.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Private.Uri.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Private.Xml.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Private.Xml.Linq.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.DispatchProxy.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.Emit.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.Emit.ILGeneration.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.Emit.Lightweight.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.Extensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.Metadata.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Reflection.TypeExtensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Resources.Extensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Resources.Reader.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Resources.ResourceManager.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Resources.Writer.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.CompilerServices.VisualC.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Extensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Handles.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.InteropServices.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.InteropServices.JavaScript.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.InteropServices.RuntimeInformation.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Intrinsics.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Loader.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Numerics.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Serialization.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Serialization.Formatters.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Serialization.Json.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Serialization.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Runtime.Serialization.Xml.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.AccessControl.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Claims.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.Algorithms.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.Cng.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.Csp.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.Encoding.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.OpenSsl.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.Pkcs.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.ProtectedData.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.X509Certificates.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Cryptography.Xml.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Permissions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Principal.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.Principal.Windows.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Security.SecureString.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ServiceModel.Web.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ServiceProcess.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Text.Encoding.CodePages.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Text.Encoding.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Text.Encoding.Extensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Text.Encodings.Web.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Text.Json.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Text.RegularExpressions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.AccessControl.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.Channels.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.Overlapped.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.Tasks.Dataflow.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.Tasks.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.Tasks.Parallel.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.Thread.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.ThreadPool.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Threading.Timer.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Transactions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Transactions.Local.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.ValueTuple.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Web.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Web.HttpUtility.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.Controls.Ribbon.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.Extensions.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.Forms.Design.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.Forms.Design.Editors.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.Forms.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.Forms.Primitives.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.Input.Manipulations.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Windows.Presentation.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xaml.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.Linq.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.ReaderWriter.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.Serialization.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.XDocument.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.XmlDocument.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.XmlSerializer.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.XPath.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\System.Xml.XPath.XDocument.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\UIAutomationClient.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\UIAutomationClientSideProviders.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\UIAutomationProvider.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\UIAutomationTypes.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\vcruntime140_cor3.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\WindowsBase.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\WindowsFormsIntegration.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\wpfgfx_cor3.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\WpfMath.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\XamlMath.Shared.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Accessibility.dll"; DestDir: "{app}\prog"; Flags: ignoreversion
-Source: "..\Anicluster\bin\Publish\Anicluster.deps.json"; DestDir: "{app}\prog"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\Anicluster.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\Anicluster.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\D3DCompiler_47_cor3.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\e_sqlite3.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\Modells.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\PenImc_cor3.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\PresentationNative_cor3.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\vcruntime140_cor3.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Anicluster\bin\Publish\wpfgfx_cor3.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -322,6 +54,10 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
-[Dirs]
-Name: "{app}\prog"
-Name: "{app}\prog\databaseLiteDB"
+;[Dirs]               ; aktuell nicht wegen Programmlogik
+;Name: "{app}\db"     ; aktuell nicht wegen Programmlogik
+;Name: "{app}\logs"   ; aktuell nicht wegen Programmlogik
+
+[UninstallRun]
+Filename: "{app}\logs"; Flags: skipifdoesntexist
+Filename: "{app}\db"; Flags: skipifdoesntexist
