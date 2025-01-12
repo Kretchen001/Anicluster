@@ -9,7 +9,8 @@
         Title="Veröffentlichungszeitraum"
         Height="350"
         Width="600"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Closed="Window_Closed">
     <StackPanel Margin="5">
         <GroupBox Header="Produktionsdaten">
             <UniformGrid>
@@ -31,7 +32,7 @@
             </UniformGrid>
         </GroupBox>
         <GroupBox Header="Unterbrechungen"
-                  Height="250">
+                  Height="225">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -45,34 +46,37 @@
                     <DatePicker x:Name="DateTimePickerNewInterruptionStart"
                                 Text="Start"
                                 Margin="0,0,0,2"
-                                FirstDayOfWeek="Monday"
-                                SelectedDateChanged="DateTimePickerNewInterruptionStart_SelectedDateChanged"/>
+                                FirstDayOfWeek="Monday"/>
                     <TextBlock x:Name="TxtBlockNewInterruptionEndDatum"
                                Text="Enddatum"
                                VerticalAlignment="Center"/>
                     <DatePicker x:Name="DateTimePickerNewInterruptionEnd"
                                 Text="Ende"
-                                FirstDayOfWeek="Monday"
-                                SelectedDateChanged="DateTimePickerNewInterruptionEnd_SelectedDateChanged"/>
+                                FirstDayOfWeek="Monday"/>
                 </UniformGrid>
                 <Button x:Name="BtnAddInterruption"
                         Grid.Row="1"
                         HorizontalAlignment="Right"
-                        Margin="5">
+                        Margin="5"
+                        Click="BtnAddInterruption_Click">
                     Hinzufügen
                 </Button>
-                <DataGrid Grid.Row="2"
+                <DataGrid x:Name="DgInterruptions"
+                          Grid.Row="2"
                           VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch">
+                          HorizontalAlignment="Stretch"
+                          AutoGenerateColumns="False"
+                          SelectionMode="Single"
+                          CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Startdatum" 
-                                            Binding="{Binding Interruptions.Start}" 
+                                            Binding="{Binding Start}" 
                                             Width="auto" />
                         <DataGridTextColumn Header="Enddatum" 
-                                            Binding="{Binding Interruptions.End}" 
+                                            Binding="{Binding End}" 
                                             Width="auto" />
                         <DataGridTextColumn Header="Kommentar" 
-                                            Binding="{Binding Interruptions.Comment}" 
+                                            Binding="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                             Width="*" />
                     </DataGrid.Columns>
                 </DataGrid>
