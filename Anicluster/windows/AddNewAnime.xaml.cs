@@ -1,6 +1,9 @@
 ﻿using Anicluster.Database;
 using Anicluster.Database.Services;
 using Modells.Anime;
+using System.Net;
+using System.Net.Http;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -237,13 +240,29 @@ namespace Anicluster.windows {
             }
             else {
                 MessageBox.Show(
-                    "Pflichtfelder sind leider nicht ausgefüllt!", 
-                    "", 
-                    MessageBoxButton.OK, 
+                    "Pflichtfelder sind leider nicht ausgefüllt!",
+                    "",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Warning
-                    );
+                );
             }
             //zw string json = JsonSerializer.Serialize(myObject, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
+        }
+
+        private void BtnAutoLinkGeneration_Click(object sender, RoutedEventArgs e) {
+            NewAnime.Url = $"https://www.anime-planet.com/anime/{WebUtility.UrlEncode(NewAnime.Name.Replace(" ", "-"))}";
+            TBxUrl.Text = NewAnime.Url;
+            //HttpClient client = new HttpClient();
+            //client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+            //HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, NewAnime.Url)).Result;
+            //if (!response.IsSuccessStatusCode)  {
+            //    MessageBox.Show(
+            //        "Link nicht pingbar!",
+            //        "",
+            //        MessageBoxButton.OK,
+            //        MessageBoxImage.Warning
+            //    );
+            //}
         }
     }
 }

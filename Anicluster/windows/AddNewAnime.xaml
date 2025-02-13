@@ -178,21 +178,18 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBox Grid.Column="0"
+                                                <TextBox x:Name="TBxUrl"
+                                                         Grid.Column="0"
                                                          Height="30"
                                                          Margin="0,0,5,0"
-                                                         Text="{Binding NewAnime.Url}"
+                                                         Text="{Binding NewAnime.Url, UpdateSourceTrigger=PropertyChanged}"
                                                          VerticalContentAlignment="Center"></TextBox>
-                                                <Button Grid.Column="1"
+                                                <Button x:Name="BtnAutoLinkGeneration"
+                                                        Grid.Column="1"
                                                         Padding="3,0,3,0"
-                                                        Style="{StaticResource GoldenButtonStyle}">
+                                                        Style="{StaticResource GoldenButtonStyle}"
+                                                        Click="BtnAutoLinkGeneration_Click">
                                                     Auto-Generation
-                                                    <Button.ToolTip>
-                                                        <StackPanel>
-                                                            <TextBlock>Bitte Link überprüfen.</TextBlock>
-                                                            <TextBlock>Keine Garantie auf Korrektheit aufgrund der Benutzereingaben!</TextBlock>
-                                                        </StackPanel>
-                                                    </Button.ToolTip>
                                                 </Button>
                                             </Grid>
                                         </StackPanel>
