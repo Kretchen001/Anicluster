@@ -1,5 +1,6 @@
 ﻿using Anicluster.dialogs;
 using Modells.Anime.SoundRating;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Anicluster.userControls {
@@ -39,6 +40,11 @@ namespace Anicluster.userControls {
                 MusicPiece.General = inputDialog.Result;
                 ProgBarGeneral.Value = inputDialog.Result;
             }
+        }
+
+        public event EventHandler RemoveThisUc;
+        private void MenuItem_Delete_Click(object sender, RoutedEventArgs e) {
+            RemoveThisUc.Invoke(this, e);
         }
     }
 }

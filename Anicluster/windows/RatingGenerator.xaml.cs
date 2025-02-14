@@ -69,20 +69,38 @@ namespace Anicluster.windows {
 
         private void BtnOpeningAdd_Click(object sender, RoutedEventArgs e) {
             UcMusicPiece piece = new UcMusicPiece(MusicPieceType.Opening);
+            piece.RemoveThisUc += RemoveOpening!;
             MusicPiecesO.Add(piece);
             StackPanelOpening.Children.Add(piece);
         }
 
+        private void RemoveOpening(object sender, EventArgs e) {
+            MusicPiecesO.Remove((UcMusicPiece)sender);
+            StackPanelOpening.Children.Remove((UcMusicPiece)sender);
+        }
+
         private void BtnEndingAdd_Click(object sender, RoutedEventArgs e) {
             UcMusicPiece piece = new UcMusicPiece(MusicPieceType.Ending);
+            piece.RemoveThisUc += RemoveEnding!;
             MusicPiecesE.Add(piece);
             StackPanelEnding.Children.Add(piece);
         }
 
-        private void BtnSyncorAdd_Click(object sender, RoutedEventArgs e) {
+        private void RemoveEnding(object sender, EventArgs e) {
+            MusicPiecesE.Remove((UcMusicPiece)sender);
+            StackPanelEnding.Children.Remove((UcMusicPiece)sender);
+        }
+
+        private void BtnSyncroAdd_Click(object sender, RoutedEventArgs e) {
             UC.Syncro syncro = new UC.Syncro();
+            syncro.RemoveThisSynco += RemoveSyncro!;
             Syncros.Add(syncro);
             StackPanelSyncro.Children.Add(syncro);
+        }
+
+        private void RemoveSyncro(object sender, EventArgs e) {
+            Syncros.Remove((UC.Syncro)sender);
+            StackPanelSyncro.Children.Remove((UC.Syncro)sender);
         }
 
         private void ProgBarHistory_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {

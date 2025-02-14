@@ -2,8 +2,6 @@
 using Anicluster.Database.Services;
 using Modells.Anime;
 using System.Net;
-using System.Net.Http;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

@@ -28,6 +28,12 @@
             </Setter>
         </Style>
     </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Eintrag entfernen"
+                      Click="MenuItem_Delete_Click"/>
+        </ContextMenu>
+    </UserControl.ContextMenu>
 
     <Border Style="{StaticResource RoundedBorder}">
         <StackPanel>

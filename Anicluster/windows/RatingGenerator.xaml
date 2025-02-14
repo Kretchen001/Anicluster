@@ -193,7 +193,7 @@
                             Width="150"
                             Margin="5,2,5,2"
                             HorizontalAlignment="Right"
-                            Click="BtnSyncorAdd_Click">
+                            Click="BtnSyncroAdd_Click">
                         Hinzufügen
                     </Button>
                 </Grid>

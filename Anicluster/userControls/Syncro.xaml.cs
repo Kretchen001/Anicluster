@@ -1,6 +1,7 @@
 ﻿using Anicluster.dialogs;
 using Modells.Anime.SoundRating;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 using AnimeSR = Modells.Anime.SoundRating;
 
@@ -53,6 +54,11 @@ namespace Anicluster.userControls {
                 NewSyncro.General = inputDialog.Result;
                 ProgBarGeneral.Value = inputDialog.Result;
             }
+        }
+
+        public event EventHandler RemoveThisSynco;
+        private void MenuItem_Delete_Click(object sender, RoutedEventArgs e) {
+            RemoveThisSynco.Invoke(this, e);
         }
     }
 }
