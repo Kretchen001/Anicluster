@@ -15,6 +15,13 @@
             <MenuItem x:Name="MenuItemNewAnime" Header="Neuer Anime" Click="MenuItemNewAnime_Click" ToolTip="Strg + N" />
             <MenuItem x:Name="MenuItemNewAnimeSmall" Header="Neuer Anime (kurz)" Click="MenuItemNewAnimeSmall_Click" />
             <MenuItem x:Name="MenuItemTags" Header="Tags" Click="MenuItemTags_Click"/>
+            <MenuItem Header="Sortierung">
+                <MenuItem x:Name="SortId" Header="Nach interner ID" Click="SortId_Click"/>
+                <MenuItem x:Name="SortName" Header="Nach Name" Click="SortName_Click"/>
+                <MenuItem x:Name="SortStatus" Header="Nach Status" Click="SortStatus_Click" />
+                <MenuItem x:Name="SortFav" Header="Nach Favorisierung" Click="SortFav_Click" />
+                <MenuItem x:Name="SortTier" Header="Nach Favorisierung" Click="SortTier_Click" />
+            </MenuItem>
         </Menu>
         <Grid>
             <StackPanel x:Name="StackPnlAnimes" Margin="5" CanVerticallyScroll="True" CanHorizontallyScroll="False">
