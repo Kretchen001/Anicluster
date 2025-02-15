@@ -5,6 +5,7 @@ using Modells.Anime;
 using System.Windows;
 using UC = Anicluster.userControls;
 using System.Windows.Documents;
+using System.Windows.Controls.Primitives;
 
 namespace Anicluster.windows {
     /// <summary>
@@ -188,6 +189,14 @@ namespace Anicluster.windows {
 
         private void MenuItemAceptRating_Click(object sender, RoutedEventArgs e) {
             this.Close();
+        }
+
+        private void MenuItemHelp_Click(object sender, RoutedEventArgs e) {
+            PopUpHelp.IsOpen = true;
+        }
+
+        private void PopUpHelp_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) {
+            PopUpHelp.IsOpen = false;
         }
     }
 }

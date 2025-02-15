@@ -3,7 +3,7 @@
 
         public int General {
             get {
-                int temp = (Soundtrack != -1 ? Soundtrack : 0) * 4;
+                int temp = (Soundtrack != -1 ? Soundtrack : 0);
                 int s0 = 0, s1 = 0, s2 = 0;
                 int c0 = 0, c1 = 0, c2 = 0;
                 if (Opening.Count == 0) { c0 = 1; }
@@ -24,15 +24,19 @@
                 }
                 c2 = c2 != 0 ? c2 : 1; // check if any Syncro IsAssessed
 
-                temp += (s0 / c0); // Opening
-                temp += (s1 / c1); // Ending
-                temp += (s2 / c2) * 4; // Syncro
-                return (temp / 10);
+                int temp2 = (s0 / c0); // Opening
+                temp2 += (s1 / c1); // Ending
+                temp2 += (s2 / c2); // Syncro
+                if (temp2 != 0) {
+                    temp = (temp * 4 + temp2) / 5;
+                }
+                return (temp);
             }
         }
         public List<MusicPiece> Opening { get; set; } = [];
         public List<MusicPiece> Ending { get; set; } = [];
         public int Soundtrack { get; set; } = -1;
+        public List<MusicPiece> Sounds { get; set; }
         public List<Syncro> Syncro { get; set; } = [];
         public string? Comment { get; set; }
 

@@ -21,7 +21,17 @@
             <MenuItem x:Name="MenuItemAceptRating"
                       Header="Bewertung übernehmen"
                       Click="MenuItemAceptRating_Click" />
+            <MenuItem x:Name="MenuItemHelp"
+                      Header="?"
+                      Click="MenuItemHelp_Click" />
         </Menu>
+        <Popup x:Name="PopUpHelp" 
+               Placement="Mouse"  
+               MouseLeave="PopUpHelp_MouseLeave">
+            <TextBox>
+                Einträge lassen sich per Kontextmenü (Rechtsklick) wieder entfernen.
+            </TextBox>
+        </Popup>
         <TabControl SelectionChanged="TabControl_SelectionChanged"
                     Grid.Row="1">
             <TabItem x:Name="TabItemAuswertung" Header="Auswertung">
