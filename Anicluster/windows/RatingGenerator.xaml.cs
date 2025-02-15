@@ -185,5 +185,9 @@ namespace Anicluster.windows {
                 FormulaInsert.Formula = $"\\frac{{{temp.Story} \\cdot 40 + {temp.Animation} \\cdot 25 + {temp.SpecialEffects} \\cdot 10 + {temp.Acoustic.General} \\cdot 25}}{{100}} = {temp.General}";
             }
         }
+
+        private void MenuItemAceptRating_Click(object sender, RoutedEventArgs e) {
+            this.Close();
+        }
     }
 }

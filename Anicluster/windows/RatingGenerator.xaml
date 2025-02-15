@@ -13,7 +13,17 @@
         Width="600"
         ResizeMode="NoResize">
     <Grid>
-        <TabControl SelectionChanged="TabControl_SelectionChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem x:Name="MenuItemAceptRating"
+                      Header="Bewertung übernehmen"
+                      Click="MenuItemAceptRating_Click" />
+        </Menu>
+        <TabControl SelectionChanged="TabControl_SelectionChanged"
+                    Grid.Row="1">
             <TabItem x:Name="TabItemAuswertung" Header="Auswertung">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
@@ -156,7 +166,7 @@
                             Margin="5,2,5,2"
                             HorizontalAlignment="Right"
                             Click="BtnOpeningAdd_Click">
-                        Hinzufügen
+                        Opening Hinzufügen
                     </Button>
                 </Grid>
             </TabItem>
@@ -175,7 +185,7 @@
                             Margin="5,2,5,2"
                             HorizontalAlignment="Right"
                             Click="BtnEndingAdd_Click">
-                        Hinzufügen
+                        Ending Hinzufügen
                     </Button>
                 </Grid>
             </TabItem>
@@ -194,11 +204,10 @@
                             Margin="5,2,5,2"
                             HorizontalAlignment="Right"
                             Click="BtnSyncroAdd_Click">
-                        Hinzufügen
+                        Syncronisation Hinzufügen
                     </Button>
                 </Grid>
             </TabItem>
         </TabControl>
-
     </Grid>
 </Window>
