@@ -16,13 +16,14 @@
                     s1 += x.General;
                     c1 += 1;
                 }
-                if (Syncro.Count == 0) { c2 = 1; }
                 foreach (Syncro x in Syncro) {
                     if (x.IsAssessed) {
                         s2 += x.General;
                         c2 += 1;
                     }
                 }
+                c2 = c2 != 0 ? c2 : 1; // check if any Syncro IsAssessed
+
                 temp += (s0 / c0); // Opening
                 temp += (s1 / c1); // Ending
                 temp += (s2 / c2) * 4; // Syncro

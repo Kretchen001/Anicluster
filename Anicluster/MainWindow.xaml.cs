@@ -15,6 +15,13 @@ namespace Anicluster {
     public partial class MainWindow : Window {
 
         public DataTable Animes { get; set; }
+        private Dictionary<string, bool> SortDictionaryASC { get; set; } = new Dictionary<string, bool>() {
+            { "AnimeId", true },
+            { "AnimeName", true },
+            { "StatusState", true },
+            { "Favorite", true },
+            { "Tier", true },
+        };
 
         public MainWindow() {
             InitializeComponent();
@@ -89,23 +96,53 @@ namespace Anicluster {
         }
 
         private void SortId_Click(object sender, RoutedEventArgs e) {
-            SortDataTableByGivenCol("AnimeId", "ASC");
+            if (SortDictionaryASC["AnimeId"]) {
+                SortDataTableByGivenCol("AnimeId", "ASC");
+            }
+            else {
+                SortDataTableByGivenCol("AnimeId", "DESC");
+            }
+            SortDictionaryASC["AnimeId"] = !SortDictionaryASC["AnimeId"];
         }
 
         private void SortName_Click(object sender, RoutedEventArgs e) {
-            SortDataTableByGivenCol("AnimeName", "ASC");
+            if (SortDictionaryASC["AnimeName"]) {
+                SortDataTableByGivenCol("AnimeName", "ASC");
+            }
+            else {
+                SortDataTableByGivenCol("AnimeName", "DESC");
+            }
+            SortDictionaryASC["AnimeName"] = !SortDictionaryASC["AnimeName"];
         }
 
         private void SortStatus_Click(object sender, RoutedEventArgs e) {
-            SortDataTableByGivenCol("StatusState", "ASC");
+            if (SortDictionaryASC["StatusState"]) {
+                SortDataTableByGivenCol("StatusState", "ASC");
+            }
+            else {
+                SortDataTableByGivenCol("StatusState", "DESC");
+            }
+            SortDictionaryASC["StatusState"] = !SortDictionaryASC["StatusState"];
         }
 
         private void SortFav_Click(object sender, RoutedEventArgs e) {
-            SortDataTableByGivenCol("Favorite", "ASC");
+            if (SortDictionaryASC["Favorite"]) {
+                SortDataTableByGivenCol("Favorite", "ASC");
+            }
+            else {
+                SortDataTableByGivenCol("Favorite", "DESC");
+            }
+            SortDictionaryASC["Favorite"] = !SortDictionaryASC["Favorite"];
         }
 
         private void SortTier_Click(object sender, RoutedEventArgs e) {
-            SortDataTableByGivenCol("Tier", "ASC");
+            if (SortDictionaryASC["Tier"]) {
+                SortDataTableByGivenCol("Tier", "ASC");
+            }
+            else {
+                SortDataTableByGivenCol("Tier", "DESC");
+            }
+            SortDictionaryASC["Tier"] = !SortDictionaryASC["Tier"];
         }
     }
 }

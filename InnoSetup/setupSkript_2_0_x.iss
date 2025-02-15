@@ -2,14 +2,11 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Anicluster"
-#define MyAppVersion "2.0.1"
+#define MyAppVersion "2.0.3"
 #define MyAppPublisher "Kretchen001"
 #define MyAppExeName "Anicluster.exe"
 
 [Setup]
-; NOTE: The value of AppId uniquely identifies this application.
-; Do not use the same AppId value in installers for other applications.
-; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{4DACC09A-0C9C-40CE-A0B4-0A240F902801}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
@@ -20,7 +17,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 InfoBeforeFile=D:\Visual_Studio_C#\Anicluster\InnoSetup\ReadMe.txt
 OutputDir=D:\Visual_Studio_C#\Anicluster\InnoSetup
-OutputBaseFilename=setup_Anicluster_v2_0_1
+OutputBaseFilename=setup_Anicluster_v2_0_3
 Password=Anicluster
 Encryption=yes
 Compression=lzma
