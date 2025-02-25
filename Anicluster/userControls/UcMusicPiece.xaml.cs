@@ -46,5 +46,9 @@ namespace Anicluster.userControls {
         private void MenuItem_Delete_Click(object sender, RoutedEventArgs e) {
             RemoveThisUc.Invoke(this, e);
         }
+
+        private void BtnRemoveEntry_Click(object sender, RoutedEventArgs e) {
+            RemoveThisUc(this, e);
+        }
     }
 }

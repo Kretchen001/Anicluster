@@ -27,6 +27,22 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <ControlTemplate x:Key="buttonCrossTemplate" TargetType="Button">
+            <Path Data="M0,0 L8,8 M8,0 L0,8" Margin="5,5,0,0" StrokeThickness="3">
+                <Path.Style>
+                    <Style TargetType="{x:Type Path}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Stroke" Value="LightGray" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Stroke" Value="Red" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Path.Style>
+            </Path>
+        </ControlTemplate>
     </UserControl.Resources>
     <UserControl.ContextMenu>
         <ContextMenu>
@@ -45,11 +61,26 @@
                 <TextBlock Grid.Column="0"
                            VerticalAlignment="Center"
                            Margin="0,0,0,6">Name:</TextBlock>
-                <TextBox Grid.Column="1"
+                <Grid Grid.Column=" 1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0"
                          Text="{Binding Name}"
                          FontSize="16"
                          FontWeight="Bold"
                          Margin="0,0,0,5"/>
+                    <Button x:Name="BtnRemoveEntry"
+                            Grid.Column="1"
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="top"
+                            Margin="0,-2,-5,0"
+                            Template="{StaticResource ResourceKey=buttonCrossTemplate}"
+                            Click="BtnRemoveEntry_Click"/>
+                </Grid>
             </Grid>
             <Grid>
                 <ProgressBar x:Name="ProgBarGeneral"
