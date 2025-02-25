@@ -45,6 +45,7 @@ namespace Anicluster {
                     Animes.Load(result);
                     connection.Close();
                 }
+                StackPnlAnimes.Children.Clear();
                 foreach (DataRow row in Animes.Rows) {
                     StackPnlAnimes.Children.Add(
                         new AnimeMainWindowDisplay(new AnimeViewModel(
@@ -62,6 +63,7 @@ namespace Anicluster {
         private void OpenAddNewAnime(object sender, ExecutedRoutedEventArgs? e) {
             AddNewAnime addNewAnime = new AddNewAnime();
             addNewAnime.ShowDialog();
+            RequestAnimesPerViewAndAddToStackPnl();
         }
 
         private void MenuItemNewAnime_Click(object sender, RoutedEventArgs e) {
