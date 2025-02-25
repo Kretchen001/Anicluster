@@ -85,12 +85,16 @@ namespace Anicluster.Database.Services {
             // first insert and then map the opening and ending
             List<int> oList = new List<int>(acousticToInsert.Opening.Count);
             List<int> eList = new List<int>(acousticToInsert.Ending.Count);
+            List<int> sList = new List<int>(acousticToInsert.Sounds.Count);
             MusicPieceService mpService = new MusicPieceService(_databaseManager);
             foreach (MusicPiece x in acousticToInsert.Opening) {
                 oList.Add(mpService.Insert(x));
             }
             foreach (MusicPiece x in acousticToInsert.Ending) {
                 eList.Add(mpService.Insert(x));
+            }
+            foreach (MusicPiece x in acousticToInsert.Sounds) {
+                sList.Add(mpService.Insert(x));
             }
             AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(_databaseManager);
             foreach (int x in oList) {
@@ -99,14 +103,17 @@ namespace Anicluster.Database.Services {
             foreach (int x in eList) {
                 ampaes.Insert(acousticId, x);
             }
+            foreach (int x in sList) {
+                ampaes.Insert(acousticId, x);
+            }
             // insert and map the syncros
-            List<int> sList = new List<int>(acousticToInsert.Syncro.Count);
+            List<int> syncroList = new List<int>(acousticToInsert.Syncro.Count);
             SyncroService syncroService = new SyncroService(_databaseManager);
             foreach (Syncro x in acousticToInsert.Syncro) {
-                sList.Add(syncroService.Insert(x));
+                syncroList.Add(syncroService.Insert(x));
             }
             AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(_databaseManager);
-            foreach (int x in sList) {
+            foreach (int x in syncroList) {
                 asaes.Insert(acousticId, x);
             }
 

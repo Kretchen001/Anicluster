@@ -4,8 +4,6 @@ using Modells.Anime.SoundRating;
 using Modells.Anime;
 using System.Windows;
 using UC = Anicluster.userControls;
-using System.Windows.Documents;
-using System.Windows.Controls.Primitives;
 
 namespace Anicluster.windows {
     /// <summary>
@@ -15,6 +13,7 @@ namespace Anicluster.windows {
 
         public List<UcMusicPiece> MusicPiecesO = [];
         public List<UcMusicPiece> MusicPiecesE = [];
+        public List<UcMusicPiece> SoundtrackPieces = [];
         public List<UC.Syncro> Syncros = [];
         public string? CommentAcoustic { get; set; }
 
@@ -66,6 +65,34 @@ namespace Anicluster.windows {
                     ),
                 isRated: true
                 );
+        }
+
+        private void BtnSoundtrackAdd_Click(object sender, RoutedEventArgs e) {
+            UcMusicPiece piece = new UcMusicPiece(MusicPieceType.Other);
+            piece.RemoveThisUc += RemoveSoundtrack!;
+            SoundtrackPieces.Add(piece);
+            StackPanelSoundtracks.Children.Add(piece);
+        }
+
+        private void RemoveSoundtrack(object sender, EventArgs e) {
+            SoundtrackPieces.Remove((UcMusicPiece)sender);
+            StackPanelSoundtracks.Children.Remove((UcMusicPiece)sender);
+        }
+
+        private void BtnSoundtrackCalculate_Click(object sender, RoutedEventArgs e) {
+            if (SoundtrackPieces.Count > 0) {
+                Soundtrack = 0;
+                foreach (UcMusicPiece x in SoundtrackPieces) {
+                    Soundtrack += x.MusicPiece.General;
+                }
+                this.Soundtrack /= SoundtrackPieces.Count;
+                LbSoundtrack.Content = Soundtrack;
+                ProgBarSoundtrack.Value = Soundtrack;
+                RatingDisplayFunction();
+            }
+            else {
+                MessageBox.Show("Keine Soundtracks zum Berechnen eingetragen!");
+            }
         }
 
         private void BtnOpeningAdd_Click(object sender, RoutedEventArgs e) {
@@ -170,20 +197,49 @@ namespace Anicluster.windows {
             }
             ProgBarSoundtrack.Value = Soundtrack;
             LbSoundtrack.Content = Soundtrack;
+            RatingDisplayFunction();
         }
+
         private void ProgBarSoundtrack_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             NumberInputDialog inputDialog = new NumberInputDialog();
             if (inputDialog.ShowDialog() == true) {
                 Soundtrack = inputDialog.Result;
                 ProgBarSoundtrack.Value = inputDialog.Result;
                 LbSoundtrack.Content = inputDialog.Result;
+                RatingDisplayFunction();
             }
         }
 
         private void TabControl_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
+            RatingDisplayFunction();
+        }
+
+        private void RatingDisplayFunction() {
             if (TabItemAuswertung.IsSelected) {
                 Rating temp = GenerateRating();
                 FormulaInsert.Formula = $"\\frac{{{temp.Story} \\cdot 40 + {temp.Animation} \\cdot 25 + {temp.SpecialEffects} \\cdot 10 + {temp.Acoustic.General} \\cdot 25}}{{100}} = {temp.General}";
+            }
+            else if (TabItemBereiche.IsSelected) {
+                Rating temp = GenerateRating();
+                int tempOpening = 0, tempEnding = 0, tempSyncros = 0;
+                foreach (UcMusicPiece x in MusicPiecesO) {
+                    tempOpening += x.MusicPiece.General;
+                }
+                tempOpening /= MusicPiecesO.Count != 0 ? MusicPiecesO.Count : 1;
+                foreach (UcMusicPiece x in MusicPiecesE) {
+                    tempEnding += x.MusicPiece.General;
+                }
+                tempEnding /= MusicPiecesE.Count != 0 ? MusicPiecesE.Count : 1;
+                foreach (UC.Syncro x in Syncros) {
+                    tempOpening += x.NewSyncro.General;
+                }
+                tempOpening /= Syncros.Count != 0 ? Syncros.Count : 1;
+                int c = 0;
+                c += tempEnding != 0 ? 1 : 0;
+                c += tempOpening != 0 ? 1 : 0;
+                c += tempSyncros != 0 ? 1 : 0;
+                c += Soundtrack != 0 ? 1 : 0;
+                LbAkustikGesamt.Content = $"({tempOpening} + {tempEnding} + {tempSyncros} + {Soundtrack})/{c} = {temp.Acoustic.General}";
             }
         }
 

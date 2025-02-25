@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Anicluster"
-#define MyAppVersion "2.0.4"
+#define MyAppVersion "2.0.5"
 #define MyAppPublisher "Kretchen001"
 #define MyAppExeName "Anicluster.exe"
 
@@ -17,7 +17,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 InfoBeforeFile=D:\Visual_Studio_C#\Anicluster\InnoSetup\ReadMe.txt
 OutputDir=D:\Visual_Studio_C#\Anicluster\InnoSetup
-OutputBaseFilename=setup_Anicluster_v2_0_4
+OutputBaseFilename=setup_Anicluster_v2_0_5
 Password=Anicluster
 Encryption=yes
 Compression=lzma

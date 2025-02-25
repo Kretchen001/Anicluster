@@ -35,8 +35,22 @@
         }
         public List<MusicPiece> Opening { get; set; } = [];
         public List<MusicPiece> Ending { get; set; } = [];
-        public int Soundtrack { get; set; } = -1;
-        public List<MusicPiece> Sounds { get; set; }
+        private int soundtrack = -1;
+        public int Soundtrack {
+            get { 
+                int temp = soundtrack;
+                if (Sounds.Count >= 1) {
+                    temp = 0;
+                    foreach (MusicPiece x in Sounds) {
+                        temp += x.General;
+                    }
+                    temp /= Sounds.Count;
+                }
+                return temp;
+            }
+            set { soundtrack = value; }
+        }
+        public List<MusicPiece> Sounds { get; set; } = [];
         public List<Syncro> Syncro { get; set; } = [];
         public string? Comment { get; set; }
 
