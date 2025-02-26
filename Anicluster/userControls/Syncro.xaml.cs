@@ -33,9 +33,9 @@ namespace Anicluster.userControls {
             foreach (KeyValuePair<SyncroLanuage, string> x in TranslationOfLanguage) {
                 Languages.Add(x);
             }
-            ProgBarGeneral.Value = 0;
-            CBLanguageSelection.SelectedIndex = 0;
-            NewSyncro.General = 0;
+            NewSyncro.General = NewSyncro.General.Equals(-1) ? 0 : NewSyncro.General;
+            ProgBarGeneral.Value = NewSyncro.General;
+            CBLanguageSelection.SelectedIndex = NewSyncro.General;
         }
 
         private void ProgBarGeneral_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
