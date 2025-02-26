@@ -1,7 +1,11 @@
 ﻿using Anicluster.Database.Services.AssociativeEntities;
+using Anicluster.userControls;
 using Microsoft.Data.Sqlite;
 using Modells.Anime;
+using Modells.Anime.SoundRating;
+using Modells.ViewModel;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services {
 
@@ -215,16 +219,52 @@ namespace Anicluster.Database.Services {
         }
 
         // TODO
-        //public Anime? SelectAnimeByX(int id = -1, string designation = "") {
-        //    if (id.Equals(-1) && designation.Equals("")) {
-        //        return null;
-        //    }
+        public Anime? SelectAnimeByX(int id = -1, string designation = "") {
+            if (id.Equals(-1) && designation.Equals("")) {
+                return null;
+            }
 
-        //    string selectByViewId = @"SELECT * FROM vw_Anime WHERE AnimeId = @AnimeName;";
-        //    string selectByViewDesigantion = @"SELECT * FROM vw_Anime WHERE AnimeName = @AnimeName;";
+            Anime selectedAnime = new Anime();
 
-        //    return new Anime();
-        //}
+            string query = id == -1 ? @"SELECT * FROM Anime WHERE AnimeName = @A;" : @"SELECT * FROM Anime WHERE AnimeId = @A;";
+
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    cmd.Parameters.AddWithValue("@A", id == -1 ? designation : id);
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            selectedAnime.Id = (int)((long)resDt.Rows[0]["Id"]);
+            selectedAnime.Name = resDt.Rows[0]["Name"].ToString() ?? "";
+            selectedAnime.OriginalName = resDt.Rows[0]["OriginalName"].ToString();
+            selectedAnime.Url = resDt.Rows[0]["Url"].ToString() ?? "";
+            selectedAnime.Favorite = (bool)resDt.Rows[0]["Favorite"];
+            selectedAnime.Tier = (Tier)Enum.Parse(typeof(Tier), resDt.Rows[0]["Tier"].ToString() ?? "NotDefinied");
+            selectedAnime.RecommendedFrom = resDt.Rows[0]["RecommendedFrom"].ToString();
+            selectedAnime.Predecessor = (int)((long)resDt.Rows[0]["Predecessor"]);
+            selectedAnime.Successor = (int)((long)resDt.Rows[0]["Successor"]);
+            selectedAnime.Related = (int)((long)resDt.Rows[0]["Related"]);
+            selectedAnime.Comment = resDt.Rows[0]["Comment"].ToString();
+
+            selectedAnime.Rating = new RatingService(_databaseManager).GetRatingById((int)((long)resDt.Rows[0]["RatingId"]));
+            selectedAnime.MediaInfo = new MediaInfoService(_databaseManager).GetMediaInfoById((int)((long)resDt.Rows[0]["MediaInfoId"]));
+            selectedAnime.Status = new StatusService(_databaseManager).GetStatusById((int)((long)resDt.Rows[0]["StatusId"]));
+
+            List<int> ovaIds = new AnimeOvaAssociativeEntityService(_databaseManager).GetOvaIdsByAnimeId(selectedAnime.Id);
+            selectedAnime.Ovas = new VideoAnimationService(_databaseManager).GetOvas(ovaIds);
+
+            List<int> seasonIds = new AnimeSeasonAssociativeEntityService(_databaseManager).GetSeasonIdsByAnimeId(selectedAnime.Id);
+            selectedAnime.Seasons = new SeasonService(_databaseManager).GetSeasonsByIds(seasonIds);
+
+            List<int> tagIds = new AnimeTagAssociativeEntityService(_databaseManager).GetTagIdsForAnimeId(selectedAnime.Id);
+            selectedAnime.Tags = new TagService(_databaseManager).GetTagsByIds(tagIds);
+
+            return selectedAnime;
+        }
 
         #region View(s)
         /// <summary>
@@ -290,6 +330,12 @@ namespace Anicluster.Database.Services {
                 }
             }
             return true;
+        }
+        
+        public Anime? SelectAnimeByXPerView(int id = -1, string designation = "") {
+            string query = id == -1 ? @"SELECT * FROM vw_Anime WHERE AnimeName = @AnimeName;" : @"SELECT * FROM vw_Anime WHERE AnimeId = @AnimeName;";
+
+            return null;
         }
         #endregion
     }

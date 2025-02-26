@@ -80,5 +80,9 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 connection.Close();
             }
         }
+
+        public List<int> GetOvaIdsByAnimeId(int id = -1) {
+            return [];
+        }
     }
 }

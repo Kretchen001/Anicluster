@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
+using System.Data;
+using System.Xml.Linq;
 
 namespace Anicluster.Database.Services {
 
@@ -102,6 +104,28 @@ namespace Anicluster.Database.Services {
                     }
                 }
             }
+        }
+
+        public List<VideoAnimation> GetOvas(List<int> ids) {
+            List<VideoAnimation> vas = [];
+            DataTable resDt = new DataTable();
+            string query = $"SELECT Id, Comment FROM VideoAnimation WHERE Id IN ({String.Join(", ", ids)})";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            foreach (DataRow row in resDt.Rows) {
+                vas.Add(new VideoAnimation(
+                    (int)((long)row["Id"]),
+                    VideoType.Ova,
+                    row["Comment"].ToString()
+                ));
+            }
+            return vas;
         }
     }
 }

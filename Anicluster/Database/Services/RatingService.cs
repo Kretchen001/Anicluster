@@ -97,5 +97,9 @@ namespace Anicluster.Database.Services {
             }
             return ratingId;
         }
+
+        public Rating GetRatingById(int id = -1) {
+            return new Rating();
+        }
     }
 }

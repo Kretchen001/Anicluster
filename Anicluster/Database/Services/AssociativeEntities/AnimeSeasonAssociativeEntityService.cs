@@ -68,5 +68,9 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 connection.Close();
             }
         }
+
+        public List<int> GetSeasonIdsByAnimeId(int id = -1) {
+            return [];
+        }
     }
 }

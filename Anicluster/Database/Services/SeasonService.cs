@@ -116,5 +116,9 @@ namespace Anicluster.Database.Services {
                 return insertedSeasonId;
             }
         }
+
+        public List<Season> GetSeasonsByIds(List<int> ids) {
+            return [];
+        }
     }
 }

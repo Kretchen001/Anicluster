@@ -82,5 +82,9 @@ namespace Anicluster.Database.Services {
             }
             return statusId;
         }
+
+        public Status GetStatusById(int id = -1) {
+            return new Status();
+        }
     }
 }

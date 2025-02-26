@@ -71,6 +71,10 @@ namespace Anicluster.Database.Services.AssociativeEntities {
             }
         }
 
+        public List<int> GetTagIdsForAnimeId(int id = -1) {
+            return [];
+        }
+
         //public void RemoveTagFromAnime(int animeId, int tagId) {
         //    using (var connection = _databaseManager.GetConnection()) {
         //        connection.Open();

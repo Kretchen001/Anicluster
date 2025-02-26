@@ -201,6 +201,10 @@ namespace Anicluster.Database.Services {
             }
         }
 
+        public List<Tag> GetTagsByIds(List<int> ids) {
+            return [];
+        }
+
         /// <summary></summary>
         /// <param name="tagToDelete"></param>
         /// <returns></returns>

@@ -90,5 +90,9 @@ namespace Anicluster.Database.Services {
             }
             return mediaInfoId;
         }
+
+        public MediaInfo GetMediaInfoById(int id = -1) {
+            return new MediaInfo();
+        }
     }
 }
