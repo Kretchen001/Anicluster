@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services {
 
@@ -84,7 +85,24 @@ namespace Anicluster.Database.Services {
         }
 
         public Status GetStatusById(int id = -1) {
-            return new Status();
+            string query = $"" +
+                $"SELECT Id, State, Comment\n" +
+                $"FROM Status\n" +
+                $"WHERE Id = '{id}'";
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            return new Status(
+                id: (int)((long)resDt.Rows[0]["Id"]),
+                state: (State)Enum.Parse(typeof(State), resDt.Rows[0]["Status"].ToString() ?? "0"),
+                comment: resDt.Rows[0]["Comment"].ToString()
+            );
         }
     }
 }
