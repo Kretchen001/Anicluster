@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
 
@@ -67,6 +68,25 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 }
                 connection.Close();
             }
+        }
+
+        public List<int> GetVideoAnimationById(int id = -1) {
+            string query = $"" +
+                $"SELECT VideoAnimationId\n" +
+                $"FROM SeasonVideoAnimationAssociativeEntityService\n" +
+                $"WHERE\n" +
+                $"    SeasonId={id}";
+
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            return resDt.AsEnumerable().Select(row => row.Field<int>("VideoAnimationId")).ToList();
         }
     }
 }

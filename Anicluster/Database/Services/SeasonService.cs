@@ -2,6 +2,8 @@
 using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
+using System.Data;
+using System.Xml.Linq;
 
 namespace Anicluster.Database.Services {
 
@@ -118,7 +120,32 @@ namespace Anicluster.Database.Services {
         }
 
         public List<Season> GetSeasonsByIds(List<int> ids) {
-            return [];
+            List<Season> seasons = [];
+            DataTable resDt = new DataTable();
+            string query = $"SELECT Id, Number, Comment, PublishingTimeId FROM Season WHERE Id IN ({String.Join(", ", ids)})";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            PublishingTimeService pts = new PublishingTimeService(_databaseManager);
+            SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(_databaseManager);
+            VideoAnimationService vas = new VideoAnimationService(_databaseManager);
+            foreach (DataRow row in resDt.Rows) {
+                Season tempSeason = new Season(
+                    (int)((long)row["Id"]),
+                    (int)((long)row["Number"]),
+                    row["Comment"].ToString()
+                );
+                tempSeason.PublishingTime = pts.SelectById((int)((long)row["PublishingTimeId"]));
+                List<int> VideoAnimationIds = svaaes.GetVideoAnimationById(tempSeason.Id);
+                tempSeason.Episodes.AddRange(vas.GetOvas(VideoAnimationIds));
+                seasons.Add(tempSeason);
+            }
+            return seasons;
         }
     }
 }

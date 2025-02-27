@@ -1,5 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
+using Modells.Anime;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
     internal class AnimeOvaAssociativeEntityService : IDatabaseService {
@@ -82,7 +84,22 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         }
 
         public List<int> GetOvaIdsByAnimeId(int id = -1) {
-            return [];
+            string query = $"" +
+                $"SELECT VideoAnimationId\n" +
+                $"FROM AnimeOvaAssociativeEntityService\n" +
+                $"WHERE\n" +
+                $"    AnimeId={id}";
+
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            return resDt.AsEnumerable().Select(row => row.Field<int>("VideoAnimationId")).ToList();
         }
     }
 }

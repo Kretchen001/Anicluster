@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
     public class AnimeSeasonAssociativeEntityService : IDatabaseService {
@@ -70,7 +71,22 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         }
 
         public List<int> GetSeasonIdsByAnimeId(int id = -1) {
-            return [];
+            string query = $"" +
+                $"SELECT SeasonId\n" +
+                $"FROM AnimeSeasonAssociativeEntity\n" +
+                $"WHERE\n" +
+                $"    AnimeId={id}";
+
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            return resDt.AsEnumerable().Select(row => row.Field<int>("SeasonId")).ToList();
         }
     }
 }

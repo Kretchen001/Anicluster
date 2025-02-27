@@ -218,7 +218,6 @@ namespace Anicluster.Database.Services {
             return true;
         }
 
-        // TODO
         public Anime? SelectAnimeByX(int id = -1, string designation = "") {
             if (id.Equals(-1) && designation.Equals("")) {
                 return null;

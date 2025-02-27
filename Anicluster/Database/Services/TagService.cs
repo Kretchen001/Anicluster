@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services {
 
@@ -202,7 +203,24 @@ namespace Anicluster.Database.Services {
         }
 
         public List<Tag> GetTagsByIds(List<int> ids) {
-            return [];
+            List<Tag> tags = [];
+            DataTable resDt = new DataTable();
+            string query = $"SELECT Id, Designation FROM Tag WHERE Id IN ({String.Join(", ", ids)})";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            foreach (DataRow row in resDt.Rows) {
+                tags.Add(new Tag() {
+                    Id = (int)((long)row["Id"]),
+                    Designation = row["Designation"].ToString() ?? "n/a"
+                });
+            }
+            return tags;
         }
 
         /// <summary></summary>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
 
@@ -72,7 +73,22 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         }
 
         public List<int> GetTagIdsForAnimeId(int id = -1) {
-            return [];
+            string query = $"" +
+                $"SELECT TagId\n" +
+                $"FROM AnimeTagAssociativeEntity\n" +
+                $"WHERE\n" +
+                $"    AnimeId={id}";
+
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            return resDt.AsEnumerable().Select(row => row.Field<int>("TagId")).ToList();
         }
 
         //public void RemoveTagFromAnime(int animeId, int tagId) {
@@ -88,24 +104,11 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         //    }
         //}
 
-        //public List<int> GetTagsForAnime(int animeId) {
-        //    var tagIds = new List<int>();
-
-        //    using (var connection = _databaseManager.GetConnection()) {
-        //        connection.Open();
-        //        string query = "SELECT TagId FROM AnimeTag WHERE AnimeId = @AnimeId;";
-
-        //        using (var cmd = new SqliteCommand(query, connection)) {
-        //            cmd.Parameters.AddWithValue("@AnimeId", animeId);
-        //            using (var reader = cmd.ExecuteReader()) {
-        //                while (reader.Read()) {
-        //                    tagIds.Add(reader.GetInt32(0));
-        //                }
-        //            }
-        //        }
+        //public List<Tag> GetTagsForAnime(int animeId) {
+        //    
         //    }
 
-        //    return tagIds;
+        //    return tags;
         //}
     }
 }
