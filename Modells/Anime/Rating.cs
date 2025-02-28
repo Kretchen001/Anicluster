@@ -3,6 +3,7 @@
 namespace Modells.Anime {
     public class Rating {
 
+        public int Id { get; set; }
         public int General {
             get {
                 return CalcGeneral();
@@ -17,6 +18,15 @@ namespace Modells.Anime {
         public Rating() {}
 
         public Rating(int story, int animation, int specialEffects, Acoustic acoustic, bool isRated) {
+            Story = story;
+            Animation = animation;
+            SpecialEffects = specialEffects;
+            Acoustic = acoustic;
+            IsRated = isRated;
+        }
+
+        public Rating(int id, int story, int animation, int specialEffects, Acoustic acoustic, bool isRated) {
+            Id = id;
             Story = story;
             Animation = animation;
             SpecialEffects = specialEffects;

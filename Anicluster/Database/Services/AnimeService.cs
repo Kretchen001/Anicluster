@@ -1,9 +1,6 @@
 ﻿using Anicluster.Database.Services.AssociativeEntities;
-using Anicluster.userControls;
 using Microsoft.Data.Sqlite;
 using Modells.Anime;
-using Modells.Anime.SoundRating;
-using Modells.ViewModel;
 using Serilog;
 using System.Data;
 

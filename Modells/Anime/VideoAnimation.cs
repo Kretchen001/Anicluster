@@ -1,7 +1,7 @@
 ﻿namespace Modells.Anime {
     public class VideoAnimation {
 
-        public int Id { get; set; } = -1
+        public int Id { get; set; } = -1;
         public VideoType VideoType { get; set; }
         public string? Comment { get; set; }
 

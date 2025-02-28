@@ -8,6 +8,8 @@
         public string? Comment { get; set; }
         public PublishingTime PublishingTime { get; set; } = new PublishingTime();
 
+        public Season() { }
+
         public Season(int Id, int Number, string? Comment) {
             this.Id = Id;
             this.Number = Number;

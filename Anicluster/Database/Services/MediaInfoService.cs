@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services {
 
@@ -92,7 +93,29 @@ namespace Anicluster.Database.Services {
         }
 
         public MediaInfo GetMediaInfoById(int id = -1) {
-            return new MediaInfo();
+            string query = $"" +
+                $"SELECT Id, Author, Producer, Publisher, PublishingTimeId\n" +
+                $"FROM MediaInfo\n" +
+                $"WHERE Id = '{id}'";
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            PublishingTime tempPubTime = new PublishingTimeService(_databaseManager).SelectById(
+                (int)((long)resDt.Rows[0]["PublishingTimeId"])
+            );
+            return new MediaInfo(
+                id: (int)((long)resDt.Rows[0]["Id"]),
+                author: resDt.Rows[0]["Author"].ToString(),
+                producer: resDt.Rows[0]["Producer"].ToString(),
+                publisher: resDt.Rows[0]["Publisher"].ToString(),
+                pubTime: tempPubTime
+            );
         }
     }
 }
