@@ -100,7 +100,7 @@ namespace Anicluster.Database.Services {
             }
             return new Status(
                 id: (int)((long)resDt.Rows[0]["Id"]),
-                state: (State)Enum.Parse(typeof(State), resDt.Rows[0]["Status"].ToString() ?? "0"),
+                state: (State)Enum.Parse(typeof(State), resDt.Rows[0]["State"].ToString() ?? "0"),
                 comment: resDt.Rows[0]["Comment"].ToString()
             );
         }

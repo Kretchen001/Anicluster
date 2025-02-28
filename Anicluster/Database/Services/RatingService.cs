@@ -1,9 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
-using Modells.Anime.SoundRating;
 using Serilog;
 using System.Data;
-using System.Windows.Media.Animation;
 
 namespace Anicluster.Database.Services {
 
@@ -103,29 +101,25 @@ namespace Anicluster.Database.Services {
 
         public Rating GetRatingById(int id = -1) {
             string query = $"" +
-                $"SELECT Id, Story, Animation, SpecialEffects, AcousticId, IsRated\n" +
+                $"SELECT *\n" +
                 $"FROM Rating\n" +
                 $"WHERE Id = '{id}'";
             DataTable resDt = new DataTable();
-            //using (SqliteConnection connection = _databaseManager.GetConnection()) {
-            //    using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-            //        connection.Open();
-            //        SqliteDataReader result = cmd.ExecuteReader();
-            //        resDt.Load(result);
-            //        connection.Close();
-            //    }
-            //}
-            //Acoustic acoustic = new AcousticService(_databaseManager).GetAcousticById();
-            //PublishingTime tempPubTime = new PublishingTimeService(_databaseManager).SelectById(
-            //    (int)((long)resDt.Rows[0]["PublishingTimeId"])
-            //);
-            //return new MediaInfo(
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            AcousticService acse = new AcousticService(_databaseManager);
+            //return new Status(
             //    id: (int)((long)resDt.Rows[0]["Id"]),
-            //    author: resDt.Rows[0]["Author"].ToString(),
-            //    producer: resDt.Rows[0]["Producer"].ToString(),
-            //    publisher: resDt.Rows[0]["Publisher"].ToString(),
-            //    pubTime: tempPubTime
+            //    state: (State)Enum.Parse(typeof(State), resDt.Rows[0]["State"].ToString() ?? "0"),
+            //    comment: resDt.Rows[0]["Comment"].ToString()
             //);
+            // Id, Story, Animation, SpecialEffects, AcousticId, IsRated
             return new Rating();
         }
     }

@@ -142,7 +142,7 @@ namespace Anicluster.Database.Services {
                 );
                 tempSeason.PublishingTime = pts.SelectById((int)((long)row["PublishingTimeId"]));
                 List<int> VideoAnimationIds = svaaes.GetVideoAnimationById(tempSeason.Id);
-                tempSeason.Episodes.AddRange(vas.GetOvas(VideoAnimationIds));
+                tempSeason.Episodes.AddRange(vas.GetVideoAnimation(VideoAnimationIds));
                 seasons.Add(tempSeason);
             }
             return seasons;

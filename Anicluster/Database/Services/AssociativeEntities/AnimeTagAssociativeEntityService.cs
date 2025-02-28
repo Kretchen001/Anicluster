@@ -88,7 +88,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                     connection.Close();
                 }
             }
-            return resDt.AsEnumerable().Select(row => row.Field<int>("TagId")).ToList();
+            return resDt.AsEnumerable().Select(row => Convert.ToInt32(row.Field<long>("TagId"))).ToList();
         }
 
         //public void RemoveTagFromAnime(int animeId, int tagId) {

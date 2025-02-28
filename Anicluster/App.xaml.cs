@@ -2,6 +2,7 @@
 using Anicluster.Database.Services;
 using Anicluster.Database.Services.AssociativeEntities;
 using Microsoft.Data.Sqlite;
+using Modells.Anime;
 using Serilog;
 using System.IO;
 using System.Windows;
@@ -36,6 +37,7 @@ namespace Anicluster {
                 return;
             }
             base.OnStartup(e);
+            Anime x = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).SelectAnimeByX(7);
         }
 
         protected override void OnExit(ExitEventArgs e) {

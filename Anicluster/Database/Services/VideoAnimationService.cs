@@ -127,5 +127,27 @@ namespace Anicluster.Database.Services {
             }
             return vas;
         }
+
+        public List<VideoAnimation> GetVideoAnimation(List<int> ids) {
+            List<VideoAnimation> vas = [];
+            DataTable resDt = new DataTable();
+            string query = $"SELECT Id, Comment, VideoType FROM VideoAnimation WHERE Id IN ({String.Join(", ", ids)})";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            foreach (DataRow row in resDt.Rows) {
+                vas.Add(new VideoAnimation(
+                    (int)((long)row["Id"]),
+                    (VideoType)Enum.Parse(typeof(VideoType), resDt.Rows[0]["VideoType"].ToString() ?? VideoType.Ova.ToString()),
+                    row["Comment"].ToString()
+                ));
+            }
+            return vas;
+        }
     }
 }

@@ -222,7 +222,7 @@ namespace Anicluster.Database.Services {
 
             Anime selectedAnime = new Anime();
 
-            string query = id == -1 ? @"SELECT * FROM Anime WHERE AnimeName = @A;" : @"SELECT * FROM Anime WHERE AnimeId = @A;";
+            string query = id == -1 ? @"SELECT * FROM Anime WHERE Name = @A;" : @"SELECT * FROM Anime WHERE Id = @A;";
 
             DataTable resDt = new DataTable();
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
@@ -238,7 +238,7 @@ namespace Anicluster.Database.Services {
             selectedAnime.Name = resDt.Rows[0]["Name"].ToString() ?? "";
             selectedAnime.OriginalName = resDt.Rows[0]["OriginalName"].ToString();
             selectedAnime.Url = resDt.Rows[0]["Url"].ToString() ?? "";
-            selectedAnime.Favorite = (bool)resDt.Rows[0]["Favorite"];
+            selectedAnime.Favorite = Convert.ToBoolean(resDt.Rows[0]["Favorite"]);
             selectedAnime.Tier = (Tier)Enum.Parse(typeof(Tier), resDt.Rows[0]["Tier"].ToString() ?? "NotDefinied");
             selectedAnime.RecommendedFrom = resDt.Rows[0]["RecommendedFrom"].ToString();
             selectedAnime.Predecessor = (int)((long)resDt.Rows[0]["Predecessor"]);

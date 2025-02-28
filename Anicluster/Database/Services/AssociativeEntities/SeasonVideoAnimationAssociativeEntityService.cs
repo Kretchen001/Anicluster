@@ -86,7 +86,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                     connection.Close();
                 }
             }
-            return resDt.AsEnumerable().Select(row => row.Field<int>("VideoAnimationId")).ToList();
+            return resDt.AsEnumerable().Select(row => Convert.ToInt32(row.Field<long>("VideoAnimationId"))).ToList();
         }
     }
 }
