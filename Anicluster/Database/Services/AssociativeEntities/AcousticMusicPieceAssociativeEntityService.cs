@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services.AssociativeEntities {
 
@@ -78,6 +79,25 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 connection.Close();
             }
             return true;
+        }
+
+        public List<int> GetMusicPieceIdsById(int id = -1) {
+            string query = $"" +
+                $"SELECT MusicPieceId\n" +
+                $"FROM AcousticMusicPieceAssociativeEntities\n" +
+                $"WHERE\n" +
+                $"    AcousticId={id}";
+
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            return resDt.AsEnumerable().Select(row => Convert.ToInt32(row.Field<long>("MusicPieceId"))).ToList();
         }
     }
 }

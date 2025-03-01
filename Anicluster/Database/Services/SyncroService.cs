@@ -87,5 +87,9 @@ namespace Anicluster.Database.Services {
             }
             return syncroId;
         }
+
+        public List<Syncro> GetSyncrosByIds(List<int> ids) {
+            return [];
+        }
     }
 }

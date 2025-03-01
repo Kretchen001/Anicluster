@@ -1,7 +1,9 @@
 ﻿using Anicluster.Database.Services.AssociativeEntities;
 using Microsoft.Data.Sqlite;
+using Modells.Anime;
 using Modells.Anime.SoundRating;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services {
 
@@ -118,6 +120,41 @@ namespace Anicluster.Database.Services {
             }
 
             return acousticId;
+        }
+
+        public Acoustic GetAcousticById(int id = -1) {
+            string query = $"" +
+                $"SELECT Id, Soundtrack, Comment\n" +
+                $"FROM Acoustic\n" +
+                $"WHERE Id = '{id}'";
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(_databaseManager);
+            List<MusicPiece> musicPieces = new MusicPieceService(_databaseManager).GetMusicPiecesByIds(ampaes.GetMusicPieceIdsById(id));
+            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(_databaseManager);
+            List<Syncro> syncros = new SyncroService(_databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(id));
+
+            //musicPieces.Where(x => x.Type.Equals(MusicPieceType.Opening)).ToList();
+
+            //PublishingTime tempPubTime = new PublishingTimeService(_databaseManager).SelectById(
+            //    (int)((long)resDt.Rows[0]["PublishingTimeId"])
+            //);
+            //return new MediaInfo(
+            //    id: (int)((long)resDt.Rows[0]["Id"]),
+            //    author: resDt.Rows[0]["Author"].ToString(),
+            //    producer: resDt.Rows[0]["Producer"].ToString(),
+            //    publisher: resDt.Rows[0]["Publisher"].ToString(),
+            //    pubTime: tempPubTime
+            //);
+
+            return new Acoustic();
         }
     }
 }

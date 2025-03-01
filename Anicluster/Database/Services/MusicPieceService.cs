@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
+using Modells.Anime;
 using Modells.Anime.SoundRating;
 using Serilog;
+using System.Data;
 
 namespace Anicluster.Database.Services {
 
@@ -160,6 +162,31 @@ namespace Anicluster.Database.Services {
                     }
                 }
             }
+        }
+
+        public List<MusicPiece> GetMusicPiecesByIds(List<int> ids) {
+            List<MusicPiece> mps = [];
+            DataTable resDt = new DataTable();
+            string query = $"SELECT Id, Type, Name, Comment, General FROM MusicPiece WHERE Id IN ({String.Join(", ", ids)})";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            foreach (DataRow row in resDt.Rows) {
+                mps.Add(
+                    new MusicPiece(
+                        id: (int)((long)row["Id"]),
+                        type: (MusicPieceType)Enum.Parse(typeof(MusicPieceType), row["Type"].ToString() ?? MusicPieceType.Other.ToString()),
+                        name: row["Name"].ToString(),
+                        comment: row["Comment"].ToString(),
+                        general: (int)((long)row["General"])
+                ));
+            }
+            return mps;
         }
 
         /// <summary></summary>
