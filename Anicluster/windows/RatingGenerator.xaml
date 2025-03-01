@@ -68,6 +68,38 @@
                                        Margin="10,75,5,5"
                                        Formula="\frac{Story \cdot 40 + Animation \cdot 25 + SpecialEffects \cdot 10 + Acoustic.General \cdot 25}{100} = General"
                                        Height="auto"/>
+                    <TextBlock Text="Legende"
+                               Grid.Column="0"
+                               FontWeight="DemiBold"
+                               Margin="5,140,0,0"
+                               Height="auto"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"
+                               Width="auto"/>       
+                    <wf:FormulaControl x:Name="FormulaLegende"
+                                       Scale="16"
+                                       Grid.Column="1"
+                                       Margin="10,130,5,5"
+                                       Formula="Ge = \text{Geschichte}, An = \text{Animation}, SE = \text{Spezialeffekte}\\A.G = \text{Akustik gesammt, besteht mindestens aus der Soundtrack-}\\\text{         gesamtbewertung oder berechnet sich aus den Opening(s),}\\\text{         Ending(s), Syncro(s) und eingetragenen einzelnen}\\\text{         Soundtracks.}"
+                                       Height="auto"/>
+                    <TextBlock Text="Hinweis"
+                               Grid.Column="0" 
+                               FontWeight="Light"
+                               FontSize="10"
+                               Margin="5,0,0,10"
+                               Height="auto"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Left"
+                               Width="auto"/>
+                    <TextBlock Text="Die Bewertung 0 in einem der Pflichtbereiche (mit * markiert) fließt als Faktor mit ein!"
+                               Grid.Column="1"
+                               FontWeight="Light"
+                               FontSize="10"
+                               Margin="5,0,0,10"
+                               Height="auto"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Left"
+                               Width="auto"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="TabItemBereiche"
@@ -83,15 +115,15 @@
                                 <StackPanel Grid.Column="0">
                                     <Label Height="30"
                                            VerticalContentAlignment="Center">
-                                        Geschichte
+                                        Geschichte*
                                     </Label>
                                     <Label Height="30"
                                            VerticalContentAlignment="Center">
-                                        Animation
+                                        Animation*
                                     </Label>
                                     <Label Height="30"
                                            VerticalContentAlignment="Center">
-                                        Spezialeffekte
+                                        Spezialeffekte*
                                     </Label>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1">
@@ -161,7 +193,7 @@
                                 </Grid.RowDefinitions>
                                 <Label Height="30"
                                        VerticalContentAlignment="Center">
-                                    Soundtrack
+                                    Soundtrack*
                                 </Label>
                                 <ProgressBar x:Name="ProgBarSoundtrack"
                                              Height="24"
