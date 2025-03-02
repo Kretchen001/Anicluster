@@ -141,20 +141,14 @@ namespace Anicluster.Database.Services {
             AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(_databaseManager);
             List<Syncro> syncros = new SyncroService(_databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(id));
 
-            //musicPieces.Where(x => x.Type.Equals(MusicPieceType.Opening)).ToList();
-
-            //PublishingTime tempPubTime = new PublishingTimeService(_databaseManager).SelectById(
-            //    (int)((long)resDt.Rows[0]["PublishingTimeId"])
-            //);
-            //return new MediaInfo(
-            //    id: (int)((long)resDt.Rows[0]["Id"]),
-            //    author: resDt.Rows[0]["Author"].ToString(),
-            //    producer: resDt.Rows[0]["Producer"].ToString(),
-            //    publisher: resDt.Rows[0]["Publisher"].ToString(),
-            //    pubTime: tempPubTime
-            //);
-
-            return new Acoustic();
+            return new Acoustic(
+                id: (int)((long)resDt.Rows[0]["Id"]),
+                opening: musicPieces.Where(x => x.Type.Equals(MusicPieceType.Opening)).ToList(),
+                ending: musicPieces.Where(x => x.Type.Equals(MusicPieceType.Ending)).ToList(),
+                soundtrack: (int)((long)resDt.Rows[0]["Soundtrack"]),
+                syncros: syncros,
+                comment: resDt.Rows[0]["Comment"].ToString()
+            );
         }
     }
 }

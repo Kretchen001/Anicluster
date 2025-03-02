@@ -1,6 +1,7 @@
 ﻿namespace Modells.Anime.SoundRating {
     public class Acoustic {
 
+        public int Id { get; set; }
         public int General {
             get {
                 int temp = (Soundtrack != -1 ? Soundtrack : 0);
@@ -28,7 +29,11 @@
                 temp2 += (s1 / c1); // Ending
                 temp2 += (s2 / c2); // Syncro
                 if (temp2 != 0) {
-                    temp = (temp * 4 + temp2) / 5;
+                    int faktor = 0;
+                    faktor += c0 >= 1 ? faktor + 1 : faktor;
+                    faktor += c1 >= 1 ? faktor + 1 : faktor;
+                    faktor += c2 >= 1 ? faktor + 1 : faktor;
+                    temp = (temp * faktor + temp2) / (faktor + 1);
                 }
                 return (temp);
             }
@@ -37,7 +42,7 @@
         public List<MusicPiece> Ending { get; set; } = [];
         private int soundtrack = -1;
         public int Soundtrack {
-            get { 
+            get {
                 int temp = soundtrack;
                 if (Sounds.Count >= 1) {
                     temp = 0;
@@ -57,6 +62,15 @@
         public Acoustic() { }
 
         public Acoustic(List<MusicPiece> opening, List<MusicPiece> ending, int soundtrack, List<Syncro> syncros, string? comment) {
+            Opening = opening;
+            Ending = ending;
+            Soundtrack = soundtrack;
+            Syncro = syncros;
+            Comment = comment;
+        }
+
+        public Acoustic(int id, List<MusicPiece> opening, List<MusicPiece> ending, int soundtrack, List<Syncro> syncros, string? comment) {
+            Id = id;
             Opening = opening;
             Ending = ending;
             Soundtrack = soundtrack;
