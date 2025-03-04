@@ -63,23 +63,6 @@ namespace Anicluster.Database.Services {
 
         public int Insert(Season seasonToInsert) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                // check if season exist, then return only its id
-                string checkQuery = @$"
-                    SELECT *
-                    FROM Season
-                    WHERE
-                        Number={seasonToInsert.Number}
-                        AND Comment LIKE '{seasonToInsert.Comment}';";
-                connection.Open();
-                using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
-                    SqliteDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows) {
-                        reader.Read();
-                        return (int)((long)reader["Id"]);
-                    }
-                }
-                connection.Close();
-                // not there, so insert the PublishingTime
                 PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
                 int pubId = publishingTimeService.Insert(seasonToInsert.PublishingTime);
                 // else insert and return inserted id
@@ -111,8 +94,8 @@ namespace Anicluster.Database.Services {
                     videoAnimationIds.Add(vas.Insert(x));
                 }
                 // map the episodes as VideoAnimation
+                SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(_databaseManager);
                 foreach (int x in videoAnimationIds) {
-                    SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(_databaseManager);
                     svaaes.Insert(insertedSeasonId, x);
                 }
                 return insertedSeasonId;

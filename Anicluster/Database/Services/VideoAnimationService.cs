@@ -67,22 +67,6 @@ namespace Anicluster.Database.Services {
 
         public int Insert(VideoAnimation videoAnimationToInsert) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                // check if va exist, then return only its id
-                string checkQuery = "" +
-                    "SELECT *\n" +
-                    "FROM VideoAnimation\n" +
-                    $"WHERE\n" +
-                    $"    VideoType={(int)videoAnimationToInsert.VideoType}\n" +
-                    $"    AND Comment LIKE '{videoAnimationToInsert.Comment ?? ""}';";
-                connection.Open();
-                using (SqliteCommand cmd = new SqliteCommand(checkQuery, connection)) {
-                    SqliteDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows) {
-                        reader.Read();
-                        return (int)((long)reader["Id"]);
-                    }
-                }
-                connection.Close();
                 string queryInsert = @"
                     INSERT INTO VideoAnimation (VideoType, Comment)
                         VALUES (@VideoType, @Comment);
