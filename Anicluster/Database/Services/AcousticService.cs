@@ -145,6 +145,7 @@ namespace Anicluster.Database.Services {
                 id: (int)((long)resDt.Rows[0]["Id"]),
                 opening: musicPieces.Where(x => x.Type.Equals(MusicPieceType.Opening)).ToList(),
                 ending: musicPieces.Where(x => x.Type.Equals(MusicPieceType.Ending)).ToList(),
+                sounds: musicPieces.Where(x => x.Type.Equals(MusicPieceType.Other)).ToList(),
                 soundtrack: (int)((long)resDt.Rows[0]["Soundtrack"]),
                 syncros: syncros,
                 comment: resDt.Rows[0]["Comment"].ToString()

@@ -69,10 +69,11 @@
             Comment = comment;
         }
 
-        public Acoustic(int id, List<MusicPiece> opening, List<MusicPiece> ending, int soundtrack, List<Syncro> syncros, string? comment) {
+        public Acoustic(int id, List<MusicPiece> opening, List<MusicPiece> ending, List<MusicPiece> sounds, int soundtrack, List<Syncro> syncros, string? comment) {
             Id = id;
             Opening = opening;
             Ending = ending;
+            Sounds = sounds;
             Soundtrack = soundtrack;
             Syncro = syncros;
             Comment = comment;

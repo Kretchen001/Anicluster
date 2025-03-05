@@ -233,6 +233,7 @@ namespace Anicluster.windows {
 
         private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
             if (NewAnime.Name != "") {
+                NewAnime.Comment = TxtBxComment.Text.Equals("") ? null : TxtBxComment.Text;
                 new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).Insert(NewAnime);
                 this.Close();
             }

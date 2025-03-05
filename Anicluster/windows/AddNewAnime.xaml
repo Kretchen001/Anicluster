@@ -507,12 +507,12 @@
                                           FontSize="14"
                                           Padding="5"
                                           Margin="2,0,0,0">
-                                    <TextBox MinHeight="150"
+                                    <TextBox x:Name="TxtBxComment"
+                                             MinHeight="150"
                                              TextWrapping="Wrap"
                                              AcceptsReturn="True"
                                              ToolTip="Kommentarfeld"
                                              VerticalScrollBarVisibility="Auto">
-
                                     </TextBox>
                                 </GroupBox>
                             </StackPanel>

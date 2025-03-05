@@ -234,6 +234,9 @@ namespace Anicluster.Database.Services {
                     connection.Close();
                 }
             }
+            if (resDt.Rows.Count.Equals(0)) {
+                return null;
+            }
             selectedAnime.Id = (int)((long)resDt.Rows[0]["Id"]);
             selectedAnime.Name = resDt.Rows[0]["Name"].ToString() ?? "";
             selectedAnime.OriginalName = resDt.Rows[0]["OriginalName"].ToString();

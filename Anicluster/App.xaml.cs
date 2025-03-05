@@ -37,7 +37,7 @@ namespace Anicluster {
                 return;
             }
             base.OnStartup(e);
-            Anime x = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).SelectAnimeByX(7);
+            Anime x = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).SelectAnimeByX(1);
         }
 
         protected override void OnExit(ExitEventArgs e) {
