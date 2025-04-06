@@ -5,6 +5,7 @@ using Microsoft.Data.Sqlite;
 using Modells.Anime;
 using Modells.ViewModel;
 using System.Data;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
@@ -14,7 +15,7 @@ namespace Anicluster {
     /// </summary>
     public partial class MainWindow : Window {
 
-        public DataTable Animes { get; set; }
+        public DataTable Animes { get; set; } = new DataTable();
         private Dictionary<string, bool> SortDictionaryASC { get; set; } = new Dictionary<string, bool>() {
             { "AnimeId", true },
             { "AnimeName", true },
@@ -22,12 +23,18 @@ namespace Anicluster {
             { "Favorite", true },
             { "Tier", true },
         };
+        private string AppNameAndVersion { get; set; } = "Anicluster";
 
         public MainWindow() {
             InitializeComponent();
             CommandBindings.Add(new CommandBinding(ApplicationCommands.New, OpenAddNewAnime)); // bound Strg + N
 
             RequestAnimesPerViewAndAddToStackPnl();
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Version version = assembly.GetName().Version!;
+            AppNameAndVersion = $"{assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "Anicluster"} - Version: {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            this.Title = AppNameAndVersion;
         }
 
         private void RequestAnimesPerViewAndAddToStackPnl() {

@@ -2,22 +2,21 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Anicluster"
-#define MyAppVersion "2.0.5"
 #define MyAppPublisher "Kretchen001"
 #define MyAppExeName "Anicluster.exe"
 
 [Setup]
-AppId={{4DACC09A-0C9C-40CE-A0B4-0A240F902801}
+AppId={{4DACC09A-0C9C-40CE-A0B4-0A240F902802}
 AppName={#MyAppName}
-AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVersion={code:GetAppVersion}
+AppVerName={#MyAppName} {code:GetAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 InfoBeforeFile=D:\Visual_Studio_C#\Anicluster\InnoSetup\ReadMe.txt
 OutputDir=D:\Visual_Studio_C#\Anicluster\InnoSetup
-OutputBaseFilename=setup_Anicluster_v2_0_5
+OutputBaseFilename=setup_{#MyAppName}_v_XXX
 Password=Anicluster
 Encryption=yes
 Compression=lzma
@@ -58,3 +57,31 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 [UninstallRun]
 Filename: "{app}\logs"; Flags: skipifdoesntexist
 Filename: "{app}\db"; Flags: skipifdoesntexist
+
+[PostCompile]
+Name: "renameForVersion.bat"; Flags: runminimized cmdprompt redirectoutput
+
+[Code]
+function GetAppVersion(Param: string): string;
+var                 
+  VersionFile: string;
+  Lines: TArrayOfString;
+begin
+  // Der Pfad zur versions.txt, die durch MSBuild erzeugt wurde
+  VersionFile := '..\Anicluster\bin\Publish\version.txt'; 
+  if FileExists(VersionFile) then
+  begin
+    // Die Versionsnummer aus der version.txt lesen
+    LoadStringsFromFile(VersionFile, Lines); 
+    if Length(Lines) > 0 then
+      Result := Lines[0]  // Setze die erste Zeile als Versionsnummer
+    else
+      Result := '0.0.0';   // Fallback, falls die Datei leer ist        
+  end
+  else
+  begin
+    // Falls die Datei nicht existiert, setze eine Standardversion
+    Result := '0.0.0';
+  end;
+end;
+          

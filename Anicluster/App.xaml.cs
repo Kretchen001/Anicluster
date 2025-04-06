@@ -2,7 +2,6 @@
 using Anicluster.Database.Services;
 using Anicluster.Database.Services.AssociativeEntities;
 using Microsoft.Data.Sqlite;
-using Modells.Anime;
 using Serilog;
 using System.IO;
 using System.Windows;
@@ -37,7 +36,6 @@ namespace Anicluster {
                 return;
             }
             base.OnStartup(e);
-            Anime x = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).SelectAnimeByX(1);
         }
 
         protected override void OnExit(ExitEventArgs e) {
@@ -55,6 +53,10 @@ namespace Anicluster {
                 connection.Open();
                 connection.Close();
 
+                SysService sysService = new SysService(dbManager);
+                if (sysService.TableExist() == false) { sysService.InitializeTable(); }
+
+                #region Create Tables if not exist
                 AcousticService acousticService = new AcousticService(dbManager);
                 if (acousticService.TableExist() == false) { acousticService.InitializeTable(); }
                 AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(dbManager);
@@ -93,6 +95,9 @@ namespace Anicluster {
                 if (tagService.TableExist() == false) { tagService.InitializeTable(); }
                 VideoAnimationService videoAnimationService = new VideoAnimationService(dbManager);
                 if (videoAnimationService.TableExist() == false) { videoAnimationService.InitializeTable(); }
+                #endregion
+
+                sysService.UpdateTables();
 
                 if (animeService.CreateViewAnimeComplete()) {
                     Log.Information("vw_Anime created");
