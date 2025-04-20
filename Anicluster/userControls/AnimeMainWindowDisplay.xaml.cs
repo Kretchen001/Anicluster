@@ -1,4 +1,5 @@
-﻿using Modells.Anime;
+﻿using Anicluster.windows;
+using Modells.Anime;
 using Modells.Anime.SoundRating;
 using Modells.ViewModel;
 using System.Windows.Controls;
@@ -29,6 +30,11 @@ namespace Anicluster.userControls {
             }
             TranslationOfState = TranslationOfStateDeu[anime.State];
             this.DataContext = this;
+        }
+
+        private void MenuItemDetailsAndEdit_Click(object sender, System.Windows.RoutedEventArgs e) {
+            EditAnime editAnime = new EditAnime(Anime.Id);
+            editAnime.ShowDialog();
         }
     }
 }

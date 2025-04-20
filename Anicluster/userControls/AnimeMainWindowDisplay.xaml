@@ -48,6 +48,11 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem x:Name="MenuItemDetailsAndEdit" Header="Details anzeigen" Click="MenuItemDetailsAndEdit_Click"/>
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <Border BorderBrush="Gray"
             BorderThickness="1"
             CornerRadius="20"
@@ -73,7 +78,7 @@
                          Height="25"
                          Grid.Column="2">
                     <Canvas Height="50"
-                            Width="50">                            
+                            Width="50">
                         <Path x:Name="StarPath"
                               Fill="#FFAFAFAF"
                               Stretch="Uniform"

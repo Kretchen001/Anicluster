@@ -1,9 +1,9 @@
 ﻿using Modells.Anime;
 
 namespace Modells.ViewModel {
-    
-    public class AnimeViewModel {
-    
+
+    public class AnimeViewModel : ValueComparableObject {
+
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsFavorite { get; set; }

@@ -1,5 +1,6 @@
 ﻿namespace Modells.Anime {
-    public class Season {
+
+    public class Season : ValueComparableObject {
 
         public int Id { get; set; }
         /// <summary>Number of the Season in a Anime</summary>

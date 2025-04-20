@@ -1,5 +1,6 @@
 ﻿namespace Modells.Anime.SoundRating {
-    public class Acoustic {
+    
+    public class Acoustic : ValueComparableObject {
 
         public int Id { get; set; }
         public int General {

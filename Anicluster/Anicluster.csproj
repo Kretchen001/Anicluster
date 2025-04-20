@@ -18,6 +18,9 @@
 	<Target Name="WriteVersionToFile" AfterTargets="Publish">
 		<WriteLinesToFile File="$(PublishDir)version.txt" Lines="$(Version)" Overwrite="true" />
 	</Target>
+	<!--<Target Name="Setup" AfterTargets="Publish">
+		<Exec Command="'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' '$(ProjectDir)..\InnoSetup\setupSkript.iss'" />
+	</Target>-->
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.10" />

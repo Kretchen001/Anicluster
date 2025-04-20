@@ -2,7 +2,7 @@
 
 namespace Modells.ViewModel {
 
-    public class TagViewModel {
+    public class TagViewModel : ValueComparableObject {
 
         public Tag Tag { get; set; }
         public bool IsSelected { get; set; } = false;

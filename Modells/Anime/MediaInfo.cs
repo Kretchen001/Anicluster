@@ -1,5 +1,5 @@
 ﻿namespace Modells.Anime {
-    public class MediaInfo {
+    public class MediaInfo : ValueComparableObject {
 
         public int Id { get; set; }
         public string? Author { get; set; }

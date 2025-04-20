@@ -1,1 +1,0 @@
-START prog\Anicluster.exe

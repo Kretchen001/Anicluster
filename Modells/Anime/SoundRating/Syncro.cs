@@ -1,6 +1,6 @@
 ﻿namespace Modells.Anime.SoundRating {
 
-    public class Syncro {
+    public class Syncro : ValueComparableObject {
 
         public int General { get; set; } = -1;
         public SyncroLanuage Language { get; set; } = SyncroLanuage.jp;

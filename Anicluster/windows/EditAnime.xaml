@@ -1,0 +1,597 @@
+﻿<Window x:Class="Anicluster.windows.EditAnime"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Anicluster.windows"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Title="AddNewAnime"
+        Height="800"
+        Width="1200">
+    <Window.Resources>
+        <Style x:Key="RoundedButton"
+               TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="TierButton"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="15"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground"
+                    Value="White"/>
+            <Setter Property="Width"
+                    Value="75"/>
+            <Setter Property="Margin"
+                    Value="3,0"/>
+        </Style>
+        <!-- Goldener Button-Stil als benutzerdefinierte Ressource -->
+        <Style x:Key="GoldenButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="BorderBrush" Value="Goldenrod" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#FFD700" Offset="0" />
+                        <GradientStop Color="#FFB800" Offset="1" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Goldenrod" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.8"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!-- Effekt, wenn die Maus über dem Button ist -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#FFCC00" Offset="0" />
+                                <GradientStop Color="#FF8000" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="Goldenrod" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="1"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+                <!-- Effekt, wenn der Button gedrückt wird -->
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#A9A9A9" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="Gray" Direction="320" ShadowDepth="2" BlurRadius="5" Opacity="0.6"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="4" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Border MouseLeftButtonDown="Border_MouseLeftButtonDown">
+        <Grid>
+            <!-- Hintergrund und runde Ecken -->
+            <Border CornerRadius="20"
+                    Background="#FFAFAFAF"
+                    Padding="10">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="75"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <Border CornerRadius="20"
+                            Grid.Row="0"
+                            Background="LightBlue">
+                        <Grid>
+                            <Label x:Name="LbName"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Margin="25,0,0,0"
+                                   Height="40"
+                                   FontWeight="Bold"
+                                   VerticalContentAlignment="Center"
+                                   MinWidth="300"
+                                   MouseLeftButtonDown="LbName_MouseLeftButtonDown"
+                                   FontSize="20"
+                                   Background="Transparent"></Label>
+                            <TextBox x:Name="TBName"
+                                     Visibility="Collapsed"
+                                     Text="{Binding NewAnime.Name, UpdateSourceTrigger=PropertyChanged}"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Left"
+                                     Margin="25,0,0,0"
+                                     Height="40"
+                                     VerticalContentAlignment="Center"
+                                     KeyDown="TBName_KeyDown"
+                                     FontSize="20"
+                                     LostFocus="TBName_LostFocus"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="Black"/>
+                            <Viewbox VerticalAlignment="Center"
+                                     HorizontalAlignment="Right"
+                                     Margin="10,10,25,10"
+                                     ToolTip="Favorisieren?">
+                                <Canvas Height="50"
+                                        Width="50">
+                                    <Path x:Name="StarPath"
+                                          Fill="#FFAFAFAF"
+                                          Stretch="Uniform"
+                                          Data="M 25,0 L 31,20 H 50 L 34,31 L 40,50 L 25,39 L 10,50 L 16,31 L 0,20 H 19 Z"
+                                          MouseDown="StarPath_MouseDown"/>
+                                </Canvas>
+                            </Viewbox>
+                        </Grid>
+                    </Border>
+                    <Grid Grid.Row="1"
+                          Margin="10">
+                        <ScrollViewer Padding="0,0,10,0"
+                                      VerticalScrollBarVisibility="auto">
+                            <StackPanel>
+                                <GroupBox Header="Zusätzliche Informationen"
+                                          FontSize="14"
+                                          Padding="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0"
+                                                    Margin="0,0,10,0">
+                                            <Label Height="30"
+                                                   Margin="0,0,0,5"
+                                                   VerticalContentAlignment="Center">Original Name</Label>
+                                            <Label Height="30"
+                                                   VerticalContentAlignment="Center">Url (Anime-Planet z.B.)</Label>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBox Text="{Binding NewAnime.OriginalName}"
+                                                     Height="30"
+                                                     Margin="0,0,0,5"
+                                                     VerticalContentAlignment="Center"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox x:Name="TBxUrl"
+                                                         Grid.Column="0"
+                                                         Height="30"
+                                                         Margin="0,0,5,0"
+                                                         Text="{Binding NewAnime.Url, UpdateSourceTrigger=PropertyChanged}"
+                                                         VerticalContentAlignment="Center"></TextBox>
+                                                <Button x:Name="BtnAutoLinkGeneration"
+                                                        Grid.Column="1"
+                                                        Padding="3,0,3,0"
+                                                        Style="{StaticResource GoldenButtonStyle}"
+                                                        Click="BtnAutoLinkGeneration_Click">
+                                                    Auto-Generation
+                                                </Button>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox x:Name="GrBoxStatus"
+                                          Header="Zustand"
+                                          FontSize="14"
+                                          Margin="0,10,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="3*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0"
+                                                    Margin="5">
+                                            <RadioButton GroupName="Options"
+                                                         VerticalContentAlignment="Center"
+                                                         Content="Wunschliste"
+                                                         Margin="5"
+                                                         Checked="RBtn_Checked"
+                                                         IsChecked="true"/>
+                                            <RadioButton GroupName="Options"
+                                                         VerticalContentAlignment="Center"
+                                                         Content="Begonnen"
+                                                         Margin="5"
+                                                         Checked="RBtn_Checked"/>
+                                            <RadioButton GroupName="Options"
+                                                         VerticalContentAlignment="Center"
+                                                         Content="Fertig"
+                                                         Margin="5"
+                                                         Checked="RBtn_Checked"/>
+                                            <RadioButton GroupName="Options"
+                                                         VerticalContentAlignment="Center"
+                                                         Content="Unterbrochen"
+                                                         Margin="5"
+                                                         Checked="RBtn_Checked"/>
+                                            <RadioButton GroupName="Options"
+                                                         VerticalContentAlignment="Center"
+                                                         Content="Abgebrochen"
+                                                         Margin="5"
+                                                         Checked="RBtn_Checked"/>
+                                        </StackPanel>
+                                        <TextBox Grid.Column="1"
+                                                 Margin="7"
+                                                 AcceptsReturn="True"
+                                                 TextWrapping="Wrap"
+                                                 ToolTip="Kommentarfeld"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 MaxHeight="134.1"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Header="Bewertung"
+                                          FontSize="14"
+                                          Padding="5"
+                                          Margin="0,10,0,0">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0">
+                                                <ProgressBar x:Name="ProgBarGeneral"
+                                                             Maximum="100"
+                                                             Height="24"
+                                                             Margin="5,3"/>
+                                                <Label x:Name="LbGeneral"
+                                                       Margin="0"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="Black"
+                                                       Background="Transparent"/>
+                                            </Grid>
+                                            <Button x:Name="BtnRatingGenerator"
+                                                    Grid.Column="1"
+                                                    Padding="5,0,5,0"
+                                                    Margin="5,0,5,0"
+                                                    Click="BtnRatingGenerator_Click"
+                                                    Style="{StaticResource GoldenButtonStyle}">
+                                                Bewerten
+                                            </Button>
+                                        </Grid>
+                                        <Grid Grid.Row="1"
+                                              Margin="0,5,0,0">
+                                            <UniformGrid Columns="6"
+                                                         Height="50">
+                                                <Button x:Name="BtnTierS"
+                                                        Style="{StaticResource RoundedButton}"
+                                                        Background="DeepSkyBlue"
+                                                        Foreground="Black"
+                                                        Content="S"
+                                                        BorderBrush="Black"
+                                                        BorderThickness="0.5"
+                                                        Click="BtnTierS_Click"/>
+                                                <Button x:Name="BtnTierA"
+                                                        Style="{StaticResource RoundedButton}"
+                                                        Background="#FF00BD00"
+                                                        Foreground="Black"
+                                                        Content="A"
+                                                        BorderBrush="Black"
+                                                        BorderThickness="0.5"
+                                                        Click="BtnTierA_Click"/>
+                                                <Button x:Name="BtnTierB"
+                                                        Style="{StaticResource RoundedButton}"
+                                                        Background="Yellow"
+                                                        Foreground="Black"
+                                                        Content="B"
+                                                        BorderBrush="Black"
+                                                        BorderThickness="0.5"
+                                                        Click="BtnTierB_Click"/>
+                                                <Button x:Name="BtnTierC"
+                                                        Style="{StaticResource RoundedButton}"
+                                                        Background="Orange"
+                                                        Foreground="Black"
+                                                        Content="C"
+                                                        BorderBrush="Black"
+                                                        BorderThickness="0.5"
+                                                        Click="BtnTierC_Click"/>
+                                                <Button x:Name="BtnTierD"
+                                                        Style="{StaticResource RoundedButton}"
+                                                        Background="Red"
+                                                        Content="D"
+                                                        BorderBrush="Black"
+                                                        BorderThickness="0.5"
+                                                        Click="BtnTierD_Click"/>
+                                                <Button x:Name="BtnTierE"
+                                                        Style="{StaticResource RoundedButton}"
+                                                        Background="DarkRed"
+                                                        Content="E"
+                                                        BorderBrush="Black"
+                                                        BorderThickness="0.5"
+                                                        Click="BtnTierE_Click"/>
+                                            </UniformGrid>
+                                        </Grid>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Header="Staffeln &#38; OVAs"
+                                          FontSize="14"
+                                          Margin="0,10,0,0"
+                                          Padding="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0"
+                                                    Orientation="Horizontal">
+                                            <Label Content="Staffeln (aktuell eingetragen):"/>
+                                            <Label Content="{Binding NewAnime.Season.Count}"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnSeasonGenerator"
+                                                Grid.Column="1"
+                                                Margin="20,2,20,2"
+                                                Click="BtnSeasonGenerator_Click"
+                                                Style="{StaticResource GoldenButtonStyle}">
+                                            Staffelgenerator
+                                        </Button>
+                                        <StackPanel Grid.Column="2"
+                                                    Orientation="Horizontal">
+                                            <Label Content="Sonstige OVAs:"/>
+                                            <Label Content="{Binding NewAnime.Ovas.Count}"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnOvaGenerator"
+                                                Grid.Column="3"
+                                                Margin="20,2,20,2"
+                                                Click="BtnOvaGenerator_Click"
+                                                Style="{StaticResource GoldenButtonStyle}">
+                                            OVA-Generator
+                                        </Button>
+                                    </Grid>
+                                </GroupBox>
+                                <UniformGrid x:Name="UniGridTagsAndMediaInfo"
+                                             Rows="1">
+                                    <GroupBox Header="Tags"
+                                              FontSize="14"
+                                              Margin="0,10,10,10"
+                                              Padding="5">
+                                        <Grid Margin="0,5,0,5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <ListView x:Name="ListViewTags"
+                                                      ItemsSource="{Binding Path=NewAnime.Tags}"
+                                                      ScrollViewer.CanContentScroll="True"
+                                                      MaxHeight="145">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="0.5">
+                                                            <TextBlock Text="{Binding Path=Designation, StringFormat='- {0}'}"
+                                                                       FontSize="12"
+                                                                       Margin="1"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                            <Button x:Name="BtnTagsSelector"
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    Margin="10"
+                                                    Click="BtnTagsSelector_Click"
+                                                    Style="{StaticResource GoldenButtonStyle}">
+                                                <StackPanel>
+                                                    <Label HorizontalAlignment="Center"
+                                                           HorizontalContentAlignment="Center">
+                                                        Tags
+                                                    </Label>
+                                                    <Label HorizontalAlignment="Center"
+                                                           HorizontalContentAlignment="Center">
+                                                        verwalten
+                                                    </Label>
+                                                </StackPanel>
+                                            </Button>
+                                        </Grid>
+                                    </GroupBox>
+                                    <GroupBox Header="Media-Infos"
+                                              FontSize="14"
+                                              Margin="10,10,0,10"
+                                              Padding="5">
+                                        <StackPanel>
+                                            <Grid x:Name="GridMediaInfoAutor">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="3*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Label  Height="30"
+                                                        Margin="0,0,0,5"
+                                                        VerticalContentAlignment="Center"
+                                                        Grid.Column="0">
+                                                    Autor
+                                                </Label>
+                                                <TextBox Text="{Binding Path=NewAnime.MediaInfo.Author}"
+                                                         Height="30"
+                                                         Margin="0,2,0,5"
+                                                         VerticalContentAlignment="Center"
+                                                         Grid.Column="1"/>
+                                            </Grid>
+                                            <Grid x:Name="GridMediaInfoProducer">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="3*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Label Height="30"
+                                                       Margin="0,0,0,5"
+                                                       VerticalContentAlignment="Center"
+                                                       Grid.Column="0">
+                                                    Produzent
+                                                </Label>
+                                                <TextBox Text="{Binding Path=NewAnime.MediaInfo.Producer}"
+                                                         Height="30"
+                                                         Margin="0,2,0,5"
+                                                         VerticalContentAlignment="Center"
+                                                         Grid.Column="1"/>
+                                            </Grid>
+                                            <Grid x:Name="GridMediaInfoPublisher">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="3*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Label  Height="30"
+                                                        Margin="0,0,0,5"
+                                                        VerticalContentAlignment="Center"
+                                                        Grid.Column="0">
+                                                    Veröffentlicher
+                                                </Label>
+                                                <TextBox Height="30"
+                                                         Text="{Binding Path=NewAnime.MediaInfo.Publisher}"
+                                                         Margin="0,2,0,5"
+                                                         VerticalContentAlignment="Center"
+                                                         Grid.Column="1"/>
+                                            </Grid>
+                                            <Button x:Name="BtnPublishingTime"
+                                                    Height="30"
+                                                    Margin="5"
+                                                    Style="{StaticResource GoldenButtonStyle}"
+                                                    Click="BtnPublishingTime_Click">
+                                                Veröffentlichungszeitraum/-räume
+                                            </Button>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </UniformGrid>
+                                <UniformGrid x:Name="UniGridButtom"
+                                             Columns="3"
+                                             Rows="1">
+                                    <GroupBox Header="Vorgänger"
+                                              FontSize="14"
+                                              Padding="5"
+                                              Margin="0,0,2,0">
+                                        <ComboBox x:Name="CBoxPredecessor"
+                                                  Height="30"/>
+                                    </GroupBox>
+                                    <GroupBox Header="Nachfolger"
+                                              FontSize="14"
+                                              Padding="5"
+                                              Margin="2,0,2,0">
+                                        <ComboBox x:Name="CBoxSuccessor"
+                                                  Height="30"/>
+                                    </GroupBox>
+                                    <GroupBox Header="Sonstig zusammenhängender Anime"
+                                              FontSize="14"
+                                              Padding="5"
+                                              Margin="2,0,2,0">
+                                        <ComboBox x:Name="CBoxRelatedAnime"
+                                                  Height="30"/>
+                                    </GroupBox>
+                                </UniformGrid>
+                                <GroupBox Header="Kommentar"
+                                          FontSize="14"
+                                          Padding="5"
+                                          Margin="2,0,0,0">
+                                    <TextBox x:Name="TxtBxComment"
+                                             MinHeight="150"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"
+                                             ToolTip="Kommentarfeld"
+                                             VerticalScrollBarVisibility="Auto">
+                                    </TextBox>
+                                </GroupBox>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="BtnAddAnimeAsNew"
+                                Grid.Column="0"
+                                Margin="25,5,25,5"
+                                Background="#FF86DE83"
+                                FontSize="14"
+                                Click="BtnAddAnimeAsNew_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="20">
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Background"
+                                            Value="#FF4CAF50"/>
+                                    <Setter Property="Foreground"
+                                            Value="Black"/>
+                                    <Setter Property="BorderBrush"
+                                            Value="#FF388E3C"/>
+                                    <Setter Property="BorderThickness"
+                                            Value="1"/>
+                                </Style>
+                            </Button.Style>
+                            Änderungen speichern
+                        </Button>
+                        <Button x:Name="BtnCancel"
+                                Grid.Column="1"
+                                Margin="25,5,25,5"
+                                Background="#FFE08F8F"
+                                Click="BtnCancel_Click"
+                                FontSize="14">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="20">
+                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Background"
+                                            Value="#FFAF4C4C"/>
+                                    <Setter Property="Foreground"
+                                            Value="Black"/>
+                                    <Setter Property="BorderBrush"
+                                            Value="#FF8E3838"/>
+                                    <Setter Property="BorderThickness"
+                                            Value="1"/>
+                                </Style>
+                            </Button.Style>
+                            Änderungen verwerfen
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

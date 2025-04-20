@@ -1,6 +1,8 @@
-﻿namespace Modells.Anime {
-    
-    public class Anime {
+﻿using Newtonsoft.Json;
+
+namespace Modells.Anime {
+
+    public class Anime : ValueComparableObject {
 
         /// <summary></summary>
         public int Id { get; set; } = -1;
@@ -35,6 +37,16 @@
         public int Successor { get; set; } = -1;
         /// <summary>related anime to this one, identified by his id</summary>
         public int Related { get; set; } = -1;
+        /// <summary></summary>
         public string? Comment { get; set; }
+
+        /// <summary></summary>
+        public Anime() { }
+
+        /// <summary></summary>
+        public Anime DeepClone() {
+            string temp = JsonConvert.SerializeObject(this);
+            return JsonConvert.DeserializeObject<Anime>(temp)!;
+        }
     }
 }

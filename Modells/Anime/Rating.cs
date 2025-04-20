@@ -1,7 +1,7 @@
 ﻿using Modells.Anime.SoundRating;
 
 namespace Modells.Anime {
-    public class Rating {
+    public class Rating : ValueComparableObject {
 
         public int Id { get; set; }
         public int General {
@@ -15,7 +15,7 @@ namespace Modells.Anime {
         public Acoustic Acoustic { get; set; } = new Acoustic();
         public bool IsRated { get; set; } = false;
 
-        public Rating() {}
+        public Rating() { }
 
         public Rating(int story, int animation, int specialEffects, Acoustic acoustic, bool isRated) {
             Story = story;

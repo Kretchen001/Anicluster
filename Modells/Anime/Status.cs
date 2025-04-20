@@ -1,5 +1,6 @@
 ﻿namespace Modells.Anime {
-    public class Status {
+
+    public class Status : ValueComparableObject {
 
         public int Id { get; set; }
         public State State { get; set; } = State.Wishlist;

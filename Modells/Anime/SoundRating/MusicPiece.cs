@@ -1,5 +1,6 @@
 ﻿namespace Modells.Anime.SoundRating {
-    public class MusicPiece {
+
+    public class MusicPiece : ValueComparableObject {
 
         public int Id { get; set; }
         public MusicPieceType Type { get; set; }
