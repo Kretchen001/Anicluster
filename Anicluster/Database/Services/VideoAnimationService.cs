@@ -126,9 +126,9 @@ namespace Anicluster.Database.Services {
             }
             foreach (DataRow row in resDt.Rows) {
                 vas.Add(new VideoAnimation(
-                    (int)((long)row["Id"]),
-                    (VideoType)Enum.Parse(typeof(VideoType), resDt.Rows[0]["VideoType"].ToString() ?? VideoType.Ova.ToString()),
-                    row["Comment"].ToString()
+                    id:(int)((long)row["Id"]),
+                    videoType:(VideoType)Enum.Parse(typeof(VideoType), resDt.Rows[0]["VideoType"].ToString() ?? VideoType.Ova.ToString()),
+                    comment:row["Comment"].ToString()
                 ));
             }
             return vas;

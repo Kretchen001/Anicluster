@@ -117,5 +117,41 @@ namespace Anicluster.Database.Services {
                 pubTime: tempPubTime
             );
         }
+
+        public bool UpdateMediaInfo(MediaInfo mediaInfoToUpdate) {
+            if (!(new PublishingTimeService(_databaseManager).UpdatePublishingTime(mediaInfoToUpdate.PublishingTime))) {
+                return false;
+            }
+
+            string updateQuery = @"
+                Update Rating 
+                SET
+                    Author = @Author
+                    Producer = @Producer
+                    Publisher = @Publisher
+                    PublishingTimeId = @PublishingTimeId
+                WHERE Id = @Id;
+            ";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
+                try {
+                    using (SqliteCommand cmd = new SqliteCommand(updateQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@Id", mediaInfoToUpdate.Id);
+                        cmd.Parameters.AddWithValue("@Author", mediaInfoToUpdate.Author ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Producer", mediaInfoToUpdate.Producer ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Publisher", mediaInfoToUpdate.Publisher ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@PublishingTimeId", mediaInfoToUpdate.PublishingTime);
+                        cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while updating Status data");
+                    return false;
+                }
+                connection.Close();
+            }
+
+            return true;
+        }
     }
 }

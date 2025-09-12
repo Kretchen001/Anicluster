@@ -104,5 +104,33 @@ namespace Anicluster.Database.Services {
                 comment: resDt.Rows[0]["Comment"].ToString()
             );
         }
+
+        public bool UpdateStatus(Status statusToUpdate) {
+            string updateQuery = @"
+                Update Rating 
+                SET
+                    State = @State,
+                    Comment = @Comment
+                WHERE Id = @id;
+            ";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
+                try {
+                    using (SqliteCommand cmd = new SqliteCommand(updateQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@Id", statusToUpdate.Id);
+                        cmd.Parameters.AddWithValue("@State", statusToUpdate.State);
+                        cmd.Parameters.AddWithValue("@Comment", statusToUpdate.Comment ?? (object)DBNull.Value);
+                        cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while updating Status data");
+                    return false;
+                }
+                connection.Close();
+            }
+
+            return true;
+        }
     }
 }

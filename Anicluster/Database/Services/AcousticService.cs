@@ -151,5 +151,65 @@ namespace Anicluster.Database.Services {
                 comment: resDt.Rows[0]["Comment"].ToString()
             );
         }
+
+        public bool UpdateAcoustic(Acoustic acousticToUpdate) {
+            string insertQuery = @"
+                Update Acoustic 
+                SET
+                    Soundtrack = @Soundtrack,
+                    Comment = @Comment 
+                WHERE Id = @id;
+            ";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
+                try {
+                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@id", acousticToUpdate.Id);
+                        cmd.Parameters.AddWithValue("@Soundtrack", acousticToUpdate.Soundtrack);
+                        cmd.Parameters.AddWithValue("@Comment", acousticToUpdate.Comment ?? DBNull.Value.ToString());
+                        cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting ratingToUpdate data");
+                    return false;
+                }
+                connection.Close();
+            }
+
+            // update opening, ending insert if not already exist
+            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(_databaseManager);
+            List<MusicPiece> musicPieces = new MusicPieceService(_databaseManager).GetMusicPiecesByIds(ampaes.GetMusicPieceIdsById(acousticToUpdate.Id));
+
+            MusicPieceService mpService = new MusicPieceService(_databaseManager);
+            // opening
+            foreach (MusicPiece x in musicPieces.Where(xx => xx.Type.Equals(MusicPieceType.Opening)).ToList()) {
+                if (!acousticToUpdate.Opening.Contains(x)) {
+                    x.Id = mpService.Insert(x);
+                    ampaes.Insert(acousticToUpdate.Id, x.Id);
+                }
+            }
+            // ending
+            foreach (MusicPiece x in musicPieces.Where(xx => xx.Type.Equals(MusicPieceType.Ending)).ToList()) {
+                if (!acousticToUpdate.Ending.Contains(x)) {
+                    x.Id = mpService.Insert(x);
+                    ampaes.Insert(acousticToUpdate.Id, x.Id);
+                }
+            }
+            // sounds
+            foreach (MusicPiece x in musicPieces.Where(xx => xx.Type.Equals(MusicPieceType.Other)).ToList()) {
+                if (!acousticToUpdate.Sounds.Contains(x)) {
+                    x.Id = mpService.Insert(x);
+                    ampaes.Insert(acousticToUpdate.Id, x.Id);
+                }
+            }
+
+            // update syncros
+            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(_databaseManager);
+            List<Syncro> syncros = new SyncroService(_databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(acousticToUpdate.Id));
+
+
+            return true;
+        }
     }
 }

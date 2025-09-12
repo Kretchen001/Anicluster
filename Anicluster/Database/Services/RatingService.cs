@@ -122,5 +122,43 @@ namespace Anicluster.Database.Services {
             // Id, Story, Animation, SpecialEffects, AcousticId, IsRated
             return new Rating();
         }
+
+        public bool UpdateRating(Rating ratingToUpdate) {
+            if (!(new AcousticService(_databaseManager).UpdateAcoustic(ratingToUpdate.Acoustic))) {
+                return false;
+            }
+
+            string insertQuery = @"
+                Update Rating 
+                SET
+                    Story = @Story,
+                    Animation = @Animation,
+                    SpecialEffects = @SpecialEffects,
+                    AcousticId = @AcousticId,
+                    IsRated = @IsRated
+                WHERE Id = @id;
+            ";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                connection.Open();
+                try {
+                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
+                        cmd.Parameters.AddWithValue("@Story", ratingToUpdate.Story);
+                        cmd.Parameters.AddWithValue("@Animation", ratingToUpdate.Animation);
+                        cmd.Parameters.AddWithValue("@SpecialEffects", ratingToUpdate.SpecialEffects);
+                        cmd.Parameters.AddWithValue("@AcousticId", ratingToUpdate.Acoustic.Id);
+                        cmd.Parameters.AddWithValue("@IsRated", ratingToUpdate.IsRated);
+                        cmd.Parameters.AddWithValue("@Id", ratingToUpdate.IsRated);
+                        cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex) {
+                    Log.Error(ex.StackTrace ?? "Error while inserting ratingToUpdate data");
+                    return false;
+                }
+                connection.Close();
+            }
+
+            return true;
+        }
     }
 }

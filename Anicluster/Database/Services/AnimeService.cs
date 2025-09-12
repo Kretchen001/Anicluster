@@ -79,7 +79,6 @@ namespace Anicluster.Database.Services {
 
         public bool Insert(Anime animeToInsert) {
             // First get the Foreign-Key's
-            // Rating
             int ratingId = new RatingService(_databaseManager).Insert(animeToInsert.Rating);
             if (ratingId.Equals(-1)) {
                 Log.Error("Break by inserting Rating...");
@@ -182,7 +181,6 @@ namespace Anicluster.Database.Services {
             return true;
         }
 
-
         public bool InsertFast(string animeName, bool animeFavorite, Tier animeTier) {
             using (SqliteConnection connection = _databaseManager.GetConnection()) {
                 connection.Open();
@@ -263,6 +261,67 @@ namespace Anicluster.Database.Services {
             selectedAnime.Tags = new TagService(_databaseManager).GetTagsByIds(tagIds);
 
             return selectedAnime;
+        }
+
+        public bool UpdateAnime(Anime animeToUpdate) {
+            DataTable resDt = new DataTable();
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand("SELECT * FROM Anime WHERE Id = @A;", connection)) {
+                    cmd.Parameters.AddWithValue("@A", animeToUpdate.Id);
+                    connection.Open();
+                    SqliteDataReader result = cmd.ExecuteReader();
+                    resDt.Load(result);
+                    connection.Close();
+                }
+            }
+            if (resDt.Rows.Count.Equals(0)) {
+                return false; // anime not found, reason unclear
+            }
+
+            string updateAnimeBase = @"
+                UPDATE Anime
+                SET
+                    Name = @Name,
+                    OriginalName = @OriginalName,
+                    Url = @Url,
+                    Favorite = @Favorite,
+                    Tier = @Tier,
+                    RecommendedFrom = @RecommendedFrom,
+                    Predecessor = @Predecessor,
+                    Successor = @Successor,
+                    Related = @Related,
+                    Comment = @Comment
+                WHERE Id = @id;
+            ";
+            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(updateAnimeBase, connection)) {
+                    cmd.Parameters.AddWithValue("@id", animeToUpdate.Id);
+                    cmd.Parameters.AddWithValue("@Name", animeToUpdate.Name);
+                    cmd.Parameters.AddWithValue("@OriginalName", animeToUpdate.OriginalName ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Url", animeToUpdate.Url ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Favorite", animeToUpdate.Favorite);
+                    cmd.Parameters.AddWithValue("@Tier", animeToUpdate.Tier);
+                    cmd.Parameters.AddWithValue("@RecommendedFrom", animeToUpdate.RecommendedFrom ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Predecessor", animeToUpdate.Predecessor);
+                    cmd.Parameters.AddWithValue("@Successor", animeToUpdate.Successor);
+                    cmd.Parameters.AddWithValue("@Related", animeToUpdate.Related);
+                    cmd.Parameters.AddWithValue("@Comment", animeToUpdate.Comment ?? (object)DBNull.Value);
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+
+            if (!(new RatingService(_databaseManager).UpdateRating(animeToUpdate.Rating))) {
+                return false;
+            }
+            if (!(new MediaInfoService(_databaseManager).UpdateMediaInfo(animeToUpdate.MediaInfo))) {
+                return false;
+            }
+            if (!(new StatusService(_databaseManager).UpdateStatus(animeToUpdate.Status))) {
+                return false;
+            }
+
+            return true;
         }
 
         #region View(s)

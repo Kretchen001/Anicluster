@@ -133,6 +133,10 @@ namespace Anicluster.Database.Services {
             }
         }
 
+        public bool UpdatePublishingTime(PublishingTime publishingTimeToUpdate) {
+            return false;
+        }
+
         ///// <summary></summary>
         ///// <param name="tagToDelete"></param>
         ///// <returns></returns>
