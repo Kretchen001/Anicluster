@@ -2,7 +2,6 @@
 using Modells.Anime;
 using Serilog;
 using System.Data;
-using System.Xml.Linq;
 
 namespace Anicluster.Database.Services {
 

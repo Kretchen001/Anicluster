@@ -9,7 +9,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        Title="AddNewAnime"
+        Title="AddAnimeToEdit"
         Height="800"
         Width="1200">
     <Window.Resources>
@@ -120,7 +120,7 @@
                                    Background="Transparent"></Label>
                             <TextBox x:Name="TBName"
                                      Visibility="Collapsed"
-                                     Text="{Binding NewAnime.Name, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding AnimeToEdit.Name, UpdateSourceTrigger=PropertyChanged}"
                                      VerticalAlignment="Center"
                                      HorizontalAlignment="Left"
                                      Margin="25,0,0,0"
@@ -169,7 +169,7 @@
                                                    VerticalContentAlignment="Center">Url (Anime-Planet z.B.)</Label>
                                         </StackPanel>
                                         <StackPanel Grid.Column="1">
-                                            <TextBox Text="{Binding NewAnime.OriginalName}"
+                                            <TextBox Text="{Binding AnimeToEdit.OriginalName}"
                                                      Height="30"
                                                      Margin="0,0,0,5"
                                                      VerticalContentAlignment="Center"/>
@@ -182,7 +182,7 @@
                                                          Grid.Column="0"
                                                          Height="30"
                                                          Margin="0,0,5,0"
-                                                         Text="{Binding NewAnime.Url, UpdateSourceTrigger=PropertyChanged}"
+                                                         Text="{Binding AnimeToEdit.Url, UpdateSourceTrigger=PropertyChanged}"
                                                          VerticalContentAlignment="Center"></TextBox>
                                                 <Button x:Name="BtnAutoLinkGeneration"
                                                         Grid.Column="1"
@@ -345,7 +345,7 @@
                                         <StackPanel Grid.Column="0"
                                                     Orientation="Horizontal">
                                             <Label Content="Staffeln (aktuell eingetragen):"/>
-                                            <Label Content="{Binding NewAnime.Season.Count}"/>
+                                            <Label Content="{Binding AnimeToEdit.Season.Count}"/>
                                         </StackPanel>
                                         <Button x:Name="BtnSeasonGenerator"
                                                 Grid.Column="1"
@@ -357,7 +357,7 @@
                                         <StackPanel Grid.Column="2"
                                                     Orientation="Horizontal">
                                             <Label Content="Sonstige OVAs:"/>
-                                            <Label Content="{Binding NewAnime.Ovas.Count}"/>
+                                            <Label Content="{Binding AnimeToEdit.Ovas.Count}"/>
                                         </StackPanel>
                                         <Button x:Name="BtnOvaGenerator"
                                                 Grid.Column="3"
@@ -380,7 +380,7 @@
                                                 <ColumnDefinition Width="1*"/>
                                             </Grid.ColumnDefinitions>
                                             <ListView x:Name="ListViewTags"
-                                                      ItemsSource="{Binding Path=NewAnime.Tags}"
+                                                      ItemsSource="{Binding Path=AnimeToEdit.Tags}"
                                                       ScrollViewer.CanContentScroll="True"
                                                       MaxHeight="145">
                                                 <ListView.ItemTemplate>
@@ -428,7 +428,7 @@
                                                         Grid.Column="0">
                                                     Autor
                                                 </Label>
-                                                <TextBox Text="{Binding Path=NewAnime.MediaInfo.Author}"
+                                                <TextBox Text="{Binding Path=AnimeToEdit.MediaInfo.Author}"
                                                          Height="30"
                                                          Margin="0,2,0,5"
                                                          VerticalContentAlignment="Center"
@@ -445,7 +445,7 @@
                                                        Grid.Column="0">
                                                     Produzent
                                                 </Label>
-                                                <TextBox Text="{Binding Path=NewAnime.MediaInfo.Producer}"
+                                                <TextBox Text="{Binding Path=AnimeToEdit.MediaInfo.Producer}"
                                                          Height="30"
                                                          Margin="0,2,0,5"
                                                          VerticalContentAlignment="Center"
@@ -463,7 +463,7 @@
                                                     Veröffentlicher
                                                 </Label>
                                                 <TextBox Height="30"
-                                                         Text="{Binding Path=NewAnime.MediaInfo.Publisher}"
+                                                         Text="{Binding Path=AnimeToEdit.MediaInfo.Publisher}"
                                                          Margin="0,2,0,5"
                                                          VerticalContentAlignment="Center"
                                                          Grid.Column="1"/>

@@ -18,7 +18,6 @@ namespace Anicluster.windows {
         AnimeService animeService = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite"));
 
         public Anime AnimeToEdit { get; set; }
-        private Anime AnimeBackup { get; set; }
 
         private RatingGenerator window_RatingGenerator = new RatingGenerator();
         private SeasonGenerator window_SeasonGenerator = new SeasonGenerator();
@@ -34,9 +33,9 @@ namespace Anicluster.windows {
                 return;
             }
             AnimeToEdit = animeNullableTemp.DeepClone();
-            AnimeBackup = AnimeToEdit.DeepClone();
             this.DataContext = this;
         }
+
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             if (e.ButtonState == MouseButtonState.Pressed)
                 this.DragMove();
