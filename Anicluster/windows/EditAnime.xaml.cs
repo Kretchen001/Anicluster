@@ -33,6 +33,11 @@ namespace Anicluster.windows {
                 return;
             }
             AnimeToEdit = animeNullableTemp.DeepClone();
+            AnimeToEdit.FirstChangeOccurred += (sender, e) => {
+                BtnSaveAnimeChanges.Visibility = Visibility.Visible;
+                BtnCancel.Content = "Änderungen verwerfen";
+            };
+            AnimeToEdit.ResetFirstChangeBool();
             this.DataContext = this;
         }
 
@@ -236,7 +241,7 @@ namespace Anicluster.windows {
             window_PublishingTime = new PublishingTimeGenerator(AnimeToEdit.MediaInfo.PublishingTime);
         }
 
-        private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
+        private void BtnSaveAnimeChanges_Click(object sender, RoutedEventArgs e) {
             if (AnimeToEdit.Name != "") {
                 AnimeToEdit.Comment = TxtBxComment.Text.Equals("") ? null : TxtBxComment.Text;
                 new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).Insert(AnimeToEdit);

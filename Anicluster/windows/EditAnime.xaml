@@ -523,12 +523,13 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="BtnAddAnimeAsNew"
+                        <Button x:Name="BtnSaveAnimeChanges"
                                 Grid.Column="0"
                                 Margin="25,5,25,5"
                                 Background="#FF86DE83"
                                 FontSize="14"
-                                Click="BtnAddAnimeAsNew_Click">
+                                Click="BtnSaveAnimeChanges_Click"
+                                Visibility="Hidden">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
@@ -587,7 +588,7 @@
                                             Value="1"/>
                                 </Style>
                             </Button.Style>
-                            Änderungen verwerfen
+                            Schließen
                         </Button>
                     </Grid>
                 </Grid>
