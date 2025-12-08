@@ -7,11 +7,11 @@ namespace Anicluster.Database {
         private readonly string _connectionString;
 
         public DatabaseManager(string connectionString) {
-            _connectionString = connectionString;
+            this._connectionString = connectionString;
         }
 
         public SqliteConnection GetConnection() {
-            return new SqliteConnection(_connectionString);
+            return new SqliteConnection(this._connectionString);
         }
     }
 }

@@ -12,11 +12,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public SeasonService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS Season (
                         Id INTEGER PRIMARY KEY,
@@ -42,7 +42,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -62,8 +62,8 @@ namespace Anicluster.Database.Services {
         }
 
         public int Insert(Season seasonToInsert) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
-                PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
+                PublishingTimeService publishingTimeService = new PublishingTimeService(this._databaseManager);
                 int pubId = publishingTimeService.Insert(seasonToInsert.PublishingTime);
                 // else insert and return inserted id
                 int insertedSeasonId = -1;
@@ -89,12 +89,12 @@ namespace Anicluster.Database.Services {
                 }
                 // insert the episodes
                 List<int> videoAnimationIds = new List<int>(seasonToInsert.Episodes.Count);
-                VideoAnimationService vas = new VideoAnimationService(_databaseManager);
+                VideoAnimationService vas = new VideoAnimationService(this._databaseManager);
                 foreach (VideoAnimation x in seasonToInsert.Episodes) {
                     videoAnimationIds.Add(vas.Insert(x));
                 }
                 // map the episodes as VideoAnimation
-                SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(_databaseManager);
+                SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(this._databaseManager);
                 foreach (int x in videoAnimationIds) {
                     svaaes.Insert(insertedSeasonId, x);
                 }
@@ -106,7 +106,7 @@ namespace Anicluster.Database.Services {
             List<Season> seasons = [];
             DataTable resDt = new DataTable();
             string query = $"SELECT Id, Number, Comment, PublishingTimeId FROM Season WHERE Id IN ({String.Join(", ", ids)})";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();
@@ -114,9 +114,9 @@ namespace Anicluster.Database.Services {
                     connection.Close();
                 }
             }
-            PublishingTimeService pts = new PublishingTimeService(_databaseManager);
-            SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(_databaseManager);
-            VideoAnimationService vas = new VideoAnimationService(_databaseManager);
+            PublishingTimeService pts = new PublishingTimeService(this._databaseManager);
+            SeasonVideoAnimationAssociativeEntityService svaaes = new SeasonVideoAnimationAssociativeEntityService(this._databaseManager);
+            VideoAnimationService vas = new VideoAnimationService(this._databaseManager);
             foreach (DataRow row in resDt.Rows) {
                 Season tempSeason = new Season(
                     (int)((long)row["Id"]),

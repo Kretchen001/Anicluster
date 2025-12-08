@@ -9,11 +9,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public SysService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS _Sys (
                         Id INTEGER PRIMARY KEY,
@@ -38,7 +38,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -60,7 +60,7 @@ namespace Anicluster.Database.Services {
         public void UpdateTables() {
             Version version = Assembly.GetExecutingAssembly().GetName().Version!;
             string strVersion = $"Version: {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     SELECT Version
                     FROM _Sys;

@@ -8,8 +8,8 @@ namespace Modells.ViewModel {
         public bool IsSelected { get; set; } = false;
 
         public TagViewModel(Tag tag) {
-            Tag = tag;
-            IsSelected = false;
+            this.Tag = tag;
+            this.IsSelected = false;
         }
     }
 }

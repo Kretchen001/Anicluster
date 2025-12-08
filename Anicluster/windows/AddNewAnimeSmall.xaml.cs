@@ -17,7 +17,7 @@ namespace Anicluster.windows {
         public string Name { get; set; } = "";
 
         public AddNewAnimeSmall() {
-            InitializeComponent();
+            this.InitializeComponent();
             this.DataContext = this;
         }
 
@@ -28,102 +28,102 @@ namespace Anicluster.windows {
 
         private void TBName_KeyDown(object sender, KeyEventArgs e) {
             if (e.Key == Key.Enter) {
-                TBName.Visibility = Visibility.Collapsed;
-                LbName.Visibility = Visibility.Visible;
-                LbName.Content = TBName.Text;
+                this.TBName.Visibility = Visibility.Collapsed;
+                this.LbName.Visibility = Visibility.Visible;
+                this.LbName.Content = this.TBName.Text;
             }
         }
 
         private void TBName_LostFocus(object sender, RoutedEventArgs e) {
-            TBName.Visibility = Visibility.Collapsed;
-            LbName.Visibility = Visibility.Visible;
-            LbName.Content = TBName.Text;
+            this.TBName.Visibility = Visibility.Collapsed;
+            this.LbName.Visibility = Visibility.Visible;
+            this.LbName.Content = this.TBName.Text;
         }
 
         private void LbName_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            TBName.Visibility = Visibility.Visible;
-            LbName.Visibility = Visibility.Collapsed;
-            TBName.Focus();
+            this.TBName.Visibility = Visibility.Visible;
+            this.LbName.Visibility = Visibility.Collapsed;
+            this.TBName.Focus();
         }
 
         private void StarPath_MouseDown(object sender, MouseButtonEventArgs e) {
-            if (Favorite) {
-                StarPath.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAFAFAF"));
+            if (this.Favorite) {
+                this.StarPath.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFAFAFAF"));
             }
             else {
-                StarPath.Fill = Brushes.Yellow;
+                this.StarPath.Fill = Brushes.Yellow;
             }
-            Favorite = !Favorite;
+            this.Favorite = !this.Favorite;
         }
 
         private void ChangeTierButtonBorder(Tier oldTier, Tier newTier) {
-            BtnTierS.BorderThickness = new Thickness(0.5);
-            BtnTierA.BorderThickness = new Thickness(0.5);
-            BtnTierB.BorderThickness = new Thickness(0.5);
-            BtnTierC.BorderThickness = new Thickness(0.5);
-            BtnTierD.BorderThickness = new Thickness(0.5);
-            BtnTierE.BorderThickness = new Thickness(0.5);
+            this.BtnTierS.BorderThickness = new Thickness(0.5);
+            this.BtnTierA.BorderThickness = new Thickness(0.5);
+            this.BtnTierB.BorderThickness = new Thickness(0.5);
+            this.BtnTierC.BorderThickness = new Thickness(0.5);
+            this.BtnTierD.BorderThickness = new Thickness(0.5);
+            this.BtnTierE.BorderThickness = new Thickness(0.5);
             switch (newTier) {
                 case Tier.S: {
-                        BtnTierS.BorderThickness = new Thickness(5);
+                        this.BtnTierS.BorderThickness = new Thickness(5);
                         return;
                     }
                 case Tier.A: {
-                        BtnTierA.BorderThickness = new Thickness(5);
+                        this.BtnTierA.BorderThickness = new Thickness(5);
                         return;
                     }
                 case Tier.B: {
-                        BtnTierB.BorderThickness = new Thickness(5);
+                        this.BtnTierB.BorderThickness = new Thickness(5);
                         return;
                     }
                 case Tier.C: {
-                        BtnTierC.BorderThickness = new Thickness(5);
+                        this.BtnTierC.BorderThickness = new Thickness(5);
                         return;
                     }
                 case Tier.D: {
-                        BtnTierD.BorderThickness = new Thickness(5);
+                        this.BtnTierD.BorderThickness = new Thickness(5);
                         return;
                     }
                 case Tier.E: {
-                        BtnTierE.BorderThickness = new Thickness(5);
+                        this.BtnTierE.BorderThickness = new Thickness(5);
                         return;
                     }
             }
         }
 
         private void BtnTierS_Click(object sender, RoutedEventArgs e) {
-            ChangeTierButtonBorder(oldTier: SelectedTier, newTier: Tier.S);
-            SelectedTier = Tier.S;
+            this.ChangeTierButtonBorder(oldTier: this.SelectedTier, newTier: Tier.S);
+            this.SelectedTier = Tier.S;
         }
 
         private void BtnTierA_Click(object sender, RoutedEventArgs e) {
-            ChangeTierButtonBorder(oldTier: SelectedTier, newTier: Tier.A);
-            SelectedTier = Tier.A;
+            this.ChangeTierButtonBorder(oldTier: this.SelectedTier, newTier: Tier.A);
+            this.SelectedTier = Tier.A;
         }
 
         private void BtnTierB_Click(object sender, RoutedEventArgs e) {
-            ChangeTierButtonBorder(oldTier: SelectedTier, newTier: Tier.B);
-            SelectedTier = Tier.B;
+            this.ChangeTierButtonBorder(oldTier: this.SelectedTier, newTier: Tier.B);
+            this.SelectedTier = Tier.B;
         }
 
         private void BtnTierC_Click(object sender, RoutedEventArgs e) {
-            ChangeTierButtonBorder(oldTier: SelectedTier, newTier: Tier.C);
-            SelectedTier = Tier.C;
+            this.ChangeTierButtonBorder(oldTier: this.SelectedTier, newTier: Tier.C);
+            this.SelectedTier = Tier.C;
         }
 
         private void BtnTierD_Click(object sender, RoutedEventArgs e) {
-            ChangeTierButtonBorder(oldTier: SelectedTier, newTier: Tier.D);
-            SelectedTier = Tier.D;
+            this.ChangeTierButtonBorder(oldTier: this.SelectedTier, newTier: Tier.D);
+            this.SelectedTier = Tier.D;
         }
 
         private void BtnTierE_Click(object sender, RoutedEventArgs e) {
-            ChangeTierButtonBorder(oldTier: SelectedTier, newTier: Tier.E);
-            SelectedTier = Tier.E;
+            this.ChangeTierButtonBorder(oldTier: this.SelectedTier, newTier: Tier.E);
+            this.SelectedTier = Tier.E;
         }
 
         private void BtnAddAnimeAsNew_Click(object sender, RoutedEventArgs e) {
-            if (Name != "") {
-                new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).InsertFast(Name, Favorite, SelectedTier);
+            if (this.Name != "") {
+                new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).InsertFast(this.Name, this.Favorite, this.SelectedTier);
                 this.Close();
             }
         }

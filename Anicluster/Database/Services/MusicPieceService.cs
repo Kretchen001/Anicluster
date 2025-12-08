@@ -11,11 +11,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public MusicPieceService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                    CREATE TABLE IF NOT EXISTS MusicPiece (
                         Id INTEGER PRIMARY KEY,
@@ -42,7 +42,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -65,7 +65,7 @@ namespace Anicluster.Database.Services {
         /// <param name="musicPiece"></param>
         /// <returns></returns>
         public int Insert(MusicPiece musicPiece) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = @"
                     INSERT INTO MusicPiece (Type, Name, Comment, General)
                         VALUES (@Type, @Name, @Comment, @General);
@@ -94,7 +94,7 @@ namespace Anicluster.Database.Services {
         /// <summary></summary>
         /// <returns></returns>
         public List<MusicPiece> SelectAllMusicPieces() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "SELECT *\n" +
                     "FROM MusicPiece;";
@@ -131,7 +131,7 @@ namespace Anicluster.Database.Services {
         /// <param name="offset"></param>
         /// <returns></returns>
         public List<MusicPiece> SelectAmountOfMusicPieces(int count = 50, int offset = 0) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "SELECT *\n" +
                     "FROM MusicPiece\n" +
@@ -168,7 +168,7 @@ namespace Anicluster.Database.Services {
             List<MusicPiece> mps = [];
             DataTable resDt = new DataTable();
             string query = $"SELECT Id, Type, Name, Comment, General FROM MusicPiece WHERE Id IN ({String.Join(", ", ids)})";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();
@@ -193,7 +193,7 @@ namespace Anicluster.Database.Services {
         /// <param name="musicPieceToDelete"></param>
         /// <returns></returns>
         public bool DeleteMusicPieceById(MusicPiece musicPieceToDelete) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "DELETE FROM MusicPiece\n" +
                     $"WHERE Id LIKE {musicPieceToDelete.Id}";

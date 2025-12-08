@@ -23,45 +23,45 @@ namespace Anicluster.windows {
         public int Soundtrack { get; set; } = 0;
 
         public RatingGenerator(Rating? rating = null) {
-            InitializeComponent();
+            this.InitializeComponent();
             if (rating is not null) {
-                History = rating.Story;
-                Animation = rating.Animation;
-                SpecialEffects = rating.SpecialEffects;
-                Soundtrack = rating.Acoustic.Soundtrack;
-                rating.Acoustic.Opening.ForEach(x => MusicPiecesO.Add(new UcMusicPiece(x.Type, x)));
-                rating.Acoustic.Ending.ForEach(x => MusicPiecesE.Add(new UcMusicPiece(x.Type, x)));
-                rating.Acoustic.Syncro.ForEach(x => Syncros.Add(new UC.Syncro(x)));
-                MusicPiecesO.ForEach(x => StackPanelOpening.Children.Add(x));
-                MusicPiecesE.ForEach(x => StackPanelEnding.Children.Add(x));
-                Syncros.ForEach(x => StackPanelSyncro.Children.Add(x));
+                this.History = rating.Story;
+                this.Animation = rating.Animation;
+                this.SpecialEffects = rating.SpecialEffects;
+                this.Soundtrack = rating.Acoustic.Soundtrack;
+                rating.Acoustic.Opening.ForEach(x => this.MusicPiecesO.Add(new UcMusicPiece(x.Type, x)));
+                rating.Acoustic.Ending.ForEach(x => this.MusicPiecesE.Add(new UcMusicPiece(x.Type, x)));
+                rating.Acoustic.Syncro.ForEach(x => this.Syncros.Add(new UC.Syncro(x)));
+                this.MusicPiecesO.ForEach(x => this.StackPanelOpening.Children.Add(x));
+                this.MusicPiecesE.ForEach(x => this.StackPanelEnding.Children.Add(x));
+                this.Syncros.ForEach(x => this.StackPanelSyncro.Children.Add(x));
             }
-            DataContext = this;
+            this.DataContext = this;
         }
 
         public Rating GenerateRating() {
             List<MusicPiece> o = [];
-            foreach (UcMusicPiece piece in MusicPiecesO) {
+            foreach (UcMusicPiece piece in this.MusicPiecesO) {
                 o.Add(piece.MusicPiece);
             }
             List<MusicPiece> e = [];
-            foreach (UcMusicPiece piece in MusicPiecesE) {
+            foreach (UcMusicPiece piece in this.MusicPiecesE) {
                 e.Add(piece.MusicPiece);
             }
             List<Modells.Anime.SoundRating.Syncro> s = [];
-            foreach (UC.Syncro piece in Syncros) {
+            foreach (UC.Syncro piece in this.Syncros) {
                 s.Add(piece.NewSyncro);
             }
             return new Rating(
-                story: History,
-                animation: Animation,
-                specialEffects: SpecialEffects,
+                story: this.History,
+                animation: this.Animation,
+                specialEffects: this.SpecialEffects,
                 acoustic: new Acoustic(
                     opening: o,
                     ending: e,
-                    soundtrack: Soundtrack,
+                    soundtrack: this.Soundtrack,
                     syncros: s,
-                    comment: CommentAcoustic
+                    comment: this.CommentAcoustic
                     ),
                 isRated: true
                 );
@@ -69,26 +69,26 @@ namespace Anicluster.windows {
 
         private void BtnSoundtrackAdd_Click(object sender, RoutedEventArgs e) {
             UcMusicPiece piece = new UcMusicPiece(MusicPieceType.Other);
-            piece.RemoveThisUc += RemoveSoundtrack!;
-            SoundtrackPieces.Add(piece);
-            StackPanelSoundtracks.Children.Add(piece);
+            piece.RemoveThisUc += this.RemoveSoundtrack!;
+            this.SoundtrackPieces.Add(piece);
+            this.StackPanelSoundtracks.Children.Add(piece);
         }
 
         private void RemoveSoundtrack(object sender, EventArgs e) {
-            SoundtrackPieces.Remove((UcMusicPiece)sender);
-            StackPanelSoundtracks.Children.Remove((UcMusicPiece)sender);
+            this.SoundtrackPieces.Remove((UcMusicPiece)sender);
+            this.StackPanelSoundtracks.Children.Remove((UcMusicPiece)sender);
         }
 
         private void BtnSoundtrackCalculate_Click(object sender, RoutedEventArgs e) {
-            if (SoundtrackPieces.Count > 0) {
-                Soundtrack = 0;
-                foreach (UcMusicPiece x in SoundtrackPieces) {
-                    Soundtrack += x.MusicPiece.General;
+            if (this.SoundtrackPieces.Count > 0) {
+                this.Soundtrack = 0;
+                foreach (UcMusicPiece x in this.SoundtrackPieces) {
+                    this.Soundtrack += x.MusicPiece.General;
                 }
-                this.Soundtrack /= SoundtrackPieces.Count;
-                LbSoundtrack.Content = Soundtrack;
-                ProgBarSoundtrack.Value = Soundtrack;
-                RatingDisplayFunction();
+                this.Soundtrack /= this.SoundtrackPieces.Count;
+                this.LbSoundtrack.Content = this.Soundtrack;
+                this.ProgBarSoundtrack.Value = this.Soundtrack;
+                this.RatingDisplayFunction();
             }
             else {
                 MessageBox.Show("Keine Soundtracks zum Berechnen eingetragen!");
@@ -97,149 +97,149 @@ namespace Anicluster.windows {
 
         private void BtnOpeningAdd_Click(object sender, RoutedEventArgs e) {
             UcMusicPiece piece = new UcMusicPiece(MusicPieceType.Opening);
-            piece.RemoveThisUc += RemoveOpening!;
-            MusicPiecesO.Add(piece);
-            StackPanelOpening.Children.Add(piece);
+            piece.RemoveThisUc += this.RemoveOpening!;
+            this.MusicPiecesO.Add(piece);
+            this.StackPanelOpening.Children.Add(piece);
         }
 
         private void RemoveOpening(object sender, EventArgs e) {
-            MusicPiecesO.Remove((UcMusicPiece)sender);
-            StackPanelOpening.Children.Remove((UcMusicPiece)sender);
+            this.MusicPiecesO.Remove((UcMusicPiece)sender);
+            this.StackPanelOpening.Children.Remove((UcMusicPiece)sender);
         }
 
         private void BtnEndingAdd_Click(object sender, RoutedEventArgs e) {
             UcMusicPiece piece = new UcMusicPiece(MusicPieceType.Ending);
-            piece.RemoveThisUc += RemoveEnding!;
-            MusicPiecesE.Add(piece);
-            StackPanelEnding.Children.Add(piece);
+            piece.RemoveThisUc += this.RemoveEnding!;
+            this.MusicPiecesE.Add(piece);
+            this.StackPanelEnding.Children.Add(piece);
         }
 
         private void RemoveEnding(object sender, EventArgs e) {
-            MusicPiecesE.Remove((UcMusicPiece)sender);
-            StackPanelEnding.Children.Remove((UcMusicPiece)sender);
+            this.MusicPiecesE.Remove((UcMusicPiece)sender);
+            this.StackPanelEnding.Children.Remove((UcMusicPiece)sender);
         }
 
         private void BtnSyncroAdd_Click(object sender, RoutedEventArgs e) {
             UC.Syncro syncro = new UC.Syncro();
-            syncro.RemoveThisSynco += RemoveSyncro!;
-            Syncros.Add(syncro);
-            StackPanelSyncro.Children.Add(syncro);
+            syncro.RemoveThisSynco += this.RemoveSyncro!;
+            this.Syncros.Add(syncro);
+            this.StackPanelSyncro.Children.Add(syncro);
         }
 
         private void RemoveSyncro(object sender, EventArgs e) {
-            Syncros.Remove((UC.Syncro)sender);
-            StackPanelSyncro.Children.Remove((UC.Syncro)sender);
+            this.Syncros.Remove((UC.Syncro)sender);
+            this.StackPanelSyncro.Children.Remove((UC.Syncro)sender);
         }
 
         private void ProgBarHistory_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
             if (e.Delta > 0) {
-                History = Math.Min(History + 1, 100);
+                this.History = Math.Min(this.History + 1, 100);
             }
             else {
-                History = Math.Max(History - 1, 0);
+                this.History = Math.Max(this.History - 1, 0);
             }
-            ProgBarHistory.Value = History;
-            LbHistory.Content = History;
+            this.ProgBarHistory.Value = this.History;
+            this.LbHistory.Content = this.History;
         }
         private void ProgBarHistory_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             NumberInputDialog inputDialog = new NumberInputDialog();
             if (inputDialog.ShowDialog() == true) {
-                History = inputDialog.Result;
-                ProgBarHistory.Value = inputDialog.Result;
-                LbHistory.Content = inputDialog.Result;
+                this.History = inputDialog.Result;
+                this.ProgBarHistory.Value = inputDialog.Result;
+                this.LbHistory.Content = inputDialog.Result;
             }
         }
 
         private void ProgBarAnimation_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
             if (e.Delta > 0) {
-                Animation = Math.Min(Animation + 1, 100);
+                this.Animation = Math.Min(this.Animation + 1, 100);
             }
             else {
-                Animation = Math.Max(Animation - 1, 0);
+                this.Animation = Math.Max(this.Animation - 1, 0);
             }
-            ProgBarAnimation.Value = Animation;
-            LbAnimation.Content = Animation;
+            this.ProgBarAnimation.Value = this.Animation;
+            this.LbAnimation.Content = this.Animation;
         }
         private void ProgBarAnimation_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             NumberInputDialog inputDialog = new NumberInputDialog();
             if (inputDialog.ShowDialog() == true) {
-                Animation = inputDialog.Result;
-                ProgBarAnimation.Value = inputDialog.Result;
-                LbAnimation.Content = inputDialog.Result;
+                this.Animation = inputDialog.Result;
+                this.ProgBarAnimation.Value = inputDialog.Result;
+                this.LbAnimation.Content = inputDialog.Result;
             }
         }
 
         private void ProgBarSpecialEffects_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
             if (e.Delta > 0) {
-                SpecialEffects = Math.Min(SpecialEffects + 1, 100);
+                this.SpecialEffects = Math.Min(this.SpecialEffects + 1, 100);
             }
             else {
-                SpecialEffects = Math.Max(SpecialEffects - 1, 0);
+                this.SpecialEffects = Math.Max(this.SpecialEffects - 1, 0);
             }
-            ProgBarSpecialEffects.Value = SpecialEffects;
-            LbSpecialEffects.Content = SpecialEffects;
+            this.ProgBarSpecialEffects.Value = this.SpecialEffects;
+            this.LbSpecialEffects.Content = this.SpecialEffects;
         }
         private void ProgBarSpecialEffects_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             NumberInputDialog inputDialog = new NumberInputDialog();
             if (inputDialog.ShowDialog() == true) {
-                SpecialEffects = inputDialog.Result;
-                ProgBarSpecialEffects.Value = inputDialog.Result;
-                LbSpecialEffects.Content = inputDialog.Result;
+                this.SpecialEffects = inputDialog.Result;
+                this.ProgBarSpecialEffects.Value = inputDialog.Result;
+                this.LbSpecialEffects.Content = inputDialog.Result;
             }
         }
 
         private void ProgBarSoundtrack_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
             if (e.Delta > 0) {
-                Soundtrack = Math.Min(Soundtrack + 1, 100);
+                this.Soundtrack = Math.Min(this.Soundtrack + 1, 100);
             }
             else {
-                Soundtrack = Math.Max(Soundtrack - 1, 0);
+                this.Soundtrack = Math.Max(this.Soundtrack - 1, 0);
             }
-            ProgBarSoundtrack.Value = Soundtrack;
-            LbSoundtrack.Content = Soundtrack;
-            RatingDisplayFunction();
+            this.ProgBarSoundtrack.Value = this.Soundtrack;
+            this.LbSoundtrack.Content = this.Soundtrack;
+            this.RatingDisplayFunction();
         }
 
         private void ProgBarSoundtrack_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             NumberInputDialog inputDialog = new NumberInputDialog();
             if (inputDialog.ShowDialog() == true) {
-                Soundtrack = inputDialog.Result;
-                ProgBarSoundtrack.Value = inputDialog.Result;
-                LbSoundtrack.Content = inputDialog.Result;
-                RatingDisplayFunction();
+                this.Soundtrack = inputDialog.Result;
+                this.ProgBarSoundtrack.Value = inputDialog.Result;
+                this.LbSoundtrack.Content = inputDialog.Result;
+                this.RatingDisplayFunction();
             }
         }
 
         private void TabControl_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
-            RatingDisplayFunction();
+            this.RatingDisplayFunction();
         }
 
         private void RatingDisplayFunction() {
-            if (TabItemAuswertung.IsSelected) {
-                Rating temp = GenerateRating();
-                FormulaInsert.Formula = $"\\frac{{{temp.Story} \\cdot 40 + {temp.Animation} \\cdot 25 + {temp.SpecialEffects} \\cdot 10 + {temp.Acoustic.General} \\cdot 25}}{{100}} = {temp.General}";
+            if (this.TabItemAuswertung.IsSelected) {
+                Rating temp = this.GenerateRating();
+                this.FormulaInsert.Formula = $"\\frac{{{temp.Story} \\cdot 40 + {temp.Animation} \\cdot 25 + {temp.SpecialEffects} \\cdot 10 + {temp.Acoustic.General} \\cdot 25}}{{100}} = {temp.General}";
             }
-            else if (TabItemBereiche.IsSelected) {
-                Rating temp = GenerateRating();
+            else if (this.TabItemBereiche.IsSelected) {
+                Rating temp = this.GenerateRating();
                 int tempOpening = 0, tempEnding = 0, tempSyncros = 0;
-                foreach (UcMusicPiece x in MusicPiecesO) {
+                foreach (UcMusicPiece x in this.MusicPiecesO) {
                     tempOpening += x.MusicPiece.General;
                 }
-                tempOpening /= MusicPiecesO.Count != 0 ? MusicPiecesO.Count : 1;
-                foreach (UcMusicPiece x in MusicPiecesE) {
+                tempOpening /= this.MusicPiecesO.Count != 0 ? this.MusicPiecesO.Count : 1;
+                foreach (UcMusicPiece x in this.MusicPiecesE) {
                     tempEnding += x.MusicPiece.General;
                 }
-                tempEnding /= MusicPiecesE.Count != 0 ? MusicPiecesE.Count : 1;
-                foreach (UC.Syncro x in Syncros) {
+                tempEnding /= this.MusicPiecesE.Count != 0 ? this.MusicPiecesE.Count : 1;
+                foreach (UC.Syncro x in this.Syncros) {
                     tempOpening += x.NewSyncro.General;
                 }
-                tempOpening /= Syncros.Count != 0 ? Syncros.Count : 1;
+                tempOpening /= this.Syncros.Count != 0 ? this.Syncros.Count : 1;
                 int c = 0;
                 c += tempEnding != 0 ? 1 : 0;
                 c += tempOpening != 0 ? 1 : 0;
                 c += tempSyncros != 0 ? 1 : 0;
-                c += Soundtrack != 0 ? 1 : 0;
-                LbAkustikGesamt.Content = $"({tempOpening} + {tempEnding} + {tempSyncros} + {Soundtrack})/{c} = {temp.Acoustic.General}";
+                c += this.Soundtrack != 0 ? 1 : 0;
+                this.LbAkustikGesamt.Content = $"({tempOpening} + {tempEnding} + {tempSyncros} + {this.Soundtrack})/{c} = {temp.Acoustic.General}";
             }
         }
 
@@ -248,11 +248,11 @@ namespace Anicluster.windows {
         }
 
         private void MenuItemHelp_Click(object sender, RoutedEventArgs e) {
-            PopUpHelp.IsOpen = true;
+            this.PopUpHelp.IsOpen = true;
         }
 
         private void PopUpHelp_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) {
-            PopUpHelp.IsOpen = false;
+            this.PopUpHelp.IsOpen = false;
         }
     }
 }

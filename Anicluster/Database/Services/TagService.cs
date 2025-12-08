@@ -10,11 +10,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public TagService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS Tag (
                         Id INTEGER PRIMARY KEY,
@@ -37,7 +37,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
@@ -62,7 +62,7 @@ namespace Anicluster.Database.Services {
         /// <param name="tag"></param>
         /// <returns>The (new, correct) id of the inserted Anime</returns>
         public int Insert(Tag tag) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "INSERT INTO Tag (Designation) \n" +
                     "VALUES (@Designation);";
@@ -91,7 +91,7 @@ namespace Anicluster.Database.Services {
         /// <param name="tagList"></param>
         /// <returns></returns>
         public List<int> InsertTagList(List<Tag> tagList) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "INSERT INTO Tag (Designation) \n" +
                     "VALUES ";
@@ -138,7 +138,7 @@ namespace Anicluster.Database.Services {
         /// <summary></summary>
         /// <returns></returns>
         public List<Tag> SelectAllTags() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "SELECT *\n" +
                     "FROM Tag;";
@@ -172,7 +172,7 @@ namespace Anicluster.Database.Services {
         /// <param name="offset"></param>
         /// <returns></returns>
         public List<Tag> SelectAmountOfTags(int count = 50, int offset = 0) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "SELECT *\n" +
                     "FROM Tag\n" +
@@ -206,7 +206,7 @@ namespace Anicluster.Database.Services {
             List<Tag> tags = [];
             DataTable resDt = new DataTable();
             string query = $"SELECT Id, Designation FROM Tag WHERE Id IN ({String.Join(", ", ids)})";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();
@@ -227,7 +227,7 @@ namespace Anicluster.Database.Services {
         /// <param name="tagToDelete"></param>
         /// <returns></returns>
         public bool DeleteTagById(Tag tagToDelete) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "DELETE FROM Tag\n" +
                     $"WHERE Id LIKE {tagToDelete.Id}";

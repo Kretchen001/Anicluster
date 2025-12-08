@@ -10,11 +10,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public MediaInfoService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS MediaInfo (
                         Id INTEGER PRIMARY KEY,
@@ -42,7 +42,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -63,10 +63,10 @@ namespace Anicluster.Database.Services {
 
         public int Insert(MediaInfo mediaInfoToInsert) {
             int mediaInfoId = 0;
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
-                    PublishingTimeService publishingTimeService = new PublishingTimeService(_databaseManager);
+                    PublishingTimeService publishingTimeService = new PublishingTimeService(this._databaseManager);
                     int pubId = publishingTimeService.Insert(mediaInfoToInsert.PublishingTime);
                     string insertQuery = "" +
                         "INSERT INTO MediaInfo (Author, Producer, Publisher, PublishingTimeId)\n" +
@@ -98,7 +98,7 @@ namespace Anicluster.Database.Services {
                 $"FROM MediaInfo\n" +
                 $"WHERE Id = '{id}'";
             DataTable resDt = new DataTable();
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();
@@ -106,7 +106,7 @@ namespace Anicluster.Database.Services {
                     connection.Close();
                 }
             }
-            PublishingTime tempPubTime = new PublishingTimeService(_databaseManager).SelectById(
+            PublishingTime tempPubTime = new PublishingTimeService(this._databaseManager).SelectById(
                 (int)((long)resDt.Rows[0]["PublishingTimeId"])
             );
             return new MediaInfo(
@@ -119,7 +119,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool UpdateMediaInfo(MediaInfo mediaInfoToUpdate) {
-            if (!(new PublishingTimeService(_databaseManager).UpdatePublishingTime(mediaInfoToUpdate.PublishingTime))) {
+            if (!(new PublishingTimeService(this._databaseManager).UpdatePublishingTime(mediaInfoToUpdate.PublishingTime))) {
                 return false;
             }
 
@@ -132,7 +132,7 @@ namespace Anicluster.Database.Services {
                     PublishingTimeId = @PublishingTimeId
                 WHERE Id = @Id;
             ";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
                     using (SqliteCommand cmd = new SqliteCommand(updateQuery, connection)) {

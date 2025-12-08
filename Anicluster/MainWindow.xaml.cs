@@ -26,15 +26,15 @@ namespace Anicluster {
         private string AppNameAndVersion { get; set; } = "Anicluster";
 
         public MainWindow() {
-            InitializeComponent();
-            CommandBindings.Add(new CommandBinding(ApplicationCommands.New, OpenAddNewAnime)); // bound Strg + N
+            this.InitializeComponent();
+            this.CommandBindings.Add(new CommandBinding(ApplicationCommands.New, this.OpenAddNewAnime)); // bound Strg + N
 
-            RequestAnimesPerViewAndAddToStackPnl();
+            this.RequestAnimesPerViewAndAddToStackPnl();
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             Version version = assembly.GetName().Version!;
-            AppNameAndVersion = $"{assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "Anicluster"} - Version: {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-            this.Title = AppNameAndVersion;
+            this.AppNameAndVersion = $"{assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "Anicluster"} - Version: {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            this.Title = this.AppNameAndVersion;
         }
 
         private void RequestAnimesPerViewAndAddToStackPnl() {
@@ -45,16 +45,16 @@ namespace Anicluster {
                     FROM
                         vw_Anime;
                 ";
-                Animes = new DataTable();
+                this.Animes = new DataTable();
                 using (SqliteCommand cmd = new SqliteCommand(queryRequestView, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();
-                    Animes.Load(result);
+                    this.Animes.Load(result);
                     connection.Close();
                 }
-                StackPnlAnimes.Children.Clear();
-                foreach (DataRow row in Animes.Rows) {
-                    StackPnlAnimes.Children.Add(
+                this.StackPnlAnimes.Children.Clear();
+                foreach (DataRow row in this.Animes.Rows) {
+                    this.StackPnlAnimes.Children.Add(
                         new AnimeMainWindowDisplay(new AnimeViewModel(
                             id: int.Parse(row["AnimeId"].ToString() ?? "-1"),
                             name: row["AnimeName"].ToString() ?? "",
@@ -70,11 +70,11 @@ namespace Anicluster {
         private void OpenAddNewAnime(object sender, ExecutedRoutedEventArgs? e) {
             AddNewAnime addNewAnime = new AddNewAnime();
             addNewAnime.ShowDialog();
-            RequestAnimesPerViewAndAddToStackPnl();
+            this.RequestAnimesPerViewAndAddToStackPnl();
         }
 
         private void MenuItemNewAnime_Click(object sender, RoutedEventArgs e) {
-            OpenAddNewAnime(sender, null);
+            this.OpenAddNewAnime(sender, null);
         }
 
         private void MenuItemTags_Click(object sender, RoutedEventArgs e) {
@@ -88,11 +88,11 @@ namespace Anicluster {
         }
 
         private void SortDataTableByGivenCol(string col, string direction) {
-            StackPnlAnimes.Children.Clear();
-            Animes.DefaultView.Sort = $"{col} {direction}";
-            Animes = Animes.DefaultView.ToTable();
-            foreach (DataRow row in Animes.Rows) {
-                StackPnlAnimes.Children.Add(
+            this.StackPnlAnimes.Children.Clear();
+            this.Animes.DefaultView.Sort = $"{col} {direction}";
+            this.Animes = this.Animes.DefaultView.ToTable();
+            foreach (DataRow row in this.Animes.Rows) {
+                this.StackPnlAnimes.Children.Add(
                     new AnimeMainWindowDisplay(new AnimeViewModel(
                         id: int.Parse(row["AnimeId"].ToString() ?? "-1"),
                         name: row["AnimeName"].ToString() ?? "",
@@ -105,53 +105,53 @@ namespace Anicluster {
         }
 
         private void SortId_Click(object sender, RoutedEventArgs e) {
-            if (SortDictionaryASC["AnimeId"]) {
-                SortDataTableByGivenCol("AnimeId", "ASC");
+            if (this.SortDictionaryASC["AnimeId"]) {
+                this.SortDataTableByGivenCol("AnimeId", "ASC");
             }
             else {
-                SortDataTableByGivenCol("AnimeId", "DESC");
+                this.SortDataTableByGivenCol("AnimeId", "DESC");
             }
-            SortDictionaryASC["AnimeId"] = !SortDictionaryASC["AnimeId"];
+            this.SortDictionaryASC["AnimeId"] = !this.SortDictionaryASC["AnimeId"];
         }
 
         private void SortName_Click(object sender, RoutedEventArgs e) {
-            if (SortDictionaryASC["AnimeName"]) {
-                SortDataTableByGivenCol("AnimeName", "ASC");
+            if (this.SortDictionaryASC["AnimeName"]) {
+                this.SortDataTableByGivenCol("AnimeName", "ASC");
             }
             else {
-                SortDataTableByGivenCol("AnimeName", "DESC");
+                this.SortDataTableByGivenCol("AnimeName", "DESC");
             }
-            SortDictionaryASC["AnimeName"] = !SortDictionaryASC["AnimeName"];
+            this.SortDictionaryASC["AnimeName"] = !this.SortDictionaryASC["AnimeName"];
         }
 
         private void SortStatus_Click(object sender, RoutedEventArgs e) {
-            if (SortDictionaryASC["StatusState"]) {
-                SortDataTableByGivenCol("StatusState", "ASC");
+            if (this.SortDictionaryASC["StatusState"]) {
+                this.SortDataTableByGivenCol("StatusState", "ASC");
             }
             else {
-                SortDataTableByGivenCol("StatusState", "DESC");
+                this.SortDataTableByGivenCol("StatusState", "DESC");
             }
-            SortDictionaryASC["StatusState"] = !SortDictionaryASC["StatusState"];
+            this.SortDictionaryASC["StatusState"] = !this.SortDictionaryASC["StatusState"];
         }
 
         private void SortFav_Click(object sender, RoutedEventArgs e) {
-            if (SortDictionaryASC["Favorite"]) {
-                SortDataTableByGivenCol("Favorite", "ASC");
+            if (this.SortDictionaryASC["Favorite"]) {
+                this.SortDataTableByGivenCol("Favorite", "ASC");
             }
             else {
-                SortDataTableByGivenCol("Favorite", "DESC");
+                this.SortDataTableByGivenCol("Favorite", "DESC");
             }
-            SortDictionaryASC["Favorite"] = !SortDictionaryASC["Favorite"];
+            this.SortDictionaryASC["Favorite"] = !this.SortDictionaryASC["Favorite"];
         }
 
         private void SortTier_Click(object sender, RoutedEventArgs e) {
-            if (SortDictionaryASC["Tier"]) {
-                SortDataTableByGivenCol("Tier", "ASC");
+            if (this.SortDictionaryASC["Tier"]) {
+                this.SortDataTableByGivenCol("Tier", "ASC");
             }
             else {
-                SortDataTableByGivenCol("Tier", "DESC");
+                this.SortDataTableByGivenCol("Tier", "DESC");
             }
-            SortDictionaryASC["Tier"] = !SortDictionaryASC["Tier"];
+            this.SortDictionaryASC["Tier"] = !this.SortDictionaryASC["Tier"];
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Modells.Anime {
         public int Id { get; set; }
         public int General {
             get {
-                return CalcGeneral();
+                return this.CalcGeneral();
             }
         }
         public int Story { get; set; }
@@ -18,24 +18,24 @@ namespace Modells.Anime {
         public Rating() { }
 
         public Rating(int story, int animation, int specialEffects, Acoustic acoustic, bool isRated) {
-            Story = story;
-            Animation = animation;
-            SpecialEffects = specialEffects;
-            Acoustic = acoustic;
-            IsRated = isRated;
+            this.Story = story;
+            this.Animation = animation;
+            this.SpecialEffects = specialEffects;
+            this.Acoustic = acoustic;
+            this.IsRated = isRated;
         }
 
         public Rating(int id, int story, int animation, int specialEffects, Acoustic acoustic, bool isRated) {
-            Id = id;
-            Story = story;
-            Animation = animation;
-            SpecialEffects = specialEffects;
-            Acoustic = acoustic;
-            IsRated = isRated;
+            this.Id = id;
+            this.Story = story;
+            this.Animation = animation;
+            this.SpecialEffects = specialEffects;
+            this.Acoustic = acoustic;
+            this.IsRated = isRated;
         }
 
         private int CalcGeneral() {
-            return ((Story * 40 + Animation * 25 + SpecialEffects * 10 + Acoustic.General * 25) / 100);
+            return ((this.Story * 40 + this.Animation * 25 + this.SpecialEffects * 10 + this.Acoustic.General * 25) / 100);
         }
 
         public static int CalcGeneral(int story, int animation, int specialEffects, int acousticGeneral) {

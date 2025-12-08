@@ -11,7 +11,7 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public AnimeService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace Anicluster.Database.Services {
         /// </summary>
         /// <returns></returns>
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS Anime (
                         Id INTEGER PRIMARY KEY,
@@ -58,7 +58,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -79,24 +79,24 @@ namespace Anicluster.Database.Services {
 
         public bool Insert(Anime animeToInsert) {
             // First get the Foreign-Key's
-            int ratingId = new RatingService(_databaseManager).Insert(animeToInsert.Rating);
+            int ratingId = new RatingService(this._databaseManager).Insert(animeToInsert.Rating);
             if (ratingId.Equals(-1)) {
                 Log.Error("Break by inserting Rating...");
                 return false;
             }
-            int mediaInfoId = new MediaInfoService(_databaseManager).Insert(animeToInsert.MediaInfo);
+            int mediaInfoId = new MediaInfoService(this._databaseManager).Insert(animeToInsert.MediaInfo);
             if (mediaInfoId.Equals(-1)) {
                 Log.Error("Break by inserting MediaInfo...");
                 return false;
             }
-            int statusId = new StatusService(_databaseManager).Insert(animeToInsert.Status);
+            int statusId = new StatusService(this._databaseManager).Insert(animeToInsert.Status);
             if (statusId.Equals(-1)) {
                 Log.Error("Break by inserting Status...");
                 return false;
             }
 
             // Insert the Anime and get the Id for the Other Key's
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
                     #region Anime
@@ -145,28 +145,28 @@ namespace Anicluster.Database.Services {
                     #region "Mapping"
                     // Seasons einfügen
                     List<int> seasonIds = [];
-                    SeasonService seasonService = new SeasonService(_databaseManager);
+                    SeasonService seasonService = new SeasonService(this._databaseManager);
                     foreach (Season x in animeToInsert.Seasons) {
                         seasonIds.Add(seasonService.Insert(x));
                     }
                     // AnimeId und SeasonIds mappen
-                    AnimeSeasonAssociativeEntityService asaes = new AnimeSeasonAssociativeEntityService(_databaseManager);
+                    AnimeSeasonAssociativeEntityService asaes = new AnimeSeasonAssociativeEntityService(this._databaseManager);
                     foreach (int x in seasonIds) {
                         asaes.Insert(animeToInsert.Id, x);
                     }
                     // Movies, OVAs, etc. einfügen
                     List<int> insertedVAIds = new List<int>(animeToInsert.Ovas.Count);
-                    VideoAnimationService vas = new VideoAnimationService(_databaseManager);
+                    VideoAnimationService vas = new VideoAnimationService(this._databaseManager);
                     foreach (VideoAnimation x in animeToInsert.Ovas) {
                         insertedVAIds.Add(vas.Insert(x));
                     }
                     // AnimeId und VideoAnimationIds mappen
-                    AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(_databaseManager);
+                    AnimeOvaAssociativeEntityService aoaes = new AnimeOvaAssociativeEntityService(this._databaseManager);
                     foreach (int x in insertedVAIds) {
                         aoaes.Insert(animeToInsert.Id, x);
                     }
                     // Tags per Id auf die Animes mappen (die Tags sind ja schon da, also die nicht mehr einfügen!)
-                    AnimeTagAssociativeEntityService ataes = new AnimeTagAssociativeEntityService(_databaseManager);
+                    AnimeTagAssociativeEntityService ataes = new AnimeTagAssociativeEntityService(this._databaseManager);
                     foreach (Tag x in animeToInsert.Tags) {
                         ataes.Insert(animeToInsert.Id, x.Id);
                     }
@@ -182,7 +182,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool InsertFast(string animeName, bool animeFavorite, Tier animeTier) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
                     string insertAnimeQuery = @"
@@ -223,7 +223,7 @@ namespace Anicluster.Database.Services {
             string query = id == -1 ? @"SELECT * FROM Anime WHERE Name = @A;" : @"SELECT * FROM Anime WHERE Id = @A;";
 
             DataTable resDt = new DataTable();
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     cmd.Parameters.AddWithValue("@A", id == -1 ? designation : id);
                     connection.Open();
@@ -247,25 +247,25 @@ namespace Anicluster.Database.Services {
             selectedAnime.Related = (int)((long)resDt.Rows[0]["Related"]);
             selectedAnime.Comment = resDt.Rows[0]["Comment"].ToString();
 
-            selectedAnime.Rating = new RatingService(_databaseManager).GetRatingById((int)((long)resDt.Rows[0]["RatingId"]));
-            selectedAnime.MediaInfo = new MediaInfoService(_databaseManager).GetMediaInfoById((int)((long)resDt.Rows[0]["MediaInfoId"]));
-            selectedAnime.Status = new StatusService(_databaseManager).GetStatusById((int)((long)resDt.Rows[0]["StatusId"]));
+            selectedAnime.Rating = new RatingService(this._databaseManager).GetRatingById((int)((long)resDt.Rows[0]["RatingId"]));
+            selectedAnime.MediaInfo = new MediaInfoService(this._databaseManager).GetMediaInfoById((int)((long)resDt.Rows[0]["MediaInfoId"]));
+            selectedAnime.Status = new StatusService(this._databaseManager).GetStatusById((int)((long)resDt.Rows[0]["StatusId"]));
 
-            List<int> ovaIds = new AnimeOvaAssociativeEntityService(_databaseManager).GetOvaIdsByAnimeId(selectedAnime.Id);
-            selectedAnime.Ovas = new VideoAnimationService(_databaseManager).GetOvas(ovaIds);
+            List<int> ovaIds = new AnimeOvaAssociativeEntityService(this._databaseManager).GetOvaIdsByAnimeId(selectedAnime.Id);
+            selectedAnime.Ovas = new VideoAnimationService(this._databaseManager).GetOvas(ovaIds);
 
-            List<int> seasonIds = new AnimeSeasonAssociativeEntityService(_databaseManager).GetSeasonIdsByAnimeId(selectedAnime.Id);
-            selectedAnime.Seasons = new SeasonService(_databaseManager).GetSeasonsByIds(seasonIds);
+            List<int> seasonIds = new AnimeSeasonAssociativeEntityService(this._databaseManager).GetSeasonIdsByAnimeId(selectedAnime.Id);
+            selectedAnime.Seasons = new SeasonService(this._databaseManager).GetSeasonsByIds(seasonIds);
 
-            List<int> tagIds = new AnimeTagAssociativeEntityService(_databaseManager).GetTagIdsForAnimeId(selectedAnime.Id);
-            selectedAnime.Tags = new TagService(_databaseManager).GetTagsByIds(tagIds);
+            List<int> tagIds = new AnimeTagAssociativeEntityService(this._databaseManager).GetTagIdsForAnimeId(selectedAnime.Id);
+            selectedAnime.Tags = new TagService(this._databaseManager).GetTagsByIds(tagIds);
 
             return selectedAnime;
         }
 
         public bool UpdateAnime(Anime animeToUpdate) {
             DataTable resDt = new DataTable();
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand("SELECT * FROM Anime WHERE Id = @A;", connection)) {
                     cmd.Parameters.AddWithValue("@A", animeToUpdate.Id);
                     connection.Open();
@@ -293,7 +293,7 @@ namespace Anicluster.Database.Services {
                     Comment = @Comment
                 WHERE Id = @id;
             ";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(updateAnimeBase, connection)) {
                     cmd.Parameters.AddWithValue("@id", animeToUpdate.Id);
                     cmd.Parameters.AddWithValue("@Name", animeToUpdate.Name);
@@ -311,13 +311,13 @@ namespace Anicluster.Database.Services {
                 }
             }
 
-            if (!(new RatingService(_databaseManager).UpdateRating(animeToUpdate.Rating))) {
+            if (!(new RatingService(this._databaseManager).UpdateRating(animeToUpdate.Rating))) {
                 return false;
             }
-            if (!(new MediaInfoService(_databaseManager).UpdateMediaInfo(animeToUpdate.MediaInfo))) {
+            if (!(new MediaInfoService(this._databaseManager).UpdateMediaInfo(animeToUpdate.MediaInfo))) {
                 return false;
             }
-            if (!(new StatusService(_databaseManager).UpdateStatus(animeToUpdate.Status))) {
+            if (!(new StatusService(this._databaseManager).UpdateStatus(animeToUpdate.Status))) {
                 return false;
             }
 
@@ -330,7 +330,7 @@ namespace Anicluster.Database.Services {
         /// </summary>
         /// <returns></returns>
         public bool CreateViewAnimeComplete() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string animeView = $"SELECT name FROM sqlite_master WHERE type='view' AND name='vw_Anime';";
                 using (SqliteCommand cmd = new SqliteCommand(animeView, connection)) {
                     connection.Open();

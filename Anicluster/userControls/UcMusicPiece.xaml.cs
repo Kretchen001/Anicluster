@@ -13,32 +13,32 @@ namespace Anicluster.userControls {
 
         public UcMusicPiece(MusicPieceType musicPieceType, MusicPiece? musicPiece = null) {
             if (musicPiece is not null) {
-                MusicPiece = musicPiece;
+                this.MusicPiece = musicPiece;
             }
             else {
-                MusicPiece.Type = musicPieceType;
-                MusicPiece.Comment = "";
+                this.MusicPiece.Type = musicPieceType;
+                this.MusicPiece.Comment = "";
             }
-            DataContext = MusicPiece;
-            InitializeComponent();
-            ProgBarGeneral.Value = MusicPiece.General != -1 ? MusicPiece.General : 0;
+            this.DataContext = this.MusicPiece;
+            this.InitializeComponent();
+            this.ProgBarGeneral.Value = this.MusicPiece.General != -1 ? this.MusicPiece.General : 0;
         }
 
         private void ProgBarGeneral_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
             if (e.Delta > 0) {
-                MusicPiece.General = Math.Min(MusicPiece.General + 1, 100);
+                this.MusicPiece.General = Math.Min(this.MusicPiece.General + 1, 100);
             }
             else {
-                MusicPiece.General = Math.Max(MusicPiece.General - 1, 0);
+                this.MusicPiece.General = Math.Max(this.MusicPiece.General - 1, 0);
             }
-            ProgBarGeneral.Value = MusicPiece.General; // Update ProgressBar
+            this.ProgBarGeneral.Value = this.MusicPiece.General; // Update ProgressBar
         }
 
         private void ProgBarGeneral_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             NumberInputDialog inputDialog = new NumberInputDialog();
             if (inputDialog.ShowDialog() == true) {
-                MusicPiece.General = inputDialog.Result;
-                ProgBarGeneral.Value = inputDialog.Result;
+                this.MusicPiece.General = inputDialog.Result;
+                this.ProgBarGeneral.Value = inputDialog.Result;
             }
         }
 

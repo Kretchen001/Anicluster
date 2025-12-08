@@ -14,18 +14,18 @@ namespace Anicluster.windows {
         public ObservableCollection<Season> Seasons { get; set; }
 
         public SeasonGenerator(List<Season>? seasons = null) {
-            InitializeComponent();
-            Seasons = new ObservableCollection<Season>(seasons ?? new List<Season>());
-            ListViewSeasons.ItemsSource = Seasons;
+            this.InitializeComponent();
+            this.Seasons = new ObservableCollection<Season>(seasons ?? new List<Season>());
+            this.ListViewSeasons.ItemsSource = this.Seasons;
         }
 
         private void BtnHinzufuegen_Click(object sender, RoutedEventArgs e) {
             List<VideoAnimation> list = [];
-            for (int i = 0; i < int.Parse(TextBoxEpisodenAnzahl.Text); i += 1) {
+            for (int i = 0; i < int.Parse(this.TextBoxEpisodenAnzahl.Text); i += 1) {
                 list.Add(new VideoAnimation(VideoType.Episode, null));
             }
-            int startYear = ParseOrDefault(TextBoxStartdatum.Text);
-            int endYear = ParseOrDefault(TextBoxEnddatum.Text);
+            int startYear = ParseOrDefault(this.TextBoxStartdatum.Text);
+            int endYear = ParseOrDefault(this.TextBoxEnddatum.Text);
             if (startYear > endYear) {
                 MessageBox.Show("Start- und Endjahr sind in der Konstellation unmöglich!", "Fehlerhafte eingabe", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -34,8 +34,8 @@ namespace Anicluster.windows {
                 MessageBox.Show("Start- und Endjahr sind zu hoch!", "Fehlerhafte eingabe", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            Seasons.Add(new Season() {
-                Number = Seasons.Count + 1,
+            this.Seasons.Add(new Season() {
+                Number = this.Seasons.Count + 1,
                 Episodes = list,
                 PublishingTime = new PublishingTime() {
                     StartDate = new DateTime(startYear, 1, 1),
@@ -55,10 +55,10 @@ namespace Anicluster.windows {
                 return;
             }
             if (e.Key == Key.Delete) {
-                object selectedItem = ListViewSeasons.SelectedItem;
+                object selectedItem = this.ListViewSeasons.SelectedItem;
                 if (selectedItem != null) {
-                    Seasons.Remove((Season)selectedItem);
-                    UpdateNumbers();
+                    this.Seasons.Remove((Season)selectedItem);
+                    this.UpdateNumbers();
                 }
             }
         }
@@ -79,11 +79,11 @@ namespace Anicluster.windows {
                 ListViewItem targetItem = FindAncestor<ListViewItem>((DependencyObject)e.OriginalSource)!;
 
                 if (targetItem != null) {
-                    int targetIndex = ListViewSeasons.Items.IndexOf(targetItem.DataContext);
-                    Seasons.Remove(droppedData);
-                    Seasons.Insert(targetIndex, droppedData);
+                    int targetIndex = this.ListViewSeasons.Items.IndexOf(targetItem.DataContext);
+                    this.Seasons.Remove(droppedData);
+                    this.Seasons.Insert(targetIndex, droppedData);
 
-                    UpdateNumbers();
+                    this.UpdateNumbers();
                 }
             }
         }
@@ -97,12 +97,12 @@ namespace Anicluster.windows {
 
         private void UpdateNumbers() {
             List<Season> s = [];
-            for (int i = 0; i < Seasons.Count; i += 1) {
-                s.Add(Seasons[i]);
+            for (int i = 0; i < this.Seasons.Count; i += 1) {
+                s.Add(this.Seasons[i]);
                 s[i].Number = i + 1;
             }
-            Seasons.Clear();
-            s.ForEach(s => { Seasons.Add(s); });
+            this.Seasons.Clear();
+            s.ForEach(s => { this.Seasons.Add(s); });
         }
 
         private static T? FindAncestor<T>(DependencyObject current) where T : DependencyObject {

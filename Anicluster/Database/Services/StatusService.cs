@@ -10,11 +10,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public StatusService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS Status (
                         Id INTEGER PRIMARY KEY,
@@ -38,7 +38,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -59,7 +59,7 @@ namespace Anicluster.Database.Services {
 
         public int Insert(Status statusToInsert) {
             int statusId = 0;
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
                     string insertCommand = "" +
@@ -90,7 +90,7 @@ namespace Anicluster.Database.Services {
                 $"FROM Status\n" +
                 $"WHERE Id = '{id}'";
             DataTable resDt = new DataTable();
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();
@@ -113,7 +113,7 @@ namespace Anicluster.Database.Services {
                     Comment = @Comment
                 WHERE Id = @id;
             ";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
                     using (SqliteCommand cmd = new SqliteCommand(updateQuery, connection)) {

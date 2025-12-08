@@ -21,35 +21,35 @@ namespace Anicluster.windows {
 
         public AddTagToAnime(List<Tag>? selectedTags = null) {
             TagService tagService = new TagService(new DatabaseManager($"Data Source=db/data.sqlite"));
-            if (AllTags.Count.Equals(0)) {
+            if (this.AllTags.Count.Equals(0)) {
                 List<Tag> tags = tagService.SelectAllTags();
                 foreach (Tag x in tags) {
-                    AllTags.Add(new TagViewModel(x));
+                    this.AllTags.Add(new TagViewModel(x));
                 }
             }
             if (selectedTags is not null) {
                 foreach (Tag x in selectedTags) {
-                    SelectedTags.Add(x);
-                    AllTags[AllTags.ToList().FindIndex(y => y.Tag.Id.Equals(x.Id))].IsSelected = true;
+                    this.SelectedTags.Add(x);
+                    this.AllTags[this.AllTags.ToList().FindIndex(y => y.Tag.Id.Equals(x.Id))].IsSelected = true;
                 }
             }
-            InitializeComponent();
-            DataContext = this;
-            FilteredTags = CollectionViewSource.GetDefaultView(AllTags);
+            this.InitializeComponent();
+            this.DataContext = this;
+            this.FilteredTags = CollectionViewSource.GetDefaultView(this.AllTags);
         }
 
         public bool IsTagSelected(Tag tag) {
-            return SelectedTags.Contains(tag);
+            return this.SelectedTags.Contains(tag);
         }
 
         public void ToggleTagSelection(TagViewModel tagViewModel) {
             if (tagViewModel.IsSelected) {
                 tagViewModel.IsSelected = false;
-                SelectedTags.Remove(tagViewModel.Tag);
+                this.SelectedTags.Remove(tagViewModel.Tag);
             }
             else {
                 tagViewModel.IsSelected = true;
-                SelectedTags.Add(tagViewModel.Tag);
+                this.SelectedTags.Add(tagViewModel.Tag);
             }
         }
 
@@ -57,28 +57,28 @@ namespace Anicluster.windows {
             CheckBox? checkBox = sender as CheckBox;
             TagViewModel? tagViewModel = checkBox?.DataContext as TagViewModel;
             if (tagViewModel is not null) {
-                ToggleTagSelection(tagViewModel);
+                this.ToggleTagSelection(tagViewModel);
             }
         }
 
         public void FilterTags(string filter) {
-            FilteredTags.Filter = obj => {
+            this.FilteredTags.Filter = obj => {
                 if (obj is TagViewModel tagViewModel) {
                     return string.IsNullOrEmpty(filter) || tagViewModel.Tag.Designation.Contains(filter, StringComparison.OrdinalIgnoreCase);
                 }
                 return false;
             };
-            FilteredTags.Refresh();
+            this.FilteredTags.Refresh();
         }
 
         private void TBFilter_TextChanged(object sender, TextChangedEventArgs e) {
             TextBox? textBox = sender as TextBox;
             string filter = textBox!.Text;
-            FilterTags(filter);
+            this.FilterTags(filter);
         }
 
         private void BtnFilterLeeren_Click(object sender, RoutedEventArgs e) {
-            TBFilter.Text = "";
+            this.TBFilter.Text = "";
         }
 
         /// <summary></summary>

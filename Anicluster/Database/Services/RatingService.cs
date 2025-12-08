@@ -10,11 +10,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public RatingService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS Rating (
                         Id INTEGER PRIMARY KEY,
@@ -42,7 +42,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -63,7 +63,7 @@ namespace Anicluster.Database.Services {
 
         public int Insert(Rating ratingToInsert) {
             // First Insert the Acoustic and get this Id
-            int acousticId = new AcousticService(_databaseManager).Insert(ratingToInsert.Acoustic);
+            int acousticId = new AcousticService(this._databaseManager).Insert(ratingToInsert.Acoustic);
             if (acousticId.Equals(-1)) {
                 Log.Error("Break by inserting Rating...");
                 return -1;
@@ -74,7 +74,7 @@ namespace Anicluster.Database.Services {
             string insertQuery = "" +
                 "INSERT INTO Rating (Story, Animation, SpecialEffects, AcousticId, IsRated)\n" +
                 "    VALUES (@Story, @Animation, @SpecialEffects, @AcousticId, @IsRated)";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
                     using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
@@ -105,7 +105,7 @@ namespace Anicluster.Database.Services {
                 $"FROM Rating\n" +
                 $"WHERE Id = '{id}'";
             DataTable resDt = new DataTable();
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();
@@ -113,7 +113,7 @@ namespace Anicluster.Database.Services {
                     connection.Close();
                 }
             }
-            AcousticService acse = new AcousticService(_databaseManager);
+            AcousticService acse = new AcousticService(this._databaseManager);
             //return new Status(
             //    id: (int)((long)resDt.Rows[0]["Id"]),
             //    state: (State)Enum.Parse(typeof(State), resDt.Rows[0]["State"].ToString() ?? "0"),
@@ -124,7 +124,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool UpdateRating(Rating ratingToUpdate) {
-            if (!(new AcousticService(_databaseManager).UpdateAcoustic(ratingToUpdate.Acoustic))) {
+            if (!(new AcousticService(this._databaseManager).UpdateAcoustic(ratingToUpdate.Acoustic))) {
                 return false;
             }
 
@@ -138,7 +138,7 @@ namespace Anicluster.Database.Services {
                     IsRated = @IsRated
                 WHERE Id = @id;
             ";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
                     using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {

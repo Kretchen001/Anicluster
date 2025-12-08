@@ -13,54 +13,54 @@ namespace Anicluster.windows {
         private ObservableCollection<Interruption> Interruptions { get; set; } = new ObservableCollection<Interruption>();
 
         public PublishingTimeGenerator(PublishingTime? pubTime = null) {
-            InitializeComponent();
+            this.InitializeComponent();
             if (pubTime is not null) {
-                PublishingTime = pubTime;
-                DateTimePickerStart.SelectedDate = PublishingTime.StartDate;
-                DateTimePickerEnd.SelectedDate = PublishingTime.EndDate;
+                this.PublishingTime = pubTime;
+                this.DateTimePickerStart.SelectedDate = this.PublishingTime.StartDate;
+                this.DateTimePickerEnd.SelectedDate = this.PublishingTime.EndDate;
                 foreach (Interruption x in pubTime.Interruptions) {
-                    Interruptions.Add(x);
+                    this.Interruptions.Add(x);
                 }
             }
             else {
-                DateTimePickerStart.SelectedDate = new DateTime(2000, 1, 1);
-                DateTimePickerEnd.SelectedDate = new DateTime(2000, 1, 1);
+                this.DateTimePickerStart.SelectedDate = new DateTime(2000, 1, 1);
+                this.DateTimePickerEnd.SelectedDate = new DateTime(2000, 1, 1);
             }
-            DgInterruptions.ItemsSource = Interruptions;
+            this.DgInterruptions.ItemsSource = this.Interruptions;
         }
 
         private void DateTimePickerStart_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
-            PublishingTime.StartDate = DateTimePickerStart.SelectedDate!.Value;
+            this.PublishingTime.StartDate = this.DateTimePickerStart.SelectedDate!.Value;
         }
 
         private void DateTimePickerEnd_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
-            if (DateTimePickerEnd.SelectedDate!.Value >= DateTimePickerStart.SelectedDate!.Value) {
-                PublishingTime.EndDate = DateTimePickerEnd.SelectedDate!.Value;
+            if (this.DateTimePickerEnd.SelectedDate!.Value >= this.DateTimePickerStart.SelectedDate!.Value) {
+                this.PublishingTime.EndDate = this.DateTimePickerEnd.SelectedDate!.Value;
             }
             else {
                 MessageBox.Show("Enddatum kann nicht vorm Startdatum liegen!", "Fehlerhafte Eingabe");
-                DateTimePickerStart.SelectedDate = DateTimePickerEnd.SelectedDate!.Value;
-                PublishingTime.EndDate = DateTimePickerEnd.SelectedDate!.Value;
+                this.DateTimePickerStart.SelectedDate = this.DateTimePickerEnd.SelectedDate!.Value;
+                this.PublishingTime.EndDate = this.DateTimePickerEnd.SelectedDate!.Value;
             }
         }
 
         private void BtnAddInterruption_Click(object sender, RoutedEventArgs e) {
-            if (DateTimePickerNewInterruptionStart.SelectedDate is not null  // start selected
-                && DateTimePickerNewInterruptionEnd.SelectedDate is not null // end selected
-                && DateTimePickerNewInterruptionEnd.SelectedDate >= DateTimePickerNewInterruptionStart.SelectedDate) { // end greater then start
+            if (this.DateTimePickerNewInterruptionStart.SelectedDate is not null  // start selected
+                && this.DateTimePickerNewInterruptionEnd.SelectedDate is not null // end selected
+                && this.DateTimePickerNewInterruptionEnd.SelectedDate >= this.DateTimePickerNewInterruptionStart.SelectedDate) { // end greater then start
 
-                Interruptions.Add(new Interruption(
-                    start: DateTimePickerNewInterruptionStart.SelectedDate.Value,
-                    end: DateTimePickerNewInterruptionEnd.SelectedDate.Value,
+                this.Interruptions.Add(new Interruption(
+                    start: this.DateTimePickerNewInterruptionStart.SelectedDate.Value,
+                    end: this.DateTimePickerNewInterruptionEnd.SelectedDate.Value,
                     comment: null
                 ));
             }
         }
 
         private void Window_Closed(object sender, EventArgs e) {
-            PublishingTime.Interruptions.Clear();
-            foreach (Interruption x in Interruptions) {
-                PublishingTime.Interruptions.Add(x);
+            this.PublishingTime.Interruptions.Clear();
+            foreach (Interruption x in this.Interruptions) {
+                this.PublishingTime.Interruptions.Add(x);
             }
         }
     }

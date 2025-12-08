@@ -12,11 +12,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public AcousticService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS Acoustic (
                         Id INTEGER PRIMARY KEY,
@@ -41,7 +41,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -62,7 +62,7 @@ namespace Anicluster.Database.Services {
 
         public int Insert(Acoustic acousticToInsert) {
             int acousticId = 0;
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 try {
                     string insertAcoustic = "" +
                         "INSERT INTO Acoustic (Soundtrack, Comment)\n" +
@@ -88,7 +88,7 @@ namespace Anicluster.Database.Services {
             List<int> oList = new List<int>(acousticToInsert.Opening.Count);
             List<int> eList = new List<int>(acousticToInsert.Ending.Count);
             List<int> sList = new List<int>(acousticToInsert.Sounds.Count);
-            MusicPieceService mpService = new MusicPieceService(_databaseManager);
+            MusicPieceService mpService = new MusicPieceService(this._databaseManager);
             foreach (MusicPiece x in acousticToInsert.Opening) {
                 oList.Add(mpService.Insert(x));
             }
@@ -98,7 +98,7 @@ namespace Anicluster.Database.Services {
             foreach (MusicPiece x in acousticToInsert.Sounds) {
                 sList.Add(mpService.Insert(x));
             }
-            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(_databaseManager);
+            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(this._databaseManager);
             foreach (int x in oList) {
                 ampaes.Insert(acousticId, x);
             }
@@ -110,11 +110,11 @@ namespace Anicluster.Database.Services {
             }
             // insert and map the syncros
             List<int> syncroList = new List<int>(acousticToInsert.Syncro.Count);
-            SyncroService syncroService = new SyncroService(_databaseManager);
+            SyncroService syncroService = new SyncroService(this._databaseManager);
             foreach (Syncro x in acousticToInsert.Syncro) {
                 syncroList.Add(syncroService.Insert(x));
             }
-            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(_databaseManager);
+            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(this._databaseManager);
             foreach (int x in syncroList) {
                 asaes.Insert(acousticId, x);
             }
@@ -128,7 +128,7 @@ namespace Anicluster.Database.Services {
                 $"FROM Acoustic\n" +
                 $"WHERE Id = '{id}'";
             DataTable resDt = new DataTable();
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();
@@ -136,10 +136,10 @@ namespace Anicluster.Database.Services {
                     connection.Close();
                 }
             }
-            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(_databaseManager);
-            List<MusicPiece> musicPieces = new MusicPieceService(_databaseManager).GetMusicPiecesByIds(ampaes.GetMusicPieceIdsById(id));
-            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(_databaseManager);
-            List<Syncro> syncros = new SyncroService(_databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(id));
+            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(this._databaseManager);
+            List<MusicPiece> musicPieces = new MusicPieceService(this._databaseManager).GetMusicPiecesByIds(ampaes.GetMusicPieceIdsById(id));
+            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(this._databaseManager);
+            List<Syncro> syncros = new SyncroService(this._databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(id));
 
             return new Acoustic(
                 id: (int)((long)resDt.Rows[0]["Id"]),
@@ -160,7 +160,7 @@ namespace Anicluster.Database.Services {
                     Comment = @Comment 
                 WHERE Id = @id;
             ";
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 try {
                     using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
@@ -178,10 +178,10 @@ namespace Anicluster.Database.Services {
             }
 
             // update opening, ending insert if not already exist
-            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(_databaseManager);
-            List<MusicPiece> musicPieces = new MusicPieceService(_databaseManager).GetMusicPiecesByIds(ampaes.GetMusicPieceIdsById(acousticToUpdate.Id));
+            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(this._databaseManager);
+            List<MusicPiece> musicPieces = new MusicPieceService(this._databaseManager).GetMusicPiecesByIds(ampaes.GetMusicPieceIdsById(acousticToUpdate.Id));
 
-            MusicPieceService mpService = new MusicPieceService(_databaseManager);
+            MusicPieceService mpService = new MusicPieceService(this._databaseManager);
             // opening
             foreach (MusicPiece x in musicPieces.Where(xx => xx.Type.Equals(MusicPieceType.Opening)).ToList()) {
                 if (!acousticToUpdate.Opening.Contains(x)) {
@@ -205,8 +205,8 @@ namespace Anicluster.Database.Services {
             }
 
             // update syncros
-            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(_databaseManager);
-            List<Syncro> syncros = new SyncroService(_databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(acousticToUpdate.Id));
+            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(this._databaseManager);
+            List<Syncro> syncros = new SyncroService(this._databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(acousticToUpdate.Id));
 
 
             return true;

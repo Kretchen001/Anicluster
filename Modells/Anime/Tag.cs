@@ -8,7 +8,7 @@
         public Tag() { }
 
         public Tag(string designation) {
-            Designation = designation;
+            this.Designation = designation;
         }
     }
 }

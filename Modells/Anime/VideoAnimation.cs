@@ -8,14 +8,14 @@
         public VideoAnimation() { }
 
         public VideoAnimation(VideoType videoType, string? comment) {
-            VideoType = videoType;
-            Comment = comment;
+            this.VideoType = videoType;
+            this.Comment = comment;
         }
 
         public VideoAnimation(int id, VideoType videoType, string? comment) {
-            Id = id;
-            VideoType = videoType;
-            Comment = comment;
+            this.Id = id;
+            this.VideoType = videoType;
+            this.Comment = comment;
         }
     }
 }

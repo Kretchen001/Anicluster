@@ -23,17 +23,17 @@ namespace Anicluster.userControls {
         public string TranslationOfState { get; set; }
 
         public AnimeMainWindowDisplay(AnimeViewModel anime) {
-            InitializeComponent();
+            this.InitializeComponent();
             this.Anime = anime;
-            if (Anime.IsFavorite) {
-                StarPath.Fill = Brushes.Gold;
+            if (this.Anime.IsFavorite) {
+                this.StarPath.Fill = Brushes.Gold;
             }
-            TranslationOfState = TranslationOfStateDeu[anime.State];
+            this.TranslationOfState = TranslationOfStateDeu[anime.State];
             this.DataContext = this;
         }
 
         private void MenuItemDetailsAndEdit_Click(object sender, System.Windows.RoutedEventArgs e) {
-            EditAnime editAnime = new EditAnime(Anime.Id);
+            EditAnime editAnime = new EditAnime(this.Anime.Id);
             editAnime.ShowDialog();
         }
     }

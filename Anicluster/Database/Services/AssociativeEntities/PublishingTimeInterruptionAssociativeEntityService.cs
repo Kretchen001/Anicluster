@@ -8,11 +8,11 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         private readonly DatabaseManager _databaseManager;
 
         public PublishingTimeInterruptionAssociativeEntityService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS PublishingTimeInterruptionAssociativeEntity (\n" +
                     "    PublishingTimeId INTEGER,\n" +
@@ -37,7 +37,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -57,7 +57,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         }
 
         public bool InsertPublishingInterruption(int interId, int pubId) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 try {
                     string query = "" +
                         "INSERT INTO PublishingTimeInterruptionAssociativeEntity (PublishingTimeId, InterruptionId)\n " +
@@ -79,7 +79,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         }
 
         public List<int> SelectInterruptionsFromPublishing(int pubId) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 try {
                     string query = "" +
                         "SELECT InterruptionId\n" +

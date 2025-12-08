@@ -5,20 +5,20 @@
         public int Id { get; set; }
         public int General {
             get {
-                int temp = (Soundtrack != -1 ? Soundtrack : 0);
+                int temp = (this.Soundtrack != -1 ? this.Soundtrack : 0);
                 int s0 = 0, s1 = 0, s2 = 0;
                 int c0 = 0, c1 = 0, c2 = 0;
-                if (Opening.Count == 0) { c0 = 1; }
-                foreach (MusicPiece x in Opening) {
+                if (this.Opening.Count == 0) { c0 = 1; }
+                foreach (MusicPiece x in this.Opening) {
                     s0 += x.General;
                     c0 += 1;
                 }
-                if (Ending.Count == 0) { c1 = 1; }
-                foreach (MusicPiece x in Ending) {
+                if (this.Ending.Count == 0) { c1 = 1; }
+                foreach (MusicPiece x in this.Ending) {
                     s1 += x.General;
                     c1 += 1;
                 }
-                foreach (Syncro x in Syncro) {
+                foreach (Syncro x in this.Syncro) {
                     if (x.IsAssessed) {
                         s2 += x.General;
                         c2 += 1;
@@ -44,17 +44,17 @@
         private int soundtrack = -1;
         public int Soundtrack {
             get {
-                int temp = soundtrack;
-                if (Sounds.Count >= 1) {
+                int temp = this.soundtrack;
+                if (this.Sounds.Count >= 1) {
                     temp = 0;
-                    foreach (MusicPiece x in Sounds) {
+                    foreach (MusicPiece x in this.Sounds) {
                         temp += x.General;
                     }
-                    temp /= Sounds.Count;
+                    temp /= this.Sounds.Count;
                 }
                 return temp;
             }
-            set { soundtrack = value; }
+            set { this.soundtrack = value; }
         }
         public List<MusicPiece> Sounds { get; set; } = [];
         public List<Syncro> Syncro { get; set; } = [];
@@ -63,21 +63,21 @@
         public Acoustic() { }
 
         public Acoustic(List<MusicPiece> opening, List<MusicPiece> ending, int soundtrack, List<Syncro> syncros, string? comment) {
-            Opening = opening;
-            Ending = ending;
-            Soundtrack = soundtrack;
-            Syncro = syncros;
-            Comment = comment;
+            this.Opening = opening;
+            this.Ending = ending;
+            this.Soundtrack = soundtrack;
+            this.Syncro = syncros;
+            this.Comment = comment;
         }
 
         public Acoustic(int id, List<MusicPiece> opening, List<MusicPiece> ending, List<MusicPiece> sounds, int soundtrack, List<Syncro> syncros, string? comment) {
-            Id = id;
-            Opening = opening;
-            Ending = ending;
-            Sounds = sounds;
-            Soundtrack = soundtrack;
-            Syncro = syncros;
-            Comment = comment;
+            this.Id = id;
+            this.Opening = opening;
+            this.Ending = ending;
+            this.Sounds = sounds;
+            this.Soundtrack = soundtrack;
+            this.Syncro = syncros;
+            this.Comment = comment;
         }
     }
 }

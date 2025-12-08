@@ -10,11 +10,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public PublishingTimeService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS PublishingTime (
                         Id INTEGER PRIMARY KEY,
@@ -38,7 +38,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -61,7 +61,7 @@ namespace Anicluster.Database.Services {
         /// <param name="publishingTime"></param>
         /// <returns>The (new, correct) id of the inserted PublishingTime</returns>
         public int Insert(PublishingTime publishingTime) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "INSERT INTO PublishingTime (StartDate, EndDate) \n" +
                     "    VALUES (@StartDate, @EndDate);";
@@ -77,11 +77,11 @@ namespace Anicluster.Database.Services {
                         connection.Close();
                         int insertedIdInt = (int)((long)insertedId!);
                         List<int> insertedInterruptionIds = [];
-                        InterruptionService interruptionService = new InterruptionService(_databaseManager);
+                        InterruptionService interruptionService = new InterruptionService(this._databaseManager);
                         foreach (Interruption x in publishingTime.Interruptions) {
                             insertedInterruptionIds.Add(interruptionService.Insert(x));
                         }
-                        PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(_databaseManager);
+                        PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(this._databaseManager);
                         foreach (int x in insertedInterruptionIds) {
                             publishingTimeInterruptionAssociativeEntityService.InsertPublishingInterruption(insertedIdInt, x);
                         }
@@ -99,7 +99,7 @@ namespace Anicluster.Database.Services {
         /// <param name="id"></param>
         /// <returns></returns>
         public PublishingTime SelectById(int id) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = "" +
                     "SELECT *\n" +
                     "FROM PublishingTime\n" +
@@ -118,9 +118,9 @@ namespace Anicluster.Database.Services {
                         }
                         connection.Close();
                         // Request Interruption(s)
-                        PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(_databaseManager);
+                        PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(this._databaseManager);
                         List<int> piIds = publishingTimeInterruptionAssociativeEntityService.SelectInterruptionsFromPublishing(id);
-                        InterruptionService interruptionService = new InterruptionService(_databaseManager);
+                        InterruptionService interruptionService = new InterruptionService(this._databaseManager);
                         publishingTime.Interruptions.AddRange(interruptionService.SelectInterruptionsById(piIds));
 
                         return publishingTime;

@@ -9,11 +9,11 @@ namespace Anicluster.Database.Services {
         private readonly DatabaseManager _databaseManager;
 
         public InterruptionService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = @"
                     CREATE TABLE IF NOT EXISTS Interruption (
                         Id INTEGER PRIMARY KEY,
@@ -38,7 +38,7 @@ namespace Anicluster.Database.Services {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -58,7 +58,7 @@ namespace Anicluster.Database.Services {
         }
 
         public int Insert(Interruption interruption) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string queryInsert = @"
                     INSERT INTO Interruption (StartDate, EndDate, Comment)
                         VALUES (@StartDate, @EndDate, @Comment);
@@ -85,7 +85,7 @@ namespace Anicluster.Database.Services {
         }
 
         public List<Interruption> SelectInterruptionsById(List<int> ids) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 try {
                     string querySelect = @"
                         SELECT StartDate, EndDate, Comment

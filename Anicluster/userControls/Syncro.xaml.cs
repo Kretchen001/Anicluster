@@ -26,33 +26,33 @@ namespace Anicluster.userControls {
 
         public Syncro(AnimeSR.Syncro? syncro = null) {
             if (syncro is not null) {
-                NewSyncro = syncro;
+                this.NewSyncro = syncro;
             }
-            InitializeComponent();
-            DataContext = this;
+            this.InitializeComponent();
+            this.DataContext = this;
             foreach (KeyValuePair<SyncroLanuage, string> x in TranslationOfLanguage) {
-                Languages.Add(x);
+                this.Languages.Add(x);
             }
-            NewSyncro.General = NewSyncro.General.Equals(-1) ? 0 : NewSyncro.General;
-            ProgBarGeneral.Value = NewSyncro.General;
-            CBLanguageSelection.SelectedIndex = NewSyncro.General;
+            this.NewSyncro.General = this.NewSyncro.General.Equals(-1) ? 0 : this.NewSyncro.General;
+            this.ProgBarGeneral.Value = this.NewSyncro.General;
+            this.CBLanguageSelection.SelectedIndex = this.NewSyncro.General;
         }
 
         private void ProgBarGeneral_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
             if (e.Delta > 0) {
-                NewSyncro.General = Math.Min(NewSyncro.General + 1, 100);
+                this.NewSyncro.General = Math.Min(this.NewSyncro.General + 1, 100);
             }
             else {
-                NewSyncro.General = Math.Max(NewSyncro.General - 1, 0);
+                this.NewSyncro.General = Math.Max(this.NewSyncro.General - 1, 0);
             }
-            ProgBarGeneral.Value = NewSyncro.General; // Update ProgressBar
+            this.ProgBarGeneral.Value = this.NewSyncro.General; // Update ProgressBar
         }
 
         private void ProgBarGeneral_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             NumberInputDialog inputDialog = new NumberInputDialog();
             if (inputDialog.ShowDialog() == true) {
-                NewSyncro.General = inputDialog.Result;
-                ProgBarGeneral.Value = inputDialog.Result;
+                this.NewSyncro.General = inputDialog.Result;
+                this.ProgBarGeneral.Value = inputDialog.Result;
             }
         }
 

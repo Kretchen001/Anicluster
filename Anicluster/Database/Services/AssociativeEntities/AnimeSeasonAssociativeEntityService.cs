@@ -8,11 +8,11 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         private readonly DatabaseManager _databaseManager;
 
         public AnimeSeasonAssociativeEntityService(DatabaseManager databaseManager) {
-            _databaseManager = databaseManager;
+            this._databaseManager = databaseManager;
         }
 
         public bool InitializeTable() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string creationString = "" +
                     "CREATE TABLE IF NOT EXISTS AnimeSeasonAssociativeEntity (\n" +
                     "    AnimeId INTEGER,\n" +
@@ -37,7 +37,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         }
 
         public bool TableExist() {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 connection.Open();
                 string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
@@ -57,7 +57,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         }
 
         public void Insert(int animeId, int seasonId) {
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 string query = "INSERT INTO AnimeSeasonAssociativeEntity (AnimeId, SeasonId)\n" +
                 "    VALUES (@AnimeId, @SeasonId);";
                 connection.Open();
@@ -78,7 +78,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
                 $"    AnimeId={id}";
 
             DataTable resDt = new DataTable();
-            using (SqliteConnection connection = _databaseManager.GetConnection()) {
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
                 using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
                     connection.Open();
                     SqliteDataReader result = cmd.ExecuteReader();

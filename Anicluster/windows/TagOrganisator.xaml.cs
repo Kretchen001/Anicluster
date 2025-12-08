@@ -22,34 +22,34 @@ namespace Anicluster.windows {
 
         /// <summary></summary>
         public TagOrganisator() {
-            InitializeComponent();
-            foreach (Tag x in _tagService.SelectAllTags()) {
-                AllTags.Add(x);
+            this.InitializeComponent();
+            foreach (Tag x in this._tagService.SelectAllTags()) {
+                this.AllTags.Add(x);
             }
-            DataContext = this;
-            FilteredTags = CollectionViewSource.GetDefaultView(AllTags);
+            this.DataContext = this;
+            this.FilteredTags = CollectionViewSource.GetDefaultView(this.AllTags);
         }
 
         /// <summary></summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MenuItemAddTag_Click(object sender, RoutedEventArgs e) {
-            PopupInputNewTag.IsOpen = true;
+            this.PopupInputNewTag.IsOpen = true;
         }
 
         /// <summary></summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void BtnPopUp_Click(object sender, RoutedEventArgs e) {
-            if (!AllTags.Any(x => x.Designation.Contains(InTxtBoxNewTag.Text, StringComparison.OrdinalIgnoreCase))) {
-                Tag temp = new Tag(InTxtBoxNewTag.Text);
-                temp.Id = _tagService.Insert(temp);
-                AllTags.Add(temp);
+            if (!this.AllTags.Any(x => x.Designation.Contains(this.InTxtBoxNewTag.Text, StringComparison.OrdinalIgnoreCase))) {
+                Tag temp = new Tag(this.InTxtBoxNewTag.Text);
+                temp.Id = this._tagService.Insert(temp);
+                this.AllTags.Add(temp);
                 MessageBox.Show(owner: this, $"Tag '{temp.Designation}' erfolgreich gespeichert!");
-                InTxtBoxNewTag.Text = "";
+                this.InTxtBoxNewTag.Text = "";
             }
             else {
-                MessageBox.Show(owner: this, $"Tag '{InTxtBoxNewTag.Text}' bereits vorhanden!");
+                MessageBox.Show(owner: this, $"Tag '{this.InTxtBoxNewTag.Text}' bereits vorhanden!");
             }
         }
 
@@ -57,11 +57,11 @@ namespace Anicluster.windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void InputTextBox_TextChanged(object sender, TextChangedEventArgs e) {
-            if (AllTags.Any(x => x.Designation.Equals(InTxtBoxNewTag.Text, StringComparison.OrdinalIgnoreCase))) {
-                InTxtBoxNewTag.Background = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)); // A=128 (50% Transparenz), R=255 (Rot), G=0, B=0
+            if (this.AllTags.Any(x => x.Designation.Equals(this.InTxtBoxNewTag.Text, StringComparison.OrdinalIgnoreCase))) {
+                this.InTxtBoxNewTag.Background = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0)); // A=128 (50% Transparenz), R=255 (Rot), G=0, B=0
             }
             else {
-                InTxtBoxNewTag.Background = new SolidColorBrush(Colors.LightGreen);
+                this.InTxtBoxNewTag.Background = new SolidColorBrush(Colors.LightGreen);
             }
         }
 
@@ -69,10 +69,10 @@ namespace Anicluster.windows {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MenuItemDeleteSelectedTag_Click(object sender, RoutedEventArgs e) {
-            if (SelectedTag is not null) {
-                if (_tagService.DeleteTagById(SelectedTag)) {
-                    MessageBox.Show(owner: this, $"Tag '{SelectedTag.Designation}' erfolgreich gelöscht.");
-                    AllTags.Remove(SelectedTag);
+            if (this.SelectedTag is not null) {
+                if (this._tagService.DeleteTagById(this.SelectedTag)) {
+                    MessageBox.Show(owner: this, $"Tag '{this.SelectedTag.Designation}' erfolgreich gelöscht.");
+                    this.AllTags.Remove(this.SelectedTag);
                 }
                 else {
                     MessageBox.Show(owner: this, "Fehler beim Löschen!\nBitte beim Log aufbewahren und Programmierer informieren.");
@@ -84,25 +84,25 @@ namespace Anicluster.windows {
         }
 
         private void MenuItemTagSearch_Click(object sender, RoutedEventArgs e) {
-            GrdSearch.Visibility = GrdSearch.IsVisible ? Visibility.Collapsed : Visibility.Visible;
-            MenuItemTagSearch.Header = GrdSearch.IsVisible ? "Suche ausblenden" : "Suche einblenden";
+            this.GrdSearch.Visibility = this.GrdSearch.IsVisible ? Visibility.Collapsed : Visibility.Visible;
+            this.MenuItemTagSearch.Header = this.GrdSearch.IsVisible ? "Suche ausblenden" : "Suche einblenden";
         }
 
         private void TxtBxSearchPattern_TextChanged(object sender, TextChangedEventArgs e) {
-            FilteredTags.Filter = obj => {
+            this.FilteredTags.Filter = obj => {
                 if (obj is Tag tagViewModel) {
                     return (
-                        string.IsNullOrEmpty(TxtBxSearchPattern.Text) 
-                        || tagViewModel.Designation.Contains(TxtBxSearchPattern.Text, StringComparison.OrdinalIgnoreCase)
+                        string.IsNullOrEmpty(this.TxtBxSearchPattern.Text) 
+                        || tagViewModel.Designation.Contains(this.TxtBxSearchPattern.Text, StringComparison.OrdinalIgnoreCase)
                     );
                 }
                 return false;
             };
-            FilteredTags.Refresh();
+            this.FilteredTags.Refresh();
         }
 
         private void BtnSearchPatternEmpty_Click(object sender, RoutedEventArgs e) {
-            TxtBxSearchPattern.Text = "";
+            this.TxtBxSearchPattern.Text = "";
         }
     }
 }
