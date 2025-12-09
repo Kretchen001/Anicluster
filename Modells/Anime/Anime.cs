@@ -82,6 +82,7 @@ namespace Modells.Anime {
             return JsonConvert.DeserializeObject<Anime>(temp)!;
         }
 
+        [JsonIgnore]
         private bool isChanged = false;  // Flag, um die erste Änderung zu erkennen
         public void ResetFirstChangeBool() {
             this.isChanged = false;

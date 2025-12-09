@@ -39,6 +39,9 @@ namespace Anicluster.windows {
             };
             this.AnimeToEdit.ResetFirstChangeBool();
             this.DataContext = this;
+
+            this.TBName.Text = this.AnimeToEdit.Name;
+            this.TBName_LostFocus(null, null);
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
