@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Modells.Anime;
+using Modells.Anime.SoundRating;
 using Serilog;
 using System.Data;
 
@@ -113,14 +114,16 @@ namespace Anicluster.Database.Services {
                     connection.Close();
                 }
             }
-            AcousticService acse = new AcousticService(this._databaseManager);
-            //return new Status(
-            //    id: (int)((long)resDt.Rows[0]["Id"]),
-            //    state: (State)Enum.Parse(typeof(State), resDt.Rows[0]["State"].ToString() ?? "0"),
-            //    comment: resDt.Rows[0]["Comment"].ToString()
-            //);
-            // Id, Story, Animation, SpecialEffects, AcousticId, IsRated
-            return new Rating();
+            Acoustic acoustic = new AcousticService(this._databaseManager).GetAcousticById((int)resDt.Rows[0]["AcousticId"]);
+
+            return new Rating(
+                id: (int)((long)resDt.Rows[0]["Id"]),
+                story: (int)((long)resDt.Rows[0]["Story"]),
+                animation: (int)((long)resDt.Rows[0]["Animation"]),
+                specialEffects: (int)((long)resDt.Rows[0]["SpecialEffects"]),
+                acoustic: acoustic,
+                isRated: (bool)resDt.Rows[0]["IsRated"]
+            );
         }
 
         public bool UpdateRating(Rating ratingToUpdate) {
