@@ -1,6 +1,7 @@
 ﻿namespace Modells.Anime {
     public class PublishingTime : ValueComparableObject {
 
+        public int Id { get; set; }
         public DateTime StartDate { get; set; } = new DateTime(1, 1, 1);
         public DateTime EndDate { get; set; } = new DateTime(1, 1, 1);
         public List<Interruption> Interruptions { get; set; } = [];

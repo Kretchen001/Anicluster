@@ -120,5 +120,17 @@ namespace Anicluster.Database.Services {
                 }
             }
         }
+
+        public bool UpdateInterruptions(int publishingId, List<Interruption> interruptionsToUpdate) {
+            // get all currently binded interruptions per Id
+
+            // remove all no longer relevant
+
+            // insert new interruptions + ref in EA-Table
+
+            // update existing
+
+            return true;
+        }
     }
 }

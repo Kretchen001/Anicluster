@@ -76,6 +76,7 @@ namespace Anicluster.Database.Services {
                         object? insertedId = cmd.ExecuteScalar();
                         connection.Close();
                         int insertedIdInt = (int)((long)insertedId!);
+                        publishingTime.Id = insertedIdInt;
                         List<int> insertedInterruptionIds = [];
                         InterruptionService interruptionService = new InterruptionService(this._databaseManager);
                         foreach (Interruption x in publishingTime.Interruptions) {
@@ -111,6 +112,7 @@ namespace Anicluster.Database.Services {
                         cmd.ExecuteNonQuery();
                         using (SqliteDataReader reader = cmd.ExecuteReader()) {
                             publishingTime = new PublishingTime() {
+                                Id = (int)((long)reader["Id"]),
                                 StartDate = (DateTime)reader["StartDate"],
                                 EndDate = (DateTime)reader["EndDate"],
                             };
@@ -134,30 +136,35 @@ namespace Anicluster.Database.Services {
         }
 
         public bool UpdatePublishingTime(PublishingTime publishingTimeToUpdate) {
-            return false;
-        }
+            // update Interruptions
+            if (!(new InterruptionService(this._databaseManager).UpdateInterruptions(publishingTimeToUpdate.Id ,publishingTimeToUpdate.Interruptions))) {
+                return false;
+            }
 
-        ///// <summary></summary>
-        ///// <param name="tagToDelete"></param>
-        ///// <returns></returns>
-        //public bool DeleteTagById(Tag tagToDelete) {
-        //    using (SqliteConnection connection = _databaseManager.GetConnection()) {
-        //        string queryInsert = "" +
-        //            "DELETE FROM Tag\n" +
-        //            $"WHERE Id LIKE {tagToDelete.Id}";
-        //        using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
-        //            try {
-        //                connection.Open();
-        //                cmd.ExecuteNonQuery();
-        //                connection.Close();
-        //                return true;
-        //            }
-        //            catch (Exception ex) {
-        //                Log.Error(ex.StackTrace ?? "Error without stacktrace... <- DeleteTagById!");
-        //                return false;
-        //            }
-        //        }
-        //    }
-        //}
+            // update Publishing Time
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
+                string queryInsert = @"
+                    UPDATE PublishingTime 
+                    SET 
+                        StartDate = @StartDate
+                        EndDate = @EndDate
+                    WHERE Id = @Id; 
+                ";
+                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
+                    try {
+                        PublishingTime publishingTime = new PublishingTime();
+                        connection.Open();
+                        cmd.Parameters.AddWithValue("@Id", publishingTimeToUpdate.Id);
+                        cmd.Parameters.AddWithValue("@StartDate", publishingTimeToUpdate.StartDate);
+                        cmd.Parameters.AddWithValue("@EndDate", publishingTimeToUpdate.EndDate);
+                    }
+                    catch (Exception ex) {
+                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tags Selection (all)!");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }
