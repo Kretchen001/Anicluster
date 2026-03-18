@@ -4,10 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Anicluster.userControls"
+             xmlns:Converters="clr-namespace:Anicluster.Converters"
              mc:Ignorable="d"
              d:DesignHeight="175"
              d:DesignWidth="250">
     <UserControl.Resources>
+        <Converters:EmptyToVisibilityConverter x:Key="EmptyToVisibilityConverter"/>
         <Style x:Key="RoundedBorder"
                TargetType="Border">
             <Setter Property="Background"
@@ -109,11 +111,20 @@
                 <CheckBox HorizontalAlignment="Right"
                           IsChecked="{Binding NewSyncro.IsAssessed}"></CheckBox>
             </StackPanel>
-            <TextBox Text="{Binding NewSyncro.Comment}"
-                     Height="60"
-                     TextWrapping="Wrap"
-                     AcceptsReturn="True"
-                     ToolTip="Kommentarfeld"/>
+            <Grid>
+                <TextBox x:Name="TbComment"
+                         Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"
+                         Height="60"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         ToolTip="Kommentarfeld"/>
+                <TextBlock Text="Kommentar hier eingeben..."
+                           Foreground="LightGray"
+                           Margin="5,3,0,0"
+                           IsHitTestVisible="False"
+                           VerticalAlignment="Top"
+                           Visibility="{Binding Text, ElementName=TbComment, Converter={StaticResource EmptyToVisibilityConverter}}"/>
+            </Grid>
         </StackPanel>
     </Border>
 </UserControl>
