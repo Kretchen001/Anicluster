@@ -239,7 +239,7 @@ namespace Anicluster.windows {
                 c += tempOpening != 0 ? 1 : 0;
                 c += tempSyncros != 0 ? 1 : 0;
                 c += this.Soundtrack != 0 ? 1 : 0;
-                this.LbAkustikGesamt.Content = $"({tempOpening} + {tempEnding} + {tempSyncros} + {this.Soundtrack})/{c} = {temp.Acoustic.General}";
+                this.LbAkustikGesamt.Content = $"({this.Soundtrack} + {tempOpening} + {tempEnding} + {tempSyncros})/{c} = {temp.Acoustic.General}";
             }
         }
 

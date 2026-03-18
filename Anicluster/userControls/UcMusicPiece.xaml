@@ -10,6 +10,7 @@
              d:DesignWidth="250">
     <UserControl.Resources>
         <Converters:EmptyToVisibilityConverter x:Key="EmptyToVisibilityConverter"/>
+        <Converters:SmoothProgressBarColorConverter x:Key="SmoothProgressBarColorConverter"/>
         <Style x:Key="RoundedBorder"
                TargetType="Border">
             <Setter Property="Background"
@@ -92,7 +93,8 @@
                              Margin="0,0,0,5"
                              ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden"
                              MouseWheel="ProgBarGeneral_MouseWheel"
-                             MouseLeftButtonDown="ProgBarGeneral_MouseLeftButtonDown"/>
+                             MouseLeftButtonDown="ProgBarGeneral_MouseLeftButtonDown"
+                             Foreground="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource SmoothProgressBarColorConverter}}"/>
                 <Label x:Name="LbGeneral"
                        Content="{Binding General}"
                        Margin="0,0,0,4"

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Anicluster.windows"
         xmlns:uc="clr-namespace:Anicluster.userControls"
+        xmlns:Converters="clr-namespace:Anicluster.Converters"
         xmlns:wf="clr-namespace:WpfMath.Controls;assembly=WpfMath"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -12,6 +13,9 @@
         Height="500"
         Width="600"
         ResizeMode="CanResize">
+    <Window.Resources>
+        <Converters:SmoothProgressBarColorConverter x:Key="SmoothProgressBarColorConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -135,7 +139,8 @@
                                                      Margin="3"
                                                      ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden"
                                                      MouseWheel="ProgBarHistory_MouseWheel"
-                                                     MouseLeftButtonDown="ProgBarHistory_MouseLeftButtonDown"/>
+                                                     MouseLeftButtonDown="ProgBarHistory_MouseLeftButtonDown"
+                                                     Foreground="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource SmoothProgressBarColorConverter}}"/>
                                         <Label x:Name="LbHistory"
                                                Content="{Binding History}"
                                                Margin="0"
@@ -150,7 +155,8 @@
                                                      Value="{Binding Animation}"
                                                      Margin="3"
                                                      MouseWheel="ProgBarAnimation_MouseWheel"
-                                                     MouseLeftButtonDown="ProgBarAnimation_MouseLeftButtonDown"/>
+                                                     MouseLeftButtonDown="ProgBarAnimation_MouseLeftButtonDown"
+                                                     Foreground="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource SmoothProgressBarColorConverter}}"/>
                                         <Label x:Name="LbAnimation"
                                                Content="{Binding Animation}"
                                                Margin="0"
@@ -165,7 +171,8 @@
                                                      Value="{Binding SpecialEffects}"
                                                      Margin="3"
                                                      MouseWheel="ProgBarSpecialEffects_MouseWheel"
-                                                     MouseLeftButtonDown="ProgBarSpecialEffects_MouseLeftButtonDown"/>
+                                                     MouseLeftButtonDown="ProgBarSpecialEffects_MouseLeftButtonDown"
+                                                     Foreground="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource SmoothProgressBarColorConverter}}"/>
                                         <Label x:Name="LbSpecialEffects"
                                                Content="{Binding SpecialEffects}"
                                                Margin="0"
@@ -201,6 +208,7 @@
                                              Margin="3"
                                              MouseWheel="ProgBarSoundtrack_MouseWheel"
                                              MouseLeftButtonDown="ProgBarSoundtrack_MouseLeftButtonDown"
+                                             Foreground="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource SmoothProgressBarColorConverter}}"
                                              Grid.Column="1"/>
                                 <Label x:Name="LbSoundtrack"
                                        Content="{Binding Soundtrack, UpdateSourceTrigger=PropertyChanged}"

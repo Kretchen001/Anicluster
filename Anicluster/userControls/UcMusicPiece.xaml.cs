@@ -5,13 +5,13 @@ using System.Windows;
 using System.Windows.Controls;
 
 namespace Anicluster.userControls {
+
     /// <summary>
     /// Interaktionslogik für MusicPiece.xaml
     /// </summary>
     public partial class UcMusicPiece : UserControl, INotifyPropertyChanged {
 
         private MusicPiece _MusicPiece = new MusicPiece();
-
         public MusicPiece MusicPiece {
             get {                 
                 return this._MusicPiece; 
@@ -36,8 +36,7 @@ namespace Anicluster.userControls {
                 this.MusicPiece.Comment = "";
             }
             this.InitializeComponent();
-            this.ProgBarGeneral.Value = this.MusicPiece.General != -1 ? this.MusicPiece.General : 0;
-            this.LbGeneral.Content = this.MusicPiece.General != -1 ? this.MusicPiece.General : 0;
+            this.MusicPiece.General = this.MusicPiece.General != -1 ? this.MusicPiece.General : 0;
             this.DataContext = this.MusicPiece;
         }
 
@@ -54,7 +53,6 @@ namespace Anicluster.userControls {
             NumberInputDialog inputDialog = new NumberInputDialog(this.MusicPiece.General);
             if (inputDialog.ShowDialog() == true) {
                 this.MusicPiece.General = inputDialog.Result;
-                this.ProgBarGeneral.Value = inputDialog.Result;
             }
         }
 
@@ -65,6 +63,7 @@ namespace Anicluster.userControls {
         private void BtnRemoveEntry_Click(object sender, RoutedEventArgs e) {
             RemoveThisUc(this, e);
         }
+
         protected void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
