@@ -83,7 +83,7 @@ namespace Anicluster.Database.Services.AssociativeEntities {
         public List<int> GetSyncroIdsById(int id = -1) {
             string query = $"" +
                 $"SELECT SyncroId\n" +
-                $"FROM AcousticMusicPieceAssociativeEntities\n" +
+                $"FROM AcousticSyncroAssociativeEntity\n" +
                 $"WHERE\n" +
                 $"    AcousticId={id}";
 

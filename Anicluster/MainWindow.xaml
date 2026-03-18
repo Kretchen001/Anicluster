@@ -23,7 +23,7 @@
                 <MenuItem x:Name="SortTier" Header="Nach Favorisierung" Click="SortTier_Click" />
             </MenuItem>
         </Menu>
-        <Grid>
+        <Grid x:Name="GrdMain">
             <StackPanel x:Name="StackPnlAnimes" Margin="5" CanVerticallyScroll="True" CanHorizontallyScroll="False">
                 
             </StackPanel>            

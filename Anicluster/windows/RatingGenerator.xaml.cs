@@ -142,7 +142,7 @@ namespace Anicluster.windows {
             this.LbHistory.Content = this.History;
         }
         private void ProgBarHistory_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-            NumberInputDialog inputDialog = new NumberInputDialog();
+            NumberInputDialog inputDialog = new NumberInputDialog(this.History);
             if (inputDialog.ShowDialog() == true) {
                 this.History = inputDialog.Result;
                 this.ProgBarHistory.Value = inputDialog.Result;
@@ -180,7 +180,7 @@ namespace Anicluster.windows {
             this.LbSpecialEffects.Content = this.SpecialEffects;
         }
         private void ProgBarSpecialEffects_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-            NumberInputDialog inputDialog = new NumberInputDialog();
+            NumberInputDialog inputDialog = new NumberInputDialog(this.SpecialEffects);
             if (inputDialog.ShowDialog() == true) {
                 this.SpecialEffects = inputDialog.Result;
                 this.ProgBarSpecialEffects.Value = inputDialog.Result;
@@ -201,7 +201,7 @@ namespace Anicluster.windows {
         }
 
         private void ProgBarSoundtrack_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-            NumberInputDialog inputDialog = new NumberInputDialog();
+            NumberInputDialog inputDialog = new NumberInputDialog(this.Soundtrack);
             if (inputDialog.ShowDialog() == true) {
                 this.Soundtrack = inputDialog.Result;
                 this.ProgBarSoundtrack.Value = inputDialog.Result;

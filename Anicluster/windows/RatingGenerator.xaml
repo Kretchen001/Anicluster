@@ -9,9 +9,9 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Bewertung"
-        Height="350"
+        Height="500"
         Width="600"
-        ResizeMode="NoResize">
+        ResizeMode="CanResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -264,7 +264,7 @@
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelSoundtracks"></StackPanel>
@@ -273,6 +273,7 @@
                             Grid.Row="1"
                             Width="150"
                             Margin="5,2,5,2"
+                            Padding="0,5"
                             HorizontalAlignment="Right"
                             Click="BtnSoundtrackAdd_Click">
                         Soundtrack Hinzufügen
@@ -283,7 +284,7 @@
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelOpening"></StackPanel>
@@ -292,6 +293,7 @@
                             Grid.Row="1"
                             Width="150"
                             Margin="5,2,5,2"
+                            Padding="0,5"
                             HorizontalAlignment="Right"
                             Click="BtnOpeningAdd_Click">
                         Opening Hinzufügen
@@ -302,7 +304,7 @@
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelEnding"></StackPanel>
@@ -311,6 +313,7 @@
                             Grid.Row="1"
                             Width="150"
                             Margin="5,2,5,2"
+                            Padding="0,5"
                             HorizontalAlignment="Right"
                             Click="BtnEndingAdd_Click">
                         Ending Hinzufügen
@@ -321,7 +324,7 @@
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <ScrollViewer Grid.Row="0">
                         <StackPanel x:Name="StackPanelSyncro"></StackPanel>
@@ -330,6 +333,7 @@
                             Grid.Row="1"
                             Width="150"
                             Margin="5,2,5,2"
+                            Padding="0,5"
                             HorizontalAlignment="Right"
                             Click="BtnSyncroAdd_Click">
                         Syncronisation Hinzufügen

@@ -7,6 +7,7 @@ using Modells.ViewModel;
 using System.Data;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Anicluster {
@@ -35,6 +36,49 @@ namespace Anicluster {
             Version version = assembly.GetName().Version!;
             this.AppNameAndVersion = $"{assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "Anicluster"} - Version: {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
             this.Title = this.AppNameAndVersion;
+        }
+
+        private UserControl? currentEditAnimeUC = null;
+
+        public void ShowEditAnime(UserControl editControl) {
+            // 1. Anime-Stack ausblenden
+            this.StackPnlAnimes.Visibility = Visibility.Collapsed;
+
+            // 2. Falls ein EditAnime schon angezeigt wird, entfernen und Event abmelden
+            if (this.currentEditAnimeUC != null) {
+                if (this.currentEditAnimeUC is EditAnime oldEA) {
+                    oldEA.RequestClose -= (s, e) => this.HideEditAnime(); // Achtung: Lambda funktioniert hier nicht zum Abmelden
+                }
+                this.GrdMain.Children.Remove(this.currentEditAnimeUC);
+            }
+
+            // 3. Neues EditAnime UC einfügen
+            this.currentEditAnimeUC = editControl;
+
+            // Event abonnieren
+            if (editControl is EditAnime ea) {
+                ea.RequestClose += this.EditAnime_RequestClose;
+            }
+
+            this.GrdMain.Children.Add(editControl);
+        }
+
+        private void EditAnime_RequestClose(object? sender, EventArgs e) {
+            this.HideEditAnime();
+        }
+
+        public void HideEditAnime() {
+            if (this.currentEditAnimeUC != null) {
+                // Event abmelden
+                if (this.currentEditAnimeUC is EditAnime ea) {
+                    ea.RequestClose -= this.EditAnime_RequestClose;
+                }
+
+                this.GrdMain.Children.Remove(this.currentEditAnimeUC);
+                this.currentEditAnimeUC = null;
+            }
+
+            this.StackPnlAnimes.Visibility = Visibility.Visible;
         }
 
         private void RequestAnimesPerViewAndAddToStackPnl() {

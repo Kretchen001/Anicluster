@@ -2,6 +2,7 @@
 using Modells.Anime;
 using Modells.Anime.SoundRating;
 using Modells.ViewModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -31,10 +32,14 @@ namespace Anicluster.userControls {
             this.TranslationOfState = TranslationOfStateDeu[anime.State];
             this.DataContext = this;
         }
+        private void MenuItemDetailsAndEdit_Click(object sender, RoutedEventArgs e) {
+            // Neues UC erzeugen
+            EditAnime editAnimeUC = new EditAnime(this.Anime.Id);
 
-        private void MenuItemDetailsAndEdit_Click(object sender, System.Windows.RoutedEventArgs e) {
-            EditAnime editAnime = new EditAnime(this.Anime.Id);
-            editAnime.ShowDialog();
+            // MainWindow holen
+            if (Window.GetWindow(this) is MainWindow mainWindow) {
+                mainWindow.ShowEditAnime(editAnimeUC);
+            }
         }
     }
 }

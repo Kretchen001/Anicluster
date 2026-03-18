@@ -13,7 +13,7 @@ namespace Anicluster.windows {
     /// <summary>
     /// Interaktionslogik für EditAnime.xaml
     /// </summary>
-    public partial class EditAnime : Window {
+    public partial class EditAnime : UserControl {
 
         AnimeService animeService = new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite"));
 
@@ -23,6 +23,9 @@ namespace Anicluster.windows {
         private SeasonGenerator window_SeasonGenerator = new SeasonGenerator();
         private AddTagToAnime window_AddTagToAnime = new AddTagToAnime();
         private PublishingTimeGenerator window_PublishingTime = new PublishingTimeGenerator();
+
+
+        public event EventHandler? RequestClose;
 
         public EditAnime(int AnimeId) {
             this.InitializeComponent();
@@ -42,11 +45,6 @@ namespace Anicluster.windows {
 
             this.TBName.Text = this.AnimeToEdit.Name;
             this.TBName_LostFocus(null, null);
-        }
-
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            if (e.ButtonState == MouseButtonState.Pressed)
-                this.DragMove();
         }
 
         private void TBName_KeyDown(object sender, KeyEventArgs e) {
@@ -70,7 +68,7 @@ namespace Anicluster.windows {
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e) {
-            this.Close();
+            RequestClose?.Invoke(this, EventArgs.Empty);
         }
 
         private void StarPath_MouseDown(object sender, MouseButtonEventArgs e) {
@@ -218,7 +216,7 @@ namespace Anicluster.windows {
         private void BtnTagsSelector_Click(object sender, RoutedEventArgs e) {
             if (!this.window_AddTagToAnime.IsVisible) {
                 this.window_AddTagToAnime.Closed += this.TagsSelectorClosed!;
-                this.window_AddTagToAnime.Owner = this;
+                this.window_AddTagToAnime.Owner = Window.GetWindow(this);
                 this.window_AddTagToAnime.Show();
             }
         }
@@ -233,7 +231,7 @@ namespace Anicluster.windows {
         private void BtnPublishingTime_Click(object sender, RoutedEventArgs e) {
             if (!this.window_PublishingTime.IsVisible) {
                 this.window_PublishingTime.Closed += this.PublishingTimeClosed!;
-                this.window_PublishingTime.Owner = this;
+                this.window_PublishingTime.Owner = Window.GetWindow(this);
                 this.window_PublishingTime.Show();
             }
         }
@@ -248,7 +246,6 @@ namespace Anicluster.windows {
             if (this.AnimeToEdit.Name != "") {
                 this.AnimeToEdit.Comment = this.TxtBxComment.Text.Equals("") ? null : this.TxtBxComment.Text;
                 new AnimeService(new DatabaseManager($"Data Source=db/data.sqlite")).Insert(this.AnimeToEdit);
-                this.Close();
             }
             else {
                 MessageBox.Show(

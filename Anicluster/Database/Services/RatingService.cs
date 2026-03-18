@@ -114,7 +114,7 @@ namespace Anicluster.Database.Services {
                     connection.Close();
                 }
             }
-            Acoustic acoustic = new AcousticService(this._databaseManager).GetAcousticById((int)resDt.Rows[0]["AcousticId"]);
+            Acoustic acoustic = new AcousticService(this._databaseManager).GetAcousticById((int)((long)resDt.Rows[0]["AcousticId"]));
 
             return new Rating(
                 id: (int)((long)resDt.Rows[0]["Id"]),
@@ -122,7 +122,7 @@ namespace Anicluster.Database.Services {
                 animation: (int)((long)resDt.Rows[0]["Animation"]),
                 specialEffects: (int)((long)resDt.Rows[0]["SpecialEffects"]),
                 acoustic: acoustic,
-                isRated: (bool)resDt.Rows[0]["IsRated"]
+                isRated: Convert.ToBoolean(resDt.Rows[0]["IsRated"])
             );
         }
 

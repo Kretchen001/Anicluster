@@ -9,7 +9,8 @@ namespace Anicluster.dialogs {
 
         public int Result { get; private set; }
         
-        public NumberInputDialog() {
+        public NumberInputDialog(int initializeValue = 0) {
+            this.Result = initializeValue;
             this.InitializeComponent();
             this.TBInputNumber.Focus();
         }

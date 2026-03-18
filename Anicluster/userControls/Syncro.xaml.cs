@@ -49,7 +49,7 @@ namespace Anicluster.userControls {
         }
 
         private void ProgBarGeneral_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-            NumberInputDialog inputDialog = new NumberInputDialog();
+            NumberInputDialog inputDialog = new NumberInputDialog(this.NewSyncro.General);
             if (inputDialog.ShowDialog() == true) {
                 this.NewSyncro.General = inputDialog.Result;
                 this.ProgBarGeneral.Value = inputDialog.Result;
