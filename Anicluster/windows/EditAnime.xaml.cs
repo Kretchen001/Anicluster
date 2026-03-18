@@ -21,7 +21,7 @@ namespace Anicluster.windows {
 
         private RatingGenerator window_RatingGenerator = new RatingGenerator();
         private SeasonGenerator window_SeasonGenerator = new SeasonGenerator();
-        private AddTagToAnime window_AddTagToAnime = new AddTagToAnime();
+        private AddTagToAnime window_TagsOfAnime = new AddTagToAnime();
         private PublishingTimeGenerator window_PublishingTime = new PublishingTimeGenerator();
 
 
@@ -41,6 +41,9 @@ namespace Anicluster.windows {
                 this.BtnCancel.Content = "Änderungen verwerfen";
             };
             this.AnimeToEdit.ResetFirstChangeBool();
+            
+            this.window_TagsOfAnime = new AddTagToAnime(this.AnimeToEdit.Tags);
+
             this.DataContext = this;
 
             this.TBName.Text = this.AnimeToEdit.Name;
@@ -214,18 +217,18 @@ namespace Anicluster.windows {
         }
 
         private void BtnTagsSelector_Click(object sender, RoutedEventArgs e) {
-            if (!this.window_AddTagToAnime.IsVisible) {
-                this.window_AddTagToAnime.Closed += this.TagsSelectorClosed!;
-                this.window_AddTagToAnime.Owner = Window.GetWindow(this);
-                this.window_AddTagToAnime.Show();
+            if (!this.window_TagsOfAnime.IsVisible) {
+                this.window_TagsOfAnime.Closed += this.TagsSelectorClosed!;
+                this.window_TagsOfAnime.Owner = Window.GetWindow(this);
+                this.window_TagsOfAnime.Show();
             }
         }
 
         private void TagsSelectorClosed(object sender, EventArgs e) {
-            this.AnimeToEdit.Tags = new List<Tag>(this.window_AddTagToAnime.SelectedTags);
+            this.AnimeToEdit.Tags = new List<Tag>(this.window_TagsOfAnime.SelectedTags);
             this.ListViewTags.ItemsSource = this.AnimeToEdit.Tags;
-            this.window_AddTagToAnime.Closed -= this.TagsSelectorClosed!;
-            this.window_AddTagToAnime = new AddTagToAnime(this.AnimeToEdit.Tags);
+            this.window_TagsOfAnime.Closed -= this.TagsSelectorClosed!;
+            this.window_TagsOfAnime = new AddTagToAnime(this.AnimeToEdit.Tags);
         }
 
         private void BtnPublishingTime_Click(object sender, RoutedEventArgs e) {
