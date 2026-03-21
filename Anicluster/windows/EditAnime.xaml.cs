@@ -21,6 +21,7 @@ namespace Anicluster.windows {
 
         private RatingGenerator window_RatingGenerator = new RatingGenerator();
         private SeasonGenerator window_SeasonGenerator = new SeasonGenerator();
+        private VideoAnimationGenerator window_VideoGenerator = new VideoAnimationGenerator();
         private AddTagToAnime window_TagsOfAnime = new AddTagToAnime();
         private PublishingTimeGenerator window_PublishingTime = new PublishingTimeGenerator();
 
@@ -41,8 +42,10 @@ namespace Anicluster.windows {
                 this.BtnCancel.Content = "Änderungen verwerfen";
             };
             this.AnimeToEdit.ResetFirstChangeBool();
-            
+
             this.window_TagsOfAnime = new AddTagToAnime(this.AnimeToEdit.Tags);
+            this.window_SeasonGenerator = new SeasonGenerator(AnimeToEdit.Seasons);
+            this.window_VideoGenerator = new VideoAnimationGenerator(AnimeToEdit.Ovas);
 
             this.DataContext = this;
 
@@ -211,9 +214,17 @@ namespace Anicluster.windows {
         }
 
         private void BtnOvaGenerator_Click(object sender, RoutedEventArgs e) {
+            if (!this.window_VideoGenerator.IsVisible) {
+                this.window_VideoGenerator.Closed += this.OvaGeneratorClosed!;
+                this.window_VideoGenerator.ShowDialog();
+            }
         }
 
         private void OvaGeneratorClosed(object sender, EventArgs e) {
+            this.AnimeToEdit.Ovas = new List<VideoAnimation>(this.window_VideoGenerator.Videos);
+
+            this.window_VideoGenerator.Closed -= this.OvaGeneratorClosed!;
+            this.window_VideoGenerator = new VideoAnimationGenerator(this.AnimeToEdit.Ovas);
         }
 
         private void BtnTagsSelector_Click(object sender, RoutedEventArgs e) {

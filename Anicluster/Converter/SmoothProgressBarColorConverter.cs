@@ -25,19 +25,19 @@ namespace Anicluster.Converters {
             Color c;
 
             if (val <= 20) {
-                c = InterpolateColor(Colors.Red, Colors.Orange, val / 20.0);
+                c = this.InterpolateColor(Colors.Red, Colors.Orange, val / 20.0);
             }
             else if (val <= 40) {
-                c = InterpolateColor(Colors.Orange, Colors.Yellow, (val - 20) / 20.0);
+                c = this.InterpolateColor(Colors.Orange, Colors.Yellow, (val - 20) / 20.0);
             }
             else if (val <= 60) {
-                c = InterpolateColor(Colors.Yellow, Colors.YellowGreen, (val - 40) / 20.0);
+                c = this.InterpolateColor(Colors.Yellow, Colors.YellowGreen, (val - 40) / 20.0);
             }
             else if (val <= 80) {
-                c = InterpolateColor(Colors.YellowGreen, Colors.LimeGreen, (val - 60) / 20.0);
+                c = this.InterpolateColor(Colors.YellowGreen, Colors.LimeGreen, (val - 60) / 20.0);
             }
             else {
-                c = InterpolateColor(Colors.LimeGreen, Colors.Lime, (val - 80) / 20.0);
+                c = this.InterpolateColor(Colors.LimeGreen, Colors.Lime, (val - 80) / 20.0);
             }
 
             return new SolidColorBrush(c);
