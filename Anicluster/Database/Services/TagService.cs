@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Anicluster.Database.Services {
 
-    public class TagService : IDatabaseService {
+    public class TagService : IDatabaseService, ITagService {
 
         private readonly DatabaseManager _databaseManager;
 

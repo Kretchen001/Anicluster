@@ -1,0 +1,153 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Runder Button, z. B. für die Tier-Auswahl -->
+    <Style x:Key="RoundedButton"
+           TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="TierButton"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="15"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground"
+                Value="White"/>
+        <Setter Property="Width"
+                Value="75"/>
+        <Setter Property="Margin"
+                Value="3,0"/>
+    </Style>
+
+    <!-- Goldener Button-Stil -->
+    <Style x:Key="GoldenButtonStyle" TargetType="Button">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="BorderBrush" Value="Goldenrod" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#FFD700" Offset="0" />
+                    <GradientStop Color="#FFB800" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="Goldenrod" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="0.8"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <!-- Effekt, wenn die Maus über dem Button ist -->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#FFCC00" Offset="0" />
+                            <GradientStop Color="#FF8000" Offset="1" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="Goldenrod" Direction="320" ShadowDepth="5" BlurRadius="10" Opacity="1"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+
+            <!-- Effekt, wenn der Button gedrückt wird -->
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#A9A9A9" />
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="Gray" Direction="320" ShadowDepth="2" BlurRadius="5" Opacity="0.6"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <TranslateTransform Y="4" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Weiße Karte mit Schatten für Musikstücke und Syncros -->
+    <Style x:Key="RoundedBorder"
+           TargetType="Border">
+        <Setter Property="Background"
+                Value="White"/>
+        <Setter Property="CornerRadius"
+                Value="10"/>
+        <Setter Property="Margin"
+                Value="10"/>
+        <Setter Property="Padding"
+                Value="10"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#FF000000"
+                                  BlurRadius="10"
+                                  ShadowDepth="5"
+                                  Opacity="0.5"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Rotes Kreuz zum Entfernen eines Eintrags -->
+    <ControlTemplate x:Key="buttonCrossTemplate" TargetType="Button">
+        <Path Data="M0,0 L8,8 M8,0 L0,8" Margin="5,5,0,0" StrokeThickness="3">
+            <Path.Style>
+                <Style TargetType="{x:Type Path}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter Property="Stroke" Value="LightGray" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Stroke" Value="Red" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Path.Style>
+        </Path>
+    </ControlTemplate>
+
+    <!-- Grüner bzw. roter Aktions-Button mit runden Ecken (Speichern / Abbrechen) -->
+    <Style x:Key="RoundedGreenButton" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="20">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="#FF4CAF50"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="BorderBrush" Value="#FF388E3C"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <Style x:Key="RoundedRedButton"
+           TargetType="Button"
+           BasedOn="{StaticResource RoundedGreenButton}">
+        <Setter Property="Background" Value="#FFAF4C4C"/>
+        <Setter Property="BorderBrush" Value="#FF8E3838"/>
+    </Style>
+
+    <!-- Fester Hintergrund der Dialoge -->
+    <SolidColorBrush x:Key="DialogBackgroundBrush" Color="#FFE5E5E5"/>
+</ResourceDictionary>

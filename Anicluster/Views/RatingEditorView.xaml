@@ -1,0 +1,239 @@
+﻿<UserControl x:Class="Anicluster.Views.RatingEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:Anicluster.Views"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             xmlns:wf="clr-namespace:WpfMath.Controls;assembly=WpfMath"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:RatingEditorViewModel}"
+             MinWidth="600"
+             MinHeight="500"
+             d:DesignHeight="500"
+             d:DesignWidth="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="Bewertung übernehmen"
+                      Click="MenuItemAcceptRating_Click"/>
+            <MenuItem Header="Abbrechen"
+                      Click="MenuItemCancel_Click"/>
+            <MenuItem Header="?"
+                      Click="MenuItemHelp_Click"/>
+        </Menu>
+        <Popup x:Name="PopUpHelp"
+               Placement="Mouse"
+               MouseLeave="PopUpHelp_MouseLeave">
+            <TextBox>
+                Einträge lassen sich per Kontextmenü (Rechtsklick) wieder entfernen.
+            </TextBox>
+        </Popup>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Auswertung">
+                <Grid Background="{StaticResource DialogBackgroundBrush}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Berechnung"
+                               Grid.Column="0"
+                               FontWeight="DemiBold"
+                               Margin="5,15,5,5"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"/>
+                    <wf:FormulaControl Scale="18"
+                                       Grid.Column="1"
+                                       Margin="10,15,5,5"
+                                       Formula="\frac{Ge \cdot 40 + An \cdot 25 + SE \cdot 10 + A.G \cdot 25}{100}"/>
+                    <TextBlock Text="Aktuelle Eingabe"
+                               Grid.Column="0"
+                               FontWeight="DemiBold"
+                               Margin="5,80,0,0"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"/>
+                    <wf:FormulaControl Scale="18"
+                                       Grid.Column="1"
+                                       Margin="10,75,5,5"
+                                       Formula="{Binding FormulaText}"/>
+                    <TextBlock Text="Legende"
+                               Grid.Column="0"
+                               FontWeight="DemiBold"
+                               Margin="5,140,0,0"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"/>
+                    <wf:FormulaControl Scale="16"
+                                       Grid.Column="1"
+                                       Margin="10,130,5,5"
+                                       Formula="Ge = \text{Geschichte}, An = \text{Animation}, SE = \text{Spezialeffekte}\\A.G = \text{Akustik gesammt, besteht mindestens aus der Soundtrack-}\\\text{         gesamtbewertung oder berechnet sich aus den Opening(s),}\\\text{         Ending(s), Syncro(s) und eingetragenen einzelnen}\\\text{         Soundtracks.}"/>
+                    <TextBlock Text="Hinweis"
+                               Grid.Column="0"
+                               FontWeight="Light"
+                               FontSize="10"
+                               Margin="5,0,0,10"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Left"/>
+                    <TextBlock Text="Die Bewertung 0 in einem der Pflichtbereiche (mit * markiert) fließt als Faktor mit ein!"
+                               Grid.Column="1"
+                               FontWeight="Light"
+                               FontSize="10"
+                               Margin="5,0,0,10"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Left"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Bereiche">
+                <Grid Background="{StaticResource DialogBackgroundBrush}">
+                    <StackPanel>
+                        <GroupBox Header="Allgemein">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Label Height="30"
+                                           VerticalContentAlignment="Center">
+                                        Geschichte*
+                                    </Label>
+                                    <Label Height="30"
+                                           VerticalContentAlignment="Center">
+                                        Animation*
+                                    </Label>
+                                    <Label Height="30"
+                                           VerticalContentAlignment="Center">
+                                        Spezialeffekte*
+                                    </Label>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <views:ScoreBarView DataContext="{Binding Story}"/>
+                                    <views:ScoreBarView DataContext="{Binding Animation}"/>
+                                    <views:ScoreBarView DataContext="{Binding SpecialEffects}"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="Akustik">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Label Height="30"
+                                       VerticalContentAlignment="Center">
+                                    Soundtrack*
+                                </Label>
+                                <views:ScoreBarView Grid.Column="1"
+                                                    DataContext="{Binding Soundtrack}"/>
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Content="Soundtracks einzelnen bewerten"/>
+                                <Button Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="150,3"
+                                        Content="Berechnen"
+                                        Click="BtnSoundtrackCalculate_Click"/>
+                                <Separator Grid.Row="2"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"/>
+                                <Label Grid.Row="3"
+                                       Grid.Column="0"
+                                       ToolTip="Die Akustik berechnet sich aus gleichen Teilen von Opening, Ending, bewertete Syncro's und dem Soundtrack-Wert. Beispielsweise bei Eintragung aller (durch 4, sonst entsprechend weniger)">
+                                    Akustik-Gesamt:
+                                </Label>
+                                <Label Grid.Row="3"
+                                       Grid.Column="1"
+                                       Content="{Binding AcousticSummaryText}"/>
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Soundtrack">
+                <Grid Background="{StaticResource DialogBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0">
+                        <ItemsControl ItemsSource="{Binding SoundtrackPieces}"/>
+                    </ScrollViewer>
+                    <Button Grid.Row="1"
+                            Width="150"
+                            Margin="5,2,5,2"
+                            Padding="0,5"
+                            HorizontalAlignment="Right"
+                            Click="BtnSoundtrackAdd_Click">
+                        Soundtrack Hinzufügen
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Opening(s)">
+                <Grid Background="{StaticResource DialogBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0">
+                        <ItemsControl ItemsSource="{Binding Openings}"/>
+                    </ScrollViewer>
+                    <Button Grid.Row="1"
+                            Width="150"
+                            Margin="5,2,5,2"
+                            Padding="0,5"
+                            HorizontalAlignment="Right"
+                            Click="BtnOpeningAdd_Click">
+                        Opening Hinzufügen
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Ending(s)">
+                <Grid Background="{StaticResource DialogBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0">
+                        <ItemsControl ItemsSource="{Binding Endings}"/>
+                    </ScrollViewer>
+                    <Button Grid.Row="1"
+                            Width="150"
+                            Margin="5,2,5,2"
+                            Padding="0,5"
+                            HorizontalAlignment="Right"
+                            Click="BtnEndingAdd_Click">
+                        Ending Hinzufügen
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Syncro(s)">
+                <Grid Background="{StaticResource DialogBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ScrollViewer Grid.Row="0">
+                        <ItemsControl ItemsSource="{Binding Syncros}"/>
+                    </ScrollViewer>
+                    <Button Grid.Row="1"
+                            Width="150"
+                            Margin="5,2,5,2"
+                            Padding="0,5"
+                            HorizontalAlignment="Right"
+                            Click="BtnSyncroAdd_Click">
+                        Syncronisation Hinzufügen
+                    </Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

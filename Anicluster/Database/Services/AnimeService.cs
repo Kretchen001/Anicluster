@@ -6,7 +6,7 @@ using System.Data;
 
 namespace Anicluster.Database.Services {
 
-    public class AnimeService : IDatabaseService {
+    public class AnimeService : IDatabaseService, IAnimeService {
 
         private readonly DatabaseManager _databaseManager;
 
@@ -322,6 +322,38 @@ namespace Anicluster.Database.Services {
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Lädt alle Animes in der schlanken Form für die Listenansicht (aus der View vw_Anime).
+        /// </summary>
+        public List<AnimeListEntry> SelectAnimeListEntries() {
+            List<AnimeListEntry> entries = [];
+            string query = @"
+                SELECT
+                    AnimeId, AnimeName, Favorite, Tier, StatusState
+                FROM
+                    vw_Anime;
+            ";
+            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    connection.Open();
+                    using (SqliteDataReader reader = cmd.ExecuteReader()) {
+                        while (reader.Read()) {
+                            // Anime ohne Status-Eintrag (z. B. per InsertFast angelegt) gelten als Wunschliste
+                            entries.Add(new AnimeListEntry(
+                                Id: Convert.ToInt32(reader["AnimeId"]),
+                                Name: reader["AnimeName"].ToString() ?? "",
+                                IsFavorite: !reader.IsDBNull(2) && Convert.ToInt64(reader["Favorite"]) != 0,
+                                Tier: reader.IsDBNull(3) ? Tier.NotDefined : (Tier)Convert.ToInt32(reader["Tier"]),
+                                State: reader.IsDBNull(4) ? State.Wishlist : (State)Convert.ToInt32(reader["StatusState"])
+                            ));
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            return entries;
         }
 
         #region View(s)

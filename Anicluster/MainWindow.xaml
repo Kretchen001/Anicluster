@@ -3,30 +3,51 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Anicluster"
+        xmlns:vm="clr-namespace:Anicluster.ViewModels"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         WindowStartupLocation="CenterScreen"
-        Title="{Binding AppNameAndVersion}" Height="720" Width="1200">
+        Title="{Binding AppTitle}" Height="720" Width="1200">
     <Window.InputBindings>
         <KeyBinding Key="N" Modifiers="Control" Command="ApplicationCommands.New" />
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem x:Name="MenuItemNewAnime" Header="Neuer Anime" Click="MenuItemNewAnime_Click" ToolTip="Strg + N" />
-            <MenuItem x:Name="MenuItemNewAnimeSmall" Header="Neuer Anime (kurz)" Click="MenuItemNewAnimeSmall_Click" />
-            <MenuItem x:Name="MenuItemTags" Header="Tags" Click="MenuItemTags_Click"/>
+            <MenuItem Header="Neuer Anime"
+                      ToolTip="Strg + N"
+                      IsEnabled="{Binding IsListVisible}"
+                      Click="MenuItemNewAnime_Click" />
+            <MenuItem Header="Neuer Anime (kurz)"
+                      Click="MenuItemNewAnimeSmall_Click" />
+            <MenuItem Header="Tags"
+                      Click="MenuItemTags_Click"/>
             <MenuItem Header="Sortierung">
-                <MenuItem x:Name="SortId" Header="Nach interner ID" Click="SortId_Click"/>
-                <MenuItem x:Name="SortName" Header="Nach Name" Click="SortName_Click"/>
-                <MenuItem x:Name="SortStatus" Header="Nach Status" Click="SortStatus_Click" />
-                <MenuItem x:Name="SortFav" Header="Nach Favorisierung" Click="SortFav_Click" />
-                <MenuItem x:Name="SortTier" Header="Nach Favorisierung" Click="SortTier_Click" />
+                <MenuItem Header="Nach interner ID"
+                          Tag="{x:Static vm:AnimeSortField.Id}"
+                          Click="MenuItemSort_Click"/>
+                <MenuItem Header="Nach Name"
+                          Tag="{x:Static vm:AnimeSortField.Name}"
+                          Click="MenuItemSort_Click"/>
+                <MenuItem Header="Nach Status"
+                          Tag="{x:Static vm:AnimeSortField.State}"
+                          Click="MenuItemSort_Click"/>
+                <MenuItem Header="Nach Favorisierung"
+                          Tag="{x:Static vm:AnimeSortField.Favorite}"
+                          Click="MenuItemSort_Click"/>
+                <MenuItem Header="Nach Tier"
+                          Tag="{x:Static vm:AnimeSortField.Tier}"
+                          Click="MenuItemSort_Click"/>
             </MenuItem>
         </Menu>
-        <Grid x:Name="GrdMain">
-            <StackPanel x:Name="StackPnlAnimes" Margin="5" CanVerticallyScroll="True" CanHorizontallyScroll="False">
-                
-            </StackPanel>            
+        <Grid>
+            <!-- Anime-Liste, solange kein Editor geöffnet ist -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Visibility="{Binding IsListVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ItemsControl ItemsSource="{Binding Animes}"
+                              Margin="5"/>
+            </ScrollViewer>
+            <!-- Editor zum Anlegen bzw. Bearbeiten, ersetzt die Liste -->
+            <ContentControl Content="{Binding Editor}"/>
         </Grid>
     </DockPanel>
 </Window>

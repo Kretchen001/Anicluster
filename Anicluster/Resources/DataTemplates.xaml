@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:Anicluster.ViewModels"
+                    xmlns:views="clr-namespace:Anicluster.Views">
+
+    <!-- Ordnet jedem ViewModel seine View zu -->
+    <DataTemplate DataType="{x:Type vm:AnimeListItemViewModel}">
+        <views:AnimeListItemView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AnimeEditorViewModel}">
+        <views:AnimeEditorView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:QuickAnimeViewModel}">
+        <views:QuickAnimeView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:RatingEditorViewModel}">
+        <views:RatingEditorView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:MusicPieceViewModel}">
+        <views:MusicPieceView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SyncroViewModel}">
+        <views:SyncroView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SeasonEditorViewModel}">
+        <views:SeasonEditorView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:VideoAnimationEditorViewModel}">
+        <views:VideoAnimationEditorView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:PublishingTimeEditorViewModel}">
+        <views:PublishingTimeEditorView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TagSelectionViewModel}">
+        <views:TagSelectionView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TagManagerViewModel}">
+        <views:TagManagerView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:NumberInputViewModel}">
+        <views:NumberInputView/>
+    </DataTemplate>
+</ResourceDictionary>

@@ -1,0 +1,10 @@
+﻿<Window x:Class="Anicluster.Dialogs.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding Title}"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <!-- Die View zum ViewModel liefern die DataTemplates in Resources/DataTemplates.xaml -->
+    <ContentControl Content="{Binding}"/>
+</Window>

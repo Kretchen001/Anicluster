@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="Anicluster.Views.VideoAnimationEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:VideoAnimationEditorViewModel}"
+             MinWidth="700"
+             MinHeight="390"
+             d:DesignHeight="390"
+             d:DesignWidth="700">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Liste: Entf löscht, Drag & Drop sortiert um -->
+        <ListView x:Name="ListViewVideos"
+                  Margin="10"
+                  Grid.Column="0"
+                  ItemsSource="{Binding Videos}"
+                  SelectedItem="{Binding SelectedVideo}"
+                  KeyDown="ListViewVideos_KeyDown"
+                  AllowDrop="True"
+                  Drop="ListViewVideos_Drop"
+                  DragOver="ListViewVideos_DragOver"
+                  PreviewMouseLeftButtonDown="ListViewVideos_PreviewMouseLeftButtonDown">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nr." Width="40">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Id}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Typ" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding VideoType}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Kommentar" Width="250">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Comment}" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- Eingabe eines neuen Eintrags -->
+        <Grid Grid.Column="1"
+              Margin="5,10,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="Typ"
+                   FontWeight="Bold"/>
+            <ComboBox Grid.Row="1"
+                      Margin="5,0,5,5"
+                      Height="25"
+                      ItemsSource="{Binding VideoTypes}"
+                      SelectedItem="{Binding SelectedType}"/>
+            <Label Grid.Row="2"
+                   Content="Kommentar"
+                   FontWeight="Bold"/>
+            <TextBox Grid.Row="3"
+                     Margin="5,0,5,5"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Grid.Row="4"
+                    Content="Hinzufügen"
+                    Margin="55,0"
+                    Height="25"
+                    Click="BtnAdd_Click"/>
+        </Grid>
+
+        <!-- Übernehmen / Abbrechen -->
+        <StackPanel Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="10,0,10,10">
+            <Button Content="Übernehmen"
+                    MinWidth="100"
+                    Margin="0,0,10,0"
+                    Click="BtnAccept_Click"/>
+            <Button Content="Abbrechen"
+                    MinWidth="100"
+                    Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
