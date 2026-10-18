@@ -18,5 +18,11 @@ namespace Anicluster.Views {
                 item.RequestEdit();
             }
         }
+
+        private void MenuItemDelete_Click(object sender, RoutedEventArgs e) {
+            if (this.DataContext is AnimeListItemViewModel item) {
+                item.RequestDelete();
+            }
+        }
     }
 }

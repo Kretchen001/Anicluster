@@ -1,95 +1,29 @@
-﻿using Microsoft.Data.Sqlite;
-using Modells.Anime.SoundRating;
-using Serilog;
+﻿using Modells.Anime.SoundRating;
 
 namespace Anicluster.Database.Services {
 
-    public class SyncroService : IDatabaseService {
+    /// <summary>
+    /// Liest und schreibt die Syncros einer Akustik.
+    /// </summary>
+    internal class SyncroService {
 
-        private readonly DatabaseManager _databaseManager;
-
-        public SyncroService(DatabaseManager databaseManager) {
-            this._databaseManager = databaseManager;
+        public List<Syncro> SelectByAcousticId(DatabaseSession session, int acousticId) {
+            return session.Query(
+                "SELECT General, Language, IsAssessed, Comment FROM Syncro WHERE AcousticId = @AcousticId ORDER BY Id;",
+                reader => new Syncro(reader.GetInt(0), (SyncroLanuage)reader.GetInt(1), reader.GetBool(2), reader.GetStringOrNull(3)),
+                ("@AcousticId", acousticId)
+            );
         }
 
-        public bool InitializeTable() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string creationString = @"
-                    CREATE TABLE IF NOT EXISTS Syncro (
-                        Id INTEGER PRIMARY KEY,
-                        General INTEGER,
-                        Language INTEGER,
-                        IsAssessed BOOLEAN,
-                        Comment TEXT
-                    );
-                ";
-                using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
-                    try {
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                        connection.Close();
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Syncro table not created!");
-                        return false;
-                    }
-                }
+        /// <summary>Ersetzt alle Syncros der Akustik durch die übergebenen.</summary>
+        public void ReplaceForAcoustic(DatabaseSession session, int acousticId, List<Syncro> syncros) {
+            session.Execute("DELETE FROM Syncro WHERE AcousticId = @AcousticId;", ("@AcousticId", acousticId));
+            foreach (Syncro syncro in syncros) {
+                session.Execute(
+                    "INSERT INTO Syncro (AcousticId, General, Language, IsAssessed, Comment) VALUES (@AcousticId, @General, @Language, @IsAssessed, @Comment);",
+                    ("@AcousticId", acousticId), ("@General", syncro.General), ("@Language", syncro.Language), ("@IsAssessed", syncro.IsAssessed), ("@Comment", syncro.Comment)
+                );
             }
-            Log.Information("Syncro table created.");
-            return true;
-        }
-
-        public bool TableExist() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "Syncro");
-                    object? result = cmd.ExecuteScalar();
-                    connection.Close();
-                    if (result is not null) {
-                        Log.Information("Tabelle 'Syncro' existiert.");
-                        return true;
-                    }
-                    else {
-                        Log.Information("Tabelle 'Syncro' existiert NICHT!");
-                        return false;
-                    }
-                }
-            }
-        }
-
-        public int Insert(Syncro syncroToInsert) {
-            int syncroId = -1;
-            string insertQuery = @"
-                INSERT INTO Syncro (General, Language, IsAssessed, Comment)
-                    VALUES (@General, @Language, @IsAssessed, @Comment)
-            ";
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                try {
-                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
-                        cmd.Parameters.AddWithValue("@General", syncroToInsert.General);
-                        cmd.Parameters.AddWithValue("@Language", syncroToInsert.Language);
-                        cmd.Parameters.AddWithValue("@IsAssessed", syncroToInsert.IsAssessed);
-                        cmd.Parameters.AddWithValue("@Comment", syncroToInsert.Comment ?? "");
-                        cmd.ExecuteScalar();
-                    }
-                    using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
-                        syncroId = (int)((long)cmd.ExecuteScalar()!);
-                    }
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while inserting syncroToInsert data");
-                    return -1;
-                }
-                connection.Close();
-            }
-            return syncroId;
-        }
-
-        public List<Syncro> GetSyncrosByIds(List<int> ids) {
-            return [];
         }
     }
 }

@@ -27,6 +27,9 @@ namespace Anicluster.ViewModels {
         /// <summary>Wird ausgelöst, wenn der Anime zum Anzeigen/Bearbeiten geöffnet werden soll.</summary>
         public event EventHandler? EditRequested;
 
+        /// <summary>Wird ausgelöst, wenn der Anime gelöscht werden soll.</summary>
+        public event EventHandler? DeleteRequested;
+
         public AnimeListItemViewModel(AnimeListEntry entry) {
             this.Id = entry.Id;
             this.Name = entry.Name;
@@ -37,6 +40,10 @@ namespace Anicluster.ViewModels {
 
         public void RequestEdit() {
             this.EditRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void RequestDelete() {
+            this.DeleteRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

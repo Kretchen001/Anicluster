@@ -1,215 +1,55 @@
-﻿using Anicluster.Database.Services.AssociativeEntities;
-using Microsoft.Data.Sqlite;
-using Modells.Anime;
-using Modells.Anime.SoundRating;
-using Serilog;
-using System.Data;
+﻿using Modells.Anime.SoundRating;
 
 namespace Anicluster.Database.Services {
 
-    public class AcousticService : IDatabaseService {
+    /// <summary>
+    /// Liest und schreibt die Akustik-Bewertung (genau ein Eintrag pro Bewertung) samt Musikstücken und Syncros.
+    /// </summary>
+    internal class AcousticService {
 
-        private readonly DatabaseManager _databaseManager;
+        private readonly MusicPieceService _musicPieceService = new MusicPieceService();
+        private readonly SyncroService _syncroService = new SyncroService();
 
-        public AcousticService(DatabaseManager databaseManager) {
-            this._databaseManager = databaseManager;
+        /// <summary>Lädt die Akustik, ohne Eintrag wird eine leere Akustik geliefert.</summary>
+        public Acoustic SelectByRatingId(DatabaseSession session, int ratingId) {
+            Acoustic? acoustic = session.Query(
+                "SELECT Id, Soundtrack, Comment FROM Acoustic WHERE RatingId = @RatingId;",
+                reader => new Acoustic() {
+                    Id = reader.GetInt(0),
+                    Soundtrack = reader.GetInt(1),
+                    Comment = reader.GetStringOrNull(2)
+                },
+                ("@RatingId", ratingId)
+            ).FirstOrDefault();
+            if (acoustic is null) {
+                return new Acoustic();
+            }
+            List<MusicPiece> pieces = this._musicPieceService.SelectByAcousticId(session, acoustic.Id);
+            acoustic.Opening = pieces.Where(x => x.Type == MusicPieceType.Opening).ToList();
+            acoustic.Ending = pieces.Where(x => x.Type == MusicPieceType.Ending).ToList();
+            acoustic.Sounds = pieces.Where(x => x.Type == MusicPieceType.Other).ToList();
+            acoustic.Syncro = this._syncroService.SelectByAcousticId(session, acoustic.Id);
+            return acoustic;
         }
 
-        public bool InitializeTable() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string creationString = @"
-                    CREATE TABLE IF NOT EXISTS Acoustic (
-                        Id INTEGER PRIMARY KEY,
-                        Soundtrack INTEGER,
-                        Comment TEXT
-                    );
-                ";
-                using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
-                    try {
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                        connection.Close();
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Acoustic table not created!");
-                        return false;
-                    }
-                }
+        /// <summary>Legt die Akustik an oder aktualisiert sie, ersetzt Musikstücke und Syncros und setzt die Ids im Modell.</summary>
+        public void Save(DatabaseSession session, int ratingId, Acoustic acoustic) {
+            long? existingId = session.ScalarLong("SELECT Id FROM Acoustic WHERE RatingId = @RatingId;", ("@RatingId", ratingId));
+            if (existingId is null) {
+                acoustic.Id = session.Insert(
+                    "INSERT INTO Acoustic (RatingId, Soundtrack, Comment) VALUES (@RatingId, @Soundtrack, @Comment);",
+                    ("@RatingId", ratingId), ("@Soundtrack", acoustic.Soundtrack), ("@Comment", acoustic.Comment)
+                );
             }
-            Log.Information("Acoustic table created.");
-            return true;
-        }
-
-        public bool TableExist() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "Acoustic");
-                    object? result = cmd.ExecuteScalar();
-                    connection.Close();
-                    if (result is not null) {
-                        Log.Information("Tabelle 'Acoustic' existiert.");
-                        return true;
-                    }
-                    else {
-                        Log.Information("Tabelle 'Acoustic' existiert NICHT!");
-                        return false;
-                    }
-                }
+            else {
+                session.Execute(
+                    "UPDATE Acoustic SET Soundtrack = @Soundtrack, Comment = @Comment WHERE Id = @Id;",
+                    ("@Soundtrack", acoustic.Soundtrack), ("@Comment", acoustic.Comment), ("@Id", (int)existingId)
+                );
+                acoustic.Id = (int)existingId;
             }
-        }
-
-        public int Insert(Acoustic acousticToInsert) {
-            int acousticId = 0;
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                try {
-                    string insertAcoustic = "" +
-                        "INSERT INTO Acoustic (Soundtrack, Comment)\n" +
-                        "    VALUES (@soundtrack, @comment)";
-                    connection.Open();
-                    using (SqliteCommand cmd = new SqliteCommand(insertAcoustic, connection)) {
-                        cmd.Parameters.AddWithValue("@soundtrack", acousticToInsert.Soundtrack);
-                        cmd.Parameters.AddWithValue("@comment", acousticToInsert.Comment ?? DBNull.Value.ToString());
-                        cmd.ExecuteScalar();
-                    }
-                    using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
-                        object? result = cmd.ExecuteScalar();
-                        acousticId = (int)((long)result!);
-                    }
-                    connection.Close();
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while inserting acousticToInsert data");
-                    return -1;
-                }
-            }
-            // first insert and then map the opening and ending
-            List<int> oList = new List<int>(acousticToInsert.Opening.Count);
-            List<int> eList = new List<int>(acousticToInsert.Ending.Count);
-            List<int> sList = new List<int>(acousticToInsert.Sounds.Count);
-            MusicPieceService mpService = new MusicPieceService(this._databaseManager);
-            foreach (MusicPiece x in acousticToInsert.Opening) {
-                oList.Add(mpService.Insert(x));
-            }
-            foreach (MusicPiece x in acousticToInsert.Ending) {
-                eList.Add(mpService.Insert(x));
-            }
-            foreach (MusicPiece x in acousticToInsert.Sounds) {
-                sList.Add(mpService.Insert(x));
-            }
-            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(this._databaseManager);
-            foreach (int x in oList) {
-                ampaes.Insert(acousticId, x);
-            }
-            foreach (int x in eList) {
-                ampaes.Insert(acousticId, x);
-            }
-            foreach (int x in sList) {
-                ampaes.Insert(acousticId, x);
-            }
-            // insert and map the syncros
-            List<int> syncroList = new List<int>(acousticToInsert.Syncro.Count);
-            SyncroService syncroService = new SyncroService(this._databaseManager);
-            foreach (Syncro x in acousticToInsert.Syncro) {
-                syncroList.Add(syncroService.Insert(x));
-            }
-            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(this._databaseManager);
-            foreach (int x in syncroList) {
-                asaes.Insert(acousticId, x);
-            }
-
-            return acousticId;
-        }
-
-        public Acoustic GetAcousticById(int id = -1) {
-            string query = $"" +
-                $"SELECT Id, Soundtrack, Comment\n" +
-                $"FROM Acoustic\n" +
-                $"WHERE Id = '{id}'";
-            DataTable resDt = new DataTable();
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    connection.Open();
-                    SqliteDataReader result = cmd.ExecuteReader();
-                    resDt.Load(result);
-                    connection.Close();
-                }
-            }
-            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(this._databaseManager);
-            List<MusicPiece> musicPieces = new MusicPieceService(this._databaseManager).GetMusicPiecesByIds(ampaes.GetMusicPieceIdsById(id));
-            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(this._databaseManager);
-            List<Syncro> syncros = new SyncroService(this._databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(id));
-
-            return new Acoustic(
-                id: (int)((long)resDt.Rows[0]["Id"]),
-                opening: musicPieces.Where(x => x.Type.Equals(MusicPieceType.Opening)).ToList(),
-                ending: musicPieces.Where(x => x.Type.Equals(MusicPieceType.Ending)).ToList(),
-                sounds: musicPieces.Where(x => x.Type.Equals(MusicPieceType.Other)).ToList(),
-                soundtrack: (int)((long)resDt.Rows[0]["Soundtrack"]),
-                syncros: syncros,
-                comment: resDt.Rows[0]["Comment"].ToString()
-            );
-        }
-
-        public bool UpdateAcoustic(Acoustic acousticToUpdate) {
-            string insertQuery = @"
-                Update Acoustic 
-                SET
-                    Soundtrack = @Soundtrack,
-                    Comment = @Comment 
-                WHERE Id = @id;
-            ";
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                try {
-                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
-                        cmd.Parameters.AddWithValue("@id", acousticToUpdate.Id);
-                        cmd.Parameters.AddWithValue("@Soundtrack", acousticToUpdate.Soundtrack);
-                        cmd.Parameters.AddWithValue("@Comment", acousticToUpdate.Comment ?? DBNull.Value.ToString());
-                        cmd.ExecuteScalar();
-                    }
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while inserting ratingToUpdate data");
-                    return false;
-                }
-                connection.Close();
-            }
-
-            // update opening, ending insert if not already exist
-            AcousticMusicPieceAssociativeEntityService ampaes = new AcousticMusicPieceAssociativeEntityService(this._databaseManager);
-            List<MusicPiece> musicPieces = new MusicPieceService(this._databaseManager).GetMusicPiecesByIds(ampaes.GetMusicPieceIdsById(acousticToUpdate.Id));
-
-            MusicPieceService mpService = new MusicPieceService(this._databaseManager);
-            // opening
-            foreach (MusicPiece x in musicPieces.Where(xx => xx.Type.Equals(MusicPieceType.Opening)).ToList()) {
-                if (!acousticToUpdate.Opening.Contains(x)) {
-                    x.Id = mpService.Insert(x);
-                    ampaes.Insert(acousticToUpdate.Id, x.Id);
-                }
-            }
-            // ending
-            foreach (MusicPiece x in musicPieces.Where(xx => xx.Type.Equals(MusicPieceType.Ending)).ToList()) {
-                if (!acousticToUpdate.Ending.Contains(x)) {
-                    x.Id = mpService.Insert(x);
-                    ampaes.Insert(acousticToUpdate.Id, x.Id);
-                }
-            }
-            // sounds
-            foreach (MusicPiece x in musicPieces.Where(xx => xx.Type.Equals(MusicPieceType.Other)).ToList()) {
-                if (!acousticToUpdate.Sounds.Contains(x)) {
-                    x.Id = mpService.Insert(x);
-                    ampaes.Insert(acousticToUpdate.Id, x.Id);
-                }
-            }
-
-            // update syncros
-            AcousticSyncroAssociativeEntityService asaes = new AcousticSyncroAssociativeEntityService(this._databaseManager);
-            List<Syncro> syncros = new SyncroService(this._databaseManager).GetSyncrosByIds(asaes.GetSyncroIdsById(acousticToUpdate.Id));
-
-
-            return true;
+            this._musicPieceService.ReplaceForAcoustic(session, acoustic.Id, acoustic);
+            this._syncroService.ReplaceForAcoustic(session, acoustic.Id, acoustic.Syncro);
         }
     }
 }

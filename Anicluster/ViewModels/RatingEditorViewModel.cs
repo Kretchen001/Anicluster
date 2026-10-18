@@ -27,7 +27,7 @@ namespace Anicluster.ViewModels {
         public ObservableCollection<MusicPieceViewModel> Openings { get; } = [];
         public ObservableCollection<MusicPieceViewModel> Endings { get; } = [];
 
-        /// <summary>Einzelne Soundtracks, aus denen sich per <see cref="CalculateSoundtrack"/> der Soundtrack-Wert berechnen lässt.</summary>
+        /// <summary>Einzelne Soundtracks. Gibt es welche, ist der Soundtrack-Wert deren Durchschnitt (wie in <see cref="Acoustic.Soundtrack"/>).</summary>
         public ObservableCollection<MusicPieceViewModel> SoundtrackPieces { get; } = [];
         public ObservableCollection<SyncroViewModel> Syncros { get; } = [];
 
@@ -65,6 +65,9 @@ namespace Anicluster.ViewModels {
                 foreach (MusicPiece piece in rating.Acoustic.Ending) {
                     this.AddPiece(this.Endings, new MusicPieceViewModel(this._dialogService, piece.Type, piece));
                 }
+                foreach (MusicPiece piece in rating.Acoustic.Sounds) {
+                    this.AddPiece(this.SoundtrackPieces, new MusicPieceViewModel(this._dialogService, piece.Type, piece));
+                }
                 foreach (Syncro syncro in rating.Acoustic.Syncro) {
                     this.AddSyncro(new SyncroViewModel(this._dialogService, syncro));
                 }
@@ -72,6 +75,7 @@ namespace Anicluster.ViewModels {
 
             this.Openings.CollectionChanged += this.OnCollectionChanged;
             this.Endings.CollectionChanged += this.OnCollectionChanged;
+            this.SoundtrackPieces.CollectionChanged += this.OnCollectionChanged;
             this.Syncros.CollectionChanged += this.OnCollectionChanged;
             this.UpdatePreview();
         }
@@ -140,7 +144,7 @@ namespace Anicluster.ViewModels {
                 id: this._acousticId,
                 opening: this.Openings.Select(x => x.ToModel()).ToList(),
                 ending: this.Endings.Select(x => x.ToModel()).ToList(),
-                sounds: [],
+                sounds: this.SoundtrackPieces.Select(x => x.ToModel()).ToList(),
                 soundtrack: this.Soundtrack.Value,
                 syncros: this.Syncros.Select(x => x.ToModel()).ToList(),
                 comment: this.CommentAcoustic
@@ -157,13 +161,21 @@ namespace Anicluster.ViewModels {
 
         /// <summary>Aktualisiert die Formel und die Akustik-Aufschlüsselung.</summary>
         private void UpdatePreview() {
+            // Mit einzelnen Soundtracks ist deren Durchschnitt der Soundtrack-Wert
+            if (this.SoundtrackPieces.Count > 0) {
+                int average = Average(this.SoundtrackPieces.Select(x => x.Score.Value).ToList());
+                if (this.Soundtrack.Value != average) {
+                    this.Soundtrack.Value = average; // löst die Aktualisierung erneut aus
+                    return;
+                }
+            }
             Rating rating = this.BuildRating();
             this.FormulaText = $"\\frac{{{rating.Story} \\cdot 40 + {rating.Animation} \\cdot 25 + {rating.SpecialEffects} \\cdot 10 + {rating.Acoustic.General} \\cdot 25}}{{100}} = {rating.General}";
 
             int opening = Average(this.Openings.Select(x => x.Score.Value).ToList());
             int ending = Average(this.Endings.Select(x => x.Score.Value).ToList());
             int syncro = Average(this.Syncros.Where(x => x.IsAssessed).Select(x => x.Score.Value).ToList());
-            int soundtrack = this.Soundtrack.Value;
+            int soundtrack = Math.Max(rating.Acoustic.Soundtrack, 0);
             int count = new[] { soundtrack, opening, ending, syncro }.Count(x => x != 0);
             this.AcousticSummaryText = $"({soundtrack} + {opening} + {ending} + {syncro})/{count} = {rating.Acoustic.General}";
 

@@ -1,136 +1,38 @@
-﻿using Microsoft.Data.Sqlite;
-using Modells.Anime;
-using Serilog;
-using System.Data;
+﻿using Modells.Anime;
 
 namespace Anicluster.Database.Services {
 
-    public class StatusService : IDatabaseService {
+    /// <summary>
+    /// Liest und schreibt den Status eines Animes (genau ein Eintrag pro Anime).
+    /// </summary>
+    internal class StatusService {
 
-        private readonly DatabaseManager _databaseManager;
-
-        public StatusService(DatabaseManager databaseManager) {
-            this._databaseManager = databaseManager;
+        /// <summary>Lädt den Status, ohne Eintrag wird ein Standard-Status geliefert.</summary>
+        public Status SelectByAnimeId(DatabaseSession session, int animeId) {
+            Status? status = session.Query(
+                "SELECT Id, State, Comment FROM Status WHERE AnimeId = @AnimeId;",
+                reader => new Status(reader.GetInt(0), (State)reader.GetInt(1), reader.GetStringOrNull(2)),
+                ("@AnimeId", animeId)
+            ).FirstOrDefault();
+            return status ?? new Status();
         }
 
-        public bool InitializeTable() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string creationString = @"
-                    CREATE TABLE IF NOT EXISTS Status (
-                        Id INTEGER PRIMARY KEY,
-                        State INTEGER NOT NULL,
-                        Comment TEXT
-                    );
-                ";
-                using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
-                    try {
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Status table not created!");
-                        return false;
-                    }
-                }
+        /// <summary>Legt den Status an oder aktualisiert ihn und setzt die Id im Modell.</summary>
+        public void Save(DatabaseSession session, int animeId, Status status) {
+            long? existingId = session.ScalarLong("SELECT Id FROM Status WHERE AnimeId = @AnimeId;", ("@AnimeId", animeId));
+            if (existingId is null) {
+                status.Id = session.Insert(
+                    "INSERT INTO Status (AnimeId, State, Comment) VALUES (@AnimeId, @State, @Comment);",
+                    ("@AnimeId", animeId), ("@State", status.State), ("@Comment", status.Comment)
+                );
             }
-            Log.Information("Status table created.");
-            return true;
-        }
-
-        public bool TableExist() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "Status");
-                    object? result = cmd.ExecuteScalar();
-                    connection.Close();
-                    if (result is not null) {
-                        Log.Information("Tabelle 'Status' existiert.");
-                        return true;
-                    }
-                    else {
-                        Log.Information("Tabelle 'Status' existiert NICHT!");
-                        return false;
-                    }
-                }
+            else {
+                session.Execute(
+                    "UPDATE Status SET State = @State, Comment = @Comment WHERE Id = @Id;",
+                    ("@State", status.State), ("@Comment", status.Comment), ("@Id", (int)existingId)
+                );
+                status.Id = (int)existingId;
             }
-        }
-
-        public int Insert(Status statusToInsert) {
-            int statusId = 0;
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                try {
-                    string insertCommand = "" +
-                        "INSERT INTO Status (State, Comment) " +
-                        "    VALUES (@state, @comment)";
-                    using (SqliteCommand cmd = new SqliteCommand(insertCommand, connection)) {
-                        cmd.Parameters.AddWithValue("@state", ((int)statusToInsert.State));
-                        cmd.Parameters.AddWithValue("@comment", statusToInsert.Comment ?? "");
-                        cmd.ExecuteNonQuery();
-                    }
-                    using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
-                        object? result = cmd.ExecuteScalar();
-                        statusId = (int)((long)result!);
-                    }
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while inserting statusToInsert data");
-                    return -1;
-                }
-                connection.Close();
-            }
-            return statusId;
-        }
-
-        public Status GetStatusById(int id = -1) {
-            string query = $"" +
-                $"SELECT Id, State, Comment\n" +
-                $"FROM Status\n" +
-                $"WHERE Id = '{id}'";
-            DataTable resDt = new DataTable();
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    connection.Open();
-                    SqliteDataReader result = cmd.ExecuteReader();
-                    resDt.Load(result);
-                    connection.Close();
-                }
-            }
-            return new Status(
-                id: (int)((long)resDt.Rows[0]["Id"]),
-                state: (State)Enum.Parse(typeof(State), resDt.Rows[0]["State"].ToString() ?? "0"),
-                comment: resDt.Rows[0]["Comment"].ToString()
-            );
-        }
-
-        public bool UpdateStatus(Status statusToUpdate) {
-            string updateQuery = @"
-                Update Rating 
-                SET
-                    State = @State,
-                    Comment = @Comment
-                WHERE Id = @id;
-            ";
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                try {
-                    using (SqliteCommand cmd = new SqliteCommand(updateQuery, connection)) {
-                        cmd.Parameters.AddWithValue("@Id", statusToUpdate.Id);
-                        cmd.Parameters.AddWithValue("@State", statusToUpdate.State);
-                        cmd.Parameters.AddWithValue("@Comment", statusToUpdate.Comment ?? (object)DBNull.Value);
-                        cmd.ExecuteScalar();
-                    }
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while updating Status data");
-                    return false;
-                }
-                connection.Close();
-            }
-
-            return true;
         }
     }
 }

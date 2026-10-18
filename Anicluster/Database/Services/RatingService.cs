@@ -1,167 +1,51 @@
-﻿using Microsoft.Data.Sqlite;
-using Modells.Anime;
-using Modells.Anime.SoundRating;
-using Serilog;
-using System.Data;
+﻿using Modells.Anime;
 
 namespace Anicluster.Database.Services {
 
-    public class RatingService : IDatabaseService {
+    /// <summary>
+    /// Liest und schreibt die Bewertung eines Animes (genau ein Eintrag pro Anime) samt Akustik.
+    /// </summary>
+    internal class RatingService {
 
-        private readonly DatabaseManager _databaseManager;
+        private readonly AcousticService _acousticService = new AcousticService();
 
-        public RatingService(DatabaseManager databaseManager) {
-            this._databaseManager = databaseManager;
+        /// <summary>Lädt die Bewertung, ohne Eintrag wird eine unbewertete Standard-Bewertung geliefert.</summary>
+        public Rating SelectByAnimeId(DatabaseSession session, int animeId) {
+            Rating? rating = session.Query(
+                "SELECT Id, Story, Animation, SpecialEffects, IsRated FROM Rating WHERE AnimeId = @AnimeId;",
+                reader => new Rating() {
+                    Id = reader.GetInt(0),
+                    Story = reader.GetInt(1),
+                    Animation = reader.GetInt(2),
+                    SpecialEffects = reader.GetInt(3),
+                    IsRated = reader.GetBool(4)
+                },
+                ("@AnimeId", animeId)
+            ).FirstOrDefault();
+            if (rating is null) {
+                return new Rating();
+            }
+            rating.Acoustic = this._acousticService.SelectByRatingId(session, rating.Id);
+            return rating;
         }
 
-        public bool InitializeTable() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string creationString = @"
-                    CREATE TABLE IF NOT EXISTS Rating (
-                        Id INTEGER PRIMARY KEY,
-                        Story INTEGER,
-                        Animation INTEGER,
-                        SpecialEffects INTEGER,
-                        AcousticId INTEGER,
-                        IsRated BOOLEAN,
-                        FOREIGN KEY(AcousticId) REFERENCES Acoustic(Id)
-                    );
-                    ";
-                using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
-                    try {
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Rating table not created!");
-                        return false;
-                    }
-                }
+        /// <summary>Legt die Bewertung an oder aktualisiert sie, speichert die Akustik mit und setzt die Ids im Modell.</summary>
+        public void Save(DatabaseSession session, int animeId, Rating rating) {
+            long? existingId = session.ScalarLong("SELECT Id FROM Rating WHERE AnimeId = @AnimeId;", ("@AnimeId", animeId));
+            if (existingId is null) {
+                rating.Id = session.Insert(
+                    "INSERT INTO Rating (AnimeId, Story, Animation, SpecialEffects, IsRated) VALUES (@AnimeId, @Story, @Animation, @SpecialEffects, @IsRated);",
+                    ("@AnimeId", animeId), ("@Story", rating.Story), ("@Animation", rating.Animation), ("@SpecialEffects", rating.SpecialEffects), ("@IsRated", rating.IsRated)
+                );
             }
-            Log.Information("Rating table created.");
-            return true;
-        }
-
-        public bool TableExist() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "Rating");
-                    object? result = cmd.ExecuteScalar();
-                    connection.Close();
-                    if (result is not null) {
-                        Log.Information("Tabelle 'Rating' existiert.");
-                        return true;
-                    }
-                    else {
-                        Log.Information("Tabelle 'Rating' existiert NICHT!");
-                        return false;
-                    }
-                }
+            else {
+                session.Execute(
+                    "UPDATE Rating SET Story = @Story, Animation = @Animation, SpecialEffects = @SpecialEffects, IsRated = @IsRated WHERE Id = @Id;",
+                    ("@Story", rating.Story), ("@Animation", rating.Animation), ("@SpecialEffects", rating.SpecialEffects), ("@IsRated", rating.IsRated), ("@Id", (int)existingId)
+                );
+                rating.Id = (int)existingId;
             }
-        }
-
-        public int Insert(Rating ratingToInsert) {
-            // First Insert the Acoustic and get this Id
-            int acousticId = new AcousticService(this._databaseManager).Insert(ratingToInsert.Acoustic);
-            if (acousticId.Equals(-1)) {
-                Log.Error("Break by inserting Rating...");
-                return -1;
-            }
-
-            // Insert now the Rating
-            int ratingId = 0;
-            string insertQuery = "" +
-                "INSERT INTO Rating (Story, Animation, SpecialEffects, AcousticId, IsRated)\n" +
-                "    VALUES (@Story, @Animation, @SpecialEffects, @AcousticId, @IsRated)";
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                try {
-                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
-                        cmd.Parameters.AddWithValue("@Story", ratingToInsert.Story);
-                        cmd.Parameters.AddWithValue("@Animation", ratingToInsert.Animation);
-                        cmd.Parameters.AddWithValue("@SpecialEffects", ratingToInsert.SpecialEffects);
-                        cmd.Parameters.AddWithValue("@AcousticId", acousticId);
-                        cmd.Parameters.AddWithValue("@IsRated", ratingToInsert.IsRated);
-                        cmd.ExecuteScalar();
-                    }
-                    using (SqliteCommand cmd = new SqliteCommand("SELECT last_insert_rowid();", connection)) {
-                        object? result = cmd.ExecuteScalar();
-                        ratingId = (int)((long)result!);
-                    }
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while inserting ratingToInsert data");
-                    return -1;
-                }
-                connection.Close();
-            }
-            return ratingId;
-        }
-
-        public Rating GetRatingById(int id = -1) {
-            string query = $"" +
-                $"SELECT *\n" +
-                $"FROM Rating\n" +
-                $"WHERE Id = '{id}'";
-            DataTable resDt = new DataTable();
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    connection.Open();
-                    SqliteDataReader result = cmd.ExecuteReader();
-                    resDt.Load(result);
-                    connection.Close();
-                }
-            }
-            Acoustic acoustic = new AcousticService(this._databaseManager).GetAcousticById((int)((long)resDt.Rows[0]["AcousticId"]));
-
-            return new Rating(
-                id: (int)((long)resDt.Rows[0]["Id"]),
-                story: (int)((long)resDt.Rows[0]["Story"]),
-                animation: (int)((long)resDt.Rows[0]["Animation"]),
-                specialEffects: (int)((long)resDt.Rows[0]["SpecialEffects"]),
-                acoustic: acoustic,
-                isRated: Convert.ToBoolean(resDt.Rows[0]["IsRated"])
-            );
-        }
-
-        public bool UpdateRating(Rating ratingToUpdate) {
-            if (!(new AcousticService(this._databaseManager).UpdateAcoustic(ratingToUpdate.Acoustic))) {
-                return false;
-            }
-
-            string insertQuery = @"
-                Update Rating 
-                SET
-                    Story = @Story,
-                    Animation = @Animation,
-                    SpecialEffects = @SpecialEffects,
-                    AcousticId = @AcousticId,
-                    IsRated = @IsRated
-                WHERE Id = @id;
-            ";
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                try {
-                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
-                        cmd.Parameters.AddWithValue("@Story", ratingToUpdate.Story);
-                        cmd.Parameters.AddWithValue("@Animation", ratingToUpdate.Animation);
-                        cmd.Parameters.AddWithValue("@SpecialEffects", ratingToUpdate.SpecialEffects);
-                        cmd.Parameters.AddWithValue("@AcousticId", ratingToUpdate.Acoustic.Id);
-                        cmd.Parameters.AddWithValue("@IsRated", ratingToUpdate.IsRated);
-                        cmd.Parameters.AddWithValue("@Id", ratingToUpdate.IsRated);
-                        cmd.ExecuteScalar();
-                    }
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while inserting ratingToUpdate data");
-                    return false;
-                }
-                connection.Close();
-            }
-
-            return true;
+            this._acousticService.Save(session, rating.Id, rating.Acoustic);
         }
     }
 }

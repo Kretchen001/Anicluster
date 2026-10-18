@@ -1,157 +1,50 @@
-﻿using Microsoft.Data.Sqlite;
-using Modells.Anime;
-using Serilog;
-using System.Data;
+﻿using Modells.Anime;
 
 namespace Anicluster.Database.Services {
 
-    public class MediaInfoService : IDatabaseService {
+    /// <summary>
+    /// Liest und schreibt die Medieninfos eines Animes (genau ein Eintrag pro Anime) samt Veröffentlichungszeitraum.
+    /// </summary>
+    internal class MediaInfoService {
 
-        private readonly DatabaseManager _databaseManager;
+        private readonly PublishingTimeService _publishingTimeService = new PublishingTimeService();
 
-        public MediaInfoService(DatabaseManager databaseManager) {
-            this._databaseManager = databaseManager;
+        /// <summary>Lädt die Medieninfos, ohne Eintrag werden leere Medieninfos geliefert.</summary>
+        public MediaInfo SelectByAnimeId(DatabaseSession session, int animeId) {
+            MediaInfo? mediaInfo = session.Query(
+                "SELECT Id, Author, Producer, Publisher FROM MediaInfo WHERE AnimeId = @AnimeId;",
+                reader => new MediaInfo() {
+                    Id = reader.GetInt(0),
+                    Author = reader.GetStringOrNull(1),
+                    Producer = reader.GetStringOrNull(2),
+                    Publisher = reader.GetStringOrNull(3)
+                },
+                ("@AnimeId", animeId)
+            ).FirstOrDefault();
+            if (mediaInfo is null) {
+                return new MediaInfo();
+            }
+            mediaInfo.PublishingTime = this._publishingTimeService.SelectByMediaInfoId(session, mediaInfo.Id);
+            return mediaInfo;
         }
 
-        public bool InitializeTable() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string creationString = @"
-                    CREATE TABLE IF NOT EXISTS MediaInfo (
-                        Id INTEGER PRIMARY KEY,
-                        Author TEXT,
-                        Producer TEXT,
-                        Publisher TEXT,
-                        PublishingTimeId INTEGER,
-                        FOREIGN KEY (PublishingTimeId) REFERENCES PublishingTime(Id)
-                    );
-                ";
-                using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
-                    try {
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                        connection.Close();
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- MediaInfo table not created!");
-                        return false;
-                    }
-                }
+        /// <summary>Legt die Medieninfos an oder aktualisiert sie, speichert den Zeitraum mit und setzt die Ids im Modell.</summary>
+        public void Save(DatabaseSession session, int animeId, MediaInfo mediaInfo) {
+            long? existingId = session.ScalarLong("SELECT Id FROM MediaInfo WHERE AnimeId = @AnimeId;", ("@AnimeId", animeId));
+            if (existingId is null) {
+                mediaInfo.Id = session.Insert(
+                    "INSERT INTO MediaInfo (AnimeId, Author, Producer, Publisher) VALUES (@AnimeId, @Author, @Producer, @Publisher);",
+                    ("@AnimeId", animeId), ("@Author", mediaInfo.Author), ("@Producer", mediaInfo.Producer), ("@Publisher", mediaInfo.Publisher)
+                );
             }
-            Log.Information("MediaInfo table created.");
-            return true;
-        }
-
-        public bool TableExist() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "MediaInfo");
-                    object? result = cmd.ExecuteScalar();
-                    connection.Close();
-                    if (result is not null) {
-                        Log.Information("Tabelle 'MediaInfo' existiert.");
-                        return true;
-                    }
-                    else {
-                        Log.Information("Tabelle 'MediaInfo' existiert NICHT!");
-                        return false;
-                    }
-                }
+            else {
+                session.Execute(
+                    "UPDATE MediaInfo SET Author = @Author, Producer = @Producer, Publisher = @Publisher WHERE Id = @Id;",
+                    ("@Author", mediaInfo.Author), ("@Producer", mediaInfo.Producer), ("@Publisher", mediaInfo.Publisher), ("@Id", (int)existingId)
+                );
+                mediaInfo.Id = (int)existingId;
             }
-        }
-
-        public int Insert(MediaInfo mediaInfoToInsert) {
-            int mediaInfoId = 0;
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                try {
-                    PublishingTimeService publishingTimeService = new PublishingTimeService(this._databaseManager);
-                    int pubId = publishingTimeService.Insert(mediaInfoToInsert.PublishingTime);
-                    string insertQuery = "" +
-                        "INSERT INTO MediaInfo (Author, Producer, Publisher, PublishingTimeId)\n" +
-                        "    VALUES (@Author, @Producer, @Publisher, @PublishingTimeId)";
-                    using (SqliteCommand cmd = new SqliteCommand(insertQuery, connection)) {
-                        cmd.Parameters.AddWithValue("@Author", mediaInfoToInsert.Author ?? DBNull.Value.ToString());
-                        cmd.Parameters.AddWithValue("@Producer", mediaInfoToInsert.Producer ?? DBNull.Value.ToString());
-                        cmd.Parameters.AddWithValue("@Publisher", mediaInfoToInsert.Publisher ?? DBNull.Value.ToString());
-                        cmd.Parameters.AddWithValue("@PublishingTimeId", pubId);
-                        cmd.ExecuteNonQuery();
-                        cmd.Parameters.Clear();
-                        cmd.CommandText = "SELECT last_insert_rowid();";
-                        object? result = cmd.ExecuteScalar();
-                        connection.Close();
-                        mediaInfoId = (int)((long)result!);
-                    }
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while inserting mediaInfoToInsert data");
-                    return -1;
-                }
-            }
-            return mediaInfoId;
-        }
-
-        public MediaInfo GetMediaInfoById(int id = -1) {
-            string query = $"" +
-                $"SELECT Id, Author, Producer, Publisher, PublishingTimeId\n" +
-                $"FROM MediaInfo\n" +
-                $"WHERE Id = '{id}'";
-            DataTable resDt = new DataTable();
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    connection.Open();
-                    SqliteDataReader result = cmd.ExecuteReader();
-                    resDt.Load(result);
-                    connection.Close();
-                }
-            }
-            PublishingTime tempPubTime = new PublishingTimeService(this._databaseManager).SelectById(
-                (int)((long)resDt.Rows[0]["PublishingTimeId"])
-            );
-            return new MediaInfo(
-                id: (int)((long)resDt.Rows[0]["Id"]),
-                author: resDt.Rows[0]["Author"].ToString(),
-                producer: resDt.Rows[0]["Producer"].ToString(),
-                publisher: resDt.Rows[0]["Publisher"].ToString(),
-                pubTime: tempPubTime
-            );
-        }
-
-        public bool UpdateMediaInfo(MediaInfo mediaInfoToUpdate) {
-            if (!(new PublishingTimeService(this._databaseManager).UpdatePublishingTime(mediaInfoToUpdate.PublishingTime))) {
-                return false;
-            }
-
-            string updateQuery = @"
-                Update Rating 
-                SET
-                    Author = @Author
-                    Producer = @Producer
-                    Publisher = @Publisher
-                    PublishingTimeId = @PublishingTimeId
-                WHERE Id = @Id;
-            ";
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                try {
-                    using (SqliteCommand cmd = new SqliteCommand(updateQuery, connection)) {
-                        cmd.Parameters.AddWithValue("@Id", mediaInfoToUpdate.Id);
-                        cmd.Parameters.AddWithValue("@Author", mediaInfoToUpdate.Author ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Producer", mediaInfoToUpdate.Producer ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Publisher", mediaInfoToUpdate.Publisher ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@PublishingTimeId", mediaInfoToUpdate.PublishingTime);
-                        cmd.ExecuteScalar();
-                    }
-                }
-                catch (Exception ex) {
-                    Log.Error(ex.StackTrace ?? "Error while updating Status data");
-                    return false;
-                }
-                connection.Close();
-            }
-
-            return true;
+            this._publishingTimeService.SaveForMediaInfo(session, mediaInfo.Id, mediaInfo.PublishingTime);
         }
     }
 }

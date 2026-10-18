@@ -1,170 +1,80 @@
-﻿using Anicluster.Database.Services.AssociativeEntities;
-using Microsoft.Data.Sqlite;
-using Modells.Anime;
-using Serilog;
+﻿using Modells.Anime;
 
 namespace Anicluster.Database.Services {
 
-    public class PublishingTimeService : IDatabaseService {
+    /// <summary>
+    /// Liest und schreibt Veröffentlichungszeiträume samt Unterbrechungen.
+    /// Ein Zeitraum gehört entweder zu einer Medieninfo oder zu einer Staffel.
+    /// </summary>
+    internal class PublishingTimeService {
 
-        private readonly DatabaseManager _databaseManager;
+        private const string MediaInfoColumn = "MediaInfoId";
+        private const string SeasonColumn = "SeasonId";
 
-        public PublishingTimeService(DatabaseManager databaseManager) {
-            this._databaseManager = databaseManager;
+        public PublishingTime SelectByMediaInfoId(DatabaseSession session, int mediaInfoId) {
+            return this.SelectByOwner(session, MediaInfoColumn, mediaInfoId);
         }
 
-        public bool InitializeTable() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string creationString = @"
-                    CREATE TABLE IF NOT EXISTS PublishingTime (
-                        Id INTEGER PRIMARY KEY,
-                        StartDate DATETIME,
-                        EndDate DATETIME
-                    );
-                ";
-                using (SqliteCommand cmd = new SqliteCommand(creationString, connection)) {
-                    try {
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- PublishingTime table not created!");
-                        return false;
-                    }
-                }
-            }
-            Log.Information("PublishingTime table created.");
-            return true;
+        public PublishingTime SelectBySeasonId(DatabaseSession session, int seasonId) {
+            return this.SelectByOwner(session, SeasonColumn, seasonId);
         }
 
-        public bool TableExist() {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                connection.Open();
-                string query = "SELECT name FROM sqlite_master WHERE type='table' AND name=@tableName;";
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
-                    cmd.Parameters.AddWithValue("@tableName", "PublishingTime");
-                    object? result = cmd.ExecuteScalar();
-                    connection.Close();
-                    if (result is not null) {
-                        Log.Information("Tabelle 'PublishingTime' existiert.");
-                        return true;
-                    }
-                    else {
-                        Log.Information("Tabelle 'PublishingTime' existiert NICHT!");
-                        return false;
-                    }
-                }
-            }
+        public void SaveForMediaInfo(DatabaseSession session, int mediaInfoId, PublishingTime publishingTime) {
+            this.Save(session, MediaInfoColumn, mediaInfoId, publishingTime);
         }
 
-        /// <summary></summary>
-        /// <param name="publishingTime"></param>
-        /// <returns>The (new, correct) id of the inserted PublishingTime</returns>
-        public int Insert(PublishingTime publishingTime) {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string queryInsert = "" +
-                    "INSERT INTO PublishingTime (StartDate, EndDate) \n" +
-                    "    VALUES (@StartDate, @EndDate);";
-                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
-                    try {
-                        cmd.Parameters.AddWithValue("@StartDate", publishingTime.StartDate);
-                        cmd.Parameters.AddWithValue("@EndDate", publishingTime.EndDate);
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                        cmd.Parameters.Clear();
-                        cmd.CommandText = "SELECT last_insert_rowid();";
-                        object? insertedId = cmd.ExecuteScalar();
-                        connection.Close();
-                        int insertedIdInt = (int)((long)insertedId!);
-                        publishingTime.Id = insertedIdInt;
-                        List<int> insertedInterruptionIds = [];
-                        InterruptionService interruptionService = new InterruptionService(this._databaseManager);
-                        foreach (Interruption x in publishingTime.Interruptions) {
-                            insertedInterruptionIds.Add(interruptionService.Insert(x));
-                        }
-                        PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(this._databaseManager);
-                        foreach (int x in insertedInterruptionIds) {
-                            publishingTimeInterruptionAssociativeEntityService.InsertPublishingInterruption(insertedIdInt, x);
-                        }
-                        return insertedIdInt;
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- PublishingTime not inserted or queryable!");
-                        return -1;
-                    }
-                }
-            }
+        public void SaveForSeason(DatabaseSession session, int seasonId, PublishingTime publishingTime) {
+            this.Save(session, SeasonColumn, seasonId, publishingTime);
         }
 
-        /// <summary></summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public PublishingTime SelectById(int id) {
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string queryInsert = "" +
-                    "SELECT *\n" +
-                    "FROM PublishingTime\n" +
-                    $"WHERE Id LIKE {id};";
-                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
-                    try {
-                        PublishingTime publishingTime = new PublishingTime();
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                        using (SqliteDataReader reader = cmd.ExecuteReader()) {
-                            publishingTime = new PublishingTime() {
-                                Id = (int)((long)reader["Id"]),
-                                StartDate = (DateTime)reader["StartDate"],
-                                EndDate = (DateTime)reader["EndDate"],
-                            };
-                            reader.Close();
-                        }
-                        connection.Close();
-                        // Request Interruption(s)
-                        PublishingTimeInterruptionAssociativeEntityService publishingTimeInterruptionAssociativeEntityService = new PublishingTimeInterruptionAssociativeEntityService(this._databaseManager);
-                        List<int> piIds = publishingTimeInterruptionAssociativeEntityService.SelectInterruptionsFromPublishing(id);
-                        InterruptionService interruptionService = new InterruptionService(this._databaseManager);
-                        publishingTime.Interruptions.AddRange(interruptionService.SelectInterruptionsById(piIds));
-
-                        return publishingTime;
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tags Selection (all)!");
-                        return new PublishingTime();
-                    }
-                }
+        /// <summary>Lädt den Zeitraum des Besitzers, ohne Eintrag wird ein leerer Zeitraum geliefert.</summary>
+        private PublishingTime SelectByOwner(DatabaseSession session, string ownerColumn, int ownerId) {
+            PublishingTime? publishingTime = session.Query(
+                $"SELECT Id, StartDate, EndDate FROM PublishingTime WHERE {ownerColumn} = @OwnerId;",
+                reader => new PublishingTime() {
+                    Id = reader.GetInt(0),
+                    StartDate = reader.GetDate(1),
+                    EndDate = reader.GetDate(2)
+                },
+                ("@OwnerId", ownerId)
+            ).FirstOrDefault();
+            if (publishingTime is null) {
+                return new PublishingTime();
             }
+            publishingTime.Interruptions = session.Query(
+                "SELECT Id, StartDate, EndDate, Comment FROM Interruption WHERE PublishingTimeId = @PublishingTimeId ORDER BY StartDate, Id;",
+                reader => new Interruption(reader.GetDate(1), reader.GetDate(2), reader.GetStringOrNull(3)) { Id = reader.GetInt(0) },
+                ("@PublishingTimeId", publishingTime.Id)
+            );
+            return publishingTime;
         }
 
-        public bool UpdatePublishingTime(PublishingTime publishingTimeToUpdate) {
-            // update Interruptions
-            if (!(new InterruptionService(this._databaseManager).UpdateInterruptions(publishingTimeToUpdate.Id ,publishingTimeToUpdate.Interruptions))) {
-                return false;
+        /// <summary>
+        /// Legt den Zeitraum des Besitzers an oder aktualisiert ihn und ersetzt dessen Unterbrechungen.
+        /// Die Spaltennamen kommen ausschließlich aus den Konstanten dieser Klasse.
+        /// </summary>
+        private void Save(DatabaseSession session, string ownerColumn, int ownerId, PublishingTime publishingTime) {
+            long? existingId = session.ScalarLong($"SELECT Id FROM PublishingTime WHERE {ownerColumn} = @OwnerId;", ("@OwnerId", ownerId));
+            if (existingId is null) {
+                publishingTime.Id = session.Insert(
+                    $"INSERT INTO PublishingTime ({ownerColumn}, StartDate, EndDate) VALUES (@OwnerId, @StartDate, @EndDate);",
+                    ("@OwnerId", ownerId), ("@StartDate", publishingTime.StartDate), ("@EndDate", publishingTime.EndDate)
+                );
             }
-
-            // update Publishing Time
-            using (SqliteConnection connection = this._databaseManager.GetConnection()) {
-                string queryInsert = @"
-                    UPDATE PublishingTime 
-                    SET 
-                        StartDate = @StartDate
-                        EndDate = @EndDate
-                    WHERE Id = @Id; 
-                ";
-                using (SqliteCommand cmd = new SqliteCommand(queryInsert, connection)) {
-                    try {
-                        PublishingTime publishingTime = new PublishingTime();
-                        connection.Open();
-                        cmd.Parameters.AddWithValue("@Id", publishingTimeToUpdate.Id);
-                        cmd.Parameters.AddWithValue("@StartDate", publishingTimeToUpdate.StartDate);
-                        cmd.Parameters.AddWithValue("@EndDate", publishingTimeToUpdate.EndDate);
-                    }
-                    catch (Exception ex) {
-                        Log.Error(ex.StackTrace ?? "Error without stacktrace... <- Tags Selection (all)!");
-                        return false;
-                    }
-                }
+            else {
+                session.Execute(
+                    "UPDATE PublishingTime SET StartDate = @StartDate, EndDate = @EndDate WHERE Id = @Id;",
+                    ("@StartDate", publishingTime.StartDate), ("@EndDate", publishingTime.EndDate), ("@Id", (int)existingId)
+                );
+                publishingTime.Id = (int)existingId;
             }
-            return true;
+            session.Execute("DELETE FROM Interruption WHERE PublishingTimeId = @PublishingTimeId;", ("@PublishingTimeId", publishingTime.Id));
+            foreach (Interruption interruption in publishingTime.Interruptions) {
+                interruption.Id = session.Insert(
+                    "INSERT INTO Interruption (PublishingTimeId, StartDate, EndDate, Comment) VALUES (@PublishingTimeId, @StartDate, @EndDate, @Comment);",
+                    ("@PublishingTimeId", publishingTime.Id), ("@StartDate", interruption.Start), ("@EndDate", interruption.End), ("@Comment", interruption.Comment)
+                );
+            }
         }
     }
 }

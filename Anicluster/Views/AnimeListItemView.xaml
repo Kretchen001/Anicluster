@@ -40,6 +40,8 @@
         <ContextMenu>
             <MenuItem Header="Details anzeigen"
                       Click="MenuItemDetailsAndEdit_Click"/>
+            <MenuItem Header="Löschen"
+                      Click="MenuItemDelete_Click"/>
         </ContextMenu>
     </UserControl.ContextMenu>
     <Border BorderBrush="Gray"

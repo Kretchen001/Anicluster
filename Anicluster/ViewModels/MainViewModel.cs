@@ -70,6 +70,22 @@ namespace Anicluster.ViewModels {
             this.RefreshAnimes();
         }
 
+        /// <summary>Löscht den Anime nach Rückfrage samt allen zugehörigen Daten und lädt die Liste neu.</summary>
+        public void DeleteAnime(int animeId, string animeName) {
+            bool confirmed = this._dialogService.Confirm(
+                $"Soll der Anime '{animeName}' mit allen Daten (Bewertung, Staffeln, Tags, ...) wirklich gelöscht werden?\nDas kann nicht rückgängig gemacht werden.",
+                "Anime löschen"
+            );
+            if (!confirmed) {
+                return;
+            }
+            if (!this._animeService.DeleteAnime(animeId)) {
+                this._dialogService.ShowMessage("Fehler beim Löschen!\nBitte beim Log aufbewahren und Programmierer informieren.", string.Empty, MessageBoxImage.Error);
+                return;
+            }
+            this.RefreshAnimes();
+        }
+
         public void OpenTagManager() {
             this._dialogService.ShowDialog(new TagManagerViewModel(this._tagService, this._dialogService));
         }
@@ -89,6 +105,7 @@ namespace Anicluster.ViewModels {
             foreach (AnimeListEntry entry in this._animeService.SelectAnimeListEntries()) {
                 AnimeListItemViewModel item = new AnimeListItemViewModel(entry);
                 item.EditRequested += this.OnItemEditRequested;
+                item.DeleteRequested += this.OnItemDeleteRequested;
                 this.Animes.Add(item);
             }
             this.ApplySort();
@@ -111,6 +128,12 @@ namespace Anicluster.ViewModels {
         private void OnItemEditRequested(object? sender, EventArgs e) {
             if (sender is AnimeListItemViewModel item) {
                 this.EditAnime(item.Id);
+            }
+        }
+
+        private void OnItemDeleteRequested(object? sender, EventArgs e) {
+            if (sender is AnimeListItemViewModel item) {
+                this.DeleteAnime(item.Id, item.Name);
             }
         }
 
