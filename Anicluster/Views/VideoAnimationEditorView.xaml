@@ -6,13 +6,14 @@
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:VideoAnimationEditorViewModel}"
-             MinWidth="700"
-             MinHeight="390"
-             d:DesignHeight="390"
-             d:DesignWidth="700">
-    <Grid>
+             MinWidth="860"
+             MinHeight="460"
+             d:DesignHeight="460"
+             d:DesignWidth="860">
+    <Grid Margin="24,20,24,20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -20,89 +21,72 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Liste: Entf löscht, Drag & Drop sortiert um -->
-        <ListView x:Name="ListViewVideos"
-                  Margin="10"
-                  Grid.Column="0"
-                  ItemsSource="{Binding Videos}"
-                  SelectedItem="{Binding SelectedVideo}"
-                  KeyDown="ListViewVideos_KeyDown"
-                  AllowDrop="True"
-                  Drop="ListViewVideos_Drop"
-                  DragOver="ListViewVideos_DragOver"
-                  PreviewMouseLeftButtonDown="ListViewVideos_PreviewMouseLeftButtonDown">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Nr." Width="40">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Id}" HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Typ" Width="100">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding VideoType}" HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Kommentar" Width="250">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Comment}" TextWrapping="Wrap"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-
-        <!-- Eingabe eines neuen Eintrags -->
-        <Grid Grid.Column="1"
-              Margin="5,10,10,10">
+        <!-- Vorhandene Einträge: per Drag & Drop sortieren, Entf löscht den markierten Eintrag -->
+        <Grid Grid.Row="0" Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Content="Typ"
-                   FontWeight="Bold"/>
-            <ComboBox Grid.Row="1"
-                      Margin="5,0,5,5"
-                      Height="25"
-                      ItemsSource="{Binding VideoTypes}"
-                      SelectedItem="{Binding SelectedType}"/>
-            <Label Grid.Row="2"
-                   Content="Kommentar"
-                   FontWeight="Bold"/>
-            <TextBox Grid.Row="3"
-                     Margin="5,0,5,5"
-                     TextWrapping="Wrap"
-                     AcceptsReturn="True"
-                     Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Grid.Row="4"
-                    Content="Hinzufügen"
-                    Margin="55,0"
-                    Height="25"
-                    Click="BtnAdd_Click"/>
+            <Border Style="{StaticResource Card}" Padding="0">
+                <DataGrid x:Name="GridVideos"
+                          ItemsSource="{Binding Videos}"
+                          SelectedItem="{Binding SelectedVideo}"
+                          IsReadOnly="True"
+                          CanUserSortColumns="False"
+                          CanUserResizeColumns="False"
+                          CanUserReorderColumns="False"
+                          KeyDown="GridVideos_KeyDown">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nr." Binding="{Binding Id}" Width="60"/>
+                        <DataGridTextColumn Header="Typ" Binding="{Binding VideoType}" Width="110"/>
+                        <DataGridTextColumn Header="Kommentar" Binding="{Binding Comment}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+            <TextBlock Grid.Row="1"
+                       Text="Zeilen per Drag &amp; Drop sortieren, Entf löscht den markierten Eintrag."
+                       Style="{StaticResource MutedText}"
+                       FontSize="12"
+                       Margin="2,8,0,0"/>
         </Grid>
 
+        <!-- Neuer Eintrag -->
+        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Neuer Eintrag" Style="{StaticResource SectionTitle}"/>
+                <StackPanel Grid.Row="1" Margin="0,0,0,12">
+                    <TextBlock Text="Typ" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox ItemsSource="{Binding VideoTypes}" SelectedItem="{Binding SelectedType}"/>
+                </StackPanel>
+                <TextBlock Grid.Row="2" Text="Kommentar" Style="{StaticResource FieldLabel}"/>
+                <TextBox Grid.Row="3"
+                         Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         VerticalContentAlignment="Top"
+                         Margin="0,0,0,14"/>
+                <Button Grid.Row="4" Content="Hinzufügen" Click="BtnAdd_Click"/>
+            </Grid>
+        </Border>
+
         <!-- Übernehmen / Abbrechen -->
-        <StackPanel Grid.Row="1"
-                    Grid.ColumnSpan="2"
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
-                    Margin="10,0,10,10">
-            <Button Content="Übernehmen"
-                    MinWidth="100"
-                    Margin="0,0,10,0"
+                    Margin="0,18,0,0">
+            <Button Content="Abbrechen" MinWidth="120" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="Übernehmen"
+                    MinWidth="140"
+                    Margin="10,0,0,0"
                     Click="BtnAccept_Click"/>
-            <Button Content="Abbrechen"
-                    MinWidth="100"
-                    Click="BtnCancel_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

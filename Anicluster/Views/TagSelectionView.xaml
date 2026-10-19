@@ -6,78 +6,69 @@
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:TagSelectionViewModel}"
-             MinWidth="800"
-             MinHeight="450"
-             d:DesignHeight="450"
-             d:DesignWidth="800">
-    <Grid Margin="10">
+             MinWidth="620"
+             MinHeight="560"
+             d:DesignHeight="560"
+             d:DesignWidth="620">
+    <Grid Margin="24,20,24,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Margin="0,0,0,5">
+
+        <Grid Grid.Row="0" Margin="0,0,0,14">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0"
-                   VerticalAlignment="Center"
-                   VerticalContentAlignment="Center"
-                   FontSize="14">
-                Filter:
-            </Label>
-            <TextBox Margin="10,0,10,0"
-                     Grid.Column="1"
-                     VerticalAlignment="Center"
-                     FontSize="14"
-                     Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Grid.Column="2"
-                    Padding="2,3"
-                    VerticalAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    FontSize="14"
-                    Click="BtnClearFilter_Click">
-                Filter leeren
-            </Button>
+            <Grid Grid.Column="0">
+                <TextBox x:Name="FilterBox"
+                         Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                         Padding="38,6,10,6"/>
+                <TextBlock Text="&#xE721;"
+                           FontFamily="{StaticResource IconFont}"
+                           Foreground="{DynamicResource TextMutedBrush}"
+                           Margin="14,0,0,0"
+                           VerticalAlignment="Center"
+                           IsHitTestVisible="False"/>
+                <TextBlock Text="Tags filtern …"
+                           Foreground="{DynamicResource TextMutedBrush}"
+                           Margin="39,0,0,0"
+                           VerticalAlignment="Center"
+                           IsHitTestVisible="False"
+                           Visibility="{Binding Text, ElementName=FilterBox, Converter={StaticResource EmptyToVisibilityConverter}}"/>
+            </Grid>
+            <Button Grid.Column="1" Content="Filter leeren" Margin="8,0,0,0" Click="BtnClearFilter_Click"/>
         </Grid>
-        <DataGrid Grid.Row="1"
-                  ItemsSource="{Binding FilteredTags}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  HeadersVisibility="Column">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name"
-                                    Binding="{Binding Tag.Designation}"
-                                    IsReadOnly="True"
-                                    Width="20*"/>
-                <DataGridTemplateColumn Header="Ausgewählt"
-                                        Width="4*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                                      Margin="1"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,5,0,0">
-            <Button Content="Fertig"
-                    MinWidth="100"
-                    Margin="0,0,10,0"
-                    Style="{StaticResource RoundedGreenButton}"
-                    Background="#FFD7FFD9"
+
+        <Border Grid.Row="1" Style="{StaticResource Card}" Padding="0">
+            <DataGrid ItemsSource="{Binding FilteredTags}"
+                      CanUserSortColumns="False"
+                      CanUserResizeColumns="False"
+                      CanUserReorderColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Tag" Binding="{Binding Tag.Designation}" IsReadOnly="True" Width="*"/>
+                    <DataGridTemplateColumn Header="Ausgewählt" Width="130">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button Content="Abbrechen" MinWidth="120" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="Fertig"
+                    MinWidth="140"
+                    Margin="10,0,0,0"
                     Click="BtnFinish_Click"/>
-            <Button Content="Abbrechen"
-                    MinWidth="100"
-                    Click="BtnCancel_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

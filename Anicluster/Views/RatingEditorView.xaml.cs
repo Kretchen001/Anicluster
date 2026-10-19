@@ -15,11 +15,11 @@ namespace Anicluster.Views {
             this.InitializeComponent();
         }
 
-        private void MenuItemAcceptRating_Click(object sender, RoutedEventArgs e) {
+        private void BtnAccept_Click(object sender, RoutedEventArgs e) {
             this.ViewModel?.Accept();
         }
 
-        private void MenuItemCancel_Click(object sender, RoutedEventArgs e) {
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) {
             this.ViewModel?.Cancel();
         }
 
@@ -42,15 +42,5 @@ namespace Anicluster.Views {
         private void BtnSyncroAdd_Click(object sender, RoutedEventArgs e) {
             this.ViewModel?.AddSyncro();
         }
-
-        #region Hilfe-Popup (reine UI-Logik)
-        private void MenuItemHelp_Click(object sender, RoutedEventArgs e) {
-            this.PopUpHelp.IsOpen = true;
-        }
-
-        private void PopUpHelp_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) {
-            this.PopUpHelp.IsOpen = false;
-        }
-        #endregion
     }
 }

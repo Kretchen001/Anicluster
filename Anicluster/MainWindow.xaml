@@ -6,48 +6,84 @@
         xmlns:vm="clr-namespace:Anicluster.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
-        WindowStartupLocation="CenterScreen"
-        Title="{Binding AppTitle}" Height="720" Width="1200">
+        Style="{StaticResource AppWindowStyle}"
+        Title="{Binding AppTitle}"
+        Width="1320"
+        Height="820"
+        MinWidth="1000"
+        MinHeight="640"
+        WindowStartupLocation="CenterScreen">
     <Window.InputBindings>
-        <KeyBinding Key="N" Modifiers="Control" Command="ApplicationCommands.New" />
+        <KeyBinding Key="N" Modifiers="Control" Command="ApplicationCommands.New"/>
     </Window.InputBindings>
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Neuer Anime"
-                      ToolTip="Strg + N"
-                      IsEnabled="{Binding IsListVisible}"
-                      Click="MenuItemNewAnime_Click" />
-            <MenuItem Header="Neuer Anime (kurz)"
-                      Click="MenuItemNewAnimeSmall_Click" />
-            <MenuItem Header="Tags"
-                      Click="MenuItemTags_Click"/>
-            <MenuItem Header="Sortierung">
-                <MenuItem Header="Nach interner ID"
-                          Tag="{x:Static vm:AnimeSortField.Id}"
-                          Click="MenuItemSort_Click"/>
-                <MenuItem Header="Nach Name"
-                          Tag="{x:Static vm:AnimeSortField.Name}"
-                          Click="MenuItemSort_Click"/>
-                <MenuItem Header="Nach Status"
-                          Tag="{x:Static vm:AnimeSortField.State}"
-                          Click="MenuItemSort_Click"/>
-                <MenuItem Header="Nach Favorisierung"
-                          Tag="{x:Static vm:AnimeSortField.Favorite}"
-                          Click="MenuItemSort_Click"/>
-                <MenuItem Header="Nach Tier"
-                          Tag="{x:Static vm:AnimeSortField.Tier}"
-                          Click="MenuItemSort_Click"/>
-            </MenuItem>
-        </Menu>
-        <Grid>
-            <!-- Anime-Liste, solange kein Editor geöffnet ist -->
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          Visibility="{Binding IsListVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <ItemsControl ItemsSource="{Binding Animes}"
-                              Margin="5"/>
-            </ScrollViewer>
-            <!-- Editor zum Anlegen bzw. Bearbeiten, ersetzt die Liste -->
-            <ContentControl Content="{Binding Editor}"/>
-        </Grid>
-    </DockPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="248"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Seitenleiste -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource LineBrush}"
+                BorderThickness="0,0,1,0">
+            <Grid Margin="18">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="Anicluster"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource AccentBrush}"/>
+                    <TextBlock Text="Deine Anime-Sammlung"
+                               Style="{StaticResource MutedText}"
+                               Margin="0,2,0,24"/>
+                    <Button Style="{StaticResource PrimaryButton}"
+                            Content="+  Neuer Anime"
+                            ToolTip="Strg + N"
+                            Click="BtnNewAnime_Click"/>
+                    <Button Content="Schnell hinzufügen"
+                            Margin="0,8,0,0"
+                            Click="BtnQuickAnime_Click"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Margin="0,30,0,0">
+                    <RadioButton Style="{StaticResource NavStyle}"
+                                 IsChecked="{Binding Navigation, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:NavigationTarget.Library}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8F1;" FontFamily="{StaticResource IconFont}" FontSize="16" Width="28" VerticalAlignment="Center"/>
+                            <TextBlock Text="Bibliothek" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource NavStyle}"
+                                 IsChecked="{Binding Navigation, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:NavigationTarget.Tags}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8EC;" FontFamily="{StaticResource IconFont}" FontSize="16" Width="28" VerticalAlignment="Center"/>
+                            <TextBlock Text="Tags" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource NavStyle}"
+                                 IsChecked="{Binding Navigation, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:NavigationTarget.Settings}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE713;" FontFamily="{StaticResource IconFont}" FontSize="16" Width="28" VerticalAlignment="Center"/>
+                            <TextBlock Text="Einstellungen" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+
+                <TextBlock Grid.Row="2"
+                           Text="{Binding VersionText}"
+                           Style="{StaticResource MutedText}"
+                           FontSize="11"/>
+            </Grid>
+        </Border>
+
+        <!-- Aktuelle Seite (Bibliothek, Editor, Tags oder Einstellungen) -->
+        <ContentControl Grid.Column="1"
+                        Content="{Binding CurrentPage}"/>
+    </Grid>
 </Window>

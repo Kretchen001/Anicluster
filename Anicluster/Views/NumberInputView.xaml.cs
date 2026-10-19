@@ -10,6 +10,8 @@ namespace Anicluster.Views {
     /// </summary>
     public partial class NumberInputView : UserControl {
 
+        private NumberInputViewModel? ViewModel => this.DataContext as NumberInputViewModel;
+
         public NumberInputView() {
             this.InitializeComponent();
             this.Loaded += (sender, e) => this.TBInputNumber.Focus();
@@ -17,12 +19,16 @@ namespace Anicluster.Views {
 
         private void TBInputNumber_KeyDown(object sender, KeyEventArgs e) {
             if (e.Key == Key.Enter) {
-                (this.DataContext as NumberInputViewModel)?.Confirm();
+                this.ViewModel?.Confirm();
             }
         }
 
         private void BtnOk_Click(object sender, RoutedEventArgs e) {
-            (this.DataContext as NumberInputViewModel)?.Confirm();
+            this.ViewModel?.Confirm();
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) {
+            this.ViewModel?.Cancel();
         }
     }
 }

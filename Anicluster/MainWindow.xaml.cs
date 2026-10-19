@@ -1,12 +1,12 @@
-﻿using Anicluster.ViewModels;
+﻿using Anicluster.Theming;
+using Anicluster.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Anicluster {
 
     /// <summary>
-    /// Hauptfenster. Enthält nur Weiterleitungen der Menü-Klicks an das <see cref="MainViewModel"/>.
+    /// Hauptfenster. Enthält nur Weiterleitungen der Klicks an das <see cref="MainViewModel"/>.
     /// </summary>
     public partial class MainWindow : Window {
 
@@ -14,6 +14,7 @@ namespace Anicluster {
 
         public MainWindow() {
             this.InitializeComponent();
+            WindowThemeHelper.Attach(this);
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.New, this.OnNewAnimeExecuted)); // Strg + N
         }
 
@@ -21,23 +22,12 @@ namespace Anicluster {
             this.ViewModel.CreateNewAnime();
         }
 
-        private void MenuItemNewAnime_Click(object sender, RoutedEventArgs e) {
+        private void BtnNewAnime_Click(object sender, RoutedEventArgs e) {
             this.ViewModel.CreateNewAnime();
         }
 
-        private void MenuItemNewAnimeSmall_Click(object sender, RoutedEventArgs e) {
+        private void BtnQuickAnime_Click(object sender, RoutedEventArgs e) {
             this.ViewModel.CreateQuickAnime();
-        }
-
-        private void MenuItemTags_Click(object sender, RoutedEventArgs e) {
-            this.ViewModel.OpenTagManager();
-        }
-
-        /// <summary>Gemeinsamer Handler aller Sortier-Einträge, das Kriterium steht im Tag des Menüeintrags.</summary>
-        private void MenuItemSort_Click(object sender, RoutedEventArgs e) {
-            if (sender is MenuItem { Tag: AnimeSortField field }) {
-                this.ViewModel.SortAnimes(field);
-            }
         }
     }
 }

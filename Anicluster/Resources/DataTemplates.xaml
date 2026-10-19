@@ -4,23 +4,41 @@
                     xmlns:views="clr-namespace:Anicluster.Views">
 
     <!-- Ordnet jedem ViewModel seine View zu -->
-    <DataTemplate DataType="{x:Type vm:AnimeListItemViewModel}">
-        <views:AnimeListItemView/>
+
+    <!-- Seiten im Hauptfenster -->
+    <DataTemplate DataType="{x:Type vm:LibraryViewModel}">
+        <views:LibraryView/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:AnimeEditorViewModel}">
         <views:AnimeEditorView/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:QuickAnimeViewModel}">
-        <views:QuickAnimeView/>
+    <DataTemplate DataType="{x:Type vm:TagManagerViewModel}">
+        <views:TagManagerView/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:RatingEditorViewModel}">
-        <views:RatingEditorView/>
+    <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+        <views:SettingsView/>
+    </DataTemplate>
+
+    <!-- Einträge und Teile -->
+    <DataTemplate DataType="{x:Type vm:AnimeListItemViewModel}">
+        <views:AnimeListItemView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ColorEditorViewModel}">
+        <views:ColorEditorView/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:MusicPieceViewModel}">
         <views:MusicPieceView/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SyncroViewModel}">
         <views:SyncroView/>
+    </DataTemplate>
+
+    <!-- Dialoge -->
+    <DataTemplate DataType="{x:Type vm:QuickAnimeViewModel}">
+        <views:QuickAnimeView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:RatingEditorViewModel}">
+        <views:RatingEditorView/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SeasonEditorViewModel}">
         <views:SeasonEditorView/>
@@ -33,9 +51,6 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:TagSelectionViewModel}">
         <views:TagSelectionView/>
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:TagManagerViewModel}">
-        <views:TagManagerView/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:NumberInputViewModel}">
         <views:NumberInputView/>

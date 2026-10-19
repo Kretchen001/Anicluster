@@ -6,13 +6,14 @@
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:SeasonEditorViewModel}"
-             MinWidth="800"
-             MinHeight="420"
-             d:DesignHeight="420"
-             d:DesignWidth="800">
-    <Grid>
+             MinWidth="900"
+             MinHeight="480"
+             d:DesignHeight="480"
+             d:DesignWidth="900">
+    <Grid Margin="24,20,24,20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -20,137 +21,90 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Liste der Staffeln: Entf löscht, Drag & Drop sortiert um -->
-        <ListView x:Name="ListViewSeasons"
-                  Margin="10"
-                  Grid.Column="0"
-                  ItemsSource="{Binding Seasons}"
-                  SelectedItem="{Binding SelectedSeason}"
-                  KeyDown="ListViewSeasons_KeyDown"
-                  AllowDrop="True"
-                  Drop="ListViewSeasons_Drop"
-                  DragOver="ListViewSeasons_DragOver"
-                  PreviewMouseLeftButtonDown="ListViewSeasons_PreviewMouseLeftButtonDown">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Nr."
-                                    Width="25">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Number}"
-                                           HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Episoden"
-                                    Width="55">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Episodes.Count}"
-                                           HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Startjahr"
-                                    Width="75">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding PublishingTime.DisplayStartYear}"
-                                           HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Endjahr"
-                                    Width="75">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding PublishingTime.DisplayEndYear}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Kommentar"
-                                    Width="200">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Comment}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-
-        <!-- Eingabe einer neuen Staffel -->
-        <Grid Grid.Column="1"
-              Margin="5,10,10,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <!-- Vorhandene Staffeln: per Drag & Drop sortieren, Entf löscht die markierte Staffel -->
+        <Grid Grid.Row="0" Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0"
-                   Content="Anzahl der Episoden*"
-                   FontWeight="Bold"/>
-            <TextBox Grid.Row="0"
-                     Grid.Column="1"
-                     Margin="5,3"
-                     VerticalContentAlignment="Center"
-                     Text="{Binding EpisodeCountText, UpdateSourceTrigger=PropertyChanged}"
-                     AutomationProperties.HelpText="Anzahl der Episoden in Zahlen"/>
-            <Label Grid.Row="1"
-                   Content="Startjahr"
-                   FontWeight="Bold"/>
-            <TextBox Grid.Row="1"
-                     Grid.Column="1"
-                     Margin="5,3"
-                     VerticalContentAlignment="Center"
-                     Text="{Binding StartYearText, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label Grid.Row="2"
-                   Content="Endjahr"
-                   FontWeight="Bold"/>
-            <TextBox Grid.Row="2"
-                     Grid.Column="1"
-                     Margin="5,3"
-                     VerticalContentAlignment="Center"
-                     Text="{Binding EndYearText, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label Grid.Row="3"
-                   Grid.ColumnSpan="2"
-                   Content="Kommentar"
-                   FontWeight="Bold"/>
-            <TextBox Grid.Row="4"
-                     Grid.ColumnSpan="2"
-                     Margin="5,0,5,5"
-                     TextWrapping="Wrap"
-                     AcceptsReturn="True"
-                     Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Grid.Row="5"
-                    Grid.ColumnSpan="2"
-                    Content="Hinzufügen"
-                    Margin="55,0"
-                    Height="25"
-                    Click="BtnAdd_Click"/>
+            <Border Style="{StaticResource Card}" Padding="0">
+                <DataGrid x:Name="GridSeasons"
+                          ItemsSource="{Binding Seasons}"
+                          SelectedItem="{Binding SelectedSeason}"
+                          IsReadOnly="True"
+                          CanUserSortColumns="False"
+                          CanUserResizeColumns="False"
+                          CanUserReorderColumns="False"
+                          KeyDown="GridSeasons_KeyDown">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nr." Binding="{Binding Number}" Width="60"/>
+                        <DataGridTextColumn Header="Episoden" Binding="{Binding Episodes.Count}" Width="90"/>
+                        <DataGridTextColumn Header="Start" Binding="{Binding PublishingTime.DisplayStartYear}" Width="80"/>
+                        <DataGridTextColumn Header="Ende" Binding="{Binding PublishingTime.DisplayEndYear}" Width="80"/>
+                        <DataGridTextColumn Header="Kommentar" Binding="{Binding Comment}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+            <TextBlock Grid.Row="1"
+                       Text="Zeilen per Drag &amp; Drop sortieren, Entf löscht die markierte Staffel."
+                       Style="{StaticResource MutedText}"
+                       FontSize="12"
+                       Margin="2,8,0,0"/>
         </Grid>
 
+        <!-- Neue Staffel -->
+        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Neue Staffel" Style="{StaticResource SectionTitle}"/>
+                <StackPanel Grid.Row="1" Margin="0,0,0,12">
+                    <TextBlock Text="Anzahl der Episoden *" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding EpisodeCountText, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <Grid Grid.Row="2" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Startjahr" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding StartYearText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Endjahr" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding EndYearText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Grid.Row="3" Text="Kommentar" Style="{StaticResource FieldLabel}"/>
+                <TextBox Grid.Row="4"
+                         Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         VerticalContentAlignment="Top"
+                         Margin="0,0,0,14"/>
+                <Button Grid.Row="5" Content="Hinzufügen" Click="BtnAdd_Click"/>
+            </Grid>
+        </Border>
+
         <!-- Übernehmen / Abbrechen -->
-        <StackPanel Grid.Row="1"
-                    Grid.ColumnSpan="2"
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
-                    Margin="10,0,10,10">
-            <Button Content="Übernehmen"
-                    MinWidth="100"
-                    Margin="0,0,10,0"
+                    Margin="0,18,0,0">
+            <Button Content="Abbrechen" MinWidth="120" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="Übernehmen"
+                    MinWidth="140"
+                    Margin="10,0,0,0"
                     Click="BtnAccept_Click"/>
-            <Button Content="Abbrechen"
-                    MinWidth="100"
-                    Click="BtnCancel_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

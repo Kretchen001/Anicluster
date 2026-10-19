@@ -1,6 +1,8 @@
 ﻿using Anicluster.Database;
 using Anicluster.Database.Services;
 using Anicluster.Dialogs;
+using Anicluster.Settings;
+using Anicluster.Theming;
 using Anicluster.ViewModels;
 using Serilog;
 using System.IO;
@@ -16,11 +18,20 @@ namespace Anicluster {
 
         private const string ConnectionString = "Data Source=db/data.sqlite";
 
+        private AppSettingsService? _settingsService;
+
         protected override void OnStartup(StartupEventArgs e) {
             base.OnStartup(e);
             this.ConfigureLogging();
 
             Log.Information("Application started.");
+
+            // Einstellungen laden und das gespeicherte Design anwenden, bevor das erste Fenster entsteht
+            this._settingsService = new AppSettingsService();
+            this._settingsService.Load();
+            ThemeService themeService = new ThemeService();
+            themeService.Apply(this._settingsService.Current.ThemeMode, this._settingsService.Current.GetCustomPalette());
+
             DatabaseManager dbManager;
             try {
                 Log.Information("Test SQLite-DB connection");
@@ -37,12 +48,19 @@ namespace Anicluster {
             }
 
             IDialogService dialogService = new DialogService();
-            MainViewModel mainViewModel = new MainViewModel(new AnimeService(dbManager), new TagService(dbManager), dialogService);
+            MainViewModel mainViewModel = new MainViewModel(
+                new AnimeService(dbManager),
+                new TagService(dbManager),
+                dialogService,
+                themeService,
+                this._settingsService
+            );
             this.MainWindow = new MainWindow { DataContext = mainViewModel };
             this.MainWindow.Show();
         }
 
         protected override void OnExit(ExitEventArgs e) {
+            this._settingsService?.Save();
             Log.Information("Application shutdown.");
             Log.CloseAndFlush();
             base.OnExit(e);

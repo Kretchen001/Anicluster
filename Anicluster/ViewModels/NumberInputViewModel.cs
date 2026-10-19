@@ -26,6 +26,10 @@ namespace Anicluster.ViewModels {
             this.Result = initialValue;
         }
 
+        public void Cancel() {
+            this.RequestClose(false);
+        }
+
         /// <summary>Prüft die Eingabe und schließt den Dialog, wenn sie gültig ist.</summary>
         public void Confirm() {
             if (int.TryParse(this.InputText, out int number) && number >= ScoreViewModel.MinValue && number <= ScoreViewModel.MaxValue) {

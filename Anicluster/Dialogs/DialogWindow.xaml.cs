@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Anicluster.Theming;
+using System.Windows;
 
 namespace Anicluster.Dialogs {
 
@@ -9,6 +10,7 @@ namespace Anicluster.Dialogs {
 
         public DialogWindow() {
             this.InitializeComponent();
+            WindowThemeHelper.Attach(this);
         }
     }
 }

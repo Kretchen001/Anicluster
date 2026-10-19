@@ -46,6 +46,10 @@ namespace Anicluster.ViewModels {
             this.IsFavorite = !this.IsFavorite;
         }
 
+        public void Cancel() {
+            this.RequestClose(false);
+        }
+
         /// <summary>Speichert den Anime und schließt den Dialog.</summary>
         public void Save() {
             if (string.IsNullOrWhiteSpace(this.Name)) {

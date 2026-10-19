@@ -6,85 +6,82 @@
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:AnimeListItemViewModel}"
-             d:DesignHeight="60"
-             d:DesignWidth="1000">
-    <UserControl.Resources>
-        <!-- Hintergrundfarbe der Karte je nach Tier -->
-        <Style TargetType="Border">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Tier}" Value="NotDefined">
-                    <Setter Property="Background" Value="WhiteSmoke"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Tier}" Value="S">
-                    <Setter Property="Background" Value="DeepSkyBlue"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Tier}" Value="A">
-                    <Setter Property="Background" Value="#FF00BD00"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Tier}" Value="B">
-                    <Setter Property="Background" Value="Yellow"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Tier}" Value="C">
-                    <Setter Property="Background" Value="Orange"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Tier}" Value="D">
-                    <Setter Property="Background" Value="Red"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Tier}" Value="E">
-                    <Setter Property="Background" Value="DarkRed"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
+             d:DesignHeight="64"
+             d:DesignWidth="900">
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="Details anzeigen"
-                      Click="MenuItemDetailsAndEdit_Click"/>
-            <MenuItem Header="Löschen"
-                      Click="MenuItemDelete_Click"/>
+            <MenuItem Header="Details anzeigen" Click="MenuItemDetailsAndEdit_Click"/>
+            <MenuItem Header="Löschen" Click="MenuItemDelete_Click"/>
         </ContextMenu>
     </UserControl.ContextMenu>
-    <Border BorderBrush="Gray"
-            BorderThickness="1"
-            CornerRadius="20"
-            Margin="0,0,0,5">
-        <StackPanel Margin="8">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Name}"
+    <!-- Karte mit Tier-Farbleiste links, Doppelklick öffnet den Anime -->
+    <Border Style="{StaticResource ItemCard}"
+            Margin="0,0,0,10"
+            MouseLeftButtonDown="Card_MouseLeftButtonDown">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Background="{Binding Tier, Converter={StaticResource TierBrushConverter}}"
+                    CornerRadius="12,0,0,12"/>
+
+            <TextBlock Grid.Column="1"
+                       Text="{Binding Name}"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="20,16,12,16"/>
+
+            <!-- Tier -->
+            <Border Grid.Column="2"
+                    Width="34" Height="26"
+                    CornerRadius="7"
+                    VerticalAlignment="Center"
+                    Margin="8,0"
+                    Background="{Binding Tier, Converter={StaticResource TierBrushConverter}}">
+                <TextBlock Text="{Binding TierText}"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Grid.Column="0"
-                           Margin="5,0,0,0"/>
+                           Foreground="{Binding Tier, Converter={StaticResource TierBrushConverter}, ConverterParameter=Text}"/>
+            </Border>
+
+            <!-- Status -->
+            <Grid Grid.Column="3" VerticalAlignment="Center" Margin="8,0" MinWidth="110">
+                <Border Background="{Binding State, Converter={StaticResource StateBrushConverter}}"
+                        Opacity="0.2"
+                        CornerRadius="11"/>
                 <TextBlock Text="{Binding StateText}"
-                           VerticalAlignment="Center"
-                           Grid.Column="1"/>
-                <Viewbox VerticalAlignment="Center"
-                         HorizontalAlignment="Right"
-                         Margin="10"
-                         Height="25"
-                         Grid.Column="2">
-                    <Canvas Height="50"
-                            Width="50">
-                        <Path Stretch="Uniform"
-                              Data="M 25,0 L 31,20 H 50 L 34,31 L 40,50 L 25,39 L 10,50 L 16,31 L 0,20 H 19 Z">
-                            <Path.Style>
-                                <Style TargetType="Path">
-                                    <Setter Property="Fill" Value="#FFAFAFAF"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsFavorite}" Value="True">
-                                            <Setter Property="Fill" Value="Gold"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Path.Style>
-                        </Path>
-                    </Canvas>
-                </Viewbox>
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           Margin="12,4"
+                           Foreground="{Binding State, Converter={StaticResource StateBrushConverter}}"/>
             </Grid>
-        </StackPanel>
+
+            <!-- Favorit -->
+            <Viewbox Grid.Column="4" Width="22" Height="22" Margin="12,0,20,0">
+                <Canvas Width="50" Height="50">
+                    <Path Data="M 25,0 L 31,20 H 50 L 34,31 L 40,50 L 25,39 L 10,50 L 16,31 L 0,20 H 19 Z">
+                        <Path.Style>
+                            <Style TargetType="Path">
+                                <Setter Property="Fill" Value="{DynamicResource LineBrush}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                        <Setter Property="Fill" Value="#F5B301"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Path.Style>
+                    </Path>
+                </Canvas>
+            </Viewbox>
+        </Grid>
     </Border>
 </UserControl>

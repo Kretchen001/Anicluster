@@ -21,6 +21,9 @@ namespace Anicluster.ViewModels {
         public Tier Tier { get; }
         public State State { get; }
 
+        /// <summary>Kurztext des Tiers für die Tabelle ("-", wenn keins gesetzt ist)</summary>
+        public string TierText => this.Tier == Tier.NotDefined ? "–" : this.Tier.ToString();
+
         /// <summary>Deutscher Anzeigetext des Status</summary>
         public string StateText => TranslationOfState[this.State];
 

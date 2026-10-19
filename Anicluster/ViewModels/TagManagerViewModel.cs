@@ -3,46 +3,24 @@ using Anicluster.Dialogs;
 using Modells.Anime;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Data;
 
 namespace Anicluster.ViewModels {
 
     /// <summary>
-    /// Dialog zum Verwalten aller Tags (anlegen, löschen, suchen).
+    /// Seite zum Verwalten aller Tags: suchen, neue anlegen und löschen.
     /// </summary>
-    public class TagManagerViewModel : DialogViewModelBase {
+    public class TagManagerViewModel : PropertyBaseChange {
 
         private readonly ITagService _tagService;
         private readonly IDialogService _dialogService;
-        private Tag? _selectedTag;
-        private bool _isSearchVisible;
         private string _searchText = string.Empty;
-        private bool _isAddTagPopupOpen;
         private string _newTagName = string.Empty;
-
-        public override string Title => "TagOrganisator";
 
         public ObservableCollection<Tag> AllTags { get; } = [];
 
-        /// <summary>Gefilterte Sicht auf <see cref="AllTags"/></summary>
+        /// <summary>Gefilterte und alphabetisch sortierte Sicht auf <see cref="AllTags"/></summary>
         public ICollectionView FilteredTags { get; }
-
-        public Tag? SelectedTag {
-            get => this._selectedTag;
-            set => this.SetProperty(ref this._selectedTag, value);
-        }
-
-        public bool IsSearchVisible {
-            get => this._isSearchVisible;
-            private set {
-                if (this.SetProperty(ref this._isSearchVisible, value)) {
-                    this.OnPropertyChanged(nameof(this.SearchToggleText));
-                }
-            }
-        }
-
-        public string SearchToggleText => this.IsSearchVisible ? "Suche ausblenden" : "Suche einblenden";
 
         public string SearchText {
             get => this._searchText;
@@ -53,22 +31,22 @@ namespace Anicluster.ViewModels {
             }
         }
 
-        public bool IsAddTagPopupOpen {
-            get => this._isAddTagPopupOpen;
-            set => this.SetProperty(ref this._isAddTagPopupOpen, value);
-        }
-
         public string NewTagName {
             get => this._newTagName;
             set {
                 if (this.SetProperty(ref this._newTagName, value)) {
                     this.OnPropertyChanged(nameof(this.IsNewTagNameDuplicate));
+                    this.OnPropertyChanged(nameof(this.CanAddTag));
                 }
             }
         }
 
-        /// <summary>Gibt es den eingegebenen Tag-Namen bereits? (dient zur Rotfärbung des Eingabefelds)</summary>
-        public bool IsNewTagNameDuplicate => this.AllTags.Any(x => x.Designation.Equals(this.NewTagName, StringComparison.OrdinalIgnoreCase));
+        /// <summary>Gibt es den eingegebenen Namen bereits?</summary>
+        public bool IsNewTagNameDuplicate => this.AllTags.Any(x => x.Designation.Equals(this.NewTagName.Trim(), StringComparison.CurrentCultureIgnoreCase));
+
+        public bool CanAddTag => !string.IsNullOrWhiteSpace(this.NewTagName) && !this.IsNewTagNameDuplicate;
+
+        public string CountText => this.AllTags.Count == 1 ? "1 Tag" : $"{this.AllTags.Count} Tags";
 
         public TagManagerViewModel(ITagService tagService, IDialogService dialogService) {
             this._tagService = tagService;
@@ -78,56 +56,46 @@ namespace Anicluster.ViewModels {
             }
             this.FilteredTags = CollectionViewSource.GetDefaultView(this.AllTags);
             this.FilteredTags.Filter = this.MatchesSearch;
-        }
-
-        public void ToggleSearch() {
-            this.IsSearchVisible = !this.IsSearchVisible;
+            this.FilteredTags.SortDescriptions.Add(new SortDescription(nameof(Tag.Designation), ListSortDirection.Ascending));
         }
 
         public void ClearSearch() {
             this.SearchText = string.Empty;
         }
 
-        public void OpenAddTagPopup() {
-            this.IsAddTagPopupOpen = true;
-        }
-
-        /// <summary>Legt den Tag mit dem eingegebenen Namen an, sofern es keinen ähnlichen gibt.</summary>
+        /// <summary>Legt den Tag mit dem eingegebenen Namen an.</summary>
         public void AddTag() {
-            if (string.IsNullOrWhiteSpace(this.NewTagName)) {
+            if (!this.CanAddTag) {
                 return;
             }
-            if (this.AllTags.Any(x => x.Designation.Contains(this.NewTagName, StringComparison.OrdinalIgnoreCase))) {
-                this._dialogService.ShowMessage($"Tag '{this.NewTagName}' bereits vorhanden!");
+            Tag tag = new Tag(this.NewTagName.Trim());
+            if (this._tagService.Insert(tag) < 0) {
+                this._dialogService.ShowMessage("Fehler beim Speichern!\nBitte beim Log aufbewahren und Programmierer informieren.", string.Empty, System.Windows.MessageBoxImage.Error);
                 return;
             }
-            Tag tag = new Tag(this.NewTagName);
-            tag.Id = this._tagService.Insert(tag);
             this.AllTags.Add(tag);
-            this._dialogService.ShowMessage($"Tag '{tag.Designation}' erfolgreich gespeichert!");
             this.NewTagName = string.Empty;
+            this.OnPropertyChanged(nameof(this.CountText));
         }
 
-        public void DeleteSelectedTag() {
-            if (this.SelectedTag is null) {
-                this._dialogService.ShowMessage("Kein Tag ausgewählt zum Löschen.");
+        /// <summary>Löscht den Tag nach Rückfrage, er verschwindet damit auch bei allen Animes.</summary>
+        public void DeleteTag(Tag tag) {
+            if (!this._dialogService.Confirm($"Soll der Tag '{tag.Designation}' wirklich gelöscht werden?\nEr wird auch bei allen Animes entfernt.", "Tag löschen")) {
                 return;
             }
-            Tag tag = this.SelectedTag;
             if (this._tagService.DeleteTagById(tag)) {
-                this._dialogService.ShowMessage($"Tag '{tag.Designation}' erfolgreich gelöscht.");
                 this.AllTags.Remove(tag);
+                this.OnPropertyChanged(nameof(this.CountText));
             }
             else {
-                this._dialogService.ShowMessage("Fehler beim Löschen!\nBitte beim Log aufbewahren und Programmierer informieren.", string.Empty, MessageBoxImage.Error);
+                this._dialogService.ShowMessage("Fehler beim Löschen!\nBitte beim Log aufbewahren und Programmierer informieren.", string.Empty, System.Windows.MessageBoxImage.Error);
             }
         }
-
 
         private bool MatchesSearch(object item) {
             return item is Tag tag
                 && (string.IsNullOrEmpty(this.SearchText)
-                    || tag.Designation.Contains(this.SearchText, StringComparison.OrdinalIgnoreCase));
+                    || tag.Designation.Contains(this.SearchText, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

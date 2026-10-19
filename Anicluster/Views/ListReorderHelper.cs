@@ -6,45 +6,70 @@ using System.Windows.Media;
 namespace Anicluster.Views {
 
     /// <summary>
-    /// Gemeinsame Drag-&amp;-Drop-Hilfen zum Umsortieren der Einträge einer ListView.
-    /// Reine UI-Geste, die eigentliche Verschiebung übernimmt das ViewModel.
+    /// Macht die Zeilen eines DataGrids per Drag &amp; Drop umsortierbar. Reine UI-Geste: Das Ziehen startet erst nach
+    /// einer kleinen Mausbewegung (ein einfacher Klick markiert weiter die Zeile), die Verschiebung selbst übernimmt der Aufrufer.
     /// </summary>
-    internal static class ListReorderHelper {
+    internal class ListReorderHelper<T> where T : class {
 
-        /// <summary>Startet das Ziehen des angeklickten Eintrags (PreviewMouseLeftButtonDown).</summary>
-        public static void StartDrag(MouseButtonEventArgs e) {
-            ListViewItem? item = FindAncestor<ListViewItem>(e.OriginalSource as DependencyObject);
-            if (item is not null) {
-                DragDrop.DoDragDrop(item, item.DataContext, DragDropEffects.Move);
-            }
+        private readonly DataGrid _grid;
+        private readonly Action<T, int> _move;
+        private Point _dragStart;
+        private T? _dragItem;
+
+        /// <param name="grid">Das DataGrid, dessen Zeilen sortiert werden sollen</param>
+        /// <param name="move">Wird mit dem verschobenen Eintrag und der Zielposition aufgerufen</param>
+        public ListReorderHelper(DataGrid grid, Action<T, int> move) {
+            this._grid = grid;
+            this._move = move;
+            grid.AllowDrop = true;
+            grid.PreviewMouseLeftButtonDown += this.OnMouseDown;
+            grid.PreviewMouseLeftButtonUp += (sender, e) => this._dragItem = null;
+            grid.PreviewMouseMove += this.OnMouseMove;
+            grid.DragOver += this.OnDragOver;
+            grid.Drop += this.OnDrop;
         }
 
-        /// <summary>Erlaubt das Ablegen nur für Einträge vom Typ <typeparamref name="T"/> (DragOver).</summary>
-        public static void AllowDrop<T>(DragEventArgs e) {
+        private void OnMouseDown(object sender, MouseButtonEventArgs e) {
+            this._dragItem = FindAncestor<DataGridRow>(e.OriginalSource as DependencyObject)?.Item as T;
+            this._dragStart = e.GetPosition(null);
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e) {
+            if (e.LeftButton != MouseButtonState.Pressed || this._dragItem is null) {
+                return;
+            }
+            Point position = e.GetPosition(null);
+            if (Math.Abs(position.X - this._dragStart.X) < SystemParameters.MinimumHorizontalDragDistance
+                && Math.Abs(position.Y - this._dragStart.Y) < SystemParameters.MinimumVerticalDragDistance) {
+                return;
+            }
+            T item = this._dragItem;
+            this._dragItem = null;
+            DragDrop.DoDragDrop(this._grid, new DataObject(typeof(T), item), DragDropEffects.Move);
+        }
+
+        private void OnDragOver(object sender, DragEventArgs e) {
             e.Effects = e.Data.GetDataPresent(typeof(T)) ? DragDropEffects.Move : DragDropEffects.None;
             e.Handled = true;
         }
 
-        /// <summary>Liefert den abgelegten Eintrag und die Zielposition (Drop).</summary>
-        /// <returns><c>false</c>, wenn nicht auf einem Eintrag abgelegt wurde.</returns>
-        public static bool TryGetDrop<T>(ListView listView, DragEventArgs e, out T dropped, out int targetIndex) where T : class {
-            dropped = null!;
-            targetIndex = -1;
+        private void OnDrop(object sender, DragEventArgs e) {
             if (!e.Data.GetDataPresent(typeof(T))) {
-                return false;
+                return;
             }
-            ListViewItem? target = FindAncestor<ListViewItem>(e.OriginalSource as DependencyObject);
+            DataGridRow? target = FindAncestor<DataGridRow>(e.OriginalSource as DependencyObject);
             if (target is null) {
-                return false;
+                return;
             }
-            dropped = (T)e.Data.GetData(typeof(T));
-            targetIndex = listView.Items.IndexOf(target.DataContext);
-            return targetIndex >= 0;
+            int targetIndex = this._grid.Items.IndexOf(target.Item);
+            if (targetIndex >= 0) {
+                this._move((T)e.Data.GetData(typeof(T)), targetIndex);
+            }
         }
 
-        private static T? FindAncestor<T>(DependencyObject? current) where T : DependencyObject {
+        private static TAncestor? FindAncestor<TAncestor>(DependencyObject? current) where TAncestor : DependencyObject {
             while (current is not null) {
-                if (current is T ancestor) {
+                if (current is TAncestor ancestor) {
                     return ancestor;
                 }
                 // Nicht-visuelle Elemente (z. B. Text-Runs) haben keinen visuellen Parent

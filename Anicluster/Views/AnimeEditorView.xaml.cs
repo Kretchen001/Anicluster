@@ -1,5 +1,4 @@
 ﻿using Anicluster.ViewModels;
-using Modells.Anime;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,7 +25,7 @@ namespace Anicluster.Views {
             }
         }
 
-        #region Name (Label <-> TextBox)
+        #region Name (Anzeige <-> Eingabe)
         private void ShowNameEditor() {
             this.TBName.Visibility = Visibility.Visible;
             this.LbName.Visibility = Visibility.Collapsed;
@@ -52,17 +51,6 @@ namespace Anicluster.Views {
             this.ShowNameLabel();
         }
         #endregion
-
-        private void StarPath_MouseDown(object sender, MouseButtonEventArgs e) {
-            this.ViewModel?.ToggleFavorite();
-        }
-
-        /// <summary>Gemeinsamer Handler aller Tier-Buttons, das Tier steht im Tag des Buttons.</summary>
-        private void BtnTier_Click(object sender, RoutedEventArgs e) {
-            if (sender is Button { Tag: Tier tier }) {
-                this.ViewModel?.SetTier(tier);
-            }
-        }
 
         private void BtnAutoLinkGeneration_Click(object sender, RoutedEventArgs e) {
             this.ViewModel?.GenerateUrl();

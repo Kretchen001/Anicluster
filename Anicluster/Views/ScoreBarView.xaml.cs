@@ -13,11 +13,12 @@ namespace Anicluster.Views {
             this.InitializeComponent();
         }
 
-        private void ProgressBar_MouseWheel(object sender, MouseWheelEventArgs e) {
+        private void Bar_MouseWheel(object sender, MouseWheelEventArgs e) {
             (this.DataContext as ScoreViewModel)?.Adjust(e.Delta > 0 ? 1 : -1);
+            e.Handled = true;
         }
 
-        private void ProgressBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+        private void Bar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             (this.DataContext as ScoreViewModel)?.PromptForValue();
         }
     }

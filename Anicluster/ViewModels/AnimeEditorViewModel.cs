@@ -82,6 +82,7 @@ namespace Anicluster.ViewModels {
             set {
                 if (this.SetAnimeValue(this._anime.Status.State, value, x => this._anime.Status.State = x)) {
                     this.OnPropertyChanged(nameof(this.IsRatingEnabled));
+                    this.OnPropertyChanged(nameof(this.IsWishlist));
                 }
             }
         }
@@ -127,6 +128,8 @@ namespace Anicluster.ViewModels {
 
         public IReadOnlyList<Tag> Tags => this._anime.Tags;
 
+        public bool HasTags => this._anime.Tags.Count > 0;
+
         public int SeasonCount => this._anime.Seasons.Count;
 
         public int OvaCount => this._anime.Ovas.Count;
@@ -135,6 +138,8 @@ namespace Anicluster.ViewModels {
         #region Rating
         /// <summary>Bei Wunschlisten-Animes kann noch nicht bewertet werden.</summary>
         public bool IsRatingEnabled => this.State != State.Wishlist;
+
+        public bool IsWishlist => this.State == State.Wishlist;
 
         public bool IsRated => this._anime.Rating.IsRated;
 
@@ -145,6 +150,9 @@ namespace Anicluster.ViewModels {
         #endregion
 
         #region Save buttons
+        /// <summary>Überschrift des Editors</summary>
+        public string ModeText => this.IsNewAnime ? "Neuer Anime" : "Anime bearbeiten";
+
         /// <summary>Der Speichern-Button wird bei neuen Animes immer, sonst erst nach einer Änderung angezeigt.</summary>
         public bool CanSave => this.IsNewAnime || this.IsModified;
 
@@ -201,6 +209,7 @@ namespace Anicluster.ViewModels {
             if (this._dialogService.ShowDialog(editor) == true) {
                 this._anime.Tags = editor.Result;
                 this.OnPropertyChanged(nameof(this.Tags));
+                this.OnPropertyChanged(nameof(this.HasTags));
                 this.MarkAsModified();
             }
         }

@@ -6,81 +6,87 @@
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:PublishingTimeEditorViewModel}"
-             MinWidth="600"
-             MinHeight="390"
-             d:DesignHeight="390"
-             d:DesignWidth="600">
-    <StackPanel Margin="5">
-        <GroupBox Header="Produktionsdaten">
-            <UniformGrid>
-                <TextBlock Text="Startdatum"
-                           VerticalAlignment="Center"/>
-                <DatePicker SelectedDate="{Binding StartDate}"
-                            Margin="0,0,0,2"
-                            FirstDayOfWeek="Monday"/>
-                <TextBlock Text="Enddatum"
-                           VerticalAlignment="Center"/>
-                <DatePicker SelectedDate="{Binding EndDate}"
-                            FirstDayOfWeek="Monday"/>
-            </UniformGrid>
-        </GroupBox>
-        <GroupBox Header="Unterbrechungen"
-                  Height="225">
+             MinWidth="680"
+             MinHeight="560"
+             d:DesignHeight="560"
+             d:DesignWidth="680">
+    <Grid Margin="24,20,24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Style="{StaticResource Card}" Margin="0,0,0,16">
+            <StackPanel>
+                <TextBlock Text="Produktionszeitraum" Style="{StaticResource SectionTitle}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Startdatum" Style="{StaticResource FieldLabel}"/>
+                        <DatePicker SelectedDate="{Binding StartDate}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Enddatum" Style="{StaticResource FieldLabel}"/>
+                        <DatePicker SelectedDate="{Binding EndDate}"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Style="{StaticResource Card}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <UniformGrid Grid.Row="0"
-                             Columns="2">
-                    <TextBlock Text="Startdatum"
-                               VerticalAlignment="Center"/>
-                    <DatePicker SelectedDate="{Binding NewInterruptionStart}"
-                                Margin="0,0,0,2"
-                                FirstDayOfWeek="Monday"/>
-                    <TextBlock Text="Enddatum"
-                               VerticalAlignment="Center"/>
-                    <DatePicker SelectedDate="{Binding NewInterruptionEnd}"
-                                FirstDayOfWeek="Monday"/>
-                </UniformGrid>
-                <Button Grid.Row="1"
-                        HorizontalAlignment="Right"
-                        Margin="5"
-                        Click="BtnAddInterruption_Click">
-                    Hinzufügen
-                </Button>
+                <TextBlock Grid.Row="0" Text="Unterbrechungen" Style="{StaticResource SectionTitle}"/>
+                <Grid Grid.Row="1" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Start" Style="{StaticResource FieldLabel}"/>
+                        <DatePicker SelectedDate="{Binding NewInterruptionStart}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Ende" Style="{StaticResource FieldLabel}"/>
+                        <DatePicker SelectedDate="{Binding NewInterruptionEnd}"/>
+                    </StackPanel>
+                    <Button Grid.Column="4"
+                            Content="Hinzufügen"
+                            VerticalAlignment="Bottom"
+                            Click="BtnAddInterruption_Click"/>
+                </Grid>
                 <DataGrid Grid.Row="2"
                           ItemsSource="{Binding Interruptions}"
-                          VerticalAlignment="Stretch"
-                          HorizontalAlignment="Stretch"
-                          AutoGenerateColumns="False"
-                          SelectionMode="Single"
-                          CanUserAddRows="False">
+                          CanUserSortColumns="False"
+                          CanUserResizeColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Startdatum"
-                                            Binding="{Binding Start}"
-                                            Width="auto"/>
-                        <DataGridTextColumn Header="Enddatum"
-                                            Binding="{Binding End}"
-                                            Width="auto"/>
-                        <DataGridTextColumn Header="Kommentar"
-                                            Binding="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Width="*"/>
+                        <DataGridTextColumn Header="Start" Binding="{Binding Start, StringFormat='{}{0:dd.MM.yyyy}'}" IsReadOnly="True" Width="120"/>
+                        <DataGridTextColumn Header="Ende" Binding="{Binding End, StringFormat='{}{0:dd.MM.yyyy}'}" IsReadOnly="True" Width="120"/>
+                        <DataGridTextColumn Header="Kommentar" Binding="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-        </GroupBox>
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,10,5,5">
-            <Button Content="Übernehmen"
-                    MinWidth="100"
-                    Margin="0,0,10,0"
+        </Border>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button Content="Abbrechen" MinWidth="120" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="Übernehmen"
+                    MinWidth="140"
+                    Margin="10,0,0,0"
                     Click="BtnAccept_Click"/>
-            <Button Content="Abbrechen"
-                    MinWidth="100"
-                    Click="BtnCancel_Click"/>
         </StackPanel>
-    </StackPanel>
+    </Grid>
 </UserControl>

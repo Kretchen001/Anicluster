@@ -5,15 +5,20 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles.xaml"/>
+                <!-- Reihenfolge beachten: spätere Dateien bauen auf früheren auf -->
+                <ResourceDictionary Source="Resources/TierColors.xaml"/>
+                <ResourceDictionary Source="Resources/Controls.xaml"/>
+                <ResourceDictionary Source="Resources/Components.xaml"/>
                 <ResourceDictionary Source="Resources/DataTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <converters:EmptyToVisibilityConverter x:Key="EmptyToVisibilityConverter"/>
             <converters:SmoothProgressBarColorConverter x:Key="SmoothProgressBarColorConverter"/>
-            <converters:TierSelectedConverter x:Key="TierSelectedConverter"/>
             <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+            <converters:TierBrushConverter x:Key="TierBrushConverter"/>
+            <converters:StateBrushConverter x:Key="StateBrushConverter"/>
+            <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -5,481 +5,310 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:Modells.Anime;assembly=Modells"
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             xmlns:views="clr-namespace:Anicluster.Views"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:AnimeEditorViewModel}"
-             Background="Transparent"
              Loaded="UserControl_Loaded"
-             d:DesignHeight="800"
-             d:DesignWidth="1200">
-    <UserControl.Resources>
-        <!-- Stern zum Favorisieren: grau, bei Favorit gelb -->
-        <Style x:Key="FavoriteStarStyle" TargetType="Path">
-            <Setter Property="Fill" Value="#FFAFAFAF"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Favorite}" Value="True">
-                    <Setter Property="Fill" Value="Yellow"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
+             d:DesignHeight="900"
+             d:DesignWidth="1050">
     <Grid>
-        <!-- Hintergrund und runde Ecken -->
-        <Border CornerRadius="20"
-                Background="#FFAFAFAF"
-                Padding="10">
-            <Grid Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="75"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="50"/>
-                </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-                <!-- Kopfzeile: Name (per Klick bearbeitbar) und Favoriten-Stern -->
-                <Border CornerRadius="20"
-                        Grid.Row="0"
-                        Background="LightBlue">
+        <!-- Kopfzeile: zurück, Name (per Klick bearbeitbar) und Favorit -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource LineBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="24,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+                        Style="{StaticResource IconButton}"
+                        Content="&#xE72B;"
+                        ToolTip="Zurück zur Bibliothek"
+                        Margin="0,0,14,0"
+                        VerticalAlignment="Center"
+                        Click="BtnCancel_Click"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding ModeText}"
+                               Style="{StaticResource MutedText}"
+                               FontSize="12"/>
                     <Grid>
-                        <Label x:Name="LbName"
-                               Content="{Binding Name}"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Left"
-                               Margin="25,0,0,0"
-                               Height="40"
-                               FontWeight="Bold"
-                               VerticalContentAlignment="Center"
-                               MinWidth="300"
-                               MouseLeftButtonDown="LbName_MouseLeftButtonDown"
-                               FontSize="20"
-                               Background="Transparent"/>
+                        <TextBlock x:Name="LbName"
+                                   Text="{Binding Name}"
+                                   FontSize="26"
+                                   FontWeight="SemiBold"
+                                   MinWidth="320"
+                                   Cursor="IBeam"
+                                   ToolTip="Zum Bearbeiten klicken"
+                                   Background="Transparent"
+                                   MouseLeftButtonDown="LbName_MouseLeftButtonDown"/>
                         <TextBox x:Name="TBName"
                                  Visibility="Collapsed"
                                  Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-                                 VerticalAlignment="Center"
+                                 FontSize="22"
+                                 MinWidth="320"
                                  HorizontalAlignment="Left"
-                                 Margin="25,0,0,0"
-                                 Height="40"
-                                 MinWidth="300"
-                                 VerticalContentAlignment="Center"
                                  KeyDown="TBName_KeyDown"
-                                 FontSize="20"
-                                 LostFocus="TBName_LostFocus"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Foreground="Black"/>
-                        <Viewbox VerticalAlignment="Center"
-                                 HorizontalAlignment="Right"
-                                 Margin="10,10,25,10"
-                                 ToolTip="Favorisieren?">
-                            <Canvas Height="50"
-                                    Width="50">
-                                <Path Style="{StaticResource FavoriteStarStyle}"
-                                      Stretch="Uniform"
-                                      Data="M 25,0 L 31,20 H 50 L 34,31 L 40,50 L 25,39 L 10,50 L 16,31 L 0,20 H 19 Z"
-                                      MouseDown="StarPath_MouseDown"/>
-                            </Canvas>
-                        </Viewbox>
+                                 LostFocus="TBName_LostFocus"/>
                     </Grid>
-                </Border>
-
-                <Grid Grid.Row="1"
-                      Margin="10">
-                    <ScrollViewer Padding="0,0,10,0"
-                                  VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
-                            <GroupBox Header="Zusätzliche Informationen"
-                                      FontSize="14"
-                                      Padding="5">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0"
-                                                Margin="0,0,10,0">
-                                        <Label Height="30"
-                                               Margin="0,0,0,5"
-                                               VerticalContentAlignment="Center">Original Name</Label>
-                                        <Label Height="30"
-                                               VerticalContentAlignment="Center">Url (Anime-Planet z.B.)</Label>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1">
-                                        <TextBox Text="{Binding OriginalName}"
-                                                 Height="30"
-                                                 Margin="0,0,0,5"
-                                                 VerticalContentAlignment="Center"/>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBox Grid.Column="0"
-                                                     Height="30"
-                                                     Margin="0,0,5,0"
-                                                     Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}"
-                                                     VerticalContentAlignment="Center"/>
-                                            <Button Grid.Column="1"
-                                                    Padding="3,0,3,0"
-                                                    Style="{StaticResource GoldenButtonStyle}"
-                                                    Click="BtnAutoLinkGeneration_Click">
-                                                Auto-Generation
-                                            </Button>
-                                        </Grid>
-                                    </StackPanel>
-                                </Grid>
-                            </GroupBox>
-
-                            <GroupBox Header="Zustand"
-                                      FontSize="14"
-                                      Margin="0,10,0,0">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0"
-                                                Margin="5">
-                                        <RadioButton GroupName="Options"
-                                                     VerticalContentAlignment="Center"
-                                                     Content="Wunschliste"
-                                                     Margin="5"
-                                                     IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Wishlist}}"/>
-                                        <RadioButton GroupName="Options"
-                                                     VerticalContentAlignment="Center"
-                                                     Content="Begonnen"
-                                                     Margin="5"
-                                                     IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Started}}"/>
-                                        <RadioButton GroupName="Options"
-                                                     VerticalContentAlignment="Center"
-                                                     Content="Fertig"
-                                                     Margin="5"
-                                                     IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Finished}}"/>
-                                        <RadioButton GroupName="Options"
-                                                     VerticalContentAlignment="Center"
-                                                     Content="Unterbrochen"
-                                                     Margin="5"
-                                                     IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Interrupted}}"/>
-                                        <RadioButton GroupName="Options"
-                                                     VerticalContentAlignment="Center"
-                                                     Content="Abgebrochen"
-                                                     Margin="5"
-                                                     IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Canceled}}"/>
-                                    </StackPanel>
-                                    <TextBox Grid.Column="1"
-                                             Margin="7"
-                                             Text="{Binding StatusComment, UpdateSourceTrigger=PropertyChanged}"
-                                             AcceptsReturn="True"
-                                             TextWrapping="Wrap"
-                                             ToolTip="Kommentarfeld"
-                                             VerticalScrollBarVisibility="Auto"
-                                             MaxHeight="134.1"/>
-                                </Grid>
-                            </GroupBox>
-
-                            <GroupBox Header="Bewertung"
-                                      FontSize="14"
-                                      Padding="5"
-                                      Margin="0,10,0,0">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid Grid.Column="0">
-                                            <ProgressBar Maximum="100"
-                                                         Height="24"
-                                                         Margin="5,3"
-                                                         Value="{Binding RatingGeneral, Mode=OneWay}"/>
-                                            <Label Content="{Binding RatingText}"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"
-                                                   Foreground="Black"
-                                                   Background="Transparent"/>
-                                        </Grid>
-                                        <Button Grid.Column="1"
-                                                Padding="5,0,5,0"
-                                                Margin="5,0,5,0"
-                                                IsEnabled="{Binding IsRatingEnabled}"
-                                                Click="BtnRatingGenerator_Click"
-                                                Style="{StaticResource GoldenButtonStyle}">
-                                            Bewerten
-                                        </Button>
-                                    </Grid>
-                                    <!-- Tier-Auswahl: das Tier steht im Tag des Buttons, der gewählte Button erhält einen schwarzen Rahmen -->
-                                    <UniformGrid Grid.Row="1"
-                                                 Columns="6"
-                                                 Height="50"
-                                                 Margin="0,5,0,0"
-                                                 IsEnabled="{Binding IsRatingEnabled}">
-                                        <Button Style="{StaticResource RoundedButton}"
-                                                Background="DeepSkyBlue"
-                                                Foreground="Black"
-                                                Content="S"
-                                                Tag="{x:Static models:Tier.S}"
-                                                BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.S}}"
-                                                BorderThickness="3"
-                                                Click="BtnTier_Click"/>
-                                        <Button Style="{StaticResource RoundedButton}"
-                                                Background="#FF00BD00"
-                                                Foreground="Black"
-                                                Content="A"
-                                                Tag="{x:Static models:Tier.A}"
-                                                BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.A}}"
-                                                BorderThickness="3"
-                                                Click="BtnTier_Click"/>
-                                        <Button Style="{StaticResource RoundedButton}"
-                                                Background="Yellow"
-                                                Foreground="Black"
-                                                Content="B"
-                                                Tag="{x:Static models:Tier.B}"
-                                                BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.B}}"
-                                                BorderThickness="3"
-                                                Click="BtnTier_Click"/>
-                                        <Button Style="{StaticResource RoundedButton}"
-                                                Background="Orange"
-                                                Foreground="Black"
-                                                Content="C"
-                                                Tag="{x:Static models:Tier.C}"
-                                                BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.C}}"
-                                                BorderThickness="3"
-                                                Click="BtnTier_Click"/>
-                                        <Button Style="{StaticResource RoundedButton}"
-                                                Background="Red"
-                                                Content="D"
-                                                Tag="{x:Static models:Tier.D}"
-                                                BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.D}}"
-                                                BorderThickness="3"
-                                                Click="BtnTier_Click"/>
-                                        <Button Style="{StaticResource RoundedButton}"
-                                                Background="DarkRed"
-                                                Content="E"
-                                                Tag="{x:Static models:Tier.E}"
-                                                BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.E}}"
-                                                BorderThickness="3"
-                                                Click="BtnTier_Click"/>
-                                    </UniformGrid>
-                                </Grid>
-                            </GroupBox>
-
-                            <GroupBox Header="Staffeln &amp; OVAs"
-                                      FontSize="14"
-                                      Margin="0,10,0,0"
-                                      Padding="5">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0"
-                                                Orientation="Horizontal">
-                                        <Label Content="Staffeln (aktuell eingetragen):"/>
-                                        <Label Content="{Binding SeasonCount}"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="1"
-                                            Margin="20,2,20,2"
-                                            Click="BtnSeasonGenerator_Click"
-                                            Style="{StaticResource GoldenButtonStyle}">
-                                        Staffelgenerator
-                                    </Button>
-                                    <StackPanel Grid.Column="2"
-                                                Orientation="Horizontal">
-                                        <Label Content="Sonstige OVAs:"/>
-                                        <Label Content="{Binding OvaCount}"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="3"
-                                            Margin="20,2,20,2"
-                                            Click="BtnOvaGenerator_Click"
-                                            Style="{StaticResource GoldenButtonStyle}">
-                                        OVA-Generator
-                                    </Button>
-                                </Grid>
-                            </GroupBox>
-
-                            <UniformGrid Rows="1">
-                                <GroupBox Header="Tags"
-                                          FontSize="14"
-                                          Margin="0,10,10,10"
-                                          Padding="5">
-                                    <Grid Margin="0,5,0,5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="1*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <ListView ItemsSource="{Binding Tags}"
-                                                  ScrollViewer.CanContentScroll="True"
-                                                  MaxHeight="145">
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid Margin="0.5">
-                                                        <TextBlock Text="{Binding Designation, StringFormat='- {0}'}"
-                                                                   FontSize="12"
-                                                                   Margin="1"/>
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
-                                        </ListView>
-                                        <Button Grid.Column="1"
-                                                VerticalAlignment="Center"
-                                                Margin="10"
-                                                Click="BtnTagsSelector_Click"
-                                                Style="{StaticResource GoldenButtonStyle}">
-                                            <StackPanel>
-                                                <Label HorizontalAlignment="Center"
-                                                       HorizontalContentAlignment="Center">
-                                                    Tags
-                                                </Label>
-                                                <Label HorizontalAlignment="Center"
-                                                       HorizontalContentAlignment="Center">
-                                                    verwalten
-                                                </Label>
-                                            </StackPanel>
-                                        </Button>
-                                    </Grid>
-                                </GroupBox>
-                                <GroupBox Header="Media-Infos"
-                                          FontSize="14"
-                                          Margin="10,10,0,10"
-                                          Padding="5">
-                                    <StackPanel>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Label Height="30"
-                                                   Margin="0,0,0,5"
-                                                   VerticalContentAlignment="Center"
-                                                   Grid.Column="0">
-                                                Autor
-                                            </Label>
-                                            <TextBox Text="{Binding Author}"
-                                                     Height="30"
-                                                     Margin="0,2,0,5"
-                                                     VerticalContentAlignment="Center"
-                                                     Grid.Column="1"/>
-                                        </Grid>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Label Height="30"
-                                                   Margin="0,0,0,5"
-                                                   VerticalContentAlignment="Center"
-                                                   Grid.Column="0">
-                                                Produzent
-                                            </Label>
-                                            <TextBox Text="{Binding Producer}"
-                                                     Height="30"
-                                                     Margin="0,2,0,5"
-                                                     VerticalContentAlignment="Center"
-                                                     Grid.Column="1"/>
-                                        </Grid>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="3*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Label Height="30"
-                                                   Margin="0,0,0,5"
-                                                   VerticalContentAlignment="Center"
-                                                   Grid.Column="0">
-                                                Veröffentlicher
-                                            </Label>
-                                            <TextBox Height="30"
-                                                     Text="{Binding Publisher}"
-                                                     Margin="0,2,0,5"
-                                                     VerticalContentAlignment="Center"
-                                                     Grid.Column="1"/>
-                                        </Grid>
-                                        <Button Height="30"
-                                                Margin="5"
-                                                Style="{StaticResource GoldenButtonStyle}"
-                                                Click="BtnPublishingTime_Click">
-                                            Veröffentlichungszeitraum/-räume
-                                        </Button>
-                                    </StackPanel>
-                                </GroupBox>
-                            </UniformGrid>
-
-                            <UniformGrid Columns="3"
-                                         Rows="1">
-                                <GroupBox Header="Vorgänger"
-                                          FontSize="14"
-                                          Padding="5"
-                                          Margin="0,0,2,0">
-                                    <ComboBox Height="30"
-                                              ItemsSource="{Binding AnimeChoices}"
-                                              DisplayMemberPath="Name"
-                                              SelectedValuePath="Id"
-                                              SelectedValue="{Binding Predecessor}"/>
-                                </GroupBox>
-                                <GroupBox Header="Nachfolger"
-                                          FontSize="14"
-                                          Padding="5"
-                                          Margin="2,0,2,0">
-                                    <ComboBox Height="30"
-                                              ItemsSource="{Binding AnimeChoices}"
-                                              DisplayMemberPath="Name"
-                                              SelectedValuePath="Id"
-                                              SelectedValue="{Binding Successor}"/>
-                                </GroupBox>
-                                <GroupBox Header="Sonstig zusammenhängender Anime"
-                                          FontSize="14"
-                                          Padding="5"
-                                          Margin="2,0,0,0">
-                                    <ComboBox Height="30"
-                                              ItemsSource="{Binding AnimeChoices}"
-                                              DisplayMemberPath="Name"
-                                              SelectedValuePath="Id"
-                                              SelectedValue="{Binding Related}"/>
-                                </GroupBox>
-                            </UniformGrid>
-
-                            <GroupBox Header="Kommentar"
-                                      FontSize="14"
-                                      Padding="5"
-                                      Margin="2,0,0,0">
-                                <TextBox Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"
-                                         MinHeight="150"
-                                         TextWrapping="Wrap"
-                                         AcceptsReturn="True"
-                                         ToolTip="Kommentarfeld"
-                                         VerticalScrollBarVisibility="Auto"/>
-                            </GroupBox>
-                        </StackPanel>
-                    </ScrollViewer>
-                </Grid>
-
-                <!-- Aktionen: Text und Sichtbarkeit richten sich nach Neu/Bearbeiten und nach Änderungen -->
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0"
-                            Margin="25,5,25,5"
-                            Background="#FF86DE83"
-                            FontSize="14"
-                            Style="{StaticResource RoundedGreenButton}"
-                            Content="{Binding SaveText}"
-                            Visibility="{Binding CanSave, Converter={StaticResource BooleanToVisibilityConverter}}"
-                            Click="BtnSave_Click"/>
-                    <Button Grid.Column="1"
-                            Margin="25,5,25,5"
-                            Background="#FFE08F8F"
-                            FontSize="14"
-                            Style="{StaticResource RoundedRedButton}"
-                            Content="{Binding CancelText}"
-                            Click="BtnCancel_Click"/>
-                </Grid>
+                </StackPanel>
+                <ToggleButton Grid.Column="2"
+                              Style="{StaticResource StarToggleStyle}"
+                              Width="36"
+                              Height="36"
+                              IsChecked="{Binding Favorite}"/>
             </Grid>
+        </Border>
+
+        <!-- Inhalt in zwei Spalten aus Karten -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="28,24,28,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Linke Spalte -->
+                <StackPanel Grid.Column="0">
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Allgemein" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="Originalname" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding OriginalName}" Margin="0,0,0,14"/>
+                            <TextBlock Text="Link (z. B. Anime-Planet)" Style="{StaticResource FieldLabel}"/>
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0"
+                                         Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button Grid.Column="1"
+                                        Content="Link erzeugen"
+                                        Margin="8,0,0,0"
+                                        Click="BtnAutoLinkGeneration_Click"/>
+                            </Grid>
+                            <TextBlock Text="Empfohlen von" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding RecommendedFrom}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Status" Style="{StaticResource SectionTitle}"/>
+                            <WrapPanel>
+                                <RadioButton Style="{StaticResource ChipStyle}" Content="Wunschliste"
+                                             IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Wishlist}}"/>
+                                <RadioButton Style="{StaticResource ChipStyle}" Content="Begonnen"
+                                             IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Started}}"/>
+                                <RadioButton Style="{StaticResource ChipStyle}" Content="Fertig"
+                                             IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Finished}}"/>
+                                <RadioButton Style="{StaticResource ChipStyle}" Content="Unterbrochen"
+                                             IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Interrupted}}"/>
+                                <RadioButton Style="{StaticResource ChipStyle}" Content="Abgebrochen"
+                                             IsChecked="{Binding State, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:State.Canceled}}"/>
+                            </WrapPanel>
+                            <TextBlock Text="Kommentar zum Status" Style="{StaticResource FieldLabel}" Margin="0,6,0,5"/>
+                            <TextBox Text="{Binding StatusComment, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="72"
+                                     VerticalContentAlignment="Top"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Bewertung" Style="{StaticResource SectionTitle}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ProgressBar Grid.Column="0"
+                                                 Maximum="100"
+                                                 Height="14"
+                                                 Value="{Binding RatingGeneral, Mode=OneWay}"
+                                                 Foreground="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource SmoothProgressBarColorConverter}}"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding RatingText}"
+                                               FontSize="18"
+                                               FontWeight="SemiBold"
+                                               MinWidth="48"
+                                               TextAlignment="Right"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+                                <Button Grid.Column="1"
+                                        Style="{StaticResource PrimaryButton}"
+                                        Content="Bewerten"
+                                        Margin="14,0,0,0"
+                                        IsEnabled="{Binding IsRatingEnabled}"
+                                        Click="BtnRatingGenerator_Click"/>
+                            </Grid>
+                            <TextBlock Text="Tier" Style="{StaticResource FieldLabel}" Margin="0,18,0,8"/>
+                            <views:TierPickerView HorizontalAlignment="Left"
+                                                  IsEnabled="{Binding IsRatingEnabled}"/>
+                            <TextBlock Text="Bewertung und Tier sind erst möglich, wenn der Status nicht mehr „Wunschliste“ ist."
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="0,12,0,0"
+                                       Visibility="{Binding IsWishlist, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Staffeln &amp; OVAs" Style="{StaticResource SectionTitle}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="14"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0"
+                                        Background="{DynamicResource SurfaceAltBrush}"
+                                        CornerRadius="10"
+                                        Padding="16">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding SeasonCount}" FontSize="28" FontWeight="Bold"/>
+                                        <TextBlock Text="Staffeln" Style="{StaticResource MutedText}" Margin="0,0,0,12"/>
+                                        <Button Content="Staffeln bearbeiten" Click="BtnSeasonGenerator_Click"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Grid.Column="2"
+                                        Background="{DynamicResource SurfaceAltBrush}"
+                                        CornerRadius="10"
+                                        Padding="16">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding OvaCount}" FontSize="28" FontWeight="Bold"/>
+                                        <TextBlock Text="OVAs, Filme &amp; Sonstiges" Style="{StaticResource MutedText}" Margin="0,0,0,12"/>
+                                        <Button Content="OVAs bearbeiten" Click="BtnOvaGenerator_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Rechte Spalte -->
+                <StackPanel Grid.Column="2">
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Tags" Style="{StaticResource SectionTitle}"/>
+                            <ItemsControl ItemsSource="{Binding Tags}" Margin="0,0,0,8">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource TagChip}">
+                                            <TextBlock Text="{Binding Designation}"
+                                                       Foreground="{DynamicResource AccentBrush}"
+                                                       FontWeight="SemiBold"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="Noch keine Tags zugeordnet."
+                                       Style="{StaticResource MutedText}"
+                                       Margin="0,0,0,10">
+                                <TextBlock.Visibility>
+                                    <Binding Path="HasTags">
+                                        <Binding.Converter>
+                                            <views:InverseBooleanToVisibilityConverter/>
+                                        </Binding.Converter>
+                                    </Binding>
+                                </TextBlock.Visibility>
+                            </TextBlock>
+                            <Button Content="Tags verwalten" HorizontalAlignment="Left" Click="BtnTagsSelector_Click"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Medien-Infos" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="Autor" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Author}" Margin="0,0,0,12"/>
+                            <TextBlock Text="Produzent" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Producer}" Margin="0,0,0,12"/>
+                            <TextBlock Text="Veröffentlicher" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding Publisher}" Margin="0,0,0,16"/>
+                            <Button Content="Veröffentlichungszeitraum bearbeiten" Click="BtnPublishingTime_Click"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Verknüpfungen" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="Vorgänger" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox ItemsSource="{Binding AnimeChoices}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="Id"
+                                      SelectedValue="{Binding Predecessor}"
+                                      Margin="0,0,0,12"/>
+                            <TextBlock Text="Nachfolger" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox ItemsSource="{Binding AnimeChoices}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="Id"
+                                      SelectedValue="{Binding Successor}"
+                                      Margin="0,0,0,12"/>
+                            <TextBlock Text="Sonstig zusammenhängender Anime" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox ItemsSource="{Binding AnimeChoices}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="Id"
+                                      SelectedValue="{Binding Related}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Kommentar" Style="{StaticResource SectionTitle}"/>
+                            <TextBox Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="120"
+                                     VerticalContentAlignment="Top"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Aktionsleiste -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource LineBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="24,14">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="{Binding CancelText}"
+                        MinWidth="130"
+                        Click="BtnCancel_Click"/>
+                <Button Style="{StaticResource PrimaryButton}"
+                        Content="{Binding SaveText}"
+                        MinWidth="170"
+                        Margin="10,0,0,0"
+                        Visibility="{Binding CanSave, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Click="BtnSave_Click"/>
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>

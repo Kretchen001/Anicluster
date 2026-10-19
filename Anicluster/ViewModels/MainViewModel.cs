@@ -1,53 +1,90 @@
 ﻿using Anicluster.Database.Services;
 using Anicluster.Dialogs;
+using Anicluster.Settings;
+using Anicluster.Theming;
 using Modells.Anime;
 using Serilog;
-using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
 
 namespace Anicluster.ViewModels {
 
     /// <summary>
-    /// ViewModel des Hauptfensters: zeigt die Anime-Liste oder (anstelle der Liste) den Editor
-    /// zum Anlegen bzw. Bearbeiten eines Animes.
+    /// ViewModel des Hauptfensters: Seitenleiste mit den Bereichen Bibliothek, Tags und Einstellungen.
+    /// Der Editor ersetzt beim Anlegen oder Bearbeiten eines Animes die Seite der Bibliothek.
     /// </summary>
     public class MainViewModel : PropertyBaseChange {
 
         private readonly IAnimeService _animeService;
         private readonly ITagService _tagService;
         private readonly IDialogService _dialogService;
-        private AnimeEditorViewModel? _editor;
-        private AnimeSortField? _sortField;
-        private bool _sortAscending = true;
+        private readonly SettingsViewModel _settingsPage;
+        private object _currentPage;
+        private NavigationTarget _navigation = NavigationTarget.Library;
 
         public string AppTitle { get; }
 
-        public ObservableCollection<AnimeListItemViewModel> Animes { get; } = [];
+        public string VersionText { get; }
 
-        /// <summary>Der geöffnete Editor, <c>null</c> solange die Liste angezeigt wird.</summary>
-        public AnimeEditorViewModel? Editor {
-            get => this._editor;
-            private set {
-                if (this.SetProperty(ref this._editor, value)) {
-                    this.OnPropertyChanged(nameof(this.IsListVisible));
-                }
-            }
+        public LibraryViewModel Library { get; }
+
+        /// <summary>Die angezeigte Seite, die View dazu liefern die DataTemplates.</summary>
+        public object CurrentPage {
+            get => this._currentPage;
+            private set => this.SetProperty(ref this._currentPage, value);
         }
 
-        public bool IsListVisible => this.Editor is null;
+        /// <summary>Der markierte Bereich der Seitenleiste. Das Setzen wechselt die Seite.</summary>
+        public NavigationTarget Navigation {
+            get => this._navigation;
+            set => this.NavigateTo(value);
+        }
 
-        public MainViewModel(IAnimeService animeService, ITagService tagService, IDialogService dialogService) {
+        public MainViewModel(
+            IAnimeService animeService,
+            ITagService tagService,
+            IDialogService dialogService,
+            ThemeService themeService,
+            AppSettingsService settingsService
+        ) {
             this._animeService = animeService;
             this._tagService = tagService;
             this._dialogService = dialogService;
-            this.AppTitle = BuildAppTitle();
-            this.RefreshAnimes();
+            this.AppTitle = GetAssemblyTitle();
+            this.VersionText = GetVersionText();
+            this._settingsPage = new SettingsViewModel(themeService, settingsService);
+            this.Library = new LibraryViewModel(animeService, settingsService);
+            this.Library.EditRequested += (sender, item) => this.EditAnime(item.Id);
+            this.Library.DeleteRequested += (sender, item) => this.DeleteAnime(item.Id, item.Name);
+            this._currentPage = this.Library;
+        }
+
+        /// <summary>Wechselt den Bereich. Offene Änderungen im Editor werden vorher abgefragt.</summary>
+        public void NavigateTo(NavigationTarget target) {
+            if (!this.ConfirmLeaveEditor()) {
+                this.OnPropertyChanged(nameof(this.Navigation)); // Markierung der Seitenleiste zurücksetzen
+                return;
+            }
+            this.DetachEditor();
+            this._navigation = target;
+            switch (target) {
+                case NavigationTarget.Tags:
+                    this.CurrentPage = new TagManagerViewModel(this._tagService, this._dialogService);
+                    break;
+                case NavigationTarget.Settings:
+                    this.CurrentPage = this._settingsPage;
+                    break;
+                default:
+                    this.Library.Refresh();
+                    this.CurrentPage = this.Library;
+                    break;
+            }
+            this.OnPropertyChanged(nameof(this.Navigation));
         }
 
         /// <summary>Öffnet den Editor für einen neuen Anime.</summary>
         public void CreateNewAnime() {
-            if (this.Editor is not null) {
+            if (this.CurrentPage is AnimeEditorViewModel) {
                 return;
             }
             this.OpenEditor(null);
@@ -57,7 +94,7 @@ namespace Anicluster.ViewModels {
         public void EditAnime(int animeId) {
             Anime? anime = this._animeService.SelectAnimeByX(animeId);
             if (anime is null) {
-                Log.Error($"EditAnime load with id: {animeId}");
+                Log.Error("EditAnime load with id: {AnimeId}", animeId);
                 this._dialogService.ShowMessage("Fehler beim Laden eines Animes\nBitte Datenbank sichern!", string.Empty, MessageBoxImage.Error);
                 return;
             }
@@ -67,7 +104,7 @@ namespace Anicluster.ViewModels {
         /// <summary>Zeigt den Dialog zum schnellen Anlegen und lädt danach die Liste neu.</summary>
         public void CreateQuickAnime() {
             this._dialogService.ShowDialog(new QuickAnimeViewModel(this._animeService, this._dialogService));
-            this.RefreshAnimes();
+            this.Library.Refresh();
         }
 
         /// <summary>Löscht den Anime nach Rückfrage samt allen zugehörigen Daten und lädt die Liste neu.</summary>
@@ -83,89 +120,47 @@ namespace Anicluster.ViewModels {
                 this._dialogService.ShowMessage("Fehler beim Löschen!\nBitte beim Log aufbewahren und Programmierer informieren.", string.Empty, MessageBoxImage.Error);
                 return;
             }
-            this.RefreshAnimes();
-        }
-
-        public void OpenTagManager() {
-            this._dialogService.ShowDialog(new TagManagerViewModel(this._tagService, this._dialogService));
-        }
-
-        /// <summary>
-        /// Sortiert die Liste. Wird dasselbe Kriterium erneut gewählt, wechselt die Richtung.
-        /// </summary>
-        public void SortAnimes(AnimeSortField field) {
-            this._sortAscending = this._sortField != field || !this._sortAscending;
-            this._sortField = field;
-            this.ApplySort();
-        }
-
-        /// <summary>Lädt die Anime-Liste neu und behält die zuletzt gewählte Sortierung bei.</summary>
-        public void RefreshAnimes() {
-            this.Animes.Clear();
-            foreach (AnimeListEntry entry in this._animeService.SelectAnimeListEntries()) {
-                AnimeListItemViewModel item = new AnimeListItemViewModel(entry);
-                item.EditRequested += this.OnItemEditRequested;
-                item.DeleteRequested += this.OnItemDeleteRequested;
-                this.Animes.Add(item);
-            }
-            this.ApplySort();
+            this.Library.Refresh();
         }
 
         private void OpenEditor(Anime? anime) {
+            this.DetachEditor();
             AnimeEditorViewModel editor = new AnimeEditorViewModel(this._animeService, this._tagService, this._dialogService, anime);
             editor.CloseRequested += this.OnEditorCloseRequested;
-            this.Editor = editor;
+            this._navigation = NavigationTarget.Library;
+            this.CurrentPage = editor;
+            this.OnPropertyChanged(nameof(this.Navigation));
         }
 
         private void OnEditorCloseRequested(object? sender, EventArgs e) {
-            if (this.Editor is not null) {
-                this.Editor.CloseRequested -= this.OnEditorCloseRequested;
-            }
-            this.Editor = null;
-            this.RefreshAnimes();
+            this.DetachEditor();
+            this._navigation = NavigationTarget.Library;
+            this.Library.Refresh();
+            this.CurrentPage = this.Library;
+            this.OnPropertyChanged(nameof(this.Navigation));
         }
 
-        private void OnItemEditRequested(object? sender, EventArgs e) {
-            if (sender is AnimeListItemViewModel item) {
-                this.EditAnime(item.Id);
-            }
-        }
-
-        private void OnItemDeleteRequested(object? sender, EventArgs e) {
-            if (sender is AnimeListItemViewModel item) {
-                this.DeleteAnime(item.Id, item.Name);
+        private void DetachEditor() {
+            if (this.CurrentPage is AnimeEditorViewModel editor) {
+                editor.CloseRequested -= this.OnEditorCloseRequested;
             }
         }
 
-        private void ApplySort() {
-            if (this._sortField is null) {
-                return;
+        /// <summary>Fragt bei ungespeicherten Änderungen im Editor nach, ob sie verworfen werden dürfen.</summary>
+        private bool ConfirmLeaveEditor() {
+            if (this.CurrentPage is AnimeEditorViewModel { IsModified: true }) {
+                return this._dialogService.Confirm("Die Änderungen sind noch nicht gespeichert und gehen verloren.\nTrotzdem wechseln?", "Änderungen verwerfen");
             }
-            IEnumerable<AnimeListItemViewModel> sorted = this._sortField switch {
-                AnimeSortField.Id => this.Animes.OrderBy(x => x.Id),
-                AnimeSortField.Name => this.Animes.OrderBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase),
-                AnimeSortField.State => this.Animes.OrderBy(x => x.State),
-                AnimeSortField.Favorite => this.Animes.OrderBy(x => x.IsFavorite),
-                AnimeSortField.Tier => this.Animes.OrderBy(x => x.Tier),
-                _ => this.Animes
-            };
-            if (!this._sortAscending) {
-                sorted = sorted.Reverse();
-            }
-            List<AnimeListItemViewModel> ordered = sorted.ToList();
-            this.Animes.Clear();
-            foreach (AnimeListItemViewModel item in ordered) {
-                this.Animes.Add(item);
-            }
+            return true;
         }
 
-        private static string BuildAppTitle() {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string title = assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "Anicluster";
-            Version? version = assembly.GetName().Version;
-            return version is null
-                ? title
-                : $"{title} - Version: {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+        private static string GetAssemblyTitle() {
+            return Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "Anicluster";
+        }
+
+        private static string GetVersionText() {
+            Version? version = Assembly.GetExecutingAssembly().GetName().Version;
+            return version is null ? string.Empty : $"Version {version.Major}.{version.Minor}.{version.Build}";
         }
     }
 }

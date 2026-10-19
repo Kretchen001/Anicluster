@@ -4,104 +4,108 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             xmlns:views="clr-namespace:Anicluster.Views"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:TagManagerViewModel}"
-             MinWidth="800"
-             MinHeight="450"
-             d:DesignHeight="450"
-             d:DesignWidth="800">
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="↳"
-                      Background="Beige">
-                <MenuItem Header="Export List"/>
-                <MenuItem Header="Import List"/>
-            </MenuItem>
-            <MenuItem Header="Tag hinzufügen"
-                      Click="MenuItemAddTag_Click"/>
-            <MenuItem Header="Ausgewählten Tag Löschen (einer!)"
-                      Click="MenuItemDeleteSelectedTag_Click"/>
-            <MenuItem Header="{Binding SearchToggleText}"
-                      Click="MenuItemTagSearch_Click"/>
-        </Menu>
-        <Grid Margin="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0"
-                  Visibility="{Binding IsSearchVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+             d:DesignHeight="700"
+             d:DesignWidth="1000">
+    <Grid Margin="28,24,28,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <TextBlock Text="Tags" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="{Binding CountText}"
+                       Style="{StaticResource MutedText}"
+                       VerticalAlignment="Bottom"
+                       Margin="14,0,0,5"/>
+        </StackPanel>
+
+        <!-- Suchen und neuen Tag anlegen -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,18,0,16" Padding="16">
+            <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0"
-                       VerticalAlignment="Center"
-                       VerticalContentAlignment="Center"
-                       FontSize="12">
-                    Suche:
-                </Label>
-                <TextBox Margin="10,0,10,0"
-                         Grid.Column="1"
-                         VerticalAlignment="Center"
-                         FontSize="14"
-                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Grid.Column="2"
-                        Padding="2,3"
-                        VerticalAlignment="Center"
-                        VerticalContentAlignment="Center"
-                        FontSize="14"
-                        Click="BtnClearSearch_Click">
-                    Suche leeren
-                </Button>
+
+                <Grid Grid.Column="0" VerticalAlignment="Top">
+                    <TextBox x:Name="SearchBox"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Padding="38,6,10,6"/>
+                    <TextBlock Text="&#xE721;"
+                               FontFamily="{StaticResource IconFont}"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               Margin="14,0,0,0"
+                               VerticalAlignment="Center"
+                               IsHitTestVisible="False"/>
+                    <TextBlock Text="Tags durchsuchen …"
+                               Foreground="{DynamicResource TextMutedBrush}"
+                               Margin="39,0,0,0"
+                               VerticalAlignment="Center"
+                               IsHitTestVisible="False"
+                               Visibility="{Binding Text, ElementName=SearchBox, Converter={StaticResource EmptyToVisibilityConverter}}"/>
+                </Grid>
+
+                <StackPanel Grid.Column="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <TextBox x:Name="NewTagBox"
+                                     Text="{Binding NewTagName, UpdateSourceTrigger=PropertyChanged}"
+                                     KeyDown="NewTagBox_KeyDown"/>
+                            <TextBlock Text="Neuen Tag anlegen …"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       Margin="11,0,0,0"
+                                       VerticalAlignment="Center"
+                                       IsHitTestVisible="False"
+                                       Visibility="{Binding Text, ElementName=NewTagBox, Converter={StaticResource EmptyToVisibilityConverter}}"/>
+                        </Grid>
+                        <Button Grid.Column="1"
+                                Style="{StaticResource PrimaryButton}"
+                                Content="Hinzufügen"
+                                Margin="8,0,0,0"
+                                IsEnabled="{Binding CanAddTag}"
+                                Click="BtnAddTag_Click"/>
+                    </Grid>
+                    <TextBlock Text="Diesen Tag gibt es schon."
+                               Foreground="{DynamicResource DangerBrush}"
+                               FontSize="12"
+                               Margin="2,6,0,0"
+                               Visibility="{Binding IsNewTagNameDuplicate, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
             </Grid>
-            <DataGrid Grid.Row="1"
-                      ItemsSource="{Binding FilteredTags}"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      HeadersVisibility="Column"
-                      Margin="0,0,0,5"
-                      SelectedItem="{Binding SelectedTag, Mode=TwoWay}">
+        </Border>
+
+        <!-- Alle Tags -->
+        <Border Grid.Row="2" Style="{StaticResource Card}" Padding="0">
+            <DataGrid ItemsSource="{Binding FilteredTags}"
+                      IsReadOnly="True"
+                      CanUserSortColumns="False"
+                      CanUserResizeColumns="False"
+                      CanUserReorderColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Id"
-                                        IsReadOnly="True"
-                                        Binding="{Binding Id}"
-                                        Width="Auto"/>
-                    <DataGridTextColumn Header="Tag"
-                                        IsReadOnly="True"
-                                        Binding="{Binding Designation}"
-                                        Width="*"/>
+                    <DataGridTextColumn Header="Tag" Binding="{Binding Designation}" Width="*"/>
+                    <DataGridTemplateColumn Width="130">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Löschen"
+                                        Style="{StaticResource GhostButton}"
+                                        Foreground="{DynamicResource DangerBrush}"
+                                        HorizontalAlignment="Right"
+                                        Click="BtnDeleteTag_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-        </Grid>
-        <!-- Eingabe eines neuen Tags: rot, wenn es den Namen schon gibt -->
-        <Popup IsOpen="{Binding IsAddTagPopupOpen, Mode=TwoWay}"
-               Placement="Mouse"
-               StaysOpen="False">
-            <Border BorderBrush="Black"
-                    BorderThickness="1"
-                    Background="White"
-                    Padding="10">
-                <StackPanel>
-                    <TextBox Width="200"
-                             Margin="0,0,0,10"
-                             Text="{Binding NewTagName, UpdateSourceTrigger=PropertyChanged}">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Setter Property="Background" Value="LightGreen"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsNewTagNameDuplicate}" Value="True">
-                                        <Setter Property="Background" Value="IndianRed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
-                    <Button Content="OK"
-                            Click="BtnPopUp_Click"/>
-                </StackPanel>
-            </Border>
-        </Popup>
-    </DockPanel>
+        </Border>
+    </Grid>
 </UserControl>

@@ -6,28 +6,19 @@
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:NumberInputViewModel}"
-             MinWidth="300"
-             MinHeight="120"
-             d:DesignHeight="120"
-             d:DesignWidth="300">
-    <Grid>
-        <Label HorizontalAlignment="Center">
-            Bitte eine gültige Zahl unter 100 eingeben!
-        </Label>
+             d:DesignWidth="340">
+    <StackPanel Margin="24" MinWidth="320">
+        <TextBlock Text="Zahl von 0 bis 100 eingeben" FontWeight="SemiBold" Margin="0,0,0,12"/>
         <TextBox x:Name="TBInputNumber"
                  Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
-                 TabIndex="0"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Bottom"
-                 Margin="25"
-                 Width="100"
-                 Height="20"
                  KeyDown="TBInputNumber_KeyDown"/>
-        <Button Content="OK"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="10"
-                Padding="10,0,10,0"
-                Click="BtnOk_Click"/>
-    </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Abbrechen" MinWidth="100" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="OK"
+                    MinWidth="100"
+                    Margin="10,0,0,0"
+                    Click="BtnOk_Click"/>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

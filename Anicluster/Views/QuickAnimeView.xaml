@@ -3,139 +3,47 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:models="clr-namespace:Modells.Anime;assembly=Modells"
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             xmlns:views="clr-namespace:Anicluster.Views"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:QuickAnimeViewModel}"
-             MinWidth="800"
-             MinHeight="450"
-             d:DesignHeight="450"
-             d:DesignWidth="800">
-    <UserControl.Resources>
-        <!-- Stern zum Favorisieren: grau, bei Favorit gelb -->
-        <Style x:Key="FavoriteStarStyle" TargetType="Path">
-            <Setter Property="Fill" Value="#FFAFAFAF"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsFavorite}" Value="True">
-                    <Setter Property="Fill" Value="Yellow"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Border CornerRadius="0"
-                Grid.Row="0"
-                Background="LightBlue">
-            <Grid>
-                <Label x:Name="LbName"
-                       Content="{Binding Name}"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       Margin="25,0,0,0"
-                       Height="40"
-                       MinWidth="300"
-                       FontWeight="Bold"
-                       VerticalContentAlignment="Center"
-                       MouseLeftButtonDown="LbName_MouseLeftButtonDown"
-                       FontSize="20"
-                       Background="Transparent"/>
-                <TextBox x:Name="TBName"
-                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-                         VerticalAlignment="Center"
-                         HorizontalAlignment="Left"
-                         Margin="25,0,0,0"
-                         Height="40"
-                         MinWidth="300"
-                         VerticalContentAlignment="Center"
-                         KeyDown="TBName_KeyDown"
-                         FontSize="20"
-                         LostFocus="TBName_LostFocus"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         Foreground="Black"/>
-                <Viewbox VerticalAlignment="Center"
-                         HorizontalAlignment="Right"
-                         Margin="10,10,25,10"
-                         Height="75"
-                         ToolTip="Favorisieren?">
-                    <Canvas Height="50"
-                            Width="50">
-                        <Path Style="{StaticResource FavoriteStarStyle}"
-                              Stretch="Uniform"
-                              Data="M 25,0 L 31,20 H 50 L 34,31 L 40,50 L 25,39 L 10,50 L 16,31 L 0,20 H 19 Z"
-                              MouseDown="StarPath_MouseDown"/>
-                    </Canvas>
-                </Viewbox>
-            </Grid>
-        </Border>
-        <GroupBox Header="Bewertung"
-                  FontSize="14"
-                  Padding="5"
-                  Margin="0,10,0,0"
-                  Grid.Row="1">
-            <!-- Tier-Auswahl: das Tier steht im Tag des Buttons, der gewählte Button erhält einen schwarzen Rahmen -->
-            <UniformGrid Columns="6"
-                         Height="50">
-                <Button Style="{StaticResource RoundedButton}"
-                        Background="DeepSkyBlue"
-                        Foreground="Black"
-                        Content="S"
-                        Tag="{x:Static models:Tier.S}"
-                        BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.S}}"
-                        BorderThickness="3"
-                        Click="BtnTier_Click"/>
-                <Button Style="{StaticResource RoundedButton}"
-                        Background="#FF00BD00"
-                        Foreground="Black"
-                        Content="A"
-                        Tag="{x:Static models:Tier.A}"
-                        BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.A}}"
-                        BorderThickness="3"
-                        Click="BtnTier_Click"/>
-                <Button Style="{StaticResource RoundedButton}"
-                        Background="Yellow"
-                        Foreground="Black"
-                        Content="B"
-                        Tag="{x:Static models:Tier.B}"
-                        BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.B}}"
-                        BorderThickness="3"
-                        Click="BtnTier_Click"/>
-                <Button Style="{StaticResource RoundedButton}"
-                        Background="Orange"
-                        Foreground="Black"
-                        Content="C"
-                        Tag="{x:Static models:Tier.C}"
-                        BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.C}}"
-                        BorderThickness="3"
-                        Click="BtnTier_Click"/>
-                <Button Style="{StaticResource RoundedButton}"
-                        Background="Red"
-                        Content="D"
-                        Tag="{x:Static models:Tier.D}"
-                        BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.D}}"
-                        BorderThickness="3"
-                        Click="BtnTier_Click"/>
-                <Button Style="{StaticResource RoundedButton}"
-                        Background="DarkRed"
-                        Content="E"
-                        Tag="{x:Static models:Tier.E}"
-                        BorderBrush="{Binding Tier, Converter={StaticResource TierSelectedConverter}, ConverterParameter={x:Static models:Tier.E}}"
-                        BorderThickness="3"
-                        Click="BtnTier_Click"/>
-            </UniformGrid>
-        </GroupBox>
-        <Button Grid.Row="2"
-                Margin="25,5,25,5"
-                Height="50"
-                Background="#FF86DE83"
-                FontSize="14"
-                Style="{StaticResource RoundedGreenButton}"
-                Content="Hinzufügen"
-                Click="BtnAdd_Click"/>
-    </Grid>
+             d:DesignWidth="560">
+    <StackPanel Margin="28" MinWidth="520">
+        <TextBlock Text="Neuer Anime (kurz)" FontSize="20" FontWeight="SemiBold"/>
+        <TextBlock Text="Nur Name, Favorit und Tier. Alles Weitere kannst du später ergänzen."
+                   Style="{StaticResource MutedText}"
+                   TextWrapping="Wrap"
+                   Margin="0,4,0,22"/>
+
+        <TextBlock Text="Name" Style="{StaticResource FieldLabel}"/>
+        <Grid Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="TBName"
+                     Grid.Column="0"
+                     FontSize="15"
+                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                     KeyDown="TBName_KeyDown"/>
+            <ToggleButton Grid.Column="1"
+                          Style="{StaticResource StarToggleStyle}"
+                          Width="34"
+                          Height="34"
+                          Margin="14,0,0,0"
+                          IsChecked="{Binding IsFavorite}"/>
+        </Grid>
+
+        <TextBlock Text="Tier" Style="{StaticResource FieldLabel}" Margin="0,0,0,8"/>
+        <views:TierPickerView HorizontalAlignment="Left" Margin="0,0,0,28"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Abbrechen" MinWidth="110" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="Hinzufügen"
+                    MinWidth="130"
+                    Margin="10,0,0,0"
+                    Click="BtnAdd_Click"/>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

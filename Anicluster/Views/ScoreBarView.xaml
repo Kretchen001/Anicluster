@@ -6,23 +6,29 @@
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:ScoreViewModel}"
-             d:DesignHeight="24"
-             d:DesignWidth="250">
+             d:DesignHeight="30"
+             d:DesignWidth="280">
     <!-- Bewertungsbalken: Mausrad ändert den Wert, ein Klick öffnet die Zahleneingabe. DataContext ist ein ScoreViewModel. -->
-    <Grid>
-        <ProgressBar Maximum="100"
-                     Height="24"
-                     Margin="3"
+    <Grid Background="Transparent"
+          Margin="0,4"
+          ToolTip="Bewertung: klicken und Zahl eingeben oder Mausrad verwenden"
+          MouseWheel="Bar_MouseWheel"
+          MouseLeftButtonDown="Bar_MouseLeftButtonDown"
+          Cursor="Hand">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <ProgressBar Grid.Column="0"
+                     Maximum="100"
+                     Height="14"
                      Value="{Binding Value, Mode=OneWay}"
-                     ToolTip="Bewertung, bitte klicken und Zahlen eingeben oder Mausrad verwenden"
-                     MouseWheel="ProgressBar_MouseWheel"
-                     MouseLeftButtonDown="ProgressBar_MouseLeftButtonDown"
                      Foreground="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource SmoothProgressBarColorConverter}}"/>
-        <Label Content="{Binding Value}"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               IsHitTestVisible="False"
-               Foreground="Black"
-               Background="Transparent"/>
+        <TextBlock Grid.Column="1"
+                   Text="{Binding Value}"
+                   FontWeight="SemiBold"
+                   MinWidth="40"
+                   TextAlignment="Right"
+                   VerticalAlignment="Center"/>
     </Grid>
 </UserControl>
