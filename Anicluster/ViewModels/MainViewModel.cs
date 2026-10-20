@@ -172,7 +172,7 @@ namespace Anicluster.ViewModels {
         }
 
         private TimelineViewModel CreateTimeline() {
-            TimelineViewModel timeline = new TimelineViewModel(this._animeService);
+            TimelineViewModel timeline = new TimelineViewModel(this._animeService, this._tagService);
             timeline.EditRequested += (sender, animeId) => this.EditAnime(animeId);
             return timeline;
         }

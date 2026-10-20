@@ -18,21 +18,28 @@
 
         <!-- Balken: Farbe nach Tier, bei „Nach Status“ nach dem Status des Animes -->
         <DataTemplate x:Key="BarTemplate" DataType="{x:Type vm:TimelineBarViewModel}">
+            <!-- Die äußere Fläche ist so hoch wie die Zeile und mindestens 14 Pixel breit, damit auch kurze Zeiträume
+                 (Filme, offene Enden) gut mit der Maus zu treffen sind. -->
             <Border Width="{Binding Width}"
-                    Height="18"
-                    CornerRadius="5"
-                    Margin="0,7,0,0"
+                    MinWidth="14"
+                    Height="32"
+                    Background="Transparent"
+                    ToolTipService.InitialShowDelay="150"
+                    ToolTipService.ShowDuration="20000"
                     ToolTip="{Binding Tooltip}">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Setter Property="Background" Value="{Binding Tier, Converter={StaticResource TierBrushConverter}}"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ColorByTier}" Value="False">
-                                <Setter Property="Background" Value="{Binding State, Converter={StaticResource StateBrushConverter}}"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
+                <Border Height="18"
+                        CornerRadius="5">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="{Binding Tier, Converter={StaticResource TierBrushConverter}}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ColorByTier}" Value="False">
+                                    <Setter Property="Background" Value="{Binding State, Converter={StaticResource StateBrushConverter}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
             </Border>
         </DataTemplate>
 
@@ -42,7 +49,10 @@
                     Height="18"
                     Margin="0,7,0,0"
                     Background="{DynamicResource SurfaceBrush}"
-                    Opacity="0.85"/>
+                    Opacity="0.85"
+                    ToolTipService.InitialShowDelay="150"
+                    ToolTipService.ShowDuration="20000"
+                    ToolTip="{Binding Tooltip}"/>
         </DataTemplate>
 
         <!-- Zeile des Zeitstrahls, Doppelklick öffnet den Anime -->
@@ -71,8 +81,7 @@
                     </ItemsControl>
                     <ItemsControl ItemsSource="{Binding Gaps}"
                                   ItemTemplate="{StaticResource GapTemplate}"
-                                  ItemContainerStyle="{StaticResource LeftContainerStyle}"
-                                  IsHitTestVisible="False">
+                                  ItemContainerStyle="{StaticResource LeftContainerStyle}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Canvas/>
@@ -109,10 +118,12 @@
     <Grid Margin="28,24,28,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Titel und Bedienung -->
+        <!-- Titel und Zoom -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -126,19 +137,6 @@
                            Margin="14,0,0,5"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <TextBox Width="200"
-                         Margin="0,0,16,0"
-                         VerticalAlignment="Center"
-                         ToolTip="Nach Namen filtern"
-                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
-                <ToggleButton Content="Farbe: Tier"
-                              Style="{StaticResource ChipStyle}"
-                              Margin="0,0,8,0"
-                              IsChecked="{Binding ColorByTier}"/>
-                <ToggleButton Content="Farbe: Status"
-                              Style="{StaticResource ChipStyle}"
-                              Margin="0,0,16,0"
-                              IsChecked="{Binding ColorByState}"/>
                 <TextBlock Text="Zoom" Style="{StaticResource MutedText}" VerticalAlignment="Center" Margin="0,0,8,0"/>
                 <Slider Width="160"
                         VerticalAlignment="Center"
@@ -148,7 +146,150 @@
             </StackPanel>
         </Grid>
 
-        <Border Grid.Row="1" Style="{StaticResource Card}" Padding="0" Margin="0,18,0,0" ClipToBounds="True">
+        <!-- Filter und Farbe -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,16,0,0">
+            <Grid Width="260" Margin="0,0,12,0">
+                <TextBox x:Name="NameSearchBox"
+                         VerticalAlignment="Center"
+                         ToolTip="Nach Namen filtern"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Nach Name filtern …"
+                           Foreground="{DynamicResource TextMutedBrush}"
+                           Margin="12,0,0,0"
+                           VerticalAlignment="Center"
+                           IsHitTestVisible="False"
+                           Visibility="{Binding Text, ElementName=NameSearchBox, Converter={StaticResource EmptyToVisibilityConverter}}"/>
+            </Grid>
+                <Button x:Name="TagFilterButton"
+                        Content="{Binding TagButtonText}"
+                        Margin="0,0,16,0"
+                        Padding="14,6"
+                        VerticalAlignment="Center"
+                        ToolTip="Nach Tags filtern"
+                        Click="BtnTagFilter_Click"/>
+                <Popup x:Name="TagFilterPopup"
+                       PlacementTarget="{Binding ElementName=TagFilterButton}"
+                       Placement="Bottom"
+                       StaysOpen="False"
+                       AllowsTransparency="True"
+                       Closed="TagFilterPopup_Closed">
+                    <Border Background="{DynamicResource SurfaceBrush}"
+                            BorderBrush="{DynamicResource LineBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="12"
+                            Margin="0,4,12,12"
+                            Width="300">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="14" ShadowDepth="2" Opacity="0.3"/>
+                        </Border.Effect>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <TextBox x:Name="TagSearchBox"
+                                         Text="{Binding TagSearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Text="Tags filtern …"
+                                           Foreground="{DynamicResource TextMutedBrush}"
+                                           Margin="8,0,0,0"
+                                           VerticalAlignment="Center"
+                                           IsHitTestVisible="False"
+                                           Visibility="{Binding Text, ElementName=TagSearchBox, Converter={StaticResource EmptyToVisibilityConverter}}"/>
+                            </Grid>
+                            <ScrollViewer Grid.Row="1"
+                                          Margin="0,8,0,8"
+                                          MaxHeight="300"
+                                          VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding FilteredTags}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Tag.Designation}"
+                                                      IsChecked="{Binding IsSelected}"
+                                                      Margin="2,3"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                            <Button Grid.Row="2"
+                                    Content="Alle abwählen"
+                                    HorizontalAlignment="Right"
+                                    Click="BtnClearTags_Click"/>
+                        </Grid>
+                    </Border>
+                </Popup>
+                <ToggleButton Content="Farbe: Tier"
+                              Style="{StaticResource ChipStyle}"
+                              Margin="0,0,8,0"
+                              IsChecked="{Binding ColorByTier}"/>
+                <ToggleButton Content="Farbe: Status"
+                              Style="{StaticResource ChipStyle}"
+                              Margin="0,0,0,0"
+                              IsChecked="{Binding ColorByState}"/>
+        </StackPanel>
+
+        <!-- Aktiver Tag-Filter -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource AccentSoftBrush}"
+                CornerRadius="12"
+                Padding="14,10,14,2"
+                Margin="0,14,0,0"
+                Visibility="{Binding HasTagFilter, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <WrapPanel>
+                <TextBlock Text="Tag-Filter:"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,8"/>
+                <ItemsControl ItemsSource="{Binding SelectedTags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{DynamicResource SurfaceBrush}"
+                                    CornerRadius="14"
+                                    Padding="12,2,2,2"
+                                    Margin="0,0,6,8">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"
+                                               Foreground="{DynamicResource AccentBrush}"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                    <Button Content="✕"
+                                            Style="{StaticResource GhostButton}"
+                                            Padding="7,3"
+                                            FontSize="11"
+                                            ToolTip="Tag aus dem Filter entfernen"
+                                            Click="BtnRemoveTag_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Orientation="Horizontal"
+                            Margin="8,0,0,0"
+                            Visibility="{Binding HasMultipleTagFilters, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="Alle Tags"
+                                 Margin="0,0,6,8"
+                                 IsChecked="{Binding TagMatchMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:TagMatchMode.All}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="Ein Tag genügt"
+                                 Margin="0,0,6,8"
+                                 IsChecked="{Binding TagMatchMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:TagMatchMode.Any}}"/>
+                </StackPanel>
+                <Button Content="Zurücksetzen"
+                        Style="{StaticResource GhostButton}"
+                        Margin="4,0,0,8"
+                        Click="BtnClearTags_Click"/>
+            </WrapPanel>
+        </Border>
+
+        <Border Grid.Row="3" Style="{StaticResource Card}" Padding="0" Margin="0,14,0,0" ClipToBounds="True">
             <Grid>
                 <!-- Hinweis, wenn nichts angezeigt werden kann -->
                 <TextBlock Text="{Binding EmptyText}"
@@ -216,7 +357,10 @@
                                   VerticalScrollBarVisibility="Visible"
                                   ScrollChanged="MainScroll_ScrollChanged"
                                   PreviewMouseWheel="MainScroll_PreviewMouseWheel">
-                        <Grid Width="{Binding Width}" Height="{Binding BodyHeight}">
+                        <Grid Width="{Binding Width}"
+                              Height="{Binding BodyHeight}"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top">
                             <!-- Senkrechte Linien je Jahresmarke -->
                             <ItemsControl ItemsSource="{Binding Ticks}"
                                           ItemContainerStyle="{StaticResource LeftContainerStyle}"

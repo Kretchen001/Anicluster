@@ -169,7 +169,8 @@ namespace Anicluster.Database.Services {
             try {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {
                     List<TimelineBase> animes = session.Query(
-                        @"SELECT a.Id, a.Name, a.Favorite, a.Tier, COALESCE(s.State, 0), pt.StartDate, pt.EndDate
+                        @"SELECT a.Id, a.Name, a.Favorite, a.Tier, COALESCE(s.State, 0), pt.StartDate, pt.EndDate,
+                                 (SELECT GROUP_CONCAT(m.TagId) FROM AnimeTagAssociativeEntity m WHERE m.AnimeId = a.Id)
                             FROM Anime a
                             LEFT JOIN Status s ON s.AnimeId = a.Id
                             LEFT JOIN MediaInfo mi ON mi.AnimeId = a.Id
@@ -181,7 +182,8 @@ namespace Anicluster.Database.Services {
                             reader.GetBool(2),
                             (Tier)reader.GetInt(3),
                             (State)reader.GetInt(4),
-                            ToSpan(reader.GetDate(5), reader.GetDate(6))
+                            ToSpan(reader.GetDate(5), reader.GetDate(6)),
+                            ParseIds(reader.GetStringOrNull(7))
                         )
                     );
                     Dictionary<int, List<TimelineSeason>> seasons = [];
@@ -215,7 +217,8 @@ namespace Anicluster.Database.Services {
                     return animes.Select(x => new TimelineEntry(
                         x.Id, x.Name, x.IsFavorite, x.Tier, x.State, x.Run,
                         seasons.GetValueOrDefault(x.Id) ?? [],
-                        interruptions.GetValueOrDefault(x.Id) ?? []
+                        interruptions.GetValueOrDefault(x.Id) ?? [],
+                        x.TagIds
                     )).ToList();
                 }
             }
@@ -226,7 +229,8 @@ namespace Anicluster.Database.Services {
         }
 
         /// <summary>Ein Anime mit seinem Gesamtzeitraum, noch ohne Staffeln und Unterbrechungen.</summary>
-        private record TimelineBase(int Id, string Name, bool IsFavorite, Tier Tier, State State, TimelineSpan? Run);
+        private record TimelineBase(
+            int Id, string Name, bool IsFavorite, Tier Tier, State State, TimelineSpan? Run, IReadOnlyList<int> TagIds);
 
         private static void AddTo<T>(Dictionary<int, List<T>> target, int animeId, T item) {
             if (!target.TryGetValue(animeId, out List<T>? list)) {

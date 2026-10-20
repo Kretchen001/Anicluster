@@ -8,9 +8,12 @@ Installation
   ersten Start automatisch migriert und vorher gesichert.
 
 Neu in 2.3.0
-- Zeitstrahl: Animes nach Veröffentlichungszeitraum auf einer Zeitachse, mit Staffeln, Unterbrechungen, Zoom und Suche
-- Geschmacksprofil: zeigt, welche Tags bei deinen Lieblingen auffällig oft oder selten vorkommen
-- Passende Animes der Wunschliste werden nach Passung vorgeschlagen und lassen sich in der Bibliothek filtern
+- Geschmacksprofil: zeigt, welche Tags bei deinen Lieblingen (Tier S bis D, Favoriten) auffällig oft oder selten vorkommen
+- Animes mit wählbarem Status werden nach Passung vorgeschlagen ("Passt zu dir" und "Passt leidlich zu dir" über zwei
+  Schwellwerte) und lassen sich in der Bibliothek filtern
+- Zeitstrahl: Animes nach Veröffentlichungszeitraum auf einer Zeitachse, mit Staffeln, Unterbrechungen und Heute-Linie,
+  Zoom, waagerechtem Scrollen, Tooltips und Filter nach Name und Tags
+- Die Datenbankstruktur bleibt unverändert, es ist keine Migration nötig
 
 Neu in 2.2.0
 - Bilder: Jeder Anime kann ein Cover erhalten (Datei wählen, aus der Zwischenablage einfügen oder per Drag and Drop)

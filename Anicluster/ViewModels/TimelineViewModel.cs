@@ -2,6 +2,8 @@
 using Anicluster.Timeline;
 using Modells.Anime;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace Anicluster.ViewModels {
 
@@ -24,12 +26,24 @@ namespace Anicluster.ViewModels {
         private double _pixelsPerYear = 120.0;
         private string _searchText = string.Empty;
         private bool _colorByTier = true;
+        private string _tagSearchText = string.Empty;
+        private TagMatchMode _tagMatchMode = TagMatchMode.All;
+        private bool _isUpdatingTags;
         private double _width;
         private double _todayLeft;
         private int _withoutPeriodCount;
 
         /// <summary>Die sichtbaren Zeilen, früheste Veröffentlichung zuerst</summary>
         public ObservableCollection<TimelineRowViewModel> Rows { get; } = [];
+
+        /// <summary>Alle Tags mit Auswahlzustand für die Tag-Auswahl</summary>
+        public ObservableCollection<TagItemViewModel> AllTags { get; } = [];
+
+        /// <summary>Gefilterte Sicht auf <see cref="AllTags"/> (nach <see cref="TagSearchText"/>)</summary>
+        public ICollectionView FilteredTags { get; }
+
+        /// <summary>Die gewählten Tags, nach denen der Zeitstrahl gefiltert wird</summary>
+        public ObservableCollection<TagFilterItem> SelectedTags { get; } = [];
 
         /// <summary>Die Jahresmarken der Zeitachse</summary>
         public ObservableCollection<TimelineTick> Ticks { get; } = [];
@@ -60,6 +74,31 @@ namespace Anicluster.ViewModels {
                 }
             }
         }
+
+        public string TagSearchText {
+            get => this._tagSearchText;
+            set {
+                if (this.SetProperty(ref this._tagSearchText, value)) {
+                    this.FilteredTags.Refresh();
+                }
+            }
+        }
+
+        public TagMatchMode TagMatchMode {
+            get => this._tagMatchMode;
+            set {
+                if (this.SetProperty(ref this._tagMatchMode, value)) {
+                    this.Rebuild();
+                }
+            }
+        }
+
+        public bool HasTagFilter => this.SelectedTags.Count > 0;
+
+        public bool HasMultipleTagFilters => this.SelectedTags.Count > 1;
+
+        /// <summary>Beschriftung des Auswahlknopfes, z. B. „Tags (3) ▾“</summary>
+        public string TagButtonText => this.SelectedTags.Count == 0 ? "Tags ▾" : $"Tags ({this.SelectedTags.Count}) ▾";
 
         public bool ColorByTier {
             get => this._colorByTier;
@@ -104,13 +143,61 @@ namespace Anicluster.ViewModels {
         }
 
         /// <summary>Hinweis, wenn nichts angezeigt werden kann</summary>
-        public string EmptyText => this._searchText.Trim().Length > 0
-            ? "Kein Anime mit diesem Namen hat einen Veröffentlichungszeitraum."
+        public string EmptyText => this._searchText.Trim().Length > 0 || this.HasTagFilter
+            ? "Kein Anime mit Veröffentlichungszeitraum passt zu den Filtern."
             : "Noch kein Anime hat einen Veröffentlichungszeitraum. Trage ihn im Editor bei den Medieninfos oder den Staffeln ein.";
 
-        public TimelineViewModel(IAnimeService animeService) {
+        public TimelineViewModel(IAnimeService animeService, ITagService tagService) {
             this._entries = animeService.SelectTimelineEntries();
+            foreach (Tag tag in tagService.SelectAllTags()) {
+                TagItemViewModel item = new TagItemViewModel(tag);
+                item.PropertyChanged += this.OnTagItemChanged;
+                this.AllTags.Add(item);
+            }
+            this.FilteredTags = CollectionViewSource.GetDefaultView(this.AllTags);
+            this.FilteredTags.Filter = this.MatchesTagSearch;
             this.Rebuild();
+        }
+
+        /// <summary>Entfernt einen Tag aus dem Filter.</summary>
+        public void RemoveTag(TagFilterItem tag) {
+            TagItemViewModel? item = this.AllTags.FirstOrDefault(x => x.Tag.Id == tag.Id);
+            if (item is not null) {
+                item.IsSelected = false;
+            }
+        }
+
+        /// <summary>Wählt alle Tags ab.</summary>
+        public void ClearTags() {
+            this._isUpdatingTags = true;
+            foreach (TagItemViewModel item in this.AllTags) {
+                item.IsSelected = false;
+            }
+            this._isUpdatingTags = false;
+            this.UpdateSelectedTags();
+        }
+
+        private void OnTagItemChanged(object? sender, PropertyChangedEventArgs e) {
+            if (e.PropertyName == nameof(TagItemViewModel.IsSelected) && !this._isUpdatingTags) {
+                this.UpdateSelectedTags();
+            }
+        }
+
+        private void UpdateSelectedTags() {
+            this.SelectedTags.Clear();
+            foreach (TagItemViewModel item in this.AllTags.Where(x => x.IsSelected)) {
+                this.SelectedTags.Add(new TagFilterItem(item.Tag.Id, item.Tag.Designation));
+            }
+            this.OnPropertyChanged(nameof(this.HasTagFilter));
+            this.OnPropertyChanged(nameof(this.HasMultipleTagFilters));
+            this.OnPropertyChanged(nameof(this.TagButtonText));
+            this.Rebuild();
+        }
+
+        private bool MatchesTagSearch(object item) {
+            return item is TagItemViewModel tagItem
+                && (this._tagSearchText.Length == 0
+                    || tagItem.Tag.Designation.Contains(this._tagSearchText, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>Vergrößert (Faktor über 1) oder verkleinert (unter 1) den Zoom, z. B. per Strg + Mausrad.</summary>
@@ -119,7 +206,9 @@ namespace Anicluster.ViewModels {
         }
 
         private void Rebuild() {
-            TimelineLayoutResult layout = TimelineLayout.Calculate(this._entries, this._pixelsPerYear, DateTime.Today, this._searchText);
+            List<int> tagIds = this.SelectedTags.Select(x => x.Id).ToList();
+            TimelineLayoutResult layout = TimelineLayout.Calculate(
+                this._entries, this._pixelsPerYear, DateTime.Today, this._searchText, tagIds, this._tagMatchMode == TagMatchMode.All);
             this.Rows.Clear();
             foreach (TimelineRowLayout rowLayout in layout.Rows) {
                 TimelineRowViewModel row = new TimelineRowViewModel(rowLayout, this._colorByTier);

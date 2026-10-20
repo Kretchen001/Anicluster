@@ -13,7 +13,7 @@
 
     /// <summary>
     /// Schlanke Darstellung eines Animes für den Zeitstrahl: seine Veröffentlichungszeiträume (gesamt und je Staffel)
-    /// und die Unterbrechungen. <paramref name="Run"/> ist <c>null</c>, wenn kein Zeitraum für den Anime eingetragen ist.
+    /// die Unterbrechungen und die Ids seiner Tags (für den Tag-Filter). <paramref name="Run"/> ist <c>null</c>, wenn kein Zeitraum für den Anime eingetragen ist.
     /// </summary>
     public record TimelineEntry(
         int Id,
@@ -23,5 +23,6 @@
         State State,
         TimelineSpan? Run,
         IReadOnlyList<TimelineSeason> Seasons,
-        IReadOnlyList<TimelineInterruption> Interruptions);
+        IReadOnlyList<TimelineInterruption> Interruptions,
+        IReadOnlyList<int> TagIds);
 }

@@ -15,6 +15,7 @@ namespace Anicluster.Views {
         private const double WheelZoomFactor = 1.15;
 
         private TimelineViewModel? _subscribedViewModel;
+        private DateTime _tagPopupClosedAt = DateTime.MinValue;
 
         private TimelineViewModel? ViewModel => this.DataContext as TimelineViewModel;
 
@@ -78,6 +79,28 @@ namespace Anicluster.Views {
             else if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) {
                 this.MainScroll.ScrollToHorizontalOffset(this.MainScroll.HorizontalOffset - e.Delta);
                 e.Handled = true;
+            }
+        }
+
+        /// <summary>Öffnet die Tag-Auswahl. Ein Klick, der das offene Fenster nur schließt, öffnet es nicht gleich wieder.</summary>
+        private void BtnTagFilter_Click(object sender, RoutedEventArgs e) {
+            if ((DateTime.Now - this._tagPopupClosedAt).TotalMilliseconds > 250) {
+                this.TagFilterPopup.IsOpen = true;
+                this.TagSearchBox.Focus();
+            }
+        }
+
+        private void TagFilterPopup_Closed(object? sender, EventArgs e) {
+            this._tagPopupClosedAt = DateTime.Now;
+        }
+
+        private void BtnClearTags_Click(object sender, RoutedEventArgs e) {
+            this.ViewModel?.ClearTags();
+        }
+
+        private void BtnRemoveTag_Click(object sender, RoutedEventArgs e) {
+            if (sender is FrameworkElement { DataContext: TagFilterItem tag }) {
+                this.ViewModel?.RemoveTag(tag);
             }
         }
 

@@ -7,7 +7,7 @@ namespace Anicluster.Timeline {
     public record TimelineBarLayout(double Left, double Width, string Tooltip);
 
     /// <summary>Eine Pause innerhalb eines Balkens.</summary>
-    public record TimelineGapLayout(double Left, double Width);
+    public record TimelineGapLayout(double Left, double Width, string Tooltip);
 
     /// <summary>Eine Zeile des Zeitstrahls: ein Anime mit seinen Balken und Pausen.</summary>
     public record TimelineRowLayout(TimelineEntry Entry, IReadOnlyList<TimelineBarLayout> Bars, IReadOnlyList<TimelineGapLayout> Gaps);
@@ -41,8 +41,15 @@ namespace Anicluster.Timeline {
         /// <param name="pixelsPerYear">Breite eines Jahres in Pixeln (Zoom)</param>
         /// <param name="today">Heutiges Datum (Heute-Linie, spätestes Ende der Achse)</param>
         /// <param name="search">Teil des Namens, nach dem die Zeilen gefiltert werden (leer = alle)</param>
+        /// <param name="tagIds">Tags, nach denen die Zeilen gefiltert werden (leer = alle)</param>
+        /// <param name="matchAllTags"><c>true</c> = der Anime braucht alle Tags, <c>false</c> = ein Tag genügt</param>
         public static TimelineLayoutResult Calculate(
-            IReadOnlyList<TimelineEntry> entries, double pixelsPerYear, DateTime today, string search) {
+            IReadOnlyList<TimelineEntry> entries,
+            double pixelsPerYear,
+            DateTime today,
+            string search,
+            IReadOnlyCollection<int> tagIds,
+            bool matchAllTags) {
             List<(TimelineEntry Entry, List<(string Label, TimelineSpan Span)> Parts)> dated = [];
             foreach (TimelineEntry entry in entries) {
                 List<(string Label, TimelineSpan Span)> parts = GetParts(entry);
@@ -67,11 +74,21 @@ namespace Anicluster.Timeline {
             string filter = search.Trim();
             List<TimelineRowLayout> rows = dated
                 .Where(x => filter.Length == 0 || x.Entry.Name.Contains(filter, StringComparison.CurrentCultureIgnoreCase))
+                .Where(x => MatchesTags(x.Entry, tagIds, matchAllTags))
                 .OrderBy(x => x.Parts.Min(p => p.Span.Start))
                 .ThenBy(x => x.Entry.Name, StringComparer.CurrentCultureIgnoreCase)
                 .Select(x => CreateRow(x.Entry, x.Parts, origin, pixelsPerYear))
                 .ToList();
             return new TimelineLayoutResult(rows, CreateTicks(origin, last.Year, pixelsPerYear), width, ToX(today, origin, pixelsPerYear), withoutPeriod);
+        }
+
+        private static bool MatchesTags(TimelineEntry entry, IReadOnlyCollection<int> tagIds, bool matchAll) {
+            if (tagIds.Count == 0) {
+                return true;
+            }
+            return matchAll
+                ? tagIds.All(id => entry.TagIds.Contains(id))
+                : tagIds.Any(id => entry.TagIds.Contains(id));
         }
 
         /// <summary>Die Teile eines Animes, die als Balken gezeichnet werden: seine Staffeln, sonst der Gesamtzeitraum.</summary>
@@ -101,7 +118,7 @@ namespace Anicluster.Timeline {
                     if (gapEnd > gapStart) {
                         double gapLeft = ToX(gapStart, origin, pixelsPerYear);
                         double gapWidth = ToX(gapEnd, origin, pixelsPerYear) - gapLeft;
-                        gaps.Add(new TimelineGapLayout(gapLeft, Math.Max(gapWidth, 2.0)));
+                        gaps.Add(new TimelineGapLayout(gapLeft, Math.Max(gapWidth, 2.0), CreateGapTooltip(gapStart, gapEnd)));
                     }
                 }
             }
@@ -109,11 +126,45 @@ namespace Anicluster.Timeline {
         }
 
         private static string CreateTooltip(string name, string label, TimelineSpan span) {
-            string start = span.Start.ToString("d", CultureInfo.CurrentCulture);
-            string period = span.End.HasValue
-                ? $"{start} – {span.End.Value.ToString("d", CultureInfo.CurrentCulture)}"
-                : $"{start} – Ende unbekannt";
-            return label.Length == 0 ? $"{name}\n{period}" : $"{name}\n{label}: {period}";
+            List<string> lines = [name];
+            if (label.Length > 0) {
+                lines.Add(label);
+            }
+            lines.Add($"Von: {FormatDate(span.Start)}");
+            lines.Add(span.End.HasValue
+                ? $"Bis: {FormatDate(span.End.Value)} ({FormatDuration(span.Start, span.End.Value)})"
+                : "Bis: Ende unbekannt");
+            return string.Join("\n", lines);
+        }
+
+        private static string CreateGapTooltip(DateTime start, DateTime end) {
+            return $"Pause\nVon: {FormatDate(start)}\nBis: {FormatDate(end)} ({FormatDuration(start, end)})";
+        }
+
+        private static string FormatDate(DateTime date) {
+            return date.ToString("d. MMMM yyyy", CultureInfo.CurrentCulture);
+        }
+
+        /// <summary>Dauer in Tagen, Wochen, Monaten oder Jahren, je nachdem was sich für die Länge anbietet.</summary>
+        private static string FormatDuration(DateTime start, DateTime end) {
+            int days = (int)Math.Round((end - start).TotalDays) + 1;
+            if (days <= 1) {
+                return "1 Tag";
+            }
+            if (days < 14) {
+                return $"{days} Tage";
+            }
+            if (days < 90) {
+                return $"{days / 7} Wochen";
+            }
+            int months = (int)Math.Round(days / 30.44);
+            if (months < 24) {
+                return $"{months} Monate";
+            }
+            int years = months / 12;
+            int restMonths = months % 12;
+            string yearText = years == 1 ? "1 Jahr" : $"{years} Jahre";
+            return restMonths == 0 ? yearText : $"{yearText}, {restMonths} Monate";
         }
 
         /// <summary>Jahresmarken; bei starkem Verkleinern werden nur noch alle 2 oder 5 Jahre beschriftet.</summary>
