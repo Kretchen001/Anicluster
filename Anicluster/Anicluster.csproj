@@ -1,18 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<NeutralLanguage>de</NeutralLanguage>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BiboAnime\BiboAnime.csproj" />
-  </ItemGroup>
+		<Version>2.1.0</Version>
+		<FileVersion>$(Version)</FileVersion>
+		<InformationalVersion>$(Version)</InformationalVersion>
+		<Title>Anicluster</Title>
+		<Description></Description>
+	</PropertyGroup>
+	
+	<Target Name="WriteVersionToFile" AfterTargets="Publish">
+		<WriteLinesToFile File="$(PublishDir)version.txt" Lines="$(Version)" Overwrite="true" />
+	</Target>
+	<!-- Optional: "dotnet publish -p:BuildSetup=true" baut anschließend den Installer (Inno Setup 6 muss installiert sein) -->
+	<Target Name="Setup" AfterTargets="WriteVersionToFile" Condition="'$(BuildSetup)' == 'true'">
+		<Exec Command="&quot;$(MSBuildProgramFiles32)\Inno Setup 6\ISCC.exe&quot; &quot;$(ProjectDir)..\InnoSetup\setupSkript.iss&quot;" />
+	</Target>
 
-  <ItemGroup>
-    <Folder Include="png\" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.10" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
+		<PackageReference Include="WpfMath" Version="2.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Modells\Modells.csproj" />
+	</ItemGroup>
 
 </Project>

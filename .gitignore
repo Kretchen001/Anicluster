@@ -1,7 +1,12 @@
 .vs
+.vscode
 */bin
 */obj
 Anicluster/Properties/PublishProfiles/FolderProfile.pubxml.user
 InnoSetup/*.exe
 *.snk
 *.user
+Doku
+/SqlScripts/*.pdf
+/SqlScripts/*.sql
+!/SqlScripts/Tag-Initialize.sql

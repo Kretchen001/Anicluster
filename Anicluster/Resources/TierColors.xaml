@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Feste Farben für Tiers und Status, unabhängig vom gewählten Design (in beiden Designs gut sichtbar) -->
+    <SolidColorBrush x:Key="TierSBrush" Color="#2EB8F0"/>
+    <SolidColorBrush x:Key="TierABrush" Color="#3DBE6B"/>
+    <SolidColorBrush x:Key="TierBBrush" Color="#F2C94C"/>
+    <SolidColorBrush x:Key="TierCBrush" Color="#F29B38"/>
+    <SolidColorBrush x:Key="TierDBrush" Color="#E5534B"/>
+    <SolidColorBrush x:Key="TierEBrush" Color="#9B2C2C"/>
+    <SolidColorBrush x:Key="TierNotDefinedBrush" Color="#9AA3AF"/>
+
+    <SolidColorBrush x:Key="StateWishlistBrush" Color="#8E99A8"/>
+    <SolidColorBrush x:Key="StateStartedBrush" Color="#3B82F6"/>
+    <SolidColorBrush x:Key="StateFinishedBrush" Color="#22A06B"/>
+    <SolidColorBrush x:Key="StateInterruptedBrush" Color="#E5A100"/>
+    <SolidColorBrush x:Key="StateCanceledBrush" Color="#D64545"/>
+</ResourceDictionary>

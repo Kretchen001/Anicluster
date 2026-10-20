@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="Anicluster.Views.QuickAnimeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             xmlns:views="clr-namespace:Anicluster.Views"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:QuickAnimeViewModel}"
+             d:DesignWidth="560">
+    <StackPanel Margin="28" MinWidth="520">
+        <TextBlock Text="Neuer Anime (kurz)" FontSize="20" FontWeight="SemiBold"/>
+        <TextBlock Text="Nur Name, Favorit und Tier. Alles Weitere kannst du später ergänzen."
+                   Style="{StaticResource MutedText}"
+                   TextWrapping="Wrap"
+                   Margin="0,4,0,22"/>
+
+        <TextBlock Text="Name" Style="{StaticResource FieldLabel}"/>
+        <Grid Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="TBName"
+                     Grid.Column="0"
+                     FontSize="15"
+                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                     KeyDown="TBName_KeyDown"/>
+            <ToggleButton Grid.Column="1"
+                          Style="{StaticResource StarToggleStyle}"
+                          Width="34"
+                          Height="34"
+                          Margin="14,0,0,0"
+                          IsChecked="{Binding IsFavorite}"/>
+        </Grid>
+
+        <TextBlock Text="Tier" Style="{StaticResource FieldLabel}" Margin="0,0,0,8"/>
+        <views:TierPickerView HorizontalAlignment="Left" Margin="0,0,0,28"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Abbrechen" MinWidth="110" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="Hinzufügen"
+                    MinWidth="130"
+                    Margin="10,0,0,0"
+                    Click="BtnAdd_Click"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

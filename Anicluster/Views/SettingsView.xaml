@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="Anicluster.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             xmlns:theming="clr-namespace:Anicluster.Theming"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
+             d:DesignHeight="800"
+             d:DesignWidth="1000">
+    <ScrollViewer VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,24,28,28" MaxWidth="980" HorizontalAlignment="Left">
+            <TextBlock Text="Einstellungen" Style="{StaticResource PageTitle}" Margin="0,0,0,20"/>
+
+            <!-- Designauswahl -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Design" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="Wähle das Erscheinungsbild der Anwendung. Die Änderung gilt sofort und wird gespeichert."
+                               Style="{StaticResource MutedText}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,14"/>
+                    <WrapPanel>
+                        <RadioButton Style="{StaticResource ChipStyle}" Content="Hell" MinWidth="90"
+                                     IsChecked="{Binding Mode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static theming:ThemeMode.Light}}"/>
+                        <RadioButton Style="{StaticResource ChipStyle}" Content="Dunkel" MinWidth="90"
+                                     IsChecked="{Binding Mode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static theming:ThemeMode.Dark}}"/>
+                        <RadioButton Style="{StaticResource ChipStyle}" Content="Custom" MinWidth="90"
+                                     IsChecked="{Binding Mode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static theming:ThemeMode.Custom}}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Eigene Farben, nur im Custom-Design -->
+            <Border Style="{StaticResource Card}"
+                    Margin="0,0,0,20"
+                    Visibility="{Binding IsCustomMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel>
+                    <TextBlock Text="Eigene Farben" Style="{StaticResource SectionTitle}" Margin="0,0,0,6"/>
+                    <TextBlock Text="Aus vier Farben berechnet die Anwendung alle weiteren (Rahmen, Hover, gedämpfter Text). Du siehst jede Änderung sofort in der ganzen Anwendung."
+                               Style="{StaticResource MutedText}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,14"/>
+                    <WrapPanel Margin="0,0,0,14">
+                        <Button Content="Von Hell übernehmen" Margin="0,0,8,0" Click="BtnUseLight_Click"/>
+                        <Button Content="Von Dunkel übernehmen" Click="BtnUseDark_Click"/>
+                    </WrapPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <ContentControl Content="{Binding BackgroundColor}"/>
+                            <ContentControl Content="{Binding SurfaceColor}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <ContentControl Content="{Binding TextColor}"/>
+                            <ContentControl Content="{Binding AccentColor}"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Vorschau: verwendet dieselben Farben wie die ganze Anwendung -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Vorschau" Style="{StaticResource SectionTitle}"/>
+                    <Border Background="{DynamicResource BackgroundBrush}"
+                            BorderBrush="{DynamicResource LineBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="18">
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <TextBlock Text="Beispiel-Anime" FontSize="16" FontWeight="SemiBold"/>
+                                <TextBlock Text="So sehen Karten, Texte und Schaltflächen aus."
+                                           Style="{StaticResource MutedText}"
+                                           Margin="0,2,0,12"/>
+                                <WrapPanel Margin="0,0,0,6">
+                                    <Border Style="{StaticResource TagChip}">
+                                        <TextBlock Text="Beispiel-Tag"
+                                                   Foreground="{DynamicResource AccentBrush}"
+                                                   FontWeight="SemiBold"/>
+                                    </Border>
+                                    <Border Style="{StaticResource TagChip}">
+                                        <TextBlock Text="Action"
+                                                   Foreground="{DynamicResource AccentBrush}"
+                                                   FontWeight="SemiBold"/>
+                                    </Border>
+                                </WrapPanel>
+                                <ProgressBar Value="72" Maximum="100" Height="12" Margin="0,4,0,14"/>
+                                <TextBox Text="Eingabefeld" Margin="0,0,0,14"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource PrimaryButton}" Content="Hauptaktion"/>
+                                    <Button Content="Nebenaktion" Margin="8,0,0,0"/>
+                                    <Button Style="{StaticResource DangerButton}" Content="Löschen" Margin="8,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

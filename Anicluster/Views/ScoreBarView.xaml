@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="Anicluster.Views.ScoreBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:ScoreViewModel}"
+             d:DesignHeight="30"
+             d:DesignWidth="280">
+    <!-- Bewertungsbalken: Mausrad ändert den Wert, ein Klick öffnet die Zahleneingabe. DataContext ist ein ScoreViewModel. -->
+    <Grid Background="Transparent"
+          Margin="0,4"
+          ToolTip="Bewertung: klicken und Zahl eingeben oder Mausrad verwenden"
+          MouseWheel="Bar_MouseWheel"
+          MouseLeftButtonDown="Bar_MouseLeftButtonDown"
+          Cursor="Hand">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <ProgressBar Grid.Column="0"
+                     Maximum="100"
+                     Height="14"
+                     Value="{Binding Value, Mode=OneWay}"
+                     Foreground="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource SmoothProgressBarColorConverter}}"/>
+        <TextBlock Grid.Column="1"
+                   Text="{Binding Value}"
+                   FontWeight="SemiBold"
+                   MinWidth="40"
+                   TextAlignment="Right"
+                   VerticalAlignment="Center"/>
+    </Grid>
+</UserControl>

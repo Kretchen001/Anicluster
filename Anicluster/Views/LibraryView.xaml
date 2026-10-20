@@ -1,0 +1,264 @@
+﻿<UserControl x:Class="Anicluster.Views.LibraryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             xmlns:settings="clr-namespace:Anicluster.Settings"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:LibraryViewModel}"
+             d:DesignHeight="760"
+             d:DesignWidth="1050">
+    <UserControl.Resources>
+        <!-- Zeilen der Tabelle: Doppelklick öffnet, Rechtsklick markiert die Zeile für das Kontextmenü -->
+        <Style x:Key="TableRowStyle" TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+            <EventSetter Event="MouseDoubleClick" Handler="TableRow_MouseDoubleClick"/>
+            <EventSetter Event="PreviewMouseRightButtonDown" Handler="TableRow_PreviewMouseRightButtonDown"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="28,24,28,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titel und Umschalter der Darstellung -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <TextBlock Text="Bibliothek" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="{Binding CountText}"
+                           Style="{StaticResource MutedText}"
+                           VerticalAlignment="Bottom"
+                           Margin="14,0,0,5"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <RadioButton Style="{StaticResource ChipStyle}"
+                             Content="Karten"
+                             Margin="0,0,6,0"
+                             IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static settings:LibraryViewMode.Cards}}"/>
+                <RadioButton Style="{StaticResource ChipStyle}"
+                             Content="Tabelle"
+                             Margin="0"
+                             IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static settings:LibraryViewMode.Table}}"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Suche, Filter und Sortierung -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,18,0,16" Padding="16,14,16,6">
+            <StackPanel>
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <TextBox x:Name="SearchBox"
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 Padding="38,6,10,6"/>
+                        <TextBlock Text="&#xE721;"
+                                   FontFamily="{StaticResource IconFont}"
+                                   Foreground="{DynamicResource TextMutedBrush}"
+                                   Margin="14,0,0,0"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False"/>
+                        <TextBlock Text="Anime suchen …"
+                                   Foreground="{DynamicResource TextMutedBrush}"
+                                   Margin="39,0,0,0"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False"
+                                   Visibility="{Binding Text, ElementName=SearchBox, Converter={StaticResource EmptyToVisibilityConverter}}"/>
+                    </Grid>
+
+                    <ComboBox Grid.Column="1"
+                              Width="140"
+                              Margin="12,0,0,0"
+                              ItemsSource="{Binding TierOptions}"
+                              DisplayMemberPath="Label"
+                              SelectedValuePath="Value"
+                              SelectedValue="{Binding TierFilter}"/>
+                    <ComboBox Grid.Column="2"
+                              Width="150"
+                              Margin="8,0,0,0"
+                              ItemsSource="{Binding SortOptions}"
+                              DisplayMemberPath="Label"
+                              SelectedValuePath="Value"
+                              SelectedValue="{Binding SortField}"
+                              ToolTip="Sortieren nach"/>
+                    <ToggleButton Grid.Column="3"
+                                  Style="{StaticResource ChipStyle}"
+                                  Margin="8,0,0,0"
+                                  MinWidth="110"
+                                  Content="{Binding SortDirectionText}"
+                                  IsChecked="{Binding SortDescending}"/>
+                </Grid>
+
+                <WrapPanel>
+                    <RadioButton Style="{StaticResource ChipStyle}" Content="Alle"
+                                 IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:LibraryStatusFilter.All}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}" Content="Wunschliste"
+                                 IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:LibraryStatusFilter.Wishlist}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}" Content="Begonnen"
+                                 IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:LibraryStatusFilter.Started}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}" Content="Beendet"
+                                 IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:LibraryStatusFilter.Finished}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}" Content="Unterbrochen"
+                                 IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:LibraryStatusFilter.Interrupted}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}" Content="Abgebrochen"
+                                 IsChecked="{Binding StatusFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:LibraryStatusFilter.Canceled}}"/>
+                    <ToggleButton Style="{StaticResource ChipStyle}"
+                                  Content="★ Nur Favoriten"
+                                  IsChecked="{Binding OnlyFavorites}"/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Aktiver Tag-Filter (z. B. aus dem Tag-Netzwerk übernommen) -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource AccentSoftBrush}"
+                CornerRadius="12"
+                Padding="14,10,14,2"
+                Margin="0,0,0,16"
+                Visibility="{Binding HasTagFilter, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <WrapPanel>
+                <TextBlock Text="Tag-Filter:"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,8"/>
+                <ItemsControl ItemsSource="{Binding TagFilters}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{DynamicResource SurfaceBrush}"
+                                    CornerRadius="14"
+                                    Padding="12,2,2,2"
+                                    Margin="0,0,6,8">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"
+                                               Foreground="{DynamicResource AccentBrush}"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                    <Button Content="✕"
+                                            Style="{StaticResource GhostButton}"
+                                            Padding="7,3"
+                                            FontSize="11"
+                                            ToolTip="Tag aus dem Filter entfernen"
+                                            Click="BtnRemoveTagFilter_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Orientation="Horizontal"
+                            Margin="8,0,0,0"
+                            Visibility="{Binding HasMultipleTagFilters, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="Alle Tags"
+                                 Margin="0,0,6,8"
+                                 IsChecked="{Binding TagMatchMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:TagMatchMode.All}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="Ein Tag genügt"
+                                 Margin="0,0,6,8"
+                                 IsChecked="{Binding TagMatchMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:TagMatchMode.Any}}"/>
+                </StackPanel>
+                <Button Content="Zurücksetzen"
+                        Style="{StaticResource GhostButton}"
+                        Margin="4,0,0,8"
+                        Click="BtnClearTagFilter_Click"/>
+            </WrapPanel>
+        </Border>
+
+        <!-- Inhalt: Karten oder Tabelle -->
+        <Grid Grid.Row="3">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Visibility="{Binding IsCardView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ItemsControl ItemsSource="{Binding Items}" Margin="0,0,6,0"/>
+            </ScrollViewer>
+
+            <Border Style="{StaticResource Card}"
+                    Padding="0"
+                    Visibility="{Binding IsTableView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <DataGrid x:Name="Table"
+                          ItemsSource="{Binding Items}"
+                          IsReadOnly="True"
+                          CanUserSortColumns="True"
+                          CanUserResizeColumns="False"
+                          CanUserReorderColumns="False"
+                          RowStyle="{StaticResource TableRowStyle}"
+                          Sorting="Table_Sorting">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Details anzeigen" Click="TableMenuItemDetails_Click"/>
+                            <MenuItem Header="Löschen" Click="TableMenuItemDelete_Click"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Tier" SortMemberPath="Tier" Width="90">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Width="34" Height="26"
+                                            CornerRadius="7"
+                                            HorizontalAlignment="Left"
+                                            Background="{Binding Tier, Converter={StaticResource TierBrushConverter}}">
+                                        <TextBlock Text="{Binding TierText}"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{Binding Tier, Converter={StaticResource TierBrushConverter}, ConverterParameter=Text}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" SortMemberPath="Name" Width="*"/>
+                        <DataGridTemplateColumn Header="Status" SortMemberPath="State" Width="170">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="9" Height="9"
+                                                 Margin="0,0,8,0"
+                                                 VerticalAlignment="Center"
+                                                 Fill="{Binding State, Converter={StaticResource StateBrushConverter}}"/>
+                                        <TextBlock Text="{Binding StateText}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Favorit" SortMemberPath="Favorite" Width="90">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="★"
+                                               FontSize="16"
+                                               Foreground="#F5B301"
+                                               Visibility="{Binding IsFavorite, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <!-- Hinweis, wenn nichts angezeigt wird -->
+            <TextBlock Text="{Binding EmptyText}"
+                       Style="{StaticResource MutedText}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       MaxWidth="420"
+                       Visibility="{Binding IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </Grid>
+    </Grid>
+</UserControl>

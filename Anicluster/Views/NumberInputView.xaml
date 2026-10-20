@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="Anicluster.Views.NumberInputView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:NumberInputViewModel}"
+             d:DesignWidth="340">
+    <StackPanel Margin="24" MinWidth="320">
+        <TextBlock Text="Zahl von 0 bis 100 eingeben" FontWeight="SemiBold" Margin="0,0,0,12"/>
+        <TextBox x:Name="TBInputNumber"
+                 Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                 KeyDown="TBInputNumber_KeyDown"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Abbrechen" MinWidth="100" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="OK"
+                    MinWidth="100"
+                    Margin="10,0,0,0"
+                    Click="BtnOk_Click"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

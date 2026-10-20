@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="Anicluster.Views.TierPickerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:Modells.Anime;assembly=Modells">
+    <!-- Auswahl des Tiers. Der DataContext muss eine Property "Tier" besitzen (Editor und Schnellanlage haben sie). -->
+    <StackPanel Orientation="Horizontal">
+        <RadioButton Style="{StaticResource TierChipStyle}" Content="S"
+                     Background="{StaticResource TierSBrush}" Foreground="#111827"
+                     IsChecked="{Binding Tier, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:Tier.S}}"/>
+        <RadioButton Style="{StaticResource TierChipStyle}" Content="A"
+                     Background="{StaticResource TierABrush}" Foreground="#111827"
+                     IsChecked="{Binding Tier, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:Tier.A}}"/>
+        <RadioButton Style="{StaticResource TierChipStyle}" Content="B"
+                     Background="{StaticResource TierBBrush}" Foreground="#111827"
+                     IsChecked="{Binding Tier, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:Tier.B}}"/>
+        <RadioButton Style="{StaticResource TierChipStyle}" Content="C"
+                     Background="{StaticResource TierCBrush}" Foreground="#111827"
+                     IsChecked="{Binding Tier, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:Tier.C}}"/>
+        <RadioButton Style="{StaticResource TierChipStyle}" Content="D"
+                     Background="{StaticResource TierDBrush}" Foreground="White"
+                     IsChecked="{Binding Tier, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:Tier.D}}"/>
+        <RadioButton Style="{StaticResource TierChipStyle}" Content="E"
+                     Background="{StaticResource TierEBrush}" Foreground="White"
+                     IsChecked="{Binding Tier, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static models:Tier.E}}"/>
+    </StackPanel>
+</UserControl>
