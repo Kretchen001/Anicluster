@@ -165,6 +165,90 @@ namespace Anicluster.Database.Services {
             }
         }
 
+        public List<TimelineEntry> SelectTimelineEntries() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    List<TimelineBase> animes = session.Query(
+                        @"SELECT a.Id, a.Name, a.Favorite, a.Tier, COALESCE(s.State, 0), pt.StartDate, pt.EndDate
+                            FROM Anime a
+                            LEFT JOIN Status s ON s.AnimeId = a.Id
+                            LEFT JOIN MediaInfo mi ON mi.AnimeId = a.Id
+                            LEFT JOIN PublishingTime pt ON pt.MediaInfoId = mi.Id
+                            ORDER BY a.Id;",
+                        reader => new TimelineBase(
+                            reader.GetInt(0),
+                            reader.GetString(1),
+                            reader.GetBool(2),
+                            (Tier)reader.GetInt(3),
+                            (State)reader.GetInt(4),
+                            ToSpan(reader.GetDate(5), reader.GetDate(6))
+                        )
+                    );
+                    Dictionary<int, List<TimelineSeason>> seasons = [];
+                    session.Query(
+                        @"SELECT se.AnimeId, se.Number, pt.StartDate, pt.EndDate
+                            FROM Season se
+                            JOIN PublishingTime pt ON pt.SeasonId = se.Id
+                            ORDER BY se.AnimeId, se.Number;",
+                        reader => (
+                            AnimeId: reader.GetInt(0),
+                            Season: ToSeason(reader.GetInt(1), reader.GetDate(2), reader.GetDate(3)))
+                    ).ForEach(x => {
+                        if (x.Season is not null) {
+                            AddTo(seasons, x.AnimeId, x.Season);
+                        }
+                    });
+                    Dictionary<int, List<TimelineInterruption>> interruptions = [];
+                    session.Query(
+                        @"SELECT COALESCE(mi.AnimeId, se.AnimeId), i.StartDate, i.EndDate
+                            FROM Interruption i
+                            JOIN PublishingTime pt ON pt.Id = i.PublishingTimeId
+                            LEFT JOIN MediaInfo mi ON mi.Id = pt.MediaInfoId
+                            LEFT JOIN Season se ON se.Id = pt.SeasonId
+                            ORDER BY i.StartDate;",
+                        reader => (AnimeId: reader.GetInt(0), Start: reader.GetDate(1), End: reader.GetDate(2))
+                    ).ForEach(x => {
+                        if (x.Start.Year > 1 && x.End >= x.Start) {
+                            AddTo(interruptions, x.AnimeId, new TimelineInterruption(x.Start, x.End));
+                        }
+                    });
+                    return animes.Select(x => new TimelineEntry(
+                        x.Id, x.Name, x.IsFavorite, x.Tier, x.State, x.Run,
+                        seasons.GetValueOrDefault(x.Id) ?? [],
+                        interruptions.GetValueOrDefault(x.Id) ?? []
+                    )).ToList();
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Zeiträume für den Zeitstrahl konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
+        /// <summary>Ein Anime mit seinem Gesamtzeitraum, noch ohne Staffeln und Unterbrechungen.</summary>
+        private record TimelineBase(int Id, string Name, bool IsFavorite, Tier Tier, State State, TimelineSpan? Run);
+
+        private static void AddTo<T>(Dictionary<int, List<T>> target, int animeId, T item) {
+            if (!target.TryGetValue(animeId, out List<T>? list)) {
+                list = [];
+                target[animeId] = list;
+            }
+            list.Add(item);
+        }
+
+        /// <summary>Wandelt Start und Ende in einen Zeitraum um. Ohne Startdatum gibt es keinen Zeitraum, ohne Ende ist es offen.</summary>
+        private static TimelineSpan? ToSpan(DateTime start, DateTime end) {
+            if (start.Year <= 1) {
+                return null;
+            }
+            return new TimelineSpan(start, end.Year > 1 && end >= start ? end : null);
+        }
+
+        private static TimelineSeason? ToSeason(int number, DateTime start, DateTime end) {
+            TimelineSpan? span = ToSpan(start, end);
+            return span is null ? null : new TimelineSeason(number, span);
+        }
+
         public byte[]? SelectThumbnail(int animeId) {
             try {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {

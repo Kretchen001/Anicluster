@@ -8,6 +8,7 @@ Installation
   ersten Start automatisch migriert und vorher gesichert.
 
 Neu in 2.3.0
+- Zeitstrahl: Animes nach Veröffentlichungszeitraum auf einer Zeitachse, mit Staffeln, Unterbrechungen, Zoom und Suche
 - Geschmacksprofil: zeigt, welche Tags bei deinen Lieblingen auffällig oft oder selten vorkommen
 - Passende Animes der Wunschliste werden nach Passung vorgeschlagen und lassen sich in der Bibliothek filtern
 

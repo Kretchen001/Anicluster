@@ -93,6 +93,9 @@ namespace Anicluster.ViewModels {
                 case NavigationTarget.TasteProfile:
                     this.CurrentPage = this.CreateTasteProfile();
                     break;
+                case NavigationTarget.Timeline:
+                    this.CurrentPage = this.CreateTimeline();
+                    break;
                 case NavigationTarget.Settings:
                     this.CurrentPage = this._settingsPage;
                     break;
@@ -166,6 +169,12 @@ namespace Anicluster.ViewModels {
             profile.EditRequested += (sender, item) => this.EditAnime(item.Id);
             profile.ShowInLibraryRequested += (sender, e) => this.ShowLibraryWithTags(e.Tags, e.Mode, e.Status);
             return profile;
+        }
+
+        private TimelineViewModel CreateTimeline() {
+            TimelineViewModel timeline = new TimelineViewModel(this._animeService);
+            timeline.EditRequested += (sender, animeId) => this.EditAnime(animeId);
+            return timeline;
         }
 
         private void OpenEditor(Anime? anime) {

@@ -6,6 +6,7 @@ Für Versionen vor 2.1.0 gibt es keine Tags im Verlauf, sie sind deshalb nach Ze
 ## [2.3.0] – 2026-10-20
 
 ### Hinzugefügt
+- **Zeitstrahl**: Neuer Bereich in der Seitenleiste unter dem Geschmacksprofil. Alle Animes mit eingetragenem Veröffentlichungszeitraum erscheinen als Balken auf einer gemeinsamen Zeitachse (Staffeln einzeln, Unterbrechungen als Lücken, Heute-Linie). Die Farbe folgt wahlweise dem Tier oder dem Status. Zoom per Regler, Filter nach Namen, Doppelklick öffnet den Anime. Animes ohne Zeitraum werden nur gezählt.
 - **Geschmacksprofil**: Neuer Bereich in der Seitenleiste unter dem Tag-Netzwerk. Aus den gesehenen Animes, die du als Lieblinge gewählt hast (Tier S, A, optional B sowie Favoriten), wird berechnet, welche Tags dort auffällig häufiger oder seltener vorkommen als im Rest der Bibliothek. Die Listen „Das magst du“ und „Eher nicht dein Ding“ zeigen Balken, Faktor und Begründung, „Zeigen“ filtert die Bibliothek nach dem Tag.
 - **Vorschläge aus der Wunschliste**: Animes der Wunschliste werden nach Passung zum Profil sortiert (mit den passenden Tags). Der Status der bewerteten Animes ist wählbar (auch „Alle Stati“). Zwei Schwellwerte teilen sie in „Passt zu dir“ und „Passt leidlich zu dir“. Als Liebling können die Tiers S bis D sowie Favoriten zählen. „In Bibliothek filtern“ zeigt die Wunschliste gefiltert nach den stärksten Tags des Profils.
 

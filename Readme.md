@@ -1,4 +1,4 @@
-# Anicluster
+﻿# Anicluster
 
 <img src="Anicluster/Resources/Icon/Anicluster-64.png" alt="Anicluster icon" width="64" align="right">
 
@@ -42,6 +42,7 @@ Anicluster ist eine Windows-Desktopanwendung (WPF, .NET 8), mit der du deine Ani
 - **Bilder**: Cover per Dateiauswahl, aus der Zwischenablage oder per Drag and Drop einfügen. Bilder werden verkleinert in der Datenbank gespeichert, dazu entsteht eine zugeschnittene Vorschau (2:3).
 - **Tags** verwalten und im **Tag-Netzwerk** ansehen: Die Größe folgt der Häufigkeit, oft gemeinsam vorkommende Tags liegen näher beieinander. Die Auswahl lässt sich als Filter in die Bibliothek übernehmen.
 - **Geschmacksprofil**: Wertet aus, welche Tags bei deinen Lieblingen (Tier S/A, Favoriten) auffällig oft oder selten vorkommen, und schlägt dazu passende Animes deiner Wunschliste vor. Die Tiers, die als Liebling zählen, sind wählbar.
+- **Zeitstrahl**: Zeigt alle Animes mit Veröffentlichungszeitraum als Balken auf einer Zeitachse, mit Staffeln, Unterbrechungen, Zoom und Namensfilter.
 - **Themes**: Hell, Dunkel und eigene Farbpalette mit Live-Vorschau.
 - **Schnell hinzufügen** für Animes, die nur Name, Tier und Favorit brauchen.
 - Versteckte **SQL-Konsole** (Rechtsklick auf die Versionsnummer) für Fortgeschrittene. Verändernde Befehle werden bestätigt und protokolliert.
@@ -96,6 +97,7 @@ Anicluster/
   Converters/            Wertkonverter
   TagNetwork/            Layout-Simulation des Tag-Netzwerks (reines C#)
   TasteProfile/          Berechnung des Geschmacksprofils (reines C#)
+  Timeline/              Berechnung des Zeitstrahl-Layouts (reines C#)
 InnoSetup/               Installer-Skript
 SqlScripts/              Import- und Demodaten, Tag-Initialisierung
 CHANGELOG.md             Änderungsverlauf
@@ -126,6 +128,7 @@ Anicluster is a Windows desktop application (WPF, .NET 8) for managing your anim
 - **Images**: add a cover via file picker, from the clipboard or by drag and drop. Images are downscaled and stored in the database, together with a cropped 2:3 thumbnail.
 - **Tags** management and the **tag network**: size follows frequency, tags that often appear together sit closer. A selection can be applied as a filter in the library.
 - **Taste profile**: analyses which tags appear unusually often or rarely among your favourites (tier S/A, favourites) and suggests matching animes from your wishlist. The tiers that count as favourites are selectable.
+- **Timeline**: shows all animes with a publishing period as bars on a time axis, including seasons, interruptions, zoom and name filter.
 - **Themes**: light, dark and a custom palette with live preview.
 - **Quick add** for entries that only need a name, tier and favorite flag.
 - Hidden **SQL console** (right-click the version number) for advanced users. Modifying statements require confirmation and are logged.
@@ -180,6 +183,7 @@ Anicluster/
   Converters/            Value converters
   TagNetwork/            Layout simulation of the tag network (plain C#)
   TasteProfile/          Calculation of the taste profile (plain C#)
+  Timeline/              Calculation of the timeline layout (plain C#)
 InnoSetup/               Installer script
 SqlScripts/              Import and demo data, tag initialization
 CHANGELOG.md             Change history

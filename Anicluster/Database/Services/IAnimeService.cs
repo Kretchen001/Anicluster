@@ -23,6 +23,9 @@ namespace Anicluster.Database.Services {
         /// <summary>Lädt alle Animes in der schlanken Form für die Listenansicht.</summary>
         List<AnimeListEntry> SelectAnimeListEntries();
 
+        /// <summary>Lädt alle Animes mit ihren Veröffentlichungszeiträumen für den Zeitstrahl.</summary>
+        List<TimelineEntry> SelectTimelineEntries();
+
         /// <summary>Lädt nur die kleine Vorschau des Bildes. <c>null</c>, wenn der Anime kein Bild hat oder das Laden fehlschlug.</summary>
         byte[]? SelectThumbnail(int animeId);
     }

@@ -6,6 +6,7 @@
         Tags,
         TagNetwork,
         TasteProfile,
+        Timeline,
         Settings
     }
 }
