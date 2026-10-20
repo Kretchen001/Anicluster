@@ -17,6 +17,7 @@ namespace Anicluster.ViewModels {
         private string _searchText = string.Empty;
         private LibraryStatusFilter _statusFilter = LibraryStatusFilter.All;
         private LibraryTierFilter _tierFilter = LibraryTierFilter.All;
+        private TagMatchMode _tagMatchMode = TagMatchMode.All;
         private bool _onlyFavorites;
         private AnimeSortField _sortField = AnimeSortField.Name;
         private bool _sortAscending = true;
@@ -24,6 +25,9 @@ namespace Anicluster.ViewModels {
         private int _visibleCount;
 
         public ObservableCollection<AnimeListItemViewModel> Animes { get; } = [];
+
+        /// <summary>Tags, nach denen gefiltert wird (z. B. aus dem Tag-Netzwerk übernommen)</summary>
+        public ObservableCollection<TagFilterItem> TagFilters { get; } = [];
 
         /// <summary>Gefilterte und sortierte Sicht auf <see cref="Animes"/>, daran binden die Views.</summary>
         public ICollectionView Items { get; }
@@ -80,6 +84,19 @@ namespace Anicluster.ViewModels {
                 }
             }
         }
+
+        public TagMatchMode TagMatchMode {
+            get => this._tagMatchMode;
+            set {
+                if (this.SetProperty(ref this._tagMatchMode, value)) {
+                    this.RefreshFilter();
+                }
+            }
+        }
+
+        public bool HasTagFilter => this.TagFilters.Count > 0;
+
+        public bool HasMultipleTagFilters => this.TagFilters.Count > 1;
 
         public bool OnlyFavorites {
             get => this._onlyFavorites;
@@ -190,6 +207,33 @@ namespace Anicluster.ViewModels {
             this.UpdateVisibleCount();
         }
 
+        /// <summary>Ersetzt den Tag-Filter durch die übergebenen Tags.</summary>
+        public void SetTagFilter(IEnumerable<TagFilterItem> tags, TagMatchMode mode) {
+            this.TagFilters.Clear();
+            foreach (TagFilterItem tag in tags) {
+                this.TagFilters.Add(tag);
+            }
+            this._tagMatchMode = mode;
+            this.OnPropertyChanged(nameof(this.TagMatchMode));
+            this.OnTagFilterChanged();
+        }
+
+        public void RemoveTagFilter(TagFilterItem tag) {
+            this.TagFilters.Remove(tag);
+            this.OnTagFilterChanged();
+        }
+
+        public void ClearTagFilter() {
+            this.TagFilters.Clear();
+            this.OnTagFilterChanged();
+        }
+
+        private void OnTagFilterChanged() {
+            this.OnPropertyChanged(nameof(this.HasTagFilter));
+            this.OnPropertyChanged(nameof(this.HasMultipleTagFilters));
+            this.RefreshFilter();
+        }
+
         /// <summary>Sortiert nach der Spalte, wiederholtes Wählen derselben Spalte kehrt die Richtung um (Tabellenkopf).</summary>
         public void SortBy(AnimeSortField field) {
             if (this.SortField == field) {
@@ -225,8 +269,17 @@ namespace Anicluster.ViewModels {
             if (this.TierFilter != LibraryTierFilter.All && !this.MatchesTier(anime.Tier)) {
                 return false;
             }
+            if (this.TagFilters.Count > 0 && !this.MatchesTags(anime)) {
+                return false;
+            }
             return string.IsNullOrWhiteSpace(this.SearchText)
                 || anime.Name.Contains(this.SearchText.Trim(), StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        private bool MatchesTags(AnimeListItemViewModel anime) {
+            return this.TagMatchMode == TagMatchMode.All
+                ? this.TagFilters.All(tag => anime.TagIds.Contains(tag.Id))
+                : this.TagFilters.Any(tag => anime.TagIds.Contains(tag.Id));
         }
 
         private bool MatchesStatus(State state) {

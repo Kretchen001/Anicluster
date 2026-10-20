@@ -61,6 +61,7 @@ namespace Anicluster.Theming {
             this.SetBrush("AccentSoftBrush", accentSoft);
             this.SetBrush("DangerBrush", danger);
             this.SetBrush("SuccessBrush", success);
+            this.SetBrush("EdgeBrush", ColorHelper.Blend(surface, text, isDark ? 0.34 : 0.30));
             this.SetBrush("ScrollThumbBrush", ColorHelper.Blend(surface, text, 0.28));
             this.SetBrush("HoverOverlayBrush", ColorHelper.WithAlpha(text, 0x16));
             this.SetBrush("PressedOverlayBrush", ColorHelper.WithAlpha(text, 0x2A));

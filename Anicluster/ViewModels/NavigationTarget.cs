@@ -4,6 +4,7 @@
     public enum NavigationTarget {
         Library,
         Tags,
+        TagNetwork,
         Settings
     }
 }

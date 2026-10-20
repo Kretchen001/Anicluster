@@ -139,13 +139,18 @@ namespace Anicluster.Database.Services {
             try {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {
                     return session.Query(
-                        "SELECT a.Id, a.Name, a.Favorite, a.Tier, COALESCE(s.State, 0) FROM Anime a LEFT JOIN Status s ON s.AnimeId = a.Id ORDER BY a.Id;",
+                        @"SELECT a.Id, a.Name, a.Favorite, a.Tier, COALESCE(s.State, 0),
+                                 (SELECT GROUP_CONCAT(m.TagId) FROM AnimeTagAssociativeEntity m WHERE m.AnimeId = a.Id)
+                            FROM Anime a
+                            LEFT JOIN Status s ON s.AnimeId = a.Id
+                            ORDER BY a.Id;",
                         reader => new AnimeListEntry(
                             reader.GetInt(0),
                             reader.GetString(1),
                             reader.GetBool(2),
                             (Tier)reader.GetInt(3),
-                            (State)reader.GetInt(4)
+                            (State)reader.GetInt(4),
+                            ParseIds(reader.GetStringOrNull(5))
                         )
                     );
                 }
@@ -154,6 +159,20 @@ namespace Anicluster.Database.Services {
                 Log.Error(ex, "Die Anime-Liste konnte nicht geladen werden.");
                 return [];
             }
+        }
+
+        /// <summary>Wandelt eine kommagetrennte Id-Liste (Ergebnis von GROUP_CONCAT) in Zahlen um.</summary>
+        private static List<int> ParseIds(string? ids) {
+            List<int> result = [];
+            if (string.IsNullOrEmpty(ids)) {
+                return result;
+            }
+            foreach (string part in ids.Split(',')) {
+                if (int.TryParse(part, out int id)) {
+                    result.Add(id);
+                }
+            }
+            return result;
         }
 
         /// <summary>Speichert alles, was zum Anime gehört. Setzt dabei die Ids der Kind-Objekte im Modell.</summary>

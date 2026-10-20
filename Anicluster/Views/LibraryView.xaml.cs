@@ -32,6 +32,16 @@ namespace Anicluster.Views {
             }
         }
 
+        private void BtnRemoveTagFilter_Click(object sender, RoutedEventArgs e) {
+            if (sender is FrameworkElement { DataContext: TagFilterItem tag }) {
+                this.ViewModel?.RemoveTagFilter(tag);
+            }
+        }
+
+        private void BtnClearTagFilter_Click(object sender, RoutedEventArgs e) {
+            this.ViewModel?.ClearTagFilter();
+        }
+
         private void TableRow_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
             if (sender is DataGridRow { Item: AnimeListItemViewModel item }) {
                 item.RequestEdit();

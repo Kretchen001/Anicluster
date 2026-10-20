@@ -21,6 +21,9 @@ namespace Anicluster.ViewModels {
         public Tier Tier { get; }
         public State State { get; }
 
+        /// <summary>Ids der Tags dieses Animes (für den Tag-Filter)</summary>
+        public HashSet<int> TagIds { get; }
+
         /// <summary>Kurztext des Tiers für die Tabelle ("-", wenn keins gesetzt ist)</summary>
         public string TierText => this.Tier == Tier.NotDefined ? "–" : this.Tier.ToString();
 
@@ -39,6 +42,7 @@ namespace Anicluster.ViewModels {
             this.IsFavorite = entry.IsFavorite;
             this.Tier = entry.Tier;
             this.State = entry.State;
+            this.TagIds = entry.TagIds.ToHashSet();
         }
 
         public void RequestEdit() {

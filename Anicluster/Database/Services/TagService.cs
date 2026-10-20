@@ -57,6 +57,43 @@ namespace Anicluster.Database.Services {
             }
         }
 
+        public List<TagUsage> SelectTagUsage() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return session.Query(
+                        @"SELECT t.Id, t.Designation, COUNT(m.AnimeId)
+                            FROM Tag t
+                            LEFT JOIN AnimeTagAssociativeEntity m ON m.TagId = t.Id
+                            GROUP BY t.Id, t.Designation
+                            ORDER BY t.Designation COLLATE NOCASE;",
+                        reader => new TagUsage(reader.GetInt(0), reader.GetString(1), reader.GetInt(2))
+                    );
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Tag-Häufigkeiten konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
+        public List<TagLink> SelectTagLinks() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return session.Query(
+                        @"SELECT a.TagId, b.TagId, COUNT(*)
+                            FROM AnimeTagAssociativeEntity a
+                            JOIN AnimeTagAssociativeEntity b ON b.AnimeId = a.AnimeId AND a.TagId < b.TagId
+                            GROUP BY a.TagId, b.TagId;",
+                        reader => new TagLink(reader.GetInt(0), reader.GetInt(1), reader.GetInt(2))
+                    );
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die gemeinsamen Tag-Vorkommen konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
         /// <summary>Lädt die Tags eines Animes alphabetisch sortiert.</summary>
         internal List<Tag> SelectByAnimeId(DatabaseSession session, int animeId) {
             return session.Query(

@@ -21,6 +21,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -121,8 +122,67 @@
             </StackPanel>
         </Border>
 
+        <!-- Aktiver Tag-Filter (z. B. aus dem Tag-Netzwerk übernommen) -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource AccentSoftBrush}"
+                CornerRadius="12"
+                Padding="14,10,14,2"
+                Margin="0,0,0,16"
+                Visibility="{Binding HasTagFilter, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <WrapPanel>
+                <TextBlock Text="Tag-Filter:"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,8"/>
+                <ItemsControl ItemsSource="{Binding TagFilters}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{DynamicResource SurfaceBrush}"
+                                    CornerRadius="14"
+                                    Padding="12,2,2,2"
+                                    Margin="0,0,6,8">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"
+                                               Foreground="{DynamicResource AccentBrush}"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                    <Button Content="✕"
+                                            Style="{StaticResource GhostButton}"
+                                            Padding="7,3"
+                                            FontSize="11"
+                                            ToolTip="Tag aus dem Filter entfernen"
+                                            Click="BtnRemoveTagFilter_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Orientation="Horizontal"
+                            Margin="8,0,0,0"
+                            Visibility="{Binding HasMultipleTagFilters, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="Alle Tags"
+                                 Margin="0,0,6,8"
+                                 IsChecked="{Binding TagMatchMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:TagMatchMode.All}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="Ein Tag genügt"
+                                 Margin="0,0,6,8"
+                                 IsChecked="{Binding TagMatchMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:TagMatchMode.Any}}"/>
+                </StackPanel>
+                <Button Content="Zurücksetzen"
+                        Style="{StaticResource GhostButton}"
+                        Margin="4,0,0,8"
+                        Click="BtnClearTagFilter_Click"/>
+            </WrapPanel>
+        </Border>
+
         <!-- Inhalt: Karten oder Tabelle -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           Visibility="{Binding IsCardView, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ItemsControl ItemsSource="{Binding Items}" Margin="0,0,6,0"/>
