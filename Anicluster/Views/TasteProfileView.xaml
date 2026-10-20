@@ -1,0 +1,306 @@
+﻿<UserControl x:Class="Anicluster.Views.TasteProfileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:TasteProfileViewModel}"
+             d:DesignHeight="780"
+             d:DesignWidth="1250">
+    <UserControl.Resources>
+        <!-- Ein Tag mit Balken, Faktor und Erklärung. Der Knopf „Zeigen“ filtert die Bibliothek nach diesem Tag. -->
+        <DataTemplate x:Key="TasteTagTemplate" DataType="{x:Type vm:TasteTagItemViewModel}">
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="52"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Name}"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           ToolTip="{Binding Name}"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,12,0">
+                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding BarValue, Mode=OneWay}" Height="8">
+                        <ProgressBar.Style>
+                            <Style TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAvoided}" Value="True">
+                                        <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ProgressBar.Style>
+                    </ProgressBar>
+                    <TextBlock Text="{Binding DetailText}"
+                               Style="{StaticResource MutedText}"
+                               FontSize="11"
+                               TextWrapping="Wrap"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+                <TextBlock Grid.Column="2"
+                           Text="{Binding LiftText}"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"
+                           ToolTip="Faktor gegenüber dem Durchschnitt der Bibliothek"/>
+                <Button Grid.Column="3"
+                        Content="Zeigen"
+                        Style="{StaticResource GhostButton}"
+                        VerticalAlignment="Center"
+                        Click="BtnShowTag_Click"/>
+            </Grid>
+        </DataTemplate>
+
+        <!-- Vorschlag aus der Wunschliste: Vorschaubild, Name, Tier, Passung. Doppelklick öffnet den Anime. -->
+        <DataTemplate x:Key="SuggestionTemplate" DataType="{x:Type vm:TasteSuggestionViewModel}">
+            <Border Padding="8,7"
+                    CornerRadius="8"
+                    Cursor="Hand"
+                    ToolTip="Doppelklick öffnet den Anime"
+                    MouseLeftButtonDown="Suggestion_MouseLeftButtonDown">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0"
+                            Width="40" Height="56"
+                            CornerRadius="6"
+                            ClipToBounds="True"
+                            Margin="0,0,12,0"
+                            Background="{DynamicResource SurfaceAltBrush}">
+                        <Image Source="{Binding Item.Thumbnail, Converter={StaticResource BytesToImageConverter}}"
+                               Stretch="UniformToFill"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Item.Name}"
+                                   FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding MatchText}"
+                                   Style="{StaticResource MutedText}"
+                                   FontSize="11"
+                                   TextTrimming="CharacterEllipsis"
+                                   ToolTip="{Binding MatchText}"
+                                   Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding PercentText}"
+                               FontWeight="Bold"
+                               FontSize="15"
+                               Foreground="{DynamicResource AccentBrush}"
+                               VerticalAlignment="Center"
+                               Margin="10,0,0,0"
+                               ToolTip="Passung zu deinem Geschmack"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Margin="28,24,28,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titel -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <TextBlock Text="Geschmacksprofil" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="{Binding BasisText}"
+                       Style="{StaticResource MutedText}"
+                       VerticalAlignment="Bottom"
+                       Margin="14,0,0,5"/>
+        </StackPanel>
+
+        <!-- Was zählt als Liebling? -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,18,0,16">
+            <StackPanel>
+                <TextBlock Text="Was zählt als Liebling?" Style="{StaticResource SectionTitle}"/>
+                <WrapPanel Margin="0,10,0,0">
+                    <ToggleButton Content="Tier S" Style="{StaticResource ChipStyle}" IsChecked="{Binding IncludeTierS}"/>
+                    <ToggleButton Content="Tier A" Style="{StaticResource ChipStyle}" IsChecked="{Binding IncludeTierA}"/>
+                    <ToggleButton Content="Tier B" Style="{StaticResource ChipStyle}" IsChecked="{Binding IncludeTierB}"/>
+                    <ToggleButton Content="Tier C" Style="{StaticResource ChipStyle}" IsChecked="{Binding IncludeTierC}"/>
+                    <ToggleButton Content="Tier D" Style="{StaticResource ChipStyle}" IsChecked="{Binding IncludeTierD}"/>
+                    <ToggleButton Content="★ Favoriten" Style="{StaticResource ChipStyle}" IsChecked="{Binding IncludeFavorites}"/>
+                </WrapPanel>
+
+                <TextBlock Text="Ab wann passt ein Anime?" Style="{StaticResource SectionTitle}" Margin="0,8,0,0"/>
+                <TextBlock Text="Die Passung ist relativ zum am besten passenden Anime der Auswahl (100 %)."
+                           Style="{StaticResource MutedText}"
+                           Margin="0,4,0,8"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition Width="260"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Passt zu dir" VerticalAlignment="Center" Margin="0,0,0,6"/>
+                    <Slider Grid.Row="0" Grid.Column="1"
+                            Minimum="5" Maximum="100"
+                            SmallChange="1" LargeChange="5"
+                            VerticalAlignment="Center"
+                            Margin="0,0,0,6"
+                            Value="{Binding GoodThreshold}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2"
+                               Text="{Binding GoodThresholdText}"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,6"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Passt leidlich zu dir" VerticalAlignment="Center"/>
+                    <Slider Grid.Row="1" Grid.Column="1"
+                            Minimum="5" Maximum="100"
+                            SmallChange="1" LargeChange="5"
+                            VerticalAlignment="Center"
+                            Value="{Binding FairThreshold}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2"
+                               Text="{Binding FairThresholdText}"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Zu wenige Lieblinge -->
+        <Border Grid.Row="2"
+                Style="{StaticResource Card}"
+                VerticalAlignment="Top"
+                Visibility="{Binding HasNoProfile, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="{Binding NoProfileText}" Style="{StaticResource MutedText}" TextWrapping="Wrap"/>
+        </Border>
+
+        <!-- Auswertung -->
+        <Grid Grid.Row="2" Visibility="{Binding HasProfile, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="430"/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Das magst du" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="Diese Tags kommen bei deinen Lieblingen deutlich häufiger vor als in der übrigen Bibliothek."
+                                       Style="{StaticResource MutedText}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,14"/>
+                            <ItemsControl ItemsSource="{Binding PreferredTags}"
+                                          ItemTemplate="{StaticResource TasteTagTemplate}"
+                                          Visibility="{Binding HasPreferredTags, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <TextBlock Text="Noch keine auffälligen Tags. Dafür braucht es mehr Lieblinge mit gemeinsamen Tags."
+                                       TextWrapping="Wrap">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource MutedText}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasPreferredTags}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Eher nicht dein Ding" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="Diese Tags sind häufig in deiner Bibliothek, kommen bei deinen Lieblingen aber kaum vor."
+                                       Style="{StaticResource MutedText}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,14"/>
+                            <ItemsControl ItemsSource="{Binding AvoidedTags}"
+                                          ItemTemplate="{StaticResource TasteTagTemplate}"
+                                          Visibility="{Binding HasAvoidedTags, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <TextBlock Text="Keine auffälligen Tags gefunden."
+                                       TextWrapping="Wrap">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource MutedText}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasAvoidedTags}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Vorschläge aus der Wunschliste -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock Text="Passt zu dir" Style="{StaticResource SectionTitle}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                            <TextBlock Text="Animes mit Status" Style="{StaticResource MutedText}" VerticalAlignment="Center"/>
+                            <ComboBox Width="150"
+                                      Margin="8,0,0,0"
+                                      ItemsSource="{Binding StatusOptions}"
+                                      DisplayMemberPath="Label"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{Binding SuggestionStatus}"
+                                      ToolTip="Welche Animes nach Passung bewertet werden"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <StackPanel Visibility="{Binding HasSuggestions, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock Text="{Binding GoodSuggestionsTitle}" FontWeight="SemiBold" Margin="8,0,0,4"/>
+                                <ItemsControl ItemsSource="{Binding Suggestions}"
+                                              ItemTemplate="{StaticResource SuggestionTemplate}"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,12,0,0"
+                                        Visibility="{Binding HasFairSuggestions, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock Text="{Binding FairSuggestionsTitle}" FontWeight="SemiBold" Margin="8,0,0,4"/>
+                                <ItemsControl ItemsSource="{Binding FairSuggestions}"
+                                              ItemTemplate="{StaticResource SuggestionTemplate}"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding NoSuggestionsText}"
+                                       TextWrapping="Wrap"
+                                       Style="{StaticResource MutedText}"
+                                       Visibility="{Binding HasNoAnySuggestions, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Button Grid.Row="2"
+                            Content="In Bibliothek filtern"
+                            Margin="0,12,0,0"
+                            IsEnabled="{Binding CanShowInLibrary}"
+                            ToolTip="Zeigt die Animes mit dem gewählten Status gefiltert nach den stärksten Tags deines Profils"
+                            Click="BtnShowSuggestions_Click"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

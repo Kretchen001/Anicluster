@@ -90,6 +90,9 @@ namespace Anicluster.ViewModels {
                 case NavigationTarget.TagNetwork:
                     this.CurrentPage = this.CreateTagNetwork();
                     break;
+                case NavigationTarget.TasteProfile:
+                    this.CurrentPage = this.CreateTasteProfile();
+                    break;
                 case NavigationTarget.Settings:
                     this.CurrentPage = this._settingsPage;
                     break;
@@ -121,9 +124,12 @@ namespace Anicluster.ViewModels {
         }
 
         /// <summary>Wechselt zur Bibliothek und zeigt dort nur Animes mit den übergebenen Tags.</summary>
-        public void ShowLibraryWithTags(IReadOnlyList<TagFilterItem> tags, TagMatchMode mode) {
+        public void ShowLibraryWithTags(IReadOnlyList<TagFilterItem> tags, TagMatchMode mode, LibraryStatusFilter? status = null) {
             this.NavigateTo(NavigationTarget.Library);
             this.Library.SetTagFilter(tags, mode);
+            if (status.HasValue) {
+                this.Library.StatusFilter = status.Value;
+            }
         }
 
         /// <summary>Zeigt den Dialog zum schnellen Anlegen und lädt danach die Liste neu.</summary>
@@ -153,6 +159,13 @@ namespace Anicluster.ViewModels {
             network.EditRequested += (sender, item) => this.EditAnime(item.Id);
             network.ShowInLibraryRequested += (sender, e) => this.ShowLibraryWithTags(e.Tags, e.Mode);
             return network;
+        }
+
+        private TasteProfileViewModel CreateTasteProfile() {
+            TasteProfileViewModel profile = new TasteProfileViewModel(this._animeService, this._tagService);
+            profile.EditRequested += (sender, item) => this.EditAnime(item.Id);
+            profile.ShowInLibraryRequested += (sender, e) => this.ShowLibraryWithTags(e.Tags, e.Mode, e.Status);
+            return profile;
         }
 
         private void OpenEditor(Anime? anime) {
