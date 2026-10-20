@@ -8,6 +8,7 @@ Für Versionen vor 2.1.0 gibt es keine Tags im Verlauf, sie sind deshalb nach Ze
 ### Hinzugefügt
 - **Bilder**: Jeder Anime kann ein Cover erhalten. Im Editor lässt es sich per Dateiauswahl, aus der Zwischenablage oder per Drag and Drop einfügen und wieder entfernen. Das Bild wird verkleinert (längste Seite höchstens 1024 Pixel) in der Datenbank gespeichert.
 - **Bilder-Ansicht** in der Bibliothek neben Karten und Tabelle: Kacheln mit Vorschaubild, Tier und Favorit auf dem Bild, darunter Name und Status. Animes ohne Bild zeigen einen Platzhalter. Die Auswahl der Ansicht wird gespeichert.
+- Link zum Projekt auf GitHub über der Versionsnummer in der Seitenleiste.
 - **Anicluster-Symbol** für Fenster, Programmdatei, Seitenleiste und Installer (eigene Gestaltung, gemeinfrei unter CC0).
 
 ### Geändert

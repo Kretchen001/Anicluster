@@ -11,6 +11,7 @@ Neu in 2.2.0
 - Bilder: Jeder Anime kann ein Cover erhalten (Datei wählen, aus der Zwischenablage einfügen oder per Drag and Drop)
 - Neue Bibliotheksansicht "Bilder" mit Vorschaubildern, neben Karten und Tabelle
 - Neues Anicluster-Symbol für Fenster, Programmdatei und Installer
+- Link zum Projekt auf GitHub über der Versionsnummer in der Seitenleiste
 - Die Datenbank wird beim ersten Start automatisch auf die neue Struktur gebracht und vorher gesichert
 
 Neu in 2.1.0
@@ -23,3 +24,4 @@ Neu in 2.1.0
 - Versteckte SQL-Konsole (Rechtsklick auf die Versionsnummer)
 
 Den vollständigen Verlauf enthält die Datei CHANGELOG.md.
+Projektseite: https://github.com/Kretchen001/Anicluster

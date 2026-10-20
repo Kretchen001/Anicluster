@@ -91,12 +91,21 @@
                     </RadioButton>
                 </StackPanel>
 
-                <TextBlock Grid.Row="2"
-                           Text="{Binding VersionText}"
-                           Style="{StaticResource MutedText}"
-                           FontSize="11"
-                           Background="Transparent"
-                           MouseRightButtonUp="VersionText_MouseRightButtonUp"/>
+                <StackPanel Grid.Row="2">
+                    <!-- Herkunft des Projekts, reiner Hinweis -->
+                    <TextBlock FontSize="11"
+                               Margin="0,0,0,2">
+                        <Hyperlink NavigateUri="https://github.com/Kretchen001/Anicluster"
+                                   Foreground="{DynamicResource AccentBrush}"
+                                   ToolTip="Projekt auf GitHub öffnen"
+                                   RequestNavigate="ProjectLink_RequestNavigate">github.com/Kretchen001/Anicluster</Hyperlink>
+                    </TextBlock>
+                    <TextBlock Text="{Binding VersionText}"
+                               Style="{StaticResource MutedText}"
+                               FontSize="11"
+                               Background="Transparent"
+                               MouseRightButtonUp="VersionText_MouseRightButtonUp"/>
+                </StackPanel>
             </Grid>
         </Border>
 
