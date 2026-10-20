@@ -19,6 +19,7 @@
             <converters:TierBrushConverter x:Key="TierBrushConverter"/>
             <converters:StateBrushConverter x:Key="StateBrushConverter"/>
             <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
+            <converters:BytesToImageConverter x:Key="BytesToImageConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

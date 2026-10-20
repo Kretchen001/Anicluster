@@ -17,6 +17,7 @@
         <Setter Property="FontFamily" Value="Segoe UI Variable Text, Segoe UI"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Icon" Value="pack://application:,,,/Resources/Icon/Anicluster.ico"/>
     </Style>
 
     <!-- ===== Buttons ===== -->

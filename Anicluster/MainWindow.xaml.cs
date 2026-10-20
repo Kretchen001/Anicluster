@@ -1,7 +1,11 @@
 ﻿using Anicluster.Theming;
 using Anicluster.ViewModels;
+using Serilog;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace Anicluster {
 
@@ -26,6 +30,17 @@ namespace Anicluster {
         private void VersionText_MouseRightButtonUp(object sender, MouseButtonEventArgs e) {
             e.Handled = true;
             this.ViewModel.OpenSqlConsole();
+        }
+
+        /// <summary>Öffnet den Link zum Projekt im Standardbrowser.</summary>
+        private void ProjectLink_RequestNavigate(object sender, RequestNavigateEventArgs e) {
+            e.Handled = true;
+            try {
+                Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            }
+            catch (Win32Exception ex) {
+                Log.Warning(ex, "Der Link {Uri} konnte nicht geöffnet werden.", e.Uri);
+            }
         }
 
         private void BtnNewAnime_Click(object sender, RoutedEventArgs e) {

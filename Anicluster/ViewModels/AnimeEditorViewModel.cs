@@ -1,7 +1,10 @@
 ﻿using Anicluster.Database.Services;
 using Anicluster.Dialogs;
+using Anicluster.Imaging;
 using Modells.Anime;
+using Serilog;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -14,6 +17,9 @@ namespace Anicluster.ViewModels {
     /// gespeichert wird erst über <see cref="Save"/>.
     /// </summary>
     public class AnimeEditorViewModel : PropertyBaseChange {
+
+        /// <summary>Größere Bilddateien werden abgelehnt, bevor sie vollständig eingelesen werden (Schutz vor Speicherverbrauch)</summary>
+        private const long MaxImageFileSize = 25 * 1024 * 1024;
 
         private readonly IAnimeService _animeService;
         private readonly ITagService _tagService;
@@ -132,6 +138,11 @@ namespace Anicluster.ViewModels {
 
         public int SeasonCount => this._anime.Seasons.Count;
 
+        /// <summary>Das Bild in voller (verkleinerter) Größe, <c>null</c> ohne Bild</summary>
+        public byte[]? ImageData => this._anime.Image?.Data;
+
+        public bool HasImage => this._anime.Image is not null;
+
         public int OvaCount => this._anime.Ovas.Count;
         #endregion
 
@@ -204,6 +215,67 @@ namespace Anicluster.ViewModels {
             }
         }
 
+        /// <summary>Lässt den Benutzer eine Bilddatei wählen und übernimmt sie als Bild des Animes.</summary>
+        public void SelectImage() {
+            string? path = this._dialogService.PickImageFile();
+            if (path is not null) {
+                this.SetImageFromFile(path);
+            }
+        }
+
+        /// <summary>Liest eine Bilddatei ein und übernimmt sie als Bild des Animes.</summary>
+        public void SetImageFromFile(string path) {
+            try {
+                if (new FileInfo(path).Length > MaxImageFileSize) {
+                    this._dialogService.ShowMessage(
+                        "Die Bilddatei ist zu groß (höchstens 25 MB).",
+                        string.Empty,
+                        MessageBoxImage.Warning
+                    );
+                    return;
+                }
+                this.SetImage(File.ReadAllBytes(path));
+            }
+            catch (IOException ex) {
+                this.ReportUnreadableImage(ex, path);
+            }
+            catch (UnauthorizedAccessException ex) {
+                this.ReportUnreadableImage(ex, path);
+            }
+        }
+
+        /// <summary>
+        /// Übernimmt Bilddaten (beliebiges gängiges Format) als Bild des Animes. Das Bild wird verkleinert
+        /// und gespeichert, sobald der Anime gespeichert wird.
+        /// </summary>
+        public void SetImage(byte[] source) {
+            AnimeImage? image = ImageProcessor.TryCreate(source);
+            if (image is null) {
+                this._dialogService.ShowMessage(
+                    "Dieses Bild kann nicht verwendet werden.\nUnterstützt werden z. B. JPG, PNG, BMP, GIF und TIFF.",
+                    string.Empty,
+                    MessageBoxImage.Warning
+                );
+                return;
+            }
+            this._anime.Image = image;
+            this.NotifyImageChanged();
+        }
+
+        /// <summary>Entfernt das Bild des Animes.</summary>
+        public void RemoveImage() {
+            if (this._anime.Image is null) {
+                return;
+            }
+            this._anime.Image = null;
+            this.NotifyImageChanged();
+        }
+
+        /// <summary>Meldet dem Benutzer, dass die Zwischenablage kein Bild enthält.</summary>
+        public void ReportNoImageInClipboard() {
+            this._dialogService.ShowMessage("In der Zwischenablage befindet sich kein Bild.", string.Empty, MessageBoxImage.Information);
+        }
+
         public void EditTags() {
             TagSelectionViewModel editor = new TagSelectionViewModel(this._tagService, this._anime.Tags);
             if (this._dialogService.ShowDialog(editor) == true) {
@@ -264,6 +336,17 @@ namespace Anicluster.ViewModels {
             this.OnPropertyChanged(propertyName);
             this.MarkAsModified();
             return true;
+        }
+
+        private void NotifyImageChanged() {
+            this.OnPropertyChanged(nameof(this.ImageData));
+            this.OnPropertyChanged(nameof(this.HasImage));
+            this.MarkAsModified();
+        }
+
+        private void ReportUnreadableImage(Exception ex, string path) {
+            Log.Error(ex, "Die Bilddatei '{ImagePath}' konnte nicht gelesen werden.", path);
+            this._dialogService.ShowMessage("Die Bilddatei konnte nicht gelesen werden.", string.Empty, MessageBoxImage.Error);
         }
 
         private void MarkAsModified() {

@@ -5,11 +5,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              xmlns:settings="clr-namespace:Anicluster.Settings"
+             xmlns:views="clr-namespace:Anicluster.Views"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:LibraryViewModel}"
              d:DesignHeight="760"
              d:DesignWidth="1050">
     <UserControl.Resources>
+        <!-- Kachel der Bilder-Ansicht (nur für diese Liste, deshalb lokal und nicht in DataTemplates.xaml) -->
+        <DataTemplate x:Key="TileTemplate">
+            <views:AnimeTileView/>
+        </DataTemplate>
+
         <!-- Zeilen der Tabelle: Doppelklick öffnet, Rechtsklick markiert die Zeile für das Kontextmenü -->
         <Style x:Key="TableRowStyle" TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
             <EventSetter Event="MouseDoubleClick" Handler="TableRow_MouseDoubleClick"/>
@@ -45,8 +51,12 @@
                              IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static settings:LibraryViewMode.Cards}}"/>
                 <RadioButton Style="{StaticResource ChipStyle}"
                              Content="Tabelle"
-                             Margin="0"
+                             Margin="0,0,6,0"
                              IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static settings:LibraryViewMode.Table}}"/>
+                <RadioButton Style="{StaticResource ChipStyle}"
+                             Content="Bilder"
+                             Margin="0"
+                             IsChecked="{Binding ViewMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static settings:LibraryViewMode.Images}}"/>
             </StackPanel>
         </Grid>
 
@@ -181,11 +191,32 @@
             </WrapPanel>
         </Border>
 
-        <!-- Inhalt: Karten oder Tabelle -->
+        <!-- Inhalt: Karten, Tabelle oder Bilder -->
         <Grid Grid.Row="3">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           Visibility="{Binding IsCardView, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ItemsControl ItemsSource="{Binding Items}" Margin="0,0,6,0"/>
+            </ScrollViewer>
+
+            <!-- Bilder: die Liste wird erst gefüllt, wenn die Ansicht aktiv ist, sonst würden alle Vorschauen unnötig geladen -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Visibility="{Binding IsImageView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ItemsControl ItemTemplate="{StaticResource TileTemplate}" Margin="0,0,0,0">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsImageView}" Value="True">
+                                    <Setter Property="ItemsSource" Value="{Binding Items}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
             </ScrollViewer>
 
             <Border Style="{StaticResource Card}"

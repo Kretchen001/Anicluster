@@ -6,7 +6,8 @@ namespace Anicluster.Settings {
     /// <summary>Darstellung der Anime-Liste in der Bibliothek.</summary>
     public enum LibraryViewMode {
         Cards,
-        Table
+        Table,
+        Images
     }
 
     /// <summary>

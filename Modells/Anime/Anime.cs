@@ -57,6 +57,9 @@ namespace Modells.Anime {
         /// <summary>Zusätzliche Kommentare oder Notizen zum Anime</summary>
         public string? Comment { get; set; }
 
+        /// <summary>Das Cover des Animes, <c>null</c> wenn keins hinterlegt ist</summary>
+        public AnimeImage? Image { get; set; }
+
         public Anime() { }
 
         /// <summary>Erzeugt eine tiefe Kopie über Serialisierung.</summary>

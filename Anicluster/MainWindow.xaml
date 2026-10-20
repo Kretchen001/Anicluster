@@ -35,10 +35,19 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="Anicluster"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="{DynamicResource AccentBrush}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Resources/Icon/Anicluster-64.png"
+                               Width="32"
+                               Height="32"
+                               Margin="0,0,10,0"
+                               VerticalAlignment="Center"
+                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                        <TextBlock Text="Anicluster"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource AccentBrush}"/>
+                    </StackPanel>
                     <TextBlock Text="Deine Anime-Sammlung"
                                Style="{StaticResource MutedText}"
                                Margin="0,2,0,24"/>
@@ -82,12 +91,21 @@
                     </RadioButton>
                 </StackPanel>
 
-                <TextBlock Grid.Row="2"
-                           Text="{Binding VersionText}"
-                           Style="{StaticResource MutedText}"
-                           FontSize="11"
-                           Background="Transparent"
-                           MouseRightButtonUp="VersionText_MouseRightButtonUp"/>
+                <StackPanel Grid.Row="2">
+                    <!-- Herkunft des Projekts, reiner Hinweis -->
+                    <TextBlock FontSize="11"
+                               Margin="0,0,0,2">
+                        <Hyperlink NavigateUri="https://github.com/Kretchen001/Anicluster"
+                                   Foreground="{DynamicResource AccentBrush}"
+                                   ToolTip="Projekt auf GitHub öffnen"
+                                   RequestNavigate="ProjectLink_RequestNavigate">github.com/Kretchen001/Anicluster</Hyperlink>
+                    </TextBlock>
+                    <TextBlock Text="{Binding VersionText}"
+                               Style="{StaticResource MutedText}"
+                               FontSize="11"
+                               Background="Transparent"
+                               MouseRightButtonUp="VersionText_MouseRightButtonUp"/>
+                </StackPanel>
             </Grid>
         </Border>
 

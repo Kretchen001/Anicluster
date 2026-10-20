@@ -1,4 +1,5 @@
-﻿using Modells.Anime;
+﻿using Anicluster.Database.Services;
+using Modells.Anime;
 
 namespace Anicluster.ViewModels {
 
@@ -15,11 +16,32 @@ namespace Anicluster.ViewModels {
             { State.Canceled, "Abgebrochen" },
         };
 
+        private readonly IAnimeService _animeService;
+        private byte[]? _thumbnail;
+        private bool _isThumbnailLoaded;
+
         public int Id { get; }
         public string Name { get; }
         public bool IsFavorite { get; }
         public Tier Tier { get; }
         public State State { get; }
+
+        /// <summary>Hat der Anime ein Bild?</summary>
+        public bool HasImage { get; }
+
+        /// <summary>
+        /// Die kleine Vorschau des Bildes (JPEG-Daten), <c>null</c> ohne Bild. Sie wird erst beim ersten Zugriff geladen,
+        /// damit die Karten- und Tabellenansicht keine Bilddaten lesen müssen.
+        /// </summary>
+        public byte[]? Thumbnail {
+            get {
+                if (!this._isThumbnailLoaded) {
+                    this._isThumbnailLoaded = true;
+                    this._thumbnail = this.HasImage ? this._animeService.SelectThumbnail(this.Id) : null;
+                }
+                return this._thumbnail;
+            }
+        }
 
         /// <summary>Ids der Tags dieses Animes (für den Tag-Filter)</summary>
         public HashSet<int> TagIds { get; }
@@ -36,12 +58,14 @@ namespace Anicluster.ViewModels {
         /// <summary>Wird ausgelöst, wenn der Anime gelöscht werden soll.</summary>
         public event EventHandler? DeleteRequested;
 
-        public AnimeListItemViewModel(AnimeListEntry entry) {
+        public AnimeListItemViewModel(AnimeListEntry entry, IAnimeService animeService) {
+            this._animeService = animeService;
             this.Id = entry.Id;
             this.Name = entry.Name;
             this.IsFavorite = entry.IsFavorite;
             this.Tier = entry.Tier;
             this.State = entry.State;
+            this.HasImage = entry.HasImage;
             this.TagIds = entry.TagIds.ToHashSet();
         }
 

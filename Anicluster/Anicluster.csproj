@@ -7,8 +7,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
 		<NeutralLanguage>de</NeutralLanguage>
+		<ApplicationIcon>Resources\Icon\Anicluster.ico</ApplicationIcon>
 
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<InformationalVersion>$(Version)</InformationalVersion>
 		<Title>Anicluster</Title>
@@ -28,6 +29,12 @@
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
 		<PackageReference Include="WpfMath" Version="2.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Icon und Logo werden in die Anwendung eingebettet (Fenstersymbol, Seitenleiste) -->
+		<Resource Include="Resources\Icon\Anicluster.ico" />
+		<Resource Include="Resources\Icon\Anicluster-64.png" />
 	</ItemGroup>
 
 	<ItemGroup>

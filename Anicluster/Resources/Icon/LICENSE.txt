@@ -1,0 +1,6 @@
+﻿Anicluster-Symbol (Anicluster.svg, Anicluster.png, Anicluster-64.png, Anicluster.ico)
+
+Eigene Gestaltung für das Projekt Anicluster, nicht aus fremden Vorlagen, Symbolsammlungen oder Zeichensätzen abgeleitet.
+
+Gemeinfrei gewidmet unter CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/deed.de):
+Die Dateien dürfen ohne Namensnennung und ohne Einschränkung kopiert, verändert und verwendet werden, auch kommerziell.

@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace Anicluster.Views {
 
     /// <summary>
-    /// Bibliothek mit Karten- und Tabellenansicht. Der Code-Behind übersetzt nur Tabellen-Gesten
+    /// Bibliothek mit Karten-, Tabellen- und Bilderansicht. Der Code-Behind übersetzt nur Tabellen-Gesten
     /// (Kopfklick, Doppelklick, Rechtsklick) in Aufrufe am <see cref="LibraryViewModel"/>.
     /// </summary>
     public partial class LibraryView : UserControl {

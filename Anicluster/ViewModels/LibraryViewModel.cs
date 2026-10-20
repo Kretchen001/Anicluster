@@ -8,7 +8,7 @@ using System.Windows.Data;
 namespace Anicluster.ViewModels {
 
     /// <summary>
-    /// Die Bibliothek: alle Animes mit Suche, Filter, Sortierung und umschaltbarer Darstellung (Karten oder Tabelle).
+    /// Die Bibliothek: alle Animes mit Suche, Filter, Sortierung und umschaltbarer Darstellung (Karten, Tabelle oder Bilder).
     /// </summary>
     public class LibraryViewModel : PropertyBaseChange {
 
@@ -139,6 +139,7 @@ namespace Anicluster.ViewModels {
                 if (this.SetProperty(ref this._viewMode, value)) {
                     this.OnPropertyChanged(nameof(this.IsCardView));
                     this.OnPropertyChanged(nameof(this.IsTableView));
+                    this.OnPropertyChanged(nameof(this.IsImageView));
                     this._settingsService.Current.LibraryViewMode = value;
                     this._settingsService.Save();
                 }
@@ -148,6 +149,8 @@ namespace Anicluster.ViewModels {
         public bool IsCardView => this.ViewMode == LibraryViewMode.Cards;
 
         public bool IsTableView => this.ViewMode == LibraryViewMode.Table;
+
+        public bool IsImageView => this.ViewMode == LibraryViewMode.Images;
         #endregion
 
         #region Anzahl und Leerzustand
@@ -197,7 +200,7 @@ namespace Anicluster.ViewModels {
         public void Refresh() {
             this.Animes.Clear();
             foreach (AnimeListEntry entry in this._animeService.SelectAnimeListEntries()) {
-                AnimeListItemViewModel item = new AnimeListItemViewModel(entry);
+                AnimeListItemViewModel item = new AnimeListItemViewModel(entry, this._animeService);
                 item.EditRequested += (sender, e) => this.EditRequested?.Invoke(this, item);
                 item.DeleteRequested += (sender, e) => this.DeleteRequested?.Invoke(this, item);
                 this.Animes.Add(item);

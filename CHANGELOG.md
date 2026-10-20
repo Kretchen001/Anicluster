@@ -3,6 +3,17 @@
 Alle nennenswerten Änderungen an Anicluster. Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 Für Versionen vor 2.1.0 gibt es keine Tags im Verlauf, sie sind deshalb nach Zeiträumen gruppiert.
 
+## [2.2.0] – 2026-10-20
+
+### Hinzugefügt
+- **Bilder**: Jeder Anime kann ein Cover erhalten. Im Editor lässt es sich per Dateiauswahl, aus der Zwischenablage oder per Drag and Drop einfügen und wieder entfernen. Das Bild wird verkleinert (längste Seite höchstens 1024 Pixel) in der Datenbank gespeichert.
+- **Bilder-Ansicht** in der Bibliothek neben Karten und Tabelle: Kacheln mit Vorschaubild, Tier und Favorit auf dem Bild, darunter Name und Status. Animes ohne Bild zeigen einen Platzhalter. Die Auswahl der Ansicht wird gespeichert.
+- Link zum Projekt auf GitHub über der Versionsnummer in der Seitenleiste.
+- **Anicluster-Symbol** für Fenster, Programmdatei, Seitenleiste und Installer (eigene Gestaltung, gemeinfrei unter CC0).
+
+### Geändert
+- **Datenbank**: Struktur Version 2 mit neuer Tabelle für die Bilder. Eine vorhandene Datenbank wird beim ersten Start automatisch ergänzt, vorher entsteht eine Sicherung neben der Datenbankdatei (`data.v1-<Zeitstempel>.sqlite`). Eine Datenbank der neuen Version lässt sich mit älteren Programmversionen nicht mehr öffnen.
+
 ## [2.1.0] – 2026-10-20
 
 ### Hinzugefügt

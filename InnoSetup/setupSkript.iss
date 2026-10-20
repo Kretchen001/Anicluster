@@ -32,6 +32,9 @@ AllowNoIcons=yes
 UninstallDisplayIcon={app}\{#MyAppExeName}
 UninstallDisplayName={#MyAppName}
 
+; Symbol des Installers (das Programmsymbol stammt aus der Anwendung selbst)
+SetupIconFile=..\Anicluster\Resources\Icon\Anicluster.ico
+
 ; Moderner Assistent, Changelog vor der Installation anzeigen
 WizardStyle=modern
 WizardSizePercent=110
