@@ -1,4 +1,5 @@
-﻿using Anicluster.Database.Services;
+﻿using Anicluster.Database;
+using Anicluster.Database.Services;
 using Anicluster.Dialogs;
 using Anicluster.Settings;
 using Anicluster.Theming;
@@ -18,6 +19,7 @@ namespace Anicluster.ViewModels {
         private readonly IAnimeService _animeService;
         private readonly ITagService _tagService;
         private readonly IDialogService _dialogService;
+        private readonly DatabaseManager _databaseManager;
         private readonly SettingsViewModel _settingsPage;
         private object _currentPage;
         private NavigationTarget _navigation = NavigationTarget.Library;
@@ -50,8 +52,10 @@ namespace Anicluster.ViewModels {
             ITagService tagService,
             IDialogService dialogService,
             ThemeService themeService,
-            AppSettingsService settingsService
+            AppSettingsService settingsService,
+            DatabaseManager databaseManager
         ) {
+            this._databaseManager = databaseManager;
             this._animeService = animeService;
             this._tagService = tagService;
             this._dialogService = dialogService;
@@ -62,6 +66,13 @@ namespace Anicluster.ViewModels {
             this.Library.EditRequested += (sender, item) => this.EditAnime(item.Id);
             this.Library.DeleteRequested += (sender, item) => this.DeleteAnime(item.Id, item.Name);
             this._currentPage = this.Library;
+        }
+
+        /// <summary>Öffnet die versteckte SQL-Konsole.</summary>
+        public void OpenSqlConsole() {
+            this._dialogService.ShowDialog(new SqlConsoleViewModel(this._databaseManager, this._dialogService));
+            // Die Konsole kann Daten verändert haben, daher die Bibliothek neu laden
+            this.Library.Refresh();
         }
 
         /// <summary>Wechselt den Bereich. Offene Änderungen im Editor werden vorher abgefragt.</summary>

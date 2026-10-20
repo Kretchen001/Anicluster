@@ -22,6 +22,12 @@ namespace Anicluster {
             this.ViewModel.CreateNewAnime();
         }
 
+        /// <summary>Verstecktes Feature: Rechtsklick auf die Versionsnummer öffnet die SQL-Konsole.</summary>
+        private void VersionText_MouseRightButtonUp(object sender, MouseButtonEventArgs e) {
+            e.Handled = true;
+            this.ViewModel.OpenSqlConsole();
+        }
+
         private void BtnNewAnime_Click(object sender, RoutedEventArgs e) {
             this.ViewModel.CreateNewAnime();
         }

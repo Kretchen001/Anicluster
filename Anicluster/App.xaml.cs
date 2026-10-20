@@ -53,7 +53,8 @@ namespace Anicluster {
                 new TagService(dbManager),
                 dialogService,
                 themeService,
-                this._settingsService
+                this._settingsService,
+                dbManager
             );
             this.MainWindow = new MainWindow { DataContext = mainViewModel };
             this.MainWindow.Show();

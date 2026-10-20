@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using System.Data;
 using System.Globalization;
 
 namespace Anicluster.Database {
@@ -50,6 +51,26 @@ namespace Anicluster.Database {
                     while (reader.Read()) {
                         result.Add(map(reader));
                     }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Führt beliebiges SQL (auch mehrere Statements) aus. Geliefert wird die letzte Ergebnismenge mit Spalten,
+        /// <paramref name="recordsAffected"/> enthält die Zahl der geänderten Zeilen (−1 bei reinen Abfragen).
+        /// </summary>
+        public DataTable ExecuteRaw(string sql, out int recordsAffected) {
+            DataTable result = new DataTable();
+            using (SqliteCommand cmd = this.CreateCommand(sql, [])) {
+                using (SqliteDataReader reader = cmd.ExecuteReader()) {
+                    do {
+                        if (reader.FieldCount > 0) {
+                            result = new DataTable();
+                            result.Load(reader);
+                        }
+                    } while (!reader.IsClosed && reader.NextResult());
+                    recordsAffected = reader.RecordsAffected;
                 }
             }
             return result;

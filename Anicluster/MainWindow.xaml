@@ -85,7 +85,9 @@
                 <TextBlock Grid.Row="2"
                            Text="{Binding VersionText}"
                            Style="{StaticResource MutedText}"
-                           FontSize="11"/>
+                           FontSize="11"
+                           Background="Transparent"
+                           MouseRightButtonUp="VersionText_MouseRightButtonUp"/>
             </Grid>
         </Border>
 
