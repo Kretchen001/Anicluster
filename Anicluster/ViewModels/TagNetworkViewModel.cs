@@ -21,6 +21,7 @@ namespace Anicluster.ViewModels {
 
         private readonly ForceSimulation _simulation = new ForceSimulation();
         private readonly DispatcherTimer _timer;
+        private readonly IAnimeService _animeService;
         private readonly List<AnimeListEntry> _animes;
         private readonly Dictionary<int, TagNodeViewModel> _nodesById = [];
         private readonly Dictionary<int, List<TagNodeViewModel>> _neighbors = [];
@@ -120,6 +121,7 @@ namespace Anicluster.ViewModels {
         #endregion
 
         public TagNetworkViewModel(IAnimeService animeService, ITagService tagService) {
+            this._animeService = animeService;
             this._animes = animeService.SelectAnimeListEntries();
             List<TagUsage> usages = tagService.SelectTagUsage();
             List<TagLink> links = tagService.SelectTagLinks();
@@ -446,7 +448,7 @@ namespace Anicluster.ViewModels {
                 ? selectedIds.All(id => anime.TagIds.Contains(id))
                 : selectedIds.Any(id => anime.TagIds.Contains(id)));
             foreach (AnimeListEntry entry in matches.OrderBy(x => x.Name, StringComparer.CurrentCultureIgnoreCase)) {
-                AnimeListItemViewModel item = new AnimeListItemViewModel(entry);
+                AnimeListItemViewModel item = new AnimeListItemViewModel(entry, this._animeService);
                 item.EditRequested += (sender, e) => this.EditRequested?.Invoke(this, item);
                 this.Results.Add(item);
             }

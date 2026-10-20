@@ -1,4 +1,5 @@
 ﻿using Anicluster.ViewModels;
+using Microsoft.Win32;
 using System.Windows;
 
 namespace Anicluster.Dialogs {
@@ -51,6 +52,17 @@ namespace Anicluster.Dialogs {
                 ? MessageBox.Show(message, title, MessageBoxButton.OKCancel, MessageBoxImage.Warning)
                 : MessageBox.Show(owner, message, title, MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             return result == MessageBoxResult.OK;
+        }
+
+        public string? PickImageFile() {
+            OpenFileDialog dialog = new OpenFileDialog() {
+                Title = "Bild auswählen",
+                Filter = "Bilder|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.tif;*.tiff|Alle Dateien|*.*",
+                CheckFileExists = true
+            };
+            Window? owner = this.GetActiveWindow();
+            bool? confirmed = owner is null ? dialog.ShowDialog() : dialog.ShowDialog(owner);
+            return confirmed == true ? dialog.FileName : null;
         }
 
         /// <summary>Das aktuell aktive Fenster, ersatzweise das Hauptfenster.</summary>

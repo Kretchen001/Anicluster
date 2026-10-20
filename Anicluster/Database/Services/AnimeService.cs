@@ -6,7 +6,7 @@ namespace Anicluster.Database.Services {
 
     /// <summary>
     /// Liest und schreibt Animes. Ein Anime wird immer als Ganzes in einer Transaktion gespeichert:
-    /// Stammdaten per INSERT/UPDATE, 1:1-Daten (Status, Bewertung, Medieninfo) per Anlegen oder Aktualisieren,
+    /// Stammdaten per INSERT/UPDATE, 1:1-Daten (Status, Bewertung, Medieninfo, Bild) per Anlegen oder Aktualisieren,
     /// Listen (Staffeln, OVAs, Tags, Musikstücke, ...) werden beim Speichern ersetzt.
     /// </summary>
     public class AnimeService : IAnimeService {
@@ -19,6 +19,7 @@ namespace Anicluster.Database.Services {
         private readonly MediaInfoService _mediaInfoService = new MediaInfoService();
         private readonly SeasonService _seasonService = new SeasonService();
         private readonly VideoAnimationService _videoAnimationService = new VideoAnimationService();
+        private readonly ImageService _imageService = new ImageService();
         private readonly TagService _tagService;
 
         public AnimeService(DatabaseManager databaseManager) {
@@ -75,6 +76,7 @@ namespace Anicluster.Database.Services {
                     anime.Seasons = this._seasonService.SelectByAnimeId(session, anime.Id);
                     anime.Ovas = this._videoAnimationService.SelectByAnimeId(session, anime.Id);
                     anime.Tags = this._tagService.SelectByAnimeId(session, anime.Id);
+                    anime.Image = this._imageService.SelectByAnimeId(session, anime.Id);
                     return anime;
                 }
             }
@@ -140,7 +142,8 @@ namespace Anicluster.Database.Services {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {
                     return session.Query(
                         @"SELECT a.Id, a.Name, a.Favorite, a.Tier, COALESCE(s.State, 0),
-                                 (SELECT GROUP_CONCAT(m.TagId) FROM AnimeTagAssociativeEntity m WHERE m.AnimeId = a.Id)
+                                 (SELECT GROUP_CONCAT(m.TagId) FROM AnimeTagAssociativeEntity m WHERE m.AnimeId = a.Id),
+                                 EXISTS (SELECT 1 FROM AnimeImage i WHERE i.AnimeId = a.Id)
                             FROM Anime a
                             LEFT JOIN Status s ON s.AnimeId = a.Id
                             ORDER BY a.Id;",
@@ -150,7 +153,8 @@ namespace Anicluster.Database.Services {
                             reader.GetBool(2),
                             (Tier)reader.GetInt(3),
                             (State)reader.GetInt(4),
-                            ParseIds(reader.GetStringOrNull(5))
+                            ParseIds(reader.GetStringOrNull(5)),
+                            reader.GetBool(6)
                         )
                     );
                 }
@@ -158,6 +162,18 @@ namespace Anicluster.Database.Services {
             catch (Exception ex) {
                 Log.Error(ex, "Die Anime-Liste konnte nicht geladen werden.");
                 return [];
+            }
+        }
+
+        public byte[]? SelectThumbnail(int animeId) {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return this._imageService.SelectThumbnail(session, animeId);
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Vorschau des Animes (Id: {AnimeId}) konnte nicht geladen werden.", animeId);
+                return null;
             }
         }
 
@@ -183,6 +199,7 @@ namespace Anicluster.Database.Services {
             this._seasonService.ReplaceForAnime(session, anime.Id, anime.Seasons);
             this._videoAnimationService.ReplaceForAnime(session, anime.Id, anime.Ovas);
             this._tagService.ReplaceForAnime(session, anime.Id, anime.Tags);
+            this._imageService.Save(session, anime.Id, anime.Image);
         }
 
         /// <summary>Wandelt eine Zeile (Spalten wie in <see cref="SelectAnimeColumns"/>) in einen Anime um.</summary>

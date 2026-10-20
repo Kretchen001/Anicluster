@@ -11,6 +11,9 @@
              Loaded="UserControl_Loaded"
              d:DesignHeight="900"
              d:DesignWidth="1050">
+    <UserControl.Resources>
+        <views:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -208,6 +211,62 @@
 
                 <!-- Rechte Spalte -->
                 <StackPanel Grid.Column="2">
+                    <!-- Bild: per Dialog, Zwischenablage oder Drag and Drop -->
+                    <Border Style="{StaticResource Card}"
+                            Margin="0,0,0,20"
+                            AllowDrop="True"
+                            DragOver="ImageCard_DragOver"
+                            Drop="ImageCard_Drop">
+                        <StackPanel>
+                            <TextBlock Text="Bild" Style="{StaticResource SectionTitle}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Vorschau im Seitenverhältnis 2:3, abgerundete Ecken über die Clip-Geometrie -->
+                                <Grid Grid.Column="0"
+                                      Width="140"
+                                      Height="210"
+                                      Background="{DynamicResource SurfaceAltBrush}">
+                                    <Grid.Clip>
+                                        <RectangleGeometry Rect="0,0,140,210" RadiusX="9" RadiusY="9"/>
+                                    </Grid.Clip>
+                                    <TextBlock Text="&#xE91B;"
+                                               FontFamily="{StaticResource IconFont}"
+                                               FontSize="36"
+                                               Foreground="{DynamicResource TextMutedBrush}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Visibility="{Binding HasImage, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                    <Image Source="{Binding ImageData, Converter={StaticResource BytesToImageConverter}}"
+                                           Stretch="UniformToFill"
+                                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Grid>
+
+                                <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Top">
+                                    <Button Content="Bild auswählen …"
+                                            ToolTip="Bilddatei von der Festplatte wählen"
+                                            Click="BtnSelectImage_Click"/>
+                                    <Button Content="Aus Zwischenablage"
+                                            Margin="0,8,0,0"
+                                            ToolTip="Kopiertes Bild einfügen (z. B. aus dem Browser)"
+                                            Click="BtnPasteImage_Click"/>
+                                    <Button Content="Entfernen"
+                                            Margin="0,8,0,0"
+                                            Visibility="{Binding HasImage, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                            Click="BtnRemoveImage_Click"/>
+                                    <TextBlock Text="Oder eine Bilddatei hierher ziehen. In der Bilder-Ansicht wird das Bild mittig zugeschnitten."
+                                               Style="{StaticResource MutedText}"
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               Margin="0,12,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
                     <Border Style="{StaticResource Card}" Margin="0,0,0,20">
                         <StackPanel>
                             <TextBlock Text="Tags" Style="{StaticResource SectionTitle}"/>

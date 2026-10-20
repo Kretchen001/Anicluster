@@ -22,6 +22,11 @@ namespace Anicluster.Database {
             return reader.IsDBNull(ordinal) ? null : reader.GetString(ordinal);
         }
 
+        /// <summary>Liest eine BLOB-Spalte, bei NULL wird ein leeres Array geliefert.</summary>
+        public static byte[] GetBlob(this SqliteDataReader reader, int ordinal) {
+            return reader.IsDBNull(ordinal) ? [] : reader.GetFieldValue<byte[]>(ordinal);
+        }
+
         /// <summary>
         /// Liest ein Datum. Erwartet wird das Format "yyyy-MM-dd HH:mm:ss", ältere Datenbanken können
         /// Texte im Format der Systemkultur enthalten, die dann als Rückfall interpretiert werden.

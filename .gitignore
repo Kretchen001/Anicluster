@@ -10,3 +10,5 @@ Doku
 /SqlScripts/*.pdf
 /SqlScripts/*.sql
 !/SqlScripts/Tag-Initialize.sql
+*.zip
+*.7z

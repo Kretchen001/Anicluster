@@ -11,12 +11,16 @@ namespace Anicluster.Database {
     public static class DatabaseSchema {
 
         /// <summary>Aktuelle Version der Datenbankstruktur</summary>
-        public const int CurrentVersion = 1;
+        public const int CurrentVersion = 2;
+
+        /// <summary>Struktur nach der Umstellung auf Fremdschlüssel, noch ohne Anime-Bilder</summary>
+        private const int VersionWithoutImages = 1;
 
         /// <summary>
         /// Stellt sicher, dass die Datenbank die aktuelle Struktur hat.
-        /// Eine ältere Datenbank wird gesichert (Kopie neben der Datenbankdatei) und in eine neue Datei migriert.
-        /// Schlägt die Migration fehl, wird der alte Stand wiederhergestellt und die Exception weitergereicht.
+        /// Eine ältere Datenbank wird gesichert (Kopie neben der Datenbankdatei) und migriert, Version 0 in eine neue Datei,
+        /// Version 1 direkt in der vorhandenen Datei. Schlägt die Migration fehl, wird der alte Stand wiederhergestellt
+        /// und die Exception weitergereicht.
         /// </summary>
         public static void EnsureCurrent(DatabaseManager dbManager) {
             int version;
@@ -32,13 +36,20 @@ namespace Anicluster.Database {
             if (version == CurrentVersion) {
                 return;
             }
-            if (hasAnimeTable) {
-                Log.Information("Ältere Datenbank gefunden, Migration auf Version {Version} startet.", CurrentVersion);
-                MigrateFromVersion0(dbManager);
-            }
-            else {
+            if (version == 0 && !hasAnimeTable) {
                 Log.Information("Neue Datenbank wird mit Version {Version} angelegt.", CurrentVersion);
                 CreateNewDatabase(dbManager);
+                return;
+            }
+            // Die Migrationen bauen aufeinander auf: Version 0 -> 1 -> 2
+            if (version == 0) {
+                Log.Information("Ältere Datenbank gefunden, Migration auf Version {Version} startet.", VersionWithoutImages);
+                MigrateFromVersion0(dbManager);
+                version = VersionWithoutImages;
+            }
+            if (version == VersionWithoutImages) {
+                Log.Information("Migration auf Version {Version} startet (Anime-Bilder).", CurrentVersion);
+                MigrateFromVersion1(dbManager);
             }
         }
 
@@ -47,9 +58,43 @@ namespace Anicluster.Database {
                 connection.Open();
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     Execute(connection, transaction, SchemaV1);
+                    Execute(connection, transaction, SchemaV2);
                     transaction.Commit();
                 }
                 Execute(connection, null, $"PRAGMA user_version = {CurrentVersion};");
+            }
+        }
+
+        /// <summary>
+        /// Migration von Version 1 auf Version 2: ergänzt die Tabelle für die Anime-Bilder. Vorhandene Daten bleiben unverändert.
+        /// Vorher wird die Datenbankdatei gesichert, bei einem Fehler wird diese Sicherung zurückgespielt.
+        /// </summary>
+        private static void MigrateFromVersion1(DatabaseManager dbManager) {
+            string databasePath = dbManager.DatabasePath;
+            string backupPath = Path.Combine(
+                Path.GetDirectoryName(databasePath)!,
+                $"{Path.GetFileNameWithoutExtension(databasePath)}.v1-{DateTime.Now:yyyyMMdd-HHmmss}{Path.GetExtension(databasePath)}"
+            );
+            SqliteConnection.ClearAllPools(); // gepoolte Verbindungen halten die Datei sonst gesperrt
+            File.Copy(databasePath, backupPath);
+            Log.Information("Sicherung der Datenbank vor der Migration: {BackupPath}", backupPath);
+            try {
+                using (SqliteConnection connection = dbManager.GetConnection()) {
+                    connection.Open();
+                    using (SqliteTransaction transaction = connection.BeginTransaction()) {
+                        Execute(connection, transaction, SchemaV2);
+                        transaction.Commit();
+                    }
+                    Execute(connection, null, $"PRAGMA user_version = {CurrentVersion};");
+                }
+                SqliteConnection.ClearAllPools();
+                Log.Information("Migration auf Version {Version} abgeschlossen.", CurrentVersion);
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Migration fehlgeschlagen, der alte Stand wird wiederhergestellt.");
+                SqliteConnection.ClearAllPools();
+                File.Copy(backupPath, databasePath, true);
+                throw;
             }
         }
 
@@ -94,10 +139,10 @@ namespace Anicluster.Database {
                         throw new InvalidOperationException($"Die Migration hat {violations} ungültige Verweise erzeugt.");
                     }
                     Execute(connection, null, "DETACH DATABASE old;");
-                    Execute(connection, null, $"PRAGMA user_version = {CurrentVersion};");
+                    Execute(connection, null, $"PRAGMA user_version = {VersionWithoutImages};");
                 }
                 SqliteConnection.ClearAllPools();
-                Log.Information("Migration auf Version {Version} abgeschlossen.", CurrentVersion);
+                Log.Information("Migration auf Version {Version} abgeschlossen.", VersionWithoutImages);
             }
             catch (Exception ex) {
                 Log.Error(ex, "Migration fehlgeschlagen, der alte Stand wird wiederhergestellt.");
@@ -245,6 +290,19 @@ CREATE TABLE VideoAnimation (
 );
 CREATE INDEX IX_VideoAnimation_AnimeId ON VideoAnimation (AnimeId);
 CREATE INDEX IX_VideoAnimation_SeasonId ON VideoAnimation (SeasonId);
+";
+
+        /// <summary>
+        /// Ergänzung in Version 2: ein Bild pro Anime (1:1, wird mit dem Anime gelöscht).
+        /// Das Bild liegt in zwei Größen vor, damit die Bilder-Ansicht nur die kleinen Vorschauen laden muss.
+        /// </summary>
+        private const string SchemaV2 = @"
+CREATE TABLE AnimeImage (
+    Id INTEGER PRIMARY KEY,
+    AnimeId INTEGER NOT NULL UNIQUE REFERENCES Anime(Id) ON DELETE CASCADE,
+    Data BLOB NOT NULL,
+    Thumbnail BLOB NOT NULL
+);
 ";
 
         /// <summary>

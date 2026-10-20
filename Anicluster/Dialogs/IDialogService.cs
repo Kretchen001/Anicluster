@@ -18,5 +18,8 @@ namespace Anicluster.Dialogs {
 
         /// <summary>Fragt per OK/Abbrechen nach. <c>true</c> bei OK.</summary>
         bool Confirm(string message, string title);
+
+        /// <summary>Lässt den Benutzer eine Bilddatei auswählen. <c>null</c>, wenn abgebrochen wurde.</summary>
+        string? PickImageFile();
     }
 }
