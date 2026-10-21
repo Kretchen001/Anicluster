@@ -18,7 +18,7 @@ namespace Anicluster.Views {
         private const double HullPadding = 40.0;
         private const double ArrowLength = 11.0;
         private const double ArrowHalfWidth = 5.0;
-        private const double CaptionFontSize = 12.0;
+        private const double CaptionFontSize = 13.0;
 
         public static readonly DependencyProperty EdgesProperty = DependencyProperty.Register(
             nameof(Edges),
@@ -36,6 +36,7 @@ namespace Anicluster.Views {
 
         private readonly Dictionary<(AnimeEdgeKind Kind, int Bucket, bool Highlighted), Pen> _pens = [];
         private readonly Dictionary<int, FormattedText> _captions = [];
+        private readonly Dictionary<int, (Brush Fill, Pen Outline)> _hullStyles = [];
         private Brush _edgeBrush = Brushes.Gray;
         private Brush _accentBrush = Brushes.Blue;
         private Brush _hullBrush = Brushes.LightGray;
@@ -103,6 +104,7 @@ namespace Anicluster.Views {
             }
             this._pens.Clear();
             this._captions.Clear();
+            this._hullStyles.Clear();
             this._edgeBrush = edgeBrush;
             this._accentBrush = accentBrush;
             this._hullBrush = hullBrush;
@@ -125,72 +127,25 @@ namespace Anicluster.Views {
                 if (points.Count < 2) {
                     continue;
                 }
-                List<Point> outline = CreateOutline(ConvexHull.Compute(points));
-                if (outline.Count < 3) {
+                StreamGeometry? shape = ClusterHulls.CreateShape(points, HullPadding);
+                if (shape is null) {
                     continue;
                 }
-                drawingContext.DrawGeometry(this._hullBrush, this._hullPen, CreateSmoothShape(outline));
+                (Brush fill, Pen outlinePen) = this.GetHullStyle(cluster.Id);
+                drawingContext.DrawGeometry(fill, outlinePen, shape);
                 if (cluster.Caption.Length > 0) {
                     this.DrawCaption(drawingContext, cluster, points);
                 }
             }
         }
 
-        /// <summary>Schiebt die Eckpunkte der Hülle von ihrer Mitte weg, zwei Punkte werden zu einer Kapsel aufgeweitet.</summary>
-        private static List<Point> CreateOutline(List<(double X, double Y)> hull) {
-            List<Point> outline = [];
-            if (hull.Count < 2) {
-                return outline;
+        /// <summary>Fläche und Rand eines Clusters, je Cluster einmal erzeugt (die Farben stammen aus dem Akzent des Designs).</summary>
+        private (Brush Fill, Pen Outline) GetHullStyle(int clusterId) {
+            if (!this._hullStyles.TryGetValue(clusterId, out (Brush Fill, Pen Outline) style)) {
+                style = ClusterHulls.CreateStyle(this._accentBrush, clusterId, this._hullBrush, this._hullPen ?? new Pen(this._edgeBrush, 1.0));
+                this._hullStyles[clusterId] = style;
             }
-            if (hull.Count == 2) {
-                (double X, double Y) a = hull[0];
-                (double X, double Y) b = hull[1];
-                double length = Math.Sqrt((b.X - a.X) * (b.X - a.X) + (b.Y - a.Y) * (b.Y - a.Y));
-                if (length < 1e-6) {
-                    return outline;
-                }
-                double ux = (b.X - a.X) / length * HullPadding;
-                double uy = (b.Y - a.Y) / length * HullPadding;
-                outline.Add(new Point(a.X - ux - uy, a.Y - uy + ux));
-                outline.Add(new Point(b.X + ux - uy, b.Y + uy + ux));
-                outline.Add(new Point(b.X + ux + uy, b.Y + uy - ux));
-                outline.Add(new Point(a.X - ux + uy, a.Y - uy - ux));
-                return outline;
-            }
-            double centerX = hull.Average(p => p.X);
-            double centerY = hull.Average(p => p.Y);
-            foreach ((double X, double Y) point in hull) {
-                double dx = point.X - centerX;
-                double dy = point.Y - centerY;
-                double distance = Math.Sqrt(dx * dx + dy * dy);
-                if (distance < 1e-6) {
-                    dx = 1.0;
-                    dy = 0.0;
-                    distance = 1.0;
-                }
-                outline.Add(new Point(point.X + dx / distance * HullPadding, point.Y + dy / distance * HullPadding));
-            }
-            return outline;
-        }
-
-        /// <summary>Rundet das Vieleck ab: Die Eckpunkte werden zu Kontrollpunkten, die Kurve läuft durch die Mitten der Seiten.</summary>
-        private static StreamGeometry CreateSmoothShape(List<Point> outline) {
-            StreamGeometry geometry = new StreamGeometry();
-            using (StreamGeometryContext context = geometry.Open()) {
-                int count = outline.Count;
-                context.BeginFigure(Middle(outline[count - 1], outline[0]), true, true);
-                for (int index = 0; index < count; index += 1) {
-                    Point corner = outline[index];
-                    Point next = outline[(index + 1) % count];
-                    context.QuadraticBezierTo(corner, Middle(corner, next), true, false);
-                }
-            }
-            geometry.Freeze();
-            return geometry;
-        }
-
-        private static Point Middle(Point first, Point second) {
-            return new Point((first.X + second.X) / 2.0, (first.Y + second.Y) / 2.0);
+            return style;
         }
 
         private void DrawCaption(DrawingContext drawingContext, AnimeClusterViewModel cluster, List<(double X, double Y)> points) {

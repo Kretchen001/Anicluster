@@ -7,7 +7,7 @@ namespace Anicluster.Views {
 
     /// <summary>
     /// Anime-Netzwerk. Der Code-Behind übersetzt nur Maus-Gesten auf den Knoten (Klick, Doppelklick, Ziehen, Überfahren) und das
-    /// Strg + Mausrad der Fläche in Aufrufe am <see cref="AnimeNetworkViewModel"/> und stößt das Neuzeichnen der Linien an.
+    /// Mausrad (Zoom zum Mauszeiger) und das Verschieben des Ausschnitts in Aufrufe am <see cref="AnimeNetworkViewModel"/> und stößt das Neuzeichnen der Linien an.
     /// </summary>
     public partial class AnimeNetworkView : UserControl {
 
@@ -19,6 +19,11 @@ namespace Anicluster.Views {
         private Point _dragOffset;
         private Point _downPosition;
         private bool _moved;
+        private bool _panning;
+        private bool _panMoved;
+        private Point _panStart;
+        private double _panOffsetX;
+        private double _panOffsetY;
 
         private AnimeNetworkViewModel? ViewModel => this.DataContext as AnimeNetworkViewModel;
 
@@ -53,18 +58,66 @@ namespace Anicluster.Views {
             this.ViewModel?.SetViewport(this.ViewportHost.ActualWidth, this.ViewportHost.ActualHeight);
         }
 
-        /// <summary>Strg + Mausrad zoomt, ohne Strg scrollt die Fläche wie gewohnt.</summary>
+        /// <summary>Das Mausrad zoomt. Die Stelle unter dem Mauszeiger bleibt dabei an ihrem Platz.</summary>
         private void ViewportHost_PreviewMouseWheel(object sender, MouseWheelEventArgs e) {
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) {
-                this.ViewModel?.ZoomBy(e.Delta > 0 ? 1 : -1);
-                e.Handled = true;
+            AnimeNetworkViewModel? viewModel = this.ViewModel;
+            if (viewModel is null) {
+                return;
             }
+            Point anchor = e.GetPosition(this.ViewportHost);
+            double contentX = this.ViewportHost.HorizontalOffset + anchor.X;
+            double contentY = this.ViewportHost.VerticalOffset + anchor.Y;
+            double before = viewModel.Zoom;
+            viewModel.ZoomBy(e.Delta > 0 ? 1 : -1);
+            double ratio = viewModel.Zoom / before;
+            if (Math.Abs(ratio - 1.0) > 1e-9) {
+                this.ViewportHost.UpdateLayout();
+                this.ViewportHost.ScrollToHorizontalOffset(contentX * ratio - anchor.X);
+                this.ViewportHost.ScrollToVerticalOffset(contentY * ratio - anchor.Y);
+            }
+            e.Handled = true;
         }
 
-        /// <summary>Ein Klick ins Leere hebt die Auswahl auf (Klicks auf Knoten werden dort behandelt und nicht weitergereicht).</summary>
+        #region Freie Fläche: Klick hebt die Auswahl auf, Ziehen verschiebt den Ausschnitt
+        /// <summary>Klicks auf Knoten werden dort behandelt und kommen hier nicht an.</summary>
         private void World_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            this.ViewModel?.ClearSelection();
+            this._panning = true;
+            this._panMoved = false;
+            this._panStart = e.GetPosition(this.ViewportHost);
+            this._panOffsetX = this.ViewportHost.HorizontalOffset;
+            this._panOffsetY = this.ViewportHost.VerticalOffset;
+            this.WorldHost.CaptureMouse();
         }
+
+        private void World_MouseMove(object sender, MouseEventArgs e) {
+            if (!this._panning || e.LeftButton != MouseButtonState.Pressed) {
+                return;
+            }
+            // Gemessen im sichtbaren Bereich, der beim Verschieben selbst stillsteht
+            Point position = e.GetPosition(this.ViewportHost);
+            double deltaX = position.X - this._panStart.X;
+            double deltaY = position.Y - this._panStart.Y;
+            if (!this._panMoved && Math.Abs(deltaX) < DragThreshold && Math.Abs(deltaY) < DragThreshold) {
+                return;
+            }
+            this._panMoved = true;
+            this.WorldHost.Cursor = Cursors.SizeAll;
+            this.ViewportHost.ScrollToHorizontalOffset(this._panOffsetX - deltaX);
+            this.ViewportHost.ScrollToVerticalOffset(this._panOffsetY - deltaY);
+        }
+
+        private void World_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+            if (!this._panning) {
+                return;
+            }
+            this._panning = false;
+            this.WorldHost.ReleaseMouseCapture();
+            this.WorldHost.ClearValue(FrameworkElement.CursorProperty);
+            if (!this._panMoved) {
+                this.ViewModel?.ClearSelection();
+            }
+        }
+        #endregion
 
         #region Knoten: Klick, Doppelklick, Ziehen, Überfahren
         private void Node_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
@@ -141,6 +194,11 @@ namespace Anicluster.Views {
 
         private void BtnClearSelection_Click(object sender, RoutedEventArgs e) {
             this.ViewModel?.ClearSelection();
+        }
+
+        private void BtnZoomReset_Click(object sender, RoutedEventArgs e) {
+            this.ViewModel?.ResetZoom();
+            this.ViewportHost.ScrollToHome();
         }
 
         private void BtnRelayout_Click(object sender, RoutedEventArgs e) {

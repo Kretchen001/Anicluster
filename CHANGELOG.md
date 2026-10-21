@@ -17,7 +17,7 @@ Für Versionen vor 2.1.0 gibt es keine Tags im Verlauf, sie sind deshalb nach Ze
   - **Ähnliche Tags**: Je mehr Tags zwei Animes gemeinsam haben, desto ähnlicher sind sie, seltene Tags zählen mehr als häufige (mindestens zwei gemeinsame Tags nötig). Animes ohne Tags erscheinen nicht.
   - **Ähnliche Bewertung**: Ähnlichkeit aus den Teilnoten Story, Animation, Effekte und Akustik, gewichtet wie die Gesamtnote. Unbewertete Animes erscheinen nicht.
   - Regler für Mindestähnlichkeit und die höchste Zahl ähnlicher Nachbarn pro Anime, Schalter für Animes ohne Verbindung (standardmäßig ausgeblendet), Filter nach Status und Hervorheben per Namenssuche.
-  - Klick wählt einen Anime und zeigt seine Verbindungen mit Art oder Ähnlichkeit, Doppelklick öffnet ihn im Editor, „In Bibliothek suchen“ springt zur Bibliothek. Zoom per Regler oder Strg + Mausrad, Knoten lassen sich ziehen, „Neu anordnen“ startet das Layout neu.
+  - Klick wählt einen Anime und zeigt seine Verbindungen mit Art oder Ähnlichkeit, Doppelklick öffnet ihn im Editor, „In Bibliothek suchen“ springt zur Bibliothek. Zoom per Mausrad zum Mauszeiger oder Regler (bis 800 %, „Einpassen“ zeigt wieder alles), Verschieben des Ausschnitts durch Ziehen auf freier Fläche, jeder Cluster mit eigener Farbe (vom Akzent des Designs abgeleitet), Knoten lassen sich ziehen, „Neu anordnen“ startet das Layout neu.
 - `SqlScripts/Demo-Zeitraeume.sql`: Veröffentlichungszeiträume, Staffeln und Pausen für viele Animes der Beispielliste, zum Ausprobieren des Zeitstrahls.
 
 ### Geändert
@@ -25,6 +25,7 @@ Für Versionen vor 2.1.0 gibt es keine Tags im Verlauf, sie sind deshalb nach Ze
   - Datenbank und Logs bleiben im Installationsordner und werden für alle Benutzer beschreibbar angelegt. Alle Benutzer eines Rechners teilen sich damit eine Datenbank, die Einstellungen bleiben pro Benutzer.
   - Eine bisher nur für den Benutzer installierte Version wird nicht automatisch übernommen: Die Datenbank (`%LocalAppData%\Programs\Anicluster\db`) muss nach dem Umstieg in den neuen `db`-Ordner kopiert werden.
   - Beim Deinstallieren gilt die Rückfrage zu den Einstellungen nur für das Benutzerkonto, unter dem die Deinstallation läuft.
+- **Tag-Netzwerk**: Zoom per Mausrad zum Mauszeiger oder Regler (bis 800 %, „Einpassen“ zeigt wieder alles) und Verschieben des Ausschnitts durch Ziehen auf freier Fläche. Eng zusammenhängende Tags liegen auf einer Fläche in eigener Farbe (vom Akzent des Designs abgeleitet), Strg + Mausrad ist nicht mehr nötig.
 
 ### Hinweis
 - Die Datenbankstruktur bleibt bei Version 2, ein Update braucht keine Migration.

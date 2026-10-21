@@ -128,7 +128,7 @@
                 <ColumnDefinition Width="370"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Netzwerk: verbundene Animes rücken zusammen, Cluster liegen auf einer gemeinsamen Fläche. Strg + Mausrad zoomt. -->
+            <!-- Netzwerk: verbundene Animes rücken zusammen, Cluster liegen auf einer gemeinsamen Fläche. Das Mausrad zoomt zum Mauszeiger, Ziehen auf freier Fläche verschiebt den Ausschnitt. -->
             <Border Grid.Column="0"
                     Style="{StaticResource Card}"
                     Padding="0"
@@ -148,7 +148,9 @@
                                   Width="{Binding WorldWidth}"
                                   Height="{Binding WorldHeight}"
                                   Background="Transparent"
-                                  MouseLeftButtonDown="World_MouseLeftButtonDown">
+                                  MouseLeftButtonDown="World_MouseLeftButtonDown"
+                                  MouseMove="World_MouseMove"
+                                  MouseLeftButtonUp="World_MouseLeftButtonUp">
                                 <views:AnimeEdgeLayer x:Name="EdgeLayer"
                                                       Edges="{Binding Edges}"
                                                       Clusters="{Binding Clusters}"
@@ -235,7 +237,7 @@
                     <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                         <StackPanel>
                             <TextBlock Text="Darstellung" Style="{StaticResource SectionTitle}" Margin="0,0,0,10"/>
-                            <TextBlock Text="Klick wählt einen Anime, Doppelklick öffnet ihn, Ziehen verschiebt. Strg + Mausrad zoomt."
+                            <TextBlock Text="Klick wählt einen Anime, Doppelklick öffnet ihn, Ziehen verschiebt den Anime. Das Mausrad zoomt zum Mauszeiger, Ziehen auf freier Fläche verschiebt den Ausschnitt."
                                        Style="{StaticResource MutedText}"
                                        FontSize="12"
                                        TextWrapping="Wrap"
@@ -312,10 +314,15 @@
                                 <Run Text="{Binding ZoomText, Mode=OneWay}" FontWeight="SemiBold"/>
                             </TextBlock>
                             <Slider Minimum="1"
-                                    Maximum="4"
+                                    Maximum="8"
                                     Value="{Binding Zoom}"
-                                    TickFrequency="0.25"
-                                    IsSnapToTickEnabled="True"/>
+                                    SmallChange="0.25"
+                                    LargeChange="1"/>
+                            <Button Content="Einpassen"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,6,0,0"
+                                    ToolTip="Zeigt das ganze Netzwerk"
+                                    Click="BtnZoomReset_Click"/>
 
                             <TextBlock Text="{Binding HintText}"
                                        Style="{StaticResource MutedText}"

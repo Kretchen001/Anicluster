@@ -18,8 +18,9 @@ namespace Anicluster.ViewModels {
         private const double MinDisplayScale = 0.35;
         private const double TargetCoverage = 0.14;
         private const double MinZoom = 1.0;
-        private const double MaxZoom = 4.0;
-        private const double ZoomStep = 0.25;
+        private const double MaxZoom = 8.0;
+        /// <summary>Faktor pro Mausrad-Stufe (multiplikativ, damit sich jede Stufe gleich anfühlt)</summary>
+        private const double ZoomFactor = 1.25;
         private const double ViewportInset = 2.0;
         private const int MinCaptionMembers = 3;
         private const int MaxNeighborCount = 15;
@@ -96,7 +97,7 @@ namespace Anicluster.ViewModels {
             private set => this.SetProperty(ref this._worldHeight, value);
         }
 
-        /// <summary>Vergrößerung der Darstellung von 1 (alles im sichtbaren Bereich) bis 4. Darüber hinaus wird gescrollt.</summary>
+        /// <summary>Vergrößerung der Darstellung von 1 (alles im sichtbaren Bereich) bis 8. Darüber hinaus wird gescrollt.</summary>
         public double Zoom {
             get => this._zoom;
             set {
@@ -328,7 +329,12 @@ namespace Anicluster.ViewModels {
 
         /// <summary>Ändert den Zoom um die angegebene Anzahl Stufen (positiv = größer).</summary>
         public void ZoomBy(int steps) {
-            this.Zoom += steps * ZoomStep;
+            this.Zoom *= Math.Pow(ZoomFactor, steps);
+        }
+
+        /// <summary>Zeigt wieder das ganze Netzwerk im sichtbaren Bereich.</summary>
+        public void ResetZoom() {
+            this.Zoom = MinZoom;
         }
 
         /// <summary>Hält einen Knoten beim Ziehen an der Mausposition fest (in Koordinaten der Fläche).</summary>

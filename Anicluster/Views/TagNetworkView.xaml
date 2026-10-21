@@ -99,73 +99,84 @@
             </Grid.ColumnDefinitions>
 
             <!-- Netzwerk: je häufiger ein Tag, desto größer die Schrift. Je öfter zwei Tags gemeinsam vorkommen, desto näher liegen sie beieinander. -->
-            <Border x:Name="ViewportHost"
-                    Grid.Column="0"
+            <Border Grid.Column="0"
                     Style="{StaticResource Card}"
                     Padding="0"
-                    ClipToBounds="True"
-                    SizeChanged="ViewportHost_SizeChanged">
+                    ClipToBounds="True">
                 <Grid>
-                    <Viewbox Stretch="Uniform">
-                        <Grid x:Name="WorldHost"
-                              Width="{Binding WorldWidth}"
-                              Height="{Binding WorldHeight}"
-                              Background="Transparent"
-                              MouseLeftButtonDown="World_MouseLeftButtonDown">
-                            <views:TagEdgeLayer x:Name="EdgeLayer"
-                                                Edges="{Binding Edges}"
-                                                IsHitTestVisible="False"/>
-                            <ItemsControl ItemsSource="{Binding Nodes}"
-                                          ItemContainerStyle="{StaticResource NodeContainerStyle}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <Canvas/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border x:Name="Chip"
-                                                Background="{DynamicResource SurfaceAltBrush}"
-                                                BorderBrush="{DynamicResource EdgeBrush}"
-                                                BorderThickness="1.5"
-                                                CornerRadius="18"
-                                                Padding="14,5"
-                                                Cursor="Hand"
-                                                ToolTip="{Binding Count, StringFormat='{}{0}× vergeben'}"
-                                                MouseLeftButtonDown="Node_MouseLeftButtonDown"
-                                                MouseMove="Node_MouseMove"
-                                                MouseLeftButtonUp="Node_MouseLeftButtonUp"
-                                                MouseEnter="Node_MouseEnter"
-                                                MouseLeave="Node_MouseLeave">
-                                            <Border.ContextMenu>
-                                                <ContextMenu>
-                                                    <MenuItem Header="Tag ausblenden" Click="NodeMenuHide_Click"/>
-                                                </ContextMenu>
-                                            </Border.ContextMenu>
-                                            <TextBlock x:Name="Label"
-                                                       Text="{Binding Designation}"
-                                                       FontSize="{Binding FontSize}"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{DynamicResource TextBrush}"/>
-                                        </Border>
-                                        <DataTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
-                                                <Setter TargetName="Chip" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                <Setter TargetName="Chip" Property="Background" Value="{DynamicResource AccentBrush}"/>
-                                                <Setter TargetName="Chip" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
-                                                <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource AccentTextBrush}"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsDimmed}" Value="True">
-                                                <Setter TargetName="Chip" Property="Opacity" Value="0.25"/>
-                                            </DataTrigger>
-                                        </DataTemplate.Triggers>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Grid>
-                    </Viewbox>
+                    <ScrollViewer x:Name="ViewportHost"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto"
+                                  SizeChanged="ViewportHost_SizeChanged"
+                                  PreviewMouseWheel="ViewportHost_PreviewMouseWheel">
+                        <Viewbox Stretch="Uniform"
+                                 Width="{Binding ViewWidth}"
+                                 Height="{Binding ViewHeight}"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top">
+                            <Grid x:Name="WorldHost"
+                                  Width="{Binding WorldWidth}"
+                                  Height="{Binding WorldHeight}"
+                                  Background="Transparent"
+                                  MouseLeftButtonDown="World_MouseLeftButtonDown"
+                                  MouseMove="World_MouseMove"
+                                  MouseLeftButtonUp="World_MouseLeftButtonUp">
+                                <views:TagEdgeLayer x:Name="EdgeLayer"
+                                                    Edges="{Binding Edges}"
+                                                    Clusters="{Binding Clusters}"
+                                                    IsHitTestVisible="False"/>
+                                <ItemsControl ItemsSource="{Binding Nodes}"
+                                              ItemContainerStyle="{StaticResource NodeContainerStyle}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border x:Name="Chip"
+                                                    Background="{DynamicResource SurfaceAltBrush}"
+                                                    BorderBrush="{DynamicResource EdgeBrush}"
+                                                    BorderThickness="1.5"
+                                                    CornerRadius="18"
+                                                    Padding="14,5"
+                                                    Cursor="Hand"
+                                                    ToolTip="{Binding Count, StringFormat='{}{0}× vergeben'}"
+                                                    MouseLeftButtonDown="Node_MouseLeftButtonDown"
+                                                    MouseMove="Node_MouseMove"
+                                                    MouseLeftButtonUp="Node_MouseLeftButtonUp"
+                                                    MouseEnter="Node_MouseEnter"
+                                                    MouseLeave="Node_MouseLeave">
+                                                <Border.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Tag ausblenden" Click="NodeMenuHide_Click"/>
+                                                    </ContextMenu>
+                                                </Border.ContextMenu>
+                                                <TextBlock x:Name="Label"
+                                                           Text="{Binding Designation}"
+                                                           FontSize="{Binding FontSize}"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource TextBrush}"/>
+                                            </Border>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
+                                                    <Setter TargetName="Chip" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter TargetName="Chip" Property="Background" Value="{DynamicResource AccentBrush}"/>
+                                                    <Setter TargetName="Chip" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                                    <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource AccentTextBrush}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsDimmed}" Value="True">
+                                                    <Setter TargetName="Chip" Property="Opacity" Value="0.25"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </Viewbox>
+                    </ScrollViewer>
                     <TextBlock Text="Es sind noch keine Tags vorhanden."
                                Style="{StaticResource MutedText}"
                                HorizontalAlignment="Center"
@@ -181,7 +192,7 @@
                     <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                         <StackPanel>
                             <TextBlock Text="Auswahl" Style="{StaticResource SectionTitle}" Margin="0,0,0,10"/>
-                            <TextBlock Text="Klick wählt einen Tag, Strg + Klick mehrere. Ziehen verschiebt, Rechtsklick blendet aus."
+                            <TextBlock Text="Klick wählt einen Tag, Strg + Klick mehrere. Ziehen verschiebt, Rechtsklick blendet aus. Das Mausrad zoomt zum Mauszeiger, Ziehen auf freier Fläche verschiebt den Ausschnitt."
                                        Style="{StaticResource MutedText}"
                                        FontSize="12"
                                        TextWrapping="Wrap"
@@ -242,6 +253,26 @@
                                 <ItemsControl ItemsSource="{Binding Results}"
                                               ItemTemplate="{StaticResource ResultTemplate}"/>
                             </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Darstellung" Style="{StaticResource SectionTitle}" Margin="0,0,0,10"/>
+                            <TextBlock Style="{StaticResource FieldLabel}">
+                                <Run Text="Zoom:"/>
+                                <Run Text="{Binding ZoomText, Mode=OneWay}" FontWeight="SemiBold"/>
+                            </TextBlock>
+                            <Slider Minimum="1"
+                                    Maximum="8"
+                                    Value="{Binding Zoom}"
+                                    SmallChange="0.25"
+                                    LargeChange="1"/>
+                            <Button Content="Einpassen"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,6,0,0"
+                                    ToolTip="Zeigt das ganze Netzwerk"
+                                    Click="BtnZoomReset_Click"/>
                         </StackPanel>
                     </Border>
 
