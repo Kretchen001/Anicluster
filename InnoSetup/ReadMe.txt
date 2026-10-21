@@ -26,11 +26,13 @@ Neu in 2.3.0
   aus AniList (Standard), Jikan (MyAnimeList) oder Kitsu. Die Quelle ist wählbar, es wird nur übernommen, was du
   auswählst. Ohne Internet und ohne Konto bleibt Anicluster voll nutzbar
 - Neues Feld "Beschreibung" im Editor
+- Datensicherung in den Einstellungen: ganze Bibliothek als JSON-Datei exportieren (wahlweise mit Cover) und
+  wieder importieren, entweder zusammenführen (nur Fehlendes ergänzen) oder ersetzen (wiederherstellen)
 - Bilder-Ansicht: Schalter "Nur mit Bild" blendet Animes ohne Cover aus
 - Bibliothek lädt im Hintergrund, bei längerer Ladezeit erscheint ein kleiner Hinweis "Lädt ..."
 - Große Dialogfenster sind so groß wie das Hauptfenster, kleine Eingaben bleiben klein
 - Tag-Netzwerk mit Clustern, Zoom per Mausrad und Verschieben durch Ziehen
-- Die Datenbankstruktur wechselt auf Version 3 und wird beim ersten Start automatisch ergänzt (mit Sicherung).
+- Die Datenbankstruktur wechselt auf Version 4 und wird beim ersten Start automatisch ergänzt (mit Sicherung).
   Danach lässt sich die Datenbank nicht mehr mit älteren Versionen öffnen
 
 Neu in 2.2.0

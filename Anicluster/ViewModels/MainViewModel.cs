@@ -1,4 +1,5 @@
-﻿using Anicluster.Database;
+﻿using Anicluster.Backup;
+using Anicluster.Database;
 using Anicluster.Database.Services;
 using Anicluster.Dialogs;
 using Anicluster.Metadata;
@@ -57,7 +58,8 @@ namespace Anicluster.ViewModels {
             ThemeService themeService,
             AppSettingsService settingsService,
             DatabaseManager databaseManager,
-            IMetadataClient metadataClient
+            IMetadataClient metadataClient,
+            IBackupService backupService
         ) {
             this._databaseManager = databaseManager;
             this._metadataClient = metadataClient;
@@ -67,8 +69,9 @@ namespace Anicluster.ViewModels {
             this._dialogService = dialogService;
             this.AppTitle = GetAssemblyTitle();
             this.VersionText = GetVersionText();
-            this._settingsPage = new SettingsViewModel(themeService, settingsService);
+            this._settingsPage = new SettingsViewModel(themeService, settingsService, dialogService, backupService);
             this.Library = new LibraryViewModel(animeService, settingsService);
+            this._settingsPage.DataImported += (sender, e) => this.Library.Refresh();
             this.Library.EditRequested += (sender, item) => this.EditAnime(item.Id);
             this.Library.DeleteRequested += (sender, item) => this.DeleteAnime(item.Id, item.Name);
             this._currentPage = this.Library;

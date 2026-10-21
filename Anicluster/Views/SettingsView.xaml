@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              xmlns:theming="clr-namespace:Anicluster.Theming"
+             xmlns:backup="clr-namespace:Anicluster.Backup"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
              d:DesignHeight="800"
@@ -65,7 +66,7 @@
             </Border>
 
             <!-- Vorschau: verwendet dieselben Farben wie die ganze Anwendung -->
-            <Border Style="{StaticResource Card}">
+            <Border Style="{StaticResource Card}" Margin="0,0,0,20">
                 <StackPanel>
                     <TextBlock Text="Vorschau" Style="{StaticResource SectionTitle}"/>
                     <Border Background="{DynamicResource BackgroundBrush}"
@@ -103,6 +104,48 @@
                     </Border>
                 </StackPanel>
             </Border>
+            <!-- Datensicherung: Export und Import der ganzen Bibliothek als JSON-Datei -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                <StackPanel IsEnabled="{Binding IsIdle}">
+                    <TextBlock Text="Datensicherung" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="Exportiert die ganze Bibliothek (Animes, Bewertungen, Staffeln, Tags und mehr) in eine JSON-Datei und liest sie wieder ein. Die Datei eignet sich als Sicherung und zum Austausch."
+                               Style="{StaticResource MutedText}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,14"/>
+
+                    <TextBlock Text="Export" Style="{StaticResource FieldLabel}"/>
+                    <CheckBox Content="Cover mit exportieren (die Datei wird deutlich größer)"
+                              IsChecked="{Binding IncludeImages}"
+                              Margin="0,0,0,12"/>
+                    <Button Content="Exportieren …"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,0,20"
+                            Click="BtnExport_Click"/>
+
+                    <TextBlock Text="Import" Style="{StaticResource FieldLabel}"/>
+                    <WrapPanel Margin="0,0,0,8">
+                        <RadioButton Style="{StaticResource ChipStyle}"
+                                     Content="Zusammenführen"
+                                     IsChecked="{Binding ImportMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static backup:BackupImportMode.Merge}}"/>
+                        <RadioButton Style="{StaticResource ChipStyle}"
+                                     Content="Ersetzen (Wiederherstellen)"
+                                     IsChecked="{Binding ImportMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static backup:BackupImportMode.Replace}}"/>
+                    </WrapPanel>
+                    <TextBlock Text="{Binding ImportModeHint}"
+                               Style="{StaticResource MutedText}"
+                               FontSize="12"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12"/>
+                    <Button Content="Importieren …"
+                            HorizontalAlignment="Left"
+                            Click="BtnImport_Click"/>
+                </StackPanel>
+            </Border>
+            <TextBlock Text="{Binding StatusText}"
+                       Style="{StaticResource MutedText}"
+                       TextWrapping="Wrap"
+                       Margin="4,-8,0,20"
+                       Visibility="{Binding HasStatus, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

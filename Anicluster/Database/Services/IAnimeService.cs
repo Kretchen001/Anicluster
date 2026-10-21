@@ -29,6 +29,9 @@ namespace Anicluster.Database.Services {
         /// <summary>Lädt die Verknüpfungen (Vorgänger, Nachfolger, Verwandt) aller Animes für das Anime-Netzwerk.</summary>
         List<AnimeRelationEntry> SelectRelationEntries();
 
+        /// <summary>Lädt von allen Animes die Merkmale, an denen sie wiedererkannt werden (Kennung, Quell-Ids, Name).</summary>
+        List<AnimeIdentity> SelectAnimeIdentities();
+
         /// <summary>Lädt die Teilnoten und die Gesamtnote aller bewerteten Animes für das Anime-Netzwerk.</summary>
         List<AnimeRatingEntry> SelectRatingEntries();
 

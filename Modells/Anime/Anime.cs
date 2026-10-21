@@ -10,6 +10,12 @@ namespace Modells.Anime {
 
         public int Id { get; set; }
 
+        /// <summary>
+        /// Feste Kennung (GUID als Text), bleibt beim Umbenennen und bei Datensicherungen gleich. Die Datenbank-Id gilt nur lokal,
+        /// die Kennung erlaubt es, denselben Anime in zwei Datenbanken wiederzuerkennen. Leer bis zum ersten Speichern.
+        /// </summary>
+        public string Uid { get; set; } = string.Empty;
+
         public string Name { get; set; } = "";
 
         /// <summary>Originalname des Animes</summary>

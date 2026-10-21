@@ -21,5 +21,12 @@ namespace Anicluster.Dialogs {
 
         /// <summary>Lässt den Benutzer eine Bilddatei auswählen. <c>null</c>, wenn abgebrochen wurde.</summary>
         string? PickImageFile();
+
+        /// <summary>Lässt den Benutzer eine Datei zum Speichern wählen. <c>null</c>, wenn abgebrochen wurde.</summary>
+        /// <param name="filter">Filter im Windows-Format, zum Beispiel <c>"JSON-Datei|*.json"</c></param>
+        string? PickSaveFile(string title, string filter, string defaultFileName);
+
+        /// <summary>Lässt den Benutzer eine vorhandene Datei zum Öffnen wählen. <c>null</c>, wenn abgebrochen wurde.</summary>
+        string? PickOpenFile(string title, string filter);
     }
 }

@@ -11,7 +11,7 @@ namespace Anicluster.Database {
     public static class DatabaseSchema {
 
         /// <summary>Aktuelle Version der Datenbankstruktur</summary>
-        public const int CurrentVersion = 3;
+        public const int CurrentVersion = 4;
 
         /// <summary>Struktur nach der Umstellung auf Fremdschlüssel, noch ohne Anime-Bilder</summary>
         private const int VersionWithoutImages = 1;
@@ -19,10 +19,13 @@ namespace Anicluster.Database {
         /// <summary>Struktur mit Anime-Bildern, noch ohne Beschreibung und Quell-Ids</summary>
         private const int VersionWithoutMetadata = 2;
 
+        /// <summary>Struktur mit Beschreibung und Quell-Ids, noch ohne feste Kennung der Animes</summary>
+        private const int VersionWithoutUid = 3;
+
         /// <summary>
         /// Stellt sicher, dass die Datenbank die aktuelle Struktur hat.
         /// Eine ältere Datenbank wird gesichert (Kopie neben der Datenbankdatei) und migriert, Version 0 in eine neue Datei,
-        /// die Versionen 1 und 2 direkt in der vorhandenen Datei. Schlägt die Migration fehl, wird der alte Stand wiederhergestellt
+        /// die Versionen 1 bis 3 direkt in der vorhandenen Datei. Schlägt die Migration fehl, wird der alte Stand wiederhergestellt
         /// und die Exception weitergereicht.
         /// </summary>
         public static void EnsureCurrent(DatabaseManager dbManager) {
@@ -44,7 +47,7 @@ namespace Anicluster.Database {
                 CreateNewDatabase(dbManager);
                 return;
             }
-            // Die Migrationen bauen aufeinander auf: Version 0 -> 1 -> 2 -> 3
+            // Die Migrationen bauen aufeinander auf: Version 0 -> 1 -> 2 -> 3 -> 4
             if (version == 0) {
                 Log.Information("Ältere Datenbank gefunden, Migration auf Version {Version} startet.", VersionWithoutImages);
                 MigrateFromVersion0(dbManager);
@@ -56,8 +59,13 @@ namespace Anicluster.Database {
                 version = VersionWithoutMetadata;
             }
             if (version == VersionWithoutMetadata) {
-                Log.Information("Migration auf Version {Version} startet (Beschreibung und Quell-Ids).", CurrentVersion);
+                Log.Information("Migration auf Version {Version} startet (Beschreibung und Quell-Ids).", VersionWithoutUid);
                 MigrateFromVersion2(dbManager);
+                version = VersionWithoutUid;
+            }
+            if (version == VersionWithoutUid) {
+                Log.Information("Migration auf Version {Version} startet (feste Kennung der Animes).", CurrentVersion);
+                MigrateFromVersion3(dbManager);
             }
         }
 
@@ -68,6 +76,7 @@ namespace Anicluster.Database {
                     Execute(connection, transaction, SchemaV1);
                     Execute(connection, transaction, SchemaV2);
                     Execute(connection, transaction, SchemaV3);
+                    Execute(connection, transaction, SchemaV4);
                     transaction.Commit();
                 }
                 Execute(connection, null, $"PRAGMA user_version = {CurrentVersion};");
@@ -86,7 +95,14 @@ namespace Anicluster.Database {
         /// Vorhandene Daten bleiben unverändert, die neuen Spalten sind zunächst leer.
         /// </summary>
         private static void MigrateFromVersion2(DatabaseManager dbManager) {
-            MigrateWithBackup(dbManager, VersionWithoutMetadata, SchemaV3, CurrentVersion);
+            MigrateWithBackup(dbManager, VersionWithoutMetadata, SchemaV3, VersionWithoutUid);
+        }
+
+        /// <summary>
+        /// Migration von Version 3 auf Version 4: jeder Anime erhält eine feste Kennung (GUID). Vorhandene Daten bleiben unverändert.
+        /// </summary>
+        private static void MigrateFromVersion3(DatabaseManager dbManager) {
+            MigrateWithBackup(dbManager, VersionWithoutUid, SchemaV4, CurrentVersion);
         }
 
         /// <summary>
@@ -338,6 +354,21 @@ ALTER TABLE Anime ADD COLUMN Description TEXT;
 ALTER TABLE Anime ADD COLUMN AniListId INTEGER;
 ALTER TABLE Anime ADD COLUMN MyAnimeListId INTEGER;
 ALTER TABLE Anime ADD COLUMN KitsuId INTEGER;
+";
+
+        /// <summary>
+        /// Ergänzung in Version 4: eine feste Kennung (GUID als Text) pro Anime, damit derselbe Anime in zwei Datenbanken
+        /// wiedererkannt wird (Datensicherung, späterer Vergleich). Vorhandene Animes erhalten eine zufällige Kennung,
+        /// ein Trigger vergibt sie auch für Animes, die per SQL-Skript ohne Kennung eingefügt werden.
+        /// </summary>
+        private const string SchemaV4 = @"
+ALTER TABLE Anime ADD COLUMN Uid TEXT;
+UPDATE Anime SET Uid = lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)), 2) || '-' || substr('89ab', 1 + (abs(random()) % 4), 1) || substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) WHERE Uid IS NULL;
+CREATE UNIQUE INDEX IX_Anime_Uid ON Anime (Uid);
+CREATE TRIGGER TR_Anime_Uid AFTER INSERT ON Anime WHEN NEW.Uid IS NULL
+BEGIN
+    UPDATE Anime SET Uid = lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)), 2) || '-' || substr('89ab', 1 + (abs(random()) % 4), 1) || substr(hex(randomblob(2)), 2) || '-' || hex(randomblob(6))) WHERE Id = NEW.Id;
+END;
 ";
 
         /// <summary>

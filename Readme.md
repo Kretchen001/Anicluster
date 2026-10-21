@@ -45,6 +45,7 @@ Anicluster ist eine Windows-Desktopanwendung (WPF, .NET 8), mit der du deine Ani
 - **Zeitstrahl**: Zeigt alle Animes mit Veröffentlichungszeitraum als Balken auf einer Zeitachse, mit Staffeln, Unterbrechungen und Heute-Linie. Zoom (auch Strg + Mausrad), waagerechtes Scrollen, Tooltips mit Beginn, Ende und Dauer sowie Filter nach Name und Tags.
 - **Anime-Netzwerk**: Animes als Knoten in drei Netzwerkarten, zwischen denen du umschaltest: **Vorgänger und Nachfolger** (aus den Feldern Vorgänger, Nachfolger, Verwandt, mit Pfeilen), **ähnliche Tags** (seltene gemeinsame Tags zählen mehr) und **ähnliche Bewertung** (Story, Animation, Effekte, Akustik). Cluster liegen auf einer gemeinsamen Fläche mit Beschriftung. Regler für Mindestähnlichkeit und Nachbarn pro Anime, Statusfilter, Namenssuche, Zoom (auch Strg + Mausrad). Ein Klick zeigt die Verbindungen des Animes, ein Doppelklick öffnet ihn.
 - **Online-Metadaten** (optional): Im Editor lädt „Metadaten laden …“ auf Knopfdruck Cover, Beschreibung und Veröffentlichungszeitraum eines einzelnen Animes aus **AniList** (Standard), **Jikan** (MyAnimeList) oder **Kitsu**. Die Quelle wählst du im Dialog, übernommen wird nur, was du auswählst. Ohne Internet und ohne Konto bleibt alles nutzbar.
+- **Datensicherung**: In den Einstellungen exportierst du die ganze Bibliothek (wahlweise mit Cover) in eine **JSON-Datei** und liest sie wieder ein, entweder **zusammenführend** (nur Fehlendes ergänzen) oder **ersetzend** (Wiederherstellen, mit vorheriger Kopie der Datenbank). Jeder Anime hat eine feste Kennung, damit er sich später zwischen zwei Datenbanken wiedererkennen lässt.
 - **Themes**: Hell, Dunkel und eigene Farbpalette mit Live-Vorschau.
 - **Schnell hinzufügen** für Animes, die nur Name, Tier und Favorit brauchen.
 - Versteckte **SQL-Konsole** (Rechtsklick auf die Versionsnummer) für Fortgeschrittene. Verändernde Befehle werden bestätigt und protokolliert.
@@ -79,11 +80,11 @@ dotnet publish Anicluster/Anicluster.csproj -p:PublishProfile=FolderProfile -p:B
 | Was | Wo |
 |---|---|
 | Datenbank | `db\data.sqlite` neben der Anwendung (installiert: `C:\Program Files\Anicluster\db`, für alle Benutzer gemeinsam) |
-| Sicherungen bei Migrationen | neben der Datenbank (`data.legacy-…`, `data.v1-…`, `data.v2-…`) |
+| Sicherungen bei Migrationen | neben der Datenbank (`data.legacy-…`, `data.v1-…`, `data.v2-…`, `data.v3-…`, `data.vor-import-…`) |
 | Logs | `logs\` neben der Anwendung (tägliche Rotation) |
 | Einstellungen | `%AppData%\Anicluster\settings.json` (pro Benutzer) |
 
-Die Datenbank hat derzeit die Struktur **Version 3** (`PRAGMA user_version`). Neuere Datenbanken lassen sich mit älteren Programmversionen nicht öffnen.
+Die Datenbank hat derzeit die Struktur **Version 4** (`PRAGMA user_version`). Neuere Datenbanken lassen sich mit älteren Programmversionen nicht öffnen.
 
 ### Projektstruktur
 
@@ -94,6 +95,7 @@ Anicluster/
   ViewModels/            Zustand und Logik (MVVM, ohne Framework und ohne Commands)
   Views/                 UserControls (XAML + schlanker Code-Behind)
   Dialogs/               Dialog-Dienst und Dialogfenster
+  Backup/                Export und Import der Bibliothek als JSON (Datensicherung)
   Imaging/               Bildaufbereitung (Verkleinern, Vorschau erzeugen)
   Metadata/              Online-Metadaten von AniList, Jikan und Kitsu (Abfragen, Ergebnisse, Textaufbereitung)
   Resources/             Styles, Templates, Icon
@@ -136,6 +138,7 @@ Anicluster is a Windows desktop application (WPF, .NET 8) for managing your anim
 - **Timeline**: shows all animes with a publishing period as bars on a time axis, including seasons, interruptions and a today line. Zoom (also Ctrl + mouse wheel), horizontal scrolling, tooltips with start, end and duration, and filters by name and tags.
 - **Anime network**: animes as nodes in three network types you can switch between: **predecessor and successor** (from the predecessor, successor and related fields, with arrows), **similar tags** (rare shared tags count more) and **similar ratings** (story, animation, effects, acoustics). Clusters sit on a shared background with a caption. Sliders for minimum similarity and neighbors per anime, status filter, name search, zoom (also Ctrl + mouse wheel). A click shows the connections of an anime, a double click opens it.
 - **Online metadata** (optional): in the editor, "Metadaten laden …" fetches cover, description and publishing period of a single anime from **AniList** (default), **Jikan** (MyAnimeList) or **Kitsu** on a button press. You pick the source in the dialog and only what you select is applied. Everything stays usable without internet and without an account.
+- **Backup**: in the settings you export the whole library (optionally with covers) to a **JSON file** and import it again, either **merging** (only add what is missing) or **replacing** (restore, with a copy of the database beforehand). Every anime has a stable identifier so it can be recognised across two databases later.
 - **Themes**: light, dark and a custom palette with live preview.
 - **Quick add** for entries that only need a name, tier and favorite flag.
 - Hidden **SQL console** (right-click the version number) for advanced users. Modifying statements require confirmation and are logged.
@@ -170,11 +173,11 @@ dotnet publish Anicluster/Anicluster.csproj -p:PublishProfile=FolderProfile -p:B
 | What | Where |
 |---|---|
 | Database | `db\data.sqlite` next to the application (installed: `C:\Program Files\Anicluster\db`, shared by all users) |
-| Migration backups | next to the database (`data.legacy-…`, `data.v1-…`, `data.v2-…`) |
+| Migration backups | next to the database (`data.legacy-…`, `data.v1-…`, `data.v2-…`, `data.v3-…`, `data.vor-import-…`) |
 | Logs | `logs\` next to the application (daily rotation) |
 | Settings | `%AppData%\Anicluster\settings.json` (per user) |
 
-The database currently uses **schema version 3** (`PRAGMA user_version`). Newer databases cannot be opened by older program versions.
+The database currently uses **schema version 4** (`PRAGMA user_version`). Newer databases cannot be opened by older program versions.
 
 ### Project structure
 
@@ -185,6 +188,7 @@ Anicluster/
   ViewModels/            State and logic (MVVM, no framework, no commands)
   Views/                 UserControls (XAML + thin code-behind)
   Dialogs/               Dialog service and dialog window
+  Backup/                Export and import of the library as JSON (backup)
   Imaging/               Image processing (downscaling, thumbnail creation)
   Metadata/              Online metadata from AniList, Jikan and Kitsu (requests, results, text cleanup)
   Resources/             Styles, templates, icon

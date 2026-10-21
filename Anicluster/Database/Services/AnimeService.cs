@@ -13,7 +13,7 @@ namespace Anicluster.Database.Services {
 
         private const string SelectAnimeColumns =
             "Id, Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment, "
-            + "Description, AniListId, MyAnimeListId, KitsuId";
+            + "Description, AniListId, MyAnimeListId, KitsuId, Uid";
 
         private readonly DatabaseManager _databaseManager;
         private readonly StatusService _statusService = new StatusService();
@@ -32,17 +32,20 @@ namespace Anicluster.Database.Services {
         public bool Insert(Anime animeToInsert) {
             try {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    if (string.IsNullOrWhiteSpace(animeToInsert.Uid)) {
+                        animeToInsert.Uid = Guid.NewGuid().ToString();
+                    }
                     animeToInsert.Id = session.Insert(
                         @"INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment,
-                                             Description, AniListId, MyAnimeListId, KitsuId)
+                                             Description, AniListId, MyAnimeListId, KitsuId, Uid)
                             VALUES (@Name, @OriginalName, @Url, @Favorite, @Tier, @RecommendedFrom, @Predecessor, @Successor, @Related, @Comment,
-                                    @Description, @AniListId, @MyAnimeListId, @KitsuId);",
+                                    @Description, @AniListId, @MyAnimeListId, @KitsuId, @Uid);",
                         ("@Name", animeToInsert.Name), ("@OriginalName", animeToInsert.OriginalName), ("@Url", animeToInsert.Url),
                         ("@Favorite", animeToInsert.Favorite), ("@Tier", animeToInsert.Tier), ("@RecommendedFrom", animeToInsert.RecommendedFrom),
                         ("@Predecessor", animeToInsert.Predecessor), ("@Successor", animeToInsert.Successor), ("@Related", animeToInsert.Related),
                         ("@Comment", animeToInsert.Comment), ("@Description", animeToInsert.Description),
                         ("@AniListId", animeToInsert.AniListId), ("@MyAnimeListId", animeToInsert.MyAnimeListId),
-                        ("@KitsuId", animeToInsert.KitsuId)
+                        ("@KitsuId", animeToInsert.KitsuId), ("@Uid", animeToInsert.Uid)
                     );
                     this.SaveRelatedData(session, animeToInsert);
                     session.Commit();
@@ -170,6 +173,29 @@ namespace Anicluster.Database.Services {
             }
             catch (Exception ex) {
                 Log.Error(ex, "Die Anime-Liste konnte nicht geladen werden.");
+                return [];
+            }
+        }
+
+        public List<AnimeIdentity> SelectAnimeIdentities() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return session.Query(
+                        "SELECT Id, Uid, Name, OriginalName, AniListId, MyAnimeListId, KitsuId FROM Anime ORDER BY Id;",
+                        reader => new AnimeIdentity(
+                            reader.GetInt(0),
+                            reader.GetStringOrNull(1) ?? string.Empty,
+                            reader.GetString(2),
+                            reader.GetStringOrNull(3),
+                            reader.GetIntOrNull(4),
+                            reader.GetIntOrNull(5),
+                            reader.GetIntOrNull(6)
+                        )
+                    );
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Kennungen der Animes konnten nicht geladen werden.");
                 return [];
             }
         }
@@ -343,7 +369,8 @@ namespace Anicluster.Database.Services {
                 Description = reader.GetStringOrNull(11),
                 AniListId = reader.GetIntOrNull(12),
                 MyAnimeListId = reader.GetIntOrNull(13),
-                KitsuId = reader.GetIntOrNull(14)
+                KitsuId = reader.GetIntOrNull(14),
+                Uid = reader.GetStringOrNull(15) ?? string.Empty
             };
         }
     }

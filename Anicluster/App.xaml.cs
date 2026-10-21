@@ -1,4 +1,5 @@
 ﻿using Anicluster.Database;
+using Anicluster.Backup;
 using Anicluster.Database.Services;
 using Anicluster.Dialogs;
 using Anicluster.Metadata;
@@ -51,14 +52,17 @@ namespace Anicluster {
 
             IDialogService dialogService = new DialogService();
             this._metadataClient = new MetadataClient();
+            AnimeService animeService = new AnimeService(dbManager);
+            TagService tagService = new TagService(dbManager);
             MainViewModel mainViewModel = new MainViewModel(
-                new AnimeService(dbManager),
-                new TagService(dbManager),
+                animeService,
+                tagService,
                 dialogService,
                 themeService,
                 this._settingsService,
                 dbManager,
-                this._metadataClient
+                this._metadataClient,
+                new BackupService(animeService, tagService, dbManager)
             );
             this.MainWindow = new MainWindow { DataContext = mainViewModel };
             this.MainWindow.Show();

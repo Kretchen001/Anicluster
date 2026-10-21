@@ -66,6 +66,30 @@ namespace Anicluster.Dialogs {
             return confirmed == true ? dialog.FileName : null;
         }
 
+        public string? PickSaveFile(string title, string filter, string defaultFileName) {
+            SaveFileDialog dialog = new SaveFileDialog() {
+                Title = title,
+                Filter = filter,
+                FileName = defaultFileName,
+                AddExtension = true,
+                OverwritePrompt = true
+            };
+            Window? owner = this.GetActiveWindow();
+            bool? confirmed = owner is null ? dialog.ShowDialog() : dialog.ShowDialog(owner);
+            return confirmed == true ? dialog.FileName : null;
+        }
+
+        public string? PickOpenFile(string title, string filter) {
+            OpenFileDialog dialog = new OpenFileDialog() {
+                Title = title,
+                Filter = filter,
+                CheckFileExists = true
+            };
+            Window? owner = this.GetActiveWindow();
+            bool? confirmed = owner is null ? dialog.ShowDialog() : dialog.ShowDialog(owner);
+            return confirmed == true ? dialog.FileName : null;
+        }
+
         /// <summary>Das aktuell aktive Fenster, ersatzweise das Hauptfenster.</summary>
         private Window? GetActiveWindow() {
             return Application.Current.Windows.OfType<Window>().FirstOrDefault(x => x.IsActive)
