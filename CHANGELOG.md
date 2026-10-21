@@ -14,6 +14,12 @@ Für Versionen vor 2.1.0 gibt es keine Tags im Verlauf, sie sind deshalb nach Ze
   - Filter nach Namen und nach Tags (alle Tags oder ein Tag genügt). Doppelklick öffnet den Anime. Animes ohne Zeitraum werden nur gezählt.
 - `SqlScripts/Demo-Zeitraeume.sql`: Veröffentlichungszeiträume, Staffeln und Pausen für viele Animes der Beispielliste, zum Ausprobieren des Zeitstrahls.
 
+### Geändert
+- **Installer**: Das Setup verlangt jetzt Administratorrechte und installiert für alle Benutzer nach „Programme“ (`C:\Program Files\Anicluster`, 64-Bit). Die Auswahl „nur für mich“ entfällt. Anicluster selbst läuft weiterhin ohne Administratorrechte.
+  - Datenbank und Logs bleiben im Installationsordner und werden für alle Benutzer beschreibbar angelegt. Alle Benutzer eines Rechners teilen sich damit eine Datenbank, die Einstellungen bleiben pro Benutzer.
+  - Eine bisher nur für den Benutzer installierte Version wird nicht automatisch übernommen: Die Datenbank (`%LocalAppData%\Programs\Anicluster\db`) muss nach dem Umstieg in den neuen `db`-Ordner kopiert werden.
+  - Beim Deinstallieren gilt die Rückfrage zu den Einstellungen nur für das Benutzerkonto, unter dem die Deinstallation läuft.
+
 ### Hinweis
 - Die Datenbankstruktur bleibt bei Version 2, ein Update braucht keine Migration.
 

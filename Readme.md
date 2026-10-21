@@ -50,14 +50,15 @@ Anicluster ist eine Windows-Desktopanwendung (WPF, .NET 8), mit der du deine Ani
 
 ### Voraussetzungen
 
-- Windows 10 oder 11
-- Zum Bauen: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), optional [Inno Setup 6](https://jrsoftware.org/isinfo.php) für den Installer
+- Windows 10 oder 11 (64-Bit), zum Installieren sind Administratorrechte nötig
+- Zum Bauen: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), optional [Inno Setup 6.3 oder neuer](https://jrsoftware.org/isinfo.php) für den Installer
 
 ### Installation
 
 1. Den Installer `setup_Anicluster_v_<Version>.exe` ausführen.
-2. Standardmäßig wird nur für den aktuellen Benutzer installiert (keine Administratorrechte nötig). Alternativ ist die Installation für alle Benutzer möglich.
+2. Der Installer verlangt Administratorrechte und installiert für alle Benutzer nach `C:\Program Files\Anicluster`. Anicluster selbst läuft ohne Administratorrechte. Datenbank und Logs liegen im Installationsordner und sind für alle Benutzer beschreibbar, die Datenbank wird daher von allen Benutzern des Rechners gemeinsam genutzt. Die Einstellungen bleiben pro Benutzer.
 3. Ein Update über eine bestehende Installation behält Datenbank und Einstellungen. Eine ältere Datenbank wird beim ersten Start automatisch migriert und vorher gesichert.
+4. Umstieg von einer früheren Installation nur für den aktuellen Benutzer: Sie wird nicht automatisch übernommen. Nach der neuen Installation `data.sqlite` aus `%LocalAppData%\Programs\Anicluster\db` in `C:\Program Files\Anicluster\db` kopieren (Anicluster vorher schließen) und die alte Installation deinstallieren.
 
 ### Bauen und Veröffentlichen
 
@@ -75,10 +76,10 @@ dotnet publish Anicluster/Anicluster.csproj -p:PublishProfile=FolderProfile -p:B
 
 | Was | Wo |
 |---|---|
-| Datenbank | `db\data.sqlite` neben der Anwendung |
+| Datenbank | `db\data.sqlite` neben der Anwendung (installiert: `C:\Program Files\Anicluster\db`, für alle Benutzer gemeinsam) |
 | Sicherungen bei Migrationen | neben der Datenbank (`data.legacy-…`, `data.v1-…`) |
 | Logs | `logs\` neben der Anwendung (tägliche Rotation) |
-| Einstellungen | `%AppData%\Anicluster\settings.json` |
+| Einstellungen | `%AppData%\Anicluster\settings.json` (pro Benutzer) |
 
 Die Datenbank hat derzeit die Struktur **Version 2** (`PRAGMA user_version`). Neuere Datenbanken lassen sich mit älteren Programmversionen nicht öffnen.
 
@@ -136,14 +137,15 @@ Anicluster is a Windows desktop application (WPF, .NET 8) for managing your anim
 
 ### Requirements
 
-- Windows 10 or 11
-- To build: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), optionally [Inno Setup 6](https://jrsoftware.org/isinfo.php) for the installer
+- Windows 10 or 11 (64-bit); administrator rights are required to install
+- To build: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), optionally [Inno Setup 6.3 or newer](https://jrsoftware.org/isinfo.php) for the installer
 
 ### Installation (English)
 
 1. Run the installer `setup_Anicluster_v_<version>.exe`.
-2. By default it installs for the current user only (no administrator rights needed). Installing for all users is possible as an option.
+2. The installer requires administrator rights and installs for all users into `C:\Program Files\Anicluster`. Anicluster itself runs without administrator rights. The database and logs live in the installation folder (writable for all users), so all users of the computer share one database. Settings stay per user.
 3. Updating over an existing installation keeps your database and settings. An older database is migrated automatically on first start, after a backup.
+4. Switching from an earlier per-user installation: it is not taken over automatically. After the new installation, copy `data.sqlite` from `%LocalAppData%\Programs\Anicluster\db` to `C:\Program Files\Anicluster\db` (close Anicluster first) and uninstall the old installation.
 
 ### Build and publish
 
@@ -161,10 +163,10 @@ dotnet publish Anicluster/Anicluster.csproj -p:PublishProfile=FolderProfile -p:B
 
 | What | Where |
 |---|---|
-| Database | `db\data.sqlite` next to the application |
+| Database | `db\data.sqlite` next to the application (installed: `C:\Program Files\Anicluster\db`, shared by all users) |
 | Migration backups | next to the database (`data.legacy-…`, `data.v1-…`) |
 | Logs | `logs\` next to the application (daily rotation) |
-| Settings | `%AppData%\Anicluster\settings.json` |
+| Settings | `%AppData%\Anicluster\settings.json` (per user) |
 
 The database currently uses **schema version 2** (`PRAGMA user_version`). Newer databases cannot be opened by older program versions.
 

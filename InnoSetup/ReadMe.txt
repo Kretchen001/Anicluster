@@ -1,13 +1,20 @@
 ﻿Anicluster 2.3.0
 
 Installation
-- Standardmäßig wird nur für den aktuellen Benutzer installiert, es sind keine Administratorrechte nötig.
-- Alternativ lässt sich für alle Benutzer nach "Programme" installieren. Datenbank- und Log-Ordner werden dabei
-  automatisch für Benutzer beschreibbar angelegt, ein Start mit Administratorrechten ist nicht mehr erforderlich.
+- Der Installer verlangt Administratorrechte (Windows fragt beim Start nach) und installiert für alle Benutzer nach
+  "Programme" (C:\Program Files\Anicluster). Anicluster selbst startet weiterhin ohne Administratorrechte.
+- Datenbank (db) und Logs (logs) liegen im Installationsordner und werden für alle Benutzer beschreibbar angelegt.
+  Alle Benutzer dieses Rechners arbeiten daher mit derselben Datenbank. Die Einstellungen (Farben, Ansicht) bleiben
+  pro Benutzer unter %AppData%\Anicluster.
 - Ein Update über eine vorhandene Installation behält Datenbank und Einstellungen. Eine ältere Datenbank wird beim
   ersten Start automatisch migriert und vorher gesichert.
+- Umstieg von einer Installation nur für den aktuellen Benutzer: Diese Installation wird nicht automatisch übernommen.
+  Anicluster schließen, nach der neuen Installation die Datei data.sqlite aus
+  %LocalAppData%\Programs\Anicluster\db in C:\Program Files\Anicluster\db kopieren und die alte Installation
+  danach über "Apps und Features" deinstallieren (Daten dabei behalten).
 
 Neu in 2.3.0
+- Der Installer verlangt jetzt Administratorrechte und installiert für alle Benutzer nach "Programme"
 - Geschmacksprofil: zeigt, welche Tags bei deinen Lieblingen (Tier S bis D, Favoriten) auffällig oft oder selten vorkommen
 - Animes mit wählbarem Status werden nach Passung vorgeschlagen ("Passt zu dir" und "Passt leidlich zu dir" über zwei
   Schwellwerte) und lassen sich in der Bibliothek filtern
