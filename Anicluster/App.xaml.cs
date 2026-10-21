@@ -1,6 +1,7 @@
 ﻿using Anicluster.Database;
 using Anicluster.Database.Services;
 using Anicluster.Dialogs;
+using Anicluster.Metadata;
 using Anicluster.Settings;
 using Anicluster.Theming;
 using Anicluster.ViewModels;
@@ -19,6 +20,7 @@ namespace Anicluster {
         private const string ConnectionString = "Data Source=db/data.sqlite";
 
         private AppSettingsService? _settingsService;
+        private MetadataClient? _metadataClient;
 
         protected override void OnStartup(StartupEventArgs e) {
             base.OnStartup(e);
@@ -48,13 +50,15 @@ namespace Anicluster {
             }
 
             IDialogService dialogService = new DialogService();
+            this._metadataClient = new MetadataClient();
             MainViewModel mainViewModel = new MainViewModel(
                 new AnimeService(dbManager),
                 new TagService(dbManager),
                 dialogService,
                 themeService,
                 this._settingsService,
-                dbManager
+                dbManager,
+                this._metadataClient
             );
             this.MainWindow = new MainWindow { DataContext = mainViewModel };
             this.MainWindow.Show();
@@ -62,6 +66,7 @@ namespace Anicluster {
 
         protected override void OnExit(ExitEventArgs e) {
             this._settingsService?.Save();
+            this._metadataClient?.Dispose();
             Log.Information("Application shutdown.");
             Log.CloseAndFlush();
             base.OnExit(e);

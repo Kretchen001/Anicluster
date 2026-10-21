@@ -11,7 +11,9 @@ namespace Anicluster.Database.Services {
     /// </summary>
     public class AnimeService : IAnimeService {
 
-        private const string SelectAnimeColumns = "Id, Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment";
+        private const string SelectAnimeColumns =
+            "Id, Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment, "
+            + "Description, AniListId, MyAnimeListId, KitsuId";
 
         private readonly DatabaseManager _databaseManager;
         private readonly StatusService _statusService = new StatusService();
@@ -31,12 +33,16 @@ namespace Anicluster.Database.Services {
             try {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {
                     animeToInsert.Id = session.Insert(
-                        @"INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment)
-                            VALUES (@Name, @OriginalName, @Url, @Favorite, @Tier, @RecommendedFrom, @Predecessor, @Successor, @Related, @Comment);",
+                        @"INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment,
+                                             Description, AniListId, MyAnimeListId, KitsuId)
+                            VALUES (@Name, @OriginalName, @Url, @Favorite, @Tier, @RecommendedFrom, @Predecessor, @Successor, @Related, @Comment,
+                                    @Description, @AniListId, @MyAnimeListId, @KitsuId);",
                         ("@Name", animeToInsert.Name), ("@OriginalName", animeToInsert.OriginalName), ("@Url", animeToInsert.Url),
                         ("@Favorite", animeToInsert.Favorite), ("@Tier", animeToInsert.Tier), ("@RecommendedFrom", animeToInsert.RecommendedFrom),
                         ("@Predecessor", animeToInsert.Predecessor), ("@Successor", animeToInsert.Successor), ("@Related", animeToInsert.Related),
-                        ("@Comment", animeToInsert.Comment)
+                        ("@Comment", animeToInsert.Comment), ("@Description", animeToInsert.Description),
+                        ("@AniListId", animeToInsert.AniListId), ("@MyAnimeListId", animeToInsert.MyAnimeListId),
+                        ("@KitsuId", animeToInsert.KitsuId)
                     );
                     this.SaveRelatedData(session, animeToInsert);
                     session.Commit();
@@ -93,12 +99,15 @@ namespace Anicluster.Database.Services {
                         @"UPDATE Anime
                             SET Name = @Name, OriginalName = @OriginalName, Url = @Url, Favorite = @Favorite, Tier = @Tier,
                                 RecommendedFrom = @RecommendedFrom, Predecessor = @Predecessor, Successor = @Successor,
-                                Related = @Related, Comment = @Comment
+                                Related = @Related, Comment = @Comment, Description = @Description,
+                                AniListId = @AniListId, MyAnimeListId = @MyAnimeListId, KitsuId = @KitsuId
                             WHERE Id = @Id;",
                         ("@Name", animeToUpdate.Name), ("@OriginalName", animeToUpdate.OriginalName), ("@Url", animeToUpdate.Url),
                         ("@Favorite", animeToUpdate.Favorite), ("@Tier", animeToUpdate.Tier), ("@RecommendedFrom", animeToUpdate.RecommendedFrom),
                         ("@Predecessor", animeToUpdate.Predecessor), ("@Successor", animeToUpdate.Successor), ("@Related", animeToUpdate.Related),
-                        ("@Comment", animeToUpdate.Comment), ("@Id", animeToUpdate.Id)
+                        ("@Comment", animeToUpdate.Comment), ("@Description", animeToUpdate.Description),
+                        ("@AniListId", animeToUpdate.AniListId), ("@MyAnimeListId", animeToUpdate.MyAnimeListId),
+                        ("@KitsuId", animeToUpdate.KitsuId), ("@Id", animeToUpdate.Id)
                     );
                     if (affectedRows == 0) {
                         Log.Error("Anime mit der Id {AnimeId} existiert nicht und kann nicht aktualisiert werden.", animeToUpdate.Id);
@@ -330,7 +339,11 @@ namespace Anicluster.Database.Services {
                 Predecessor = reader.GetInt(7),
                 Successor = reader.GetInt(8),
                 Related = reader.GetInt(9),
-                Comment = reader.GetStringOrNull(10)
+                Comment = reader.GetStringOrNull(10),
+                Description = reader.GetStringOrNull(11),
+                AniListId = reader.GetIntOrNull(12),
+                MyAnimeListId = reader.GetIntOrNull(13),
+                KitsuId = reader.GetIntOrNull(14)
             };
         }
     }

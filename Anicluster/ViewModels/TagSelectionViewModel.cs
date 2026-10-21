@@ -16,6 +16,8 @@ namespace Anicluster.ViewModels {
 
         public override string Title => "Tag-Selektor";
 
+        public override bool FillsOwnerWindow => true;
+
         public ObservableCollection<TagItemViewModel> AllTags { get; } = [];
 
         /// <summary>Gefilterte Sicht auf <see cref="AllTags"/></summary>

@@ -79,6 +79,10 @@ namespace Anicluster.Views {
             this.ViewModel?.EditPublishingTime();
         }
 
+        private void BtnLoadMetadata_Click(object sender, RoutedEventArgs e) {
+            this.ViewModel?.LoadMetadata();
+        }
+
         #region Bild
         private void BtnSelectImage_Click(object sender, RoutedEventArgs e) {
             this.ViewModel?.SelectImage();

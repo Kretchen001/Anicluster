@@ -1,0 +1,268 @@
+﻿<UserControl x:Class="Anicluster.Views.MetadataImportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Anicluster.ViewModels"
+             xmlns:views="clr-namespace:Anicluster.Views"
+             xmlns:meta="clr-namespace:Anicluster.Metadata"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:MetadataImportViewModel}"
+             Loaded="UserControl_Loaded"
+             MinWidth="940"
+             MinHeight="640"
+             d:DesignHeight="640"
+             d:DesignWidth="940">
+    <UserControl.Resources>
+        <views:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+
+        <!-- Treffer in der Liste: ohne Systemfarben, Auswahl und Überfahren in den Farben des Designs -->
+        <Style x:Key="CandidateItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Container"
+                                Background="Transparent"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Container" Property="Background" Value="{DynamicResource SurfaceHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Container" Property="Background" Value="{DynamicResource AccentSoftBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Statuszeile, Fehler erscheinen in der Warnfarbe des Designs -->
+        <Style x:Key="StatusTextStyle" TargetType="TextBlock" BasedOn="{StaticResource MutedText}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsStatusError}" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="24,20,24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Quelle für die nächste Abfrage -->
+        <Border Grid.Row="0" Style="{StaticResource Card}" Margin="0,0,0,16">
+            <StackPanel>
+                <TextBlock Text="Quelle" Style="{StaticResource SectionTitle}"/>
+                <WrapPanel>
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="AniList"
+                                 IsChecked="{Binding Provider, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static meta:MetadataProviderKind.AniList}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="Jikan (MyAnimeList)"
+                                 IsChecked="{Binding Provider, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static meta:MetadataProviderKind.Jikan}}"/>
+                    <RadioButton Style="{StaticResource ChipStyle}"
+                                 Content="Kitsu"
+                                 IsChecked="{Binding Provider, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static meta:MetadataProviderKind.Kitsu}}"/>
+                </WrapPanel>
+                <TextBlock Text="Gilt für die nächste Abfrage und wird gemerkt. Abgefragt wird beim Öffnen und bei „Suchen“, sonst nie."
+                           Style="{StaticResource MutedText}"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="380"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Suche und Treffer -->
+            <Border Grid.Column="0" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TBQuery"
+                                 Grid.Column="0"
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 KeyDown="TBQuery_KeyDown"/>
+                        <Button Grid.Column="1"
+                                Style="{StaticResource PrimaryButton}"
+                                Content="Suchen"
+                                Margin="8,0,0,0"
+                                IsEnabled="{Binding CanSearch}"
+                                Click="BtnSearch_Click"/>
+                    </Grid>
+                    <TextBlock Grid.Row="1"
+                               Text="{Binding StatusText}"
+                               Style="{StaticResource StatusTextStyle}"
+                               Margin="0,0,0,10"/>
+                    <ListBox Grid.Row="2"
+                             ItemsSource="{Binding Candidates}"
+                             SelectedItem="{Binding SelectedCandidate}"
+                             ItemContainerStyle="{StaticResource CandidateItemStyle}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Title}"
+                                               FontWeight="SemiBold"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding Subtitle}"
+                                               Style="{StaticResource MutedText}"
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               Margin="0,2,0,0"
+                                               Visibility="{Binding HasSubtitle, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- Vorschau des gewählten Treffers und Auswahl dessen, was übernommen wird -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <Grid>
+                    <TextBlock Text="Wähle links einen Treffer, dann siehst du hier, was übernommen werden kann."
+                               Style="{StaticResource MutedText}"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"
+                               MaxWidth="320"
+                               Visibility="{Binding HasSelection, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  Visibility="{Binding HasSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel Margin="0,0,8,0">
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Cover im Seitenverhältnis 2:3, abgerundete Ecken über die Clip-Geometrie -->
+                                <Grid Grid.Column="0"
+                                      Width="140"
+                                      Height="210"
+                                      Background="{DynamicResource SurfaceAltBrush}">
+                                    <Grid.Clip>
+                                        <RectangleGeometry Rect="0,0,140,210" RadiusX="9" RadiusY="9"/>
+                                    </Grid.Clip>
+                                    <TextBlock Text="{Binding CoverStatusText}"
+                                               Style="{StaticResource MutedText}"
+                                               FontSize="12"
+                                               TextWrapping="Wrap"
+                                               TextAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Margin="12"/>
+                                    <Image Source="{Binding CoverData, Converter={StaticResource BytesToImageConverter}}"
+                                           Stretch="UniformToFill"
+                                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Grid>
+
+                                <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                                    <TextBlock Text="{Binding PreviewTitle}"
+                                               FontSize="18"
+                                               FontWeight="SemiBold"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding PreviewSubtitle}"
+                                               Style="{StaticResource MutedText}"
+                                               TextWrapping="Wrap"
+                                               Margin="0,4,0,0"
+                                               Visibility="{Binding HasPreviewSubtitle, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <TextBlock Text="Veröffentlichung" Style="{StaticResource FieldLabel}" Margin="0,16,0,5"/>
+                                    <TextBlock>
+                                        <Run Text="Beginn: "/>
+                                        <Run Text="{Binding StartText, Mode=OneWay}" FontWeight="SemiBold"/>
+                                    </TextBlock>
+                                    <TextBlock Margin="0,2,0,0">
+                                        <Run Text="Ende: "/>
+                                        <Run Text="{Binding EndText, Mode=OneWay}" FontWeight="SemiBold"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="Beschreibung" Style="{StaticResource FieldLabel}"/>
+                            <Border Background="{DynamicResource SurfaceAltBrush}"
+                                    CornerRadius="8"
+                                    Padding="12"
+                                    Margin="0,0,0,16">
+                                <ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto">
+                                    <TextBlock Text="{Binding PreviewDescription}" TextWrapping="Wrap"/>
+                                </ScrollViewer>
+                            </Border>
+
+                            <TextBlock Text="Übernehmen" Style="{StaticResource SectionTitle}"/>
+                            <CheckBox Content="Cover"
+                                      IsChecked="{Binding ApplyCover}"
+                                      IsEnabled="{Binding CanApplyCover}"/>
+                            <TextBlock Text="{Binding CoverNote}"
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="28,2,0,0"
+                                       Visibility="{Binding HasCoverNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <CheckBox Content="Beschreibung"
+                                      Margin="0,8,0,0"
+                                      IsChecked="{Binding ApplyDescription}"
+                                      IsEnabled="{Binding CanApplyDescription}"/>
+                            <TextBlock Text="{Binding DescriptionNote}"
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="28,2,0,0"
+                                       Visibility="{Binding HasDescriptionNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <CheckBox Content="Veröffentlichungszeitraum"
+                                      Margin="0,8,0,0"
+                                      IsChecked="{Binding ApplyPeriod}"
+                                      IsEnabled="{Binding CanApplyPeriod}"/>
+                            <TextBlock Text="{Binding PeriodNote}"
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="28,2,0,0"
+                                       Visibility="{Binding HasPeriodNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button Content="Abbrechen" MinWidth="120" Click="BtnCancel_Click"/>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Content="Übernehmen"
+                    MinWidth="140"
+                    Margin="10,0,0,0"
+                    IsEnabled="{Binding CanApply}"
+                    Click="BtnApply_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

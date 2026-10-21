@@ -61,6 +61,9 @@
     <DataTemplate DataType="{x:Type vm:PublishingTimeEditorViewModel}">
         <views:PublishingTimeEditorView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:MetadataImportViewModel}">
+        <views:MetadataImportView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:TagSelectionViewModel}">
         <views:TagSelectionView/>
     </DataTemplate>

@@ -24,6 +24,8 @@ namespace Anicluster.ViewModels {
 
         public override string Title => "SQL-Konsole";
 
+        public override bool FillsOwnerWindow => true;
+
         public string SqlText {
             get => this._sqlText;
             set => this.SetProperty(ref this._sqlText, value);

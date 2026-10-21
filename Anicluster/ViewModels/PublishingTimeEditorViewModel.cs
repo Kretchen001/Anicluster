@@ -23,6 +23,8 @@ namespace Anicluster.ViewModels {
 
         public override string Title => "Veröffentlichungszeitraum";
 
+        public override bool FillsOwnerWindow => true;
+
         public DateTime? StartDate {
             get => this._startDate;
             set => this.SetProperty(ref this._startDate, value);

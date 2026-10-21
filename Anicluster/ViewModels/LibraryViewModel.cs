@@ -1,6 +1,7 @@
 ﻿using Anicluster.Database.Services;
 using Anicluster.Settings;
 using Modells.Anime;
+using Serilog;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
@@ -22,9 +23,14 @@ namespace Anicluster.ViewModels {
         private AnimeSortField _sortField = AnimeSortField.Name;
         private bool _sortAscending = true;
         private LibraryViewMode _viewMode;
+        private bool _onlyWithImage;
         private int _visibleCount;
+        private int _refreshVersion;
 
         public ObservableCollection<AnimeListItemViewModel> Animes { get; } = [];
+
+        /// <summary>Dezenter Hinweis, wenn das Laden der Liste länger dauert</summary>
+        public LoadingNotice Loading { get; } = new LoadingNotice();
 
         /// <summary>Tags, nach denen gefiltert wird (z. B. aus dem Tag-Netzwerk übernommen)</summary>
         public ObservableCollection<TagFilterItem> TagFilters { get; } = [];
@@ -142,6 +148,21 @@ namespace Anicluster.ViewModels {
                     this.OnPropertyChanged(nameof(this.IsImageView));
                     this._settingsService.Current.LibraryViewMode = value;
                     this._settingsService.Save();
+                    if (this.OnlyWithImage) {
+                        this.RefreshFilter(); // der Bildfilter gilt nur in der Bilder-Ansicht
+                    }
+                }
+            }
+        }
+
+        /// <summary>Zeigt die Bilder-Ansicht nur Animes mit Bild (Karten und Tabelle bleiben davon unberührt)?</summary>
+        public bool OnlyWithImage {
+            get => this._onlyWithImage;
+            set {
+                if (this.SetProperty(ref this._onlyWithImage, value)) {
+                    this._settingsService.Current.LibraryOnlyWithImage = value;
+                    this._settingsService.Save();
+                    this.RefreshFilter();
                 }
             }
         }
@@ -190,16 +211,46 @@ namespace Anicluster.ViewModels {
             this._animeService = animeService;
             this._settingsService = settingsService;
             this._viewMode = settingsService.Current.LibraryViewMode;
+            this._onlyWithImage = settingsService.Current.LibraryOnlyWithImage;
             this.Items = CollectionViewSource.GetDefaultView(this.Animes);
             this.Items.Filter = this.Matches;
             this.ApplySort();
             this.Refresh();
         }
 
-        /// <summary>Lädt die Animes neu, Suche, Filter und Sortierung bleiben erhalten.</summary>
+        /// <summary>
+        /// Lädt die Animes neu, Suche, Filter und Sortierung bleiben erhalten. Die Datenbank wird im Hintergrund gelesen,
+        /// die bisherige Liste bleibt bis zum Ergebnis sichtbar. Dauert das Laden länger, erscheint der Ladehinweis.
+        /// </summary>
         public void Refresh() {
+            // Bewusst nicht abgewartet: Die Oberfläche soll nicht blockieren, das Ergebnis kommt über die Collection
+            _ = this.RefreshAsync();
+        }
+
+        /// <summary>Wie <see cref="Refresh"/>, aber abwartbar. Ein später gestartetes Laden macht ein früheres wirkungslos.</summary>
+        public async Task RefreshAsync() {
+            int version = ++this._refreshVersion;
+            this.Loading.Begin();
+            try {
+                List<AnimeListEntry> entries = await Task.Run(() => this._animeService.SelectAnimeListEntries());
+                if (version != this._refreshVersion) {
+                    return; // inzwischen läuft ein neueres Laden
+                }
+                this.ReplaceItems(entries);
+            }
+            catch (InvalidOperationException ex) {
+                // Läuft ohne Aufrufer, der den Fehler sehen könnte, deshalb hier protokollieren
+                Log.Error(ex, "Die Bibliothek konnte nicht aktualisiert werden.");
+            }
+            finally {
+                this.Loading.End();
+            }
+        }
+
+        /// <summary>Ersetzt die Liste durch die geladenen Einträge (nur auf dem UI-Thread aufrufen).</summary>
+        private void ReplaceItems(List<AnimeListEntry> entries) {
             this.Animes.Clear();
-            foreach (AnimeListEntry entry in this._animeService.SelectAnimeListEntries()) {
+            foreach (AnimeListEntry entry in entries) {
                 AnimeListItemViewModel item = new AnimeListItemViewModel(entry, this._animeService);
                 item.EditRequested += (sender, e) => this.EditRequested?.Invoke(this, item);
                 item.DeleteRequested += (sender, e) => this.DeleteRequested?.Invoke(this, item);
@@ -264,6 +315,9 @@ namespace Anicluster.ViewModels {
                 return false;
             }
             if (this.OnlyFavorites && !anime.IsFavorite) {
+                return false;
+            }
+            if (this.IsImageView && this.OnlyWithImage && !anime.HasImage) {
                 return false;
             }
             if (this.StatusFilter != LibraryStatusFilter.All && !this.MatchesStatus(anime.State)) {

@@ -11,15 +11,18 @@ namespace Anicluster.Database {
     public static class DatabaseSchema {
 
         /// <summary>Aktuelle Version der Datenbankstruktur</summary>
-        public const int CurrentVersion = 2;
+        public const int CurrentVersion = 3;
 
         /// <summary>Struktur nach der Umstellung auf Fremdschlüssel, noch ohne Anime-Bilder</summary>
         private const int VersionWithoutImages = 1;
 
+        /// <summary>Struktur mit Anime-Bildern, noch ohne Beschreibung und Quell-Ids</summary>
+        private const int VersionWithoutMetadata = 2;
+
         /// <summary>
         /// Stellt sicher, dass die Datenbank die aktuelle Struktur hat.
         /// Eine ältere Datenbank wird gesichert (Kopie neben der Datenbankdatei) und migriert, Version 0 in eine neue Datei,
-        /// Version 1 direkt in der vorhandenen Datei. Schlägt die Migration fehl, wird der alte Stand wiederhergestellt
+        /// die Versionen 1 und 2 direkt in der vorhandenen Datei. Schlägt die Migration fehl, wird der alte Stand wiederhergestellt
         /// und die Exception weitergereicht.
         /// </summary>
         public static void EnsureCurrent(DatabaseManager dbManager) {
@@ -41,15 +44,20 @@ namespace Anicluster.Database {
                 CreateNewDatabase(dbManager);
                 return;
             }
-            // Die Migrationen bauen aufeinander auf: Version 0 -> 1 -> 2
+            // Die Migrationen bauen aufeinander auf: Version 0 -> 1 -> 2 -> 3
             if (version == 0) {
                 Log.Information("Ältere Datenbank gefunden, Migration auf Version {Version} startet.", VersionWithoutImages);
                 MigrateFromVersion0(dbManager);
                 version = VersionWithoutImages;
             }
             if (version == VersionWithoutImages) {
-                Log.Information("Migration auf Version {Version} startet (Anime-Bilder).", CurrentVersion);
+                Log.Information("Migration auf Version {Version} startet (Anime-Bilder).", VersionWithoutMetadata);
                 MigrateFromVersion1(dbManager);
+                version = VersionWithoutMetadata;
+            }
+            if (version == VersionWithoutMetadata) {
+                Log.Information("Migration auf Version {Version} startet (Beschreibung und Quell-Ids).", CurrentVersion);
+                MigrateFromVersion2(dbManager);
             }
         }
 
@@ -59,6 +67,7 @@ namespace Anicluster.Database {
                 using (SqliteTransaction transaction = connection.BeginTransaction()) {
                     Execute(connection, transaction, SchemaV1);
                     Execute(connection, transaction, SchemaV2);
+                    Execute(connection, transaction, SchemaV3);
                     transaction.Commit();
                 }
                 Execute(connection, null, $"PRAGMA user_version = {CurrentVersion};");
@@ -67,13 +76,28 @@ namespace Anicluster.Database {
 
         /// <summary>
         /// Migration von Version 1 auf Version 2: ergänzt die Tabelle für die Anime-Bilder. Vorhandene Daten bleiben unverändert.
-        /// Vorher wird die Datenbankdatei gesichert, bei einem Fehler wird diese Sicherung zurückgespielt.
         /// </summary>
         private static void MigrateFromVersion1(DatabaseManager dbManager) {
+            MigrateWithBackup(dbManager, VersionWithoutImages, SchemaV2, VersionWithoutMetadata);
+        }
+
+        /// <summary>
+        /// Migration von Version 2 auf Version 3: ergänzt die Spalten für Beschreibung und die Ids bei AniList, MyAnimeList und Kitsu.
+        /// Vorhandene Daten bleiben unverändert, die neuen Spalten sind zunächst leer.
+        /// </summary>
+        private static void MigrateFromVersion2(DatabaseManager dbManager) {
+            MigrateWithBackup(dbManager, VersionWithoutMetadata, SchemaV3, CurrentVersion);
+        }
+
+        /// <summary>
+        /// Führt ein Strukturskript in der vorhandenen Datei aus und setzt danach die neue Version. Vorher wird die Datenbankdatei
+        /// gesichert (<c>data.v&lt;alte Version&gt;-&lt;Zeitstempel&gt;.sqlite</c>), bei einem Fehler wird diese Sicherung zurückgespielt.
+        /// </summary>
+        private static void MigrateWithBackup(DatabaseManager dbManager, int fromVersion, string schemaSql, int targetVersion) {
             string databasePath = dbManager.DatabasePath;
             string backupPath = Path.Combine(
                 Path.GetDirectoryName(databasePath)!,
-                $"{Path.GetFileNameWithoutExtension(databasePath)}.v1-{DateTime.Now:yyyyMMdd-HHmmss}{Path.GetExtension(databasePath)}"
+                $"{Path.GetFileNameWithoutExtension(databasePath)}.v{fromVersion}-{DateTime.Now:yyyyMMdd-HHmmss}{Path.GetExtension(databasePath)}"
             );
             SqliteConnection.ClearAllPools(); // gepoolte Verbindungen halten die Datei sonst gesperrt
             File.Copy(databasePath, backupPath);
@@ -82,13 +106,13 @@ namespace Anicluster.Database {
                 using (SqliteConnection connection = dbManager.GetConnection()) {
                     connection.Open();
                     using (SqliteTransaction transaction = connection.BeginTransaction()) {
-                        Execute(connection, transaction, SchemaV2);
+                        Execute(connection, transaction, schemaSql);
                         transaction.Commit();
                     }
-                    Execute(connection, null, $"PRAGMA user_version = {CurrentVersion};");
+                    Execute(connection, null, $"PRAGMA user_version = {targetVersion};");
                 }
                 SqliteConnection.ClearAllPools();
-                Log.Information("Migration auf Version {Version} abgeschlossen.", CurrentVersion);
+                Log.Information("Migration auf Version {Version} abgeschlossen.", targetVersion);
             }
             catch (Exception ex) {
                 Log.Error(ex, "Migration fehlgeschlagen, der alte Stand wird wiederhergestellt.");
@@ -303,6 +327,17 @@ CREATE TABLE AnimeImage (
     Data BLOB NOT NULL,
     Thumbnail BLOB NOT NULL
 );
+";
+
+        /// <summary>
+        /// Ergänzung in Version 3: Metadaten aus Online-Quellen. Eine ausführliche Beschreibung und die Ids der Einträge bei AniList,
+        /// MyAnimeList und Kitsu (damit ein Anime später ohne neue Suche abgeglichen werden kann). Alle Spalten sind optional.
+        /// </summary>
+        private const string SchemaV3 = @"
+ALTER TABLE Anime ADD COLUMN Description TEXT;
+ALTER TABLE Anime ADD COLUMN AniListId INTEGER;
+ALTER TABLE Anime ADD COLUMN MyAnimeListId INTEGER;
+ALTER TABLE Anime ADD COLUMN KitsuId INTEGER;
 ";
 
         /// <summary>

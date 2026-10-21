@@ -1,6 +1,7 @@
 ﻿using Anicluster.Database;
 using Anicluster.Database.Services;
 using Anicluster.Dialogs;
+using Anicluster.Metadata;
 using Anicluster.Settings;
 using Anicluster.Theming;
 using Modells.Anime;
@@ -20,6 +21,7 @@ namespace Anicluster.ViewModels {
         private readonly ITagService _tagService;
         private readonly IDialogService _dialogService;
         private readonly DatabaseManager _databaseManager;
+        private readonly IMetadataClient _metadataClient;
         private readonly AppSettingsService _settingsService;
         private readonly SettingsViewModel _settingsPage;
         private object _currentPage;
@@ -54,9 +56,11 @@ namespace Anicluster.ViewModels {
             IDialogService dialogService,
             ThemeService themeService,
             AppSettingsService settingsService,
-            DatabaseManager databaseManager
+            DatabaseManager databaseManager,
+            IMetadataClient metadataClient
         ) {
             this._databaseManager = databaseManager;
+            this._metadataClient = metadataClient;
             this._settingsService = settingsService;
             this._animeService = animeService;
             this._tagService = tagService;
@@ -197,7 +201,14 @@ namespace Anicluster.ViewModels {
 
         private void OpenEditor(Anime? anime) {
             this.DetachEditor();
-            AnimeEditorViewModel editor = new AnimeEditorViewModel(this._animeService, this._tagService, this._dialogService, anime);
+            AnimeEditorViewModel editor = new AnimeEditorViewModel(
+                this._animeService,
+                this._tagService,
+                this._dialogService,
+                this._metadataClient,
+                this._settingsService,
+                anime
+            );
             editor.CloseRequested += this.OnEditorCloseRequested;
             this._navigation = NavigationTarget.Library;
             this.CurrentPage = editor;

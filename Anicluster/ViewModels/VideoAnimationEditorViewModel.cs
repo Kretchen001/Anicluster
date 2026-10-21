@@ -15,6 +15,8 @@ namespace Anicluster.ViewModels {
 
         public override string Title => "OVA / Movie Generator";
 
+        public override bool FillsOwnerWindow => true;
+
         public ObservableCollection<VideoAnimation> Videos { get; } = [];
 
         /// <summary>Auswahlliste für den Typ</summary>

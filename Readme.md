@@ -35,15 +35,16 @@ Anicluster ist eine Windows-Desktopanwendung (WPF, .NET 8), mit der du deine Ani
 
 ### Funktionen
 
-- **Bibliothek** mit Suche, Filtern (Status, Tier, Favoriten, Tags) und Sortierung. Die Darstellung wechselt zwischen **Karten**, **Tabelle** und **Bildern** (Kacheln mit Cover). Die Auswahl wird gespeichert.
+- **Bibliothek** mit Suche, Filtern (Status, Tier, Favoriten, Tags) und Sortierung. Die Darstellung wechselt zwischen **Karten**, **Tabelle** und **Bildern** (Kacheln mit Cover, wahlweise nur Animes mit Bild). Die Auswahl wird gespeichert. Bei längerer Ladezeit erscheint ein kleiner Hinweis „Lädt …“.
 - **Editor** zum Anlegen und Bearbeiten: Name, Originalname, Link, Status, Tier, Favorit, Empfehlung, Kommentar, Vorgänger/Nachfolger/Verwandtes, Medieninfos und Veröffentlichungszeitraum.
 - **Bewertung** für Story, Animation, Effekte und Akustik (Soundtrack, Openings, Endings, Syncros) mit Gesamtwertung.
 - **Staffeln und OVAs/Filme** mit Sortierung per Drag and Drop.
 - **Bilder**: Cover per Dateiauswahl, aus der Zwischenablage oder per Drag and Drop einfügen. Bilder werden verkleinert in der Datenbank gespeichert, dazu entsteht eine zugeschnittene Vorschau (2:3).
-- **Tags** verwalten und im **Tag-Netzwerk** ansehen: Die Größe folgt der Häufigkeit, oft gemeinsam vorkommende Tags liegen näher beieinander. Die Auswahl lässt sich als Filter in die Bibliothek übernehmen. Zoom per Mausrad zum Mauszeiger (bis 800 %), Verschieben des Ausschnitts per Ziehen, eng zusammenhängende Tags liegen auf einer Fläche in eigener Farbe.
+- **Tags** verwalten und im **Tag-Netzwerk** ansehen: Die Größe folgt der Häufigkeit, oft gemeinsam vorkommende Tags liegen näher beieinander, zusammengehörige Tags bilden farbige Cluster. Zoom (auch Strg + Mausrad), Verschieben durch Ziehen und „Einpassen“. Die Auswahl lässt sich als Filter in die Bibliothek übernehmen.
 - **Geschmacksprofil**: Wertet aus, welche Tags bei deinen Lieblingen (Tier S bis D, Favoriten) auffällig oft oder selten vorkommen, und schlägt dazu passende Animes vor, wahlweise nach Status (z. B. Wunschliste). Zwei Schwellwerte trennen „passt zu dir“ von „passt leidlich zu dir“.
 - **Zeitstrahl**: Zeigt alle Animes mit Veröffentlichungszeitraum als Balken auf einer Zeitachse, mit Staffeln, Unterbrechungen und Heute-Linie. Zoom (auch Strg + Mausrad), waagerechtes Scrollen, Tooltips mit Beginn, Ende und Dauer sowie Filter nach Name und Tags.
-- **Anime-Netzwerk**: Animes als Knoten in drei Netzwerkarten, zwischen denen du umschaltest: **Vorgänger und Nachfolger** (aus den Feldern Vorgänger, Nachfolger, Verwandt, mit Pfeilen), **ähnliche Tags** (seltene gemeinsame Tags zählen mehr) und **ähnliche Bewertung** (Story, Animation, Effekte, Akustik). Cluster liegen auf einer gemeinsamen Fläche mit Beschriftung. Regler für Mindestähnlichkeit und Nachbarn pro Anime, Statusfilter, Namenssuche, Zoom per Mausrad zum Mauszeiger (bis 800 %), Verschieben des Ausschnitts per Ziehen und je Cluster eine eigene Farbe. Ein Klick zeigt die Verbindungen des Animes, ein Doppelklick öffnet ihn.
+- **Anime-Netzwerk**: Animes als Knoten in drei Netzwerkarten, zwischen denen du umschaltest: **Vorgänger und Nachfolger** (aus den Feldern Vorgänger, Nachfolger, Verwandt, mit Pfeilen), **ähnliche Tags** (seltene gemeinsame Tags zählen mehr) und **ähnliche Bewertung** (Story, Animation, Effekte, Akustik). Cluster liegen auf einer gemeinsamen Fläche mit Beschriftung. Regler für Mindestähnlichkeit und Nachbarn pro Anime, Statusfilter, Namenssuche, Zoom (auch Strg + Mausrad). Ein Klick zeigt die Verbindungen des Animes, ein Doppelklick öffnet ihn.
+- **Online-Metadaten** (optional): Im Editor lädt „Metadaten laden …“ auf Knopfdruck Cover, Beschreibung und Veröffentlichungszeitraum eines einzelnen Animes aus **AniList** (Standard), **Jikan** (MyAnimeList) oder **Kitsu**. Die Quelle wählst du im Dialog, übernommen wird nur, was du auswählst. Ohne Internet und ohne Konto bleibt alles nutzbar.
 - **Themes**: Hell, Dunkel und eigene Farbpalette mit Live-Vorschau.
 - **Schnell hinzufügen** für Animes, die nur Name, Tier und Favorit brauchen.
 - Versteckte **SQL-Konsole** (Rechtsklick auf die Versionsnummer) für Fortgeschrittene. Verändernde Befehle werden bestätigt und protokolliert.
@@ -78,11 +79,11 @@ dotnet publish Anicluster/Anicluster.csproj -p:PublishProfile=FolderProfile -p:B
 | Was | Wo |
 |---|---|
 | Datenbank | `db\data.sqlite` neben der Anwendung (installiert: `C:\Program Files\Anicluster\db`, für alle Benutzer gemeinsam) |
-| Sicherungen bei Migrationen | neben der Datenbank (`data.legacy-…`, `data.v1-…`) |
+| Sicherungen bei Migrationen | neben der Datenbank (`data.legacy-…`, `data.v1-…`, `data.v2-…`) |
 | Logs | `logs\` neben der Anwendung (tägliche Rotation) |
 | Einstellungen | `%AppData%\Anicluster\settings.json` (pro Benutzer) |
 
-Die Datenbank hat derzeit die Struktur **Version 2** (`PRAGMA user_version`). Neuere Datenbanken lassen sich mit älteren Programmversionen nicht öffnen.
+Die Datenbank hat derzeit die Struktur **Version 3** (`PRAGMA user_version`). Neuere Datenbanken lassen sich mit älteren Programmversionen nicht öffnen.
 
 ### Projektstruktur
 
@@ -94,6 +95,7 @@ Anicluster/
   Views/                 UserControls (XAML + schlanker Code-Behind)
   Dialogs/               Dialog-Dienst und Dialogfenster
   Imaging/               Bildaufbereitung (Verkleinern, Vorschau erzeugen)
+  Metadata/              Online-Metadaten von AniList, Jikan und Kitsu (Abfragen, Ergebnisse, Textaufbereitung)
   Resources/             Styles, Templates, Icon
   Theming/ Settings/     Themes und Einstellungen
   Converters/            Wertkonverter
@@ -124,15 +126,16 @@ Anicluster is a Windows desktop application (WPF, .NET 8) for managing your anim
 
 ### Features
 
-- **Library** with search, filters (status, tier, favorites, tags) and sorting. Switch between **cards**, **table** and **images** (tiles with covers). Your choice is remembered.
+- **Library** with search, filters (status, tier, favorites, tags) and sorting. Switch between **cards**, **table** and **images** (tiles with covers, optionally only animes with a cover). Your choice is remembered. A small "Lädt …" notice appears when loading takes a while.
 - **Editor** for creating and editing entries: name, original name, link, status, tier, favorite, recommended by, comment, predecessor/successor/related, media info and publishing period.
 - **Rating** for story, animation, effects and acoustics (soundtrack, openings, endings, dubs) with an overall score.
 - **Seasons and OVAs/movies**, reorderable by drag and drop.
 - **Images**: add a cover via file picker, from the clipboard or by drag and drop. Images are downscaled and stored in the database, together with a cropped 2:3 thumbnail.
-- **Tags** management and the **tag network**: size follows frequency, tags that often appear together sit closer. A selection can be applied as a filter in the library. Mouse-wheel zoom towards the pointer (up to 800 %), panning by dragging, and closely related tags sit on a background of their own color.
+- **Tags** management and the **tag network**: size follows frequency, tags that often appear together sit closer, related tags form coloured clusters. Zoom (also Ctrl + mouse wheel), pan by dragging and "fit to view". A selection can be applied as a filter in the library.
 - **Taste profile**: analyses which tags appear unusually often or rarely among your favourites (tier S to D, favourites) and suggests matching animes, optionally by status (e.g. wishlist). Two thresholds separate "fits you" from "fits you somewhat".
 - **Timeline**: shows all animes with a publishing period as bars on a time axis, including seasons, interruptions and a today line. Zoom (also Ctrl + mouse wheel), horizontal scrolling, tooltips with start, end and duration, and filters by name and tags.
-- **Anime network**: animes as nodes in three network types you can switch between: **predecessor and successor** (from the predecessor, successor and related fields, with arrows), **similar tags** (rare shared tags count more) and **similar ratings** (story, animation, effects, acoustics). Clusters sit on a shared background with a caption. Sliders for minimum similarity and neighbors per anime, status filter, name search, mouse-wheel zoom towards the pointer (up to 800 %), panning by dragging and a separate color per cluster. A click shows the connections of an anime, a double click opens it.
+- **Anime network**: animes as nodes in three network types you can switch between: **predecessor and successor** (from the predecessor, successor and related fields, with arrows), **similar tags** (rare shared tags count more) and **similar ratings** (story, animation, effects, acoustics). Clusters sit on a shared background with a caption. Sliders for minimum similarity and neighbors per anime, status filter, name search, zoom (also Ctrl + mouse wheel). A click shows the connections of an anime, a double click opens it.
+- **Online metadata** (optional): in the editor, "Metadaten laden …" fetches cover, description and publishing period of a single anime from **AniList** (default), **Jikan** (MyAnimeList) or **Kitsu** on a button press. You pick the source in the dialog and only what you select is applied. Everything stays usable without internet and without an account.
 - **Themes**: light, dark and a custom palette with live preview.
 - **Quick add** for entries that only need a name, tier and favorite flag.
 - Hidden **SQL console** (right-click the version number) for advanced users. Modifying statements require confirmation and are logged.
@@ -167,11 +170,11 @@ dotnet publish Anicluster/Anicluster.csproj -p:PublishProfile=FolderProfile -p:B
 | What | Where |
 |---|---|
 | Database | `db\data.sqlite` next to the application (installed: `C:\Program Files\Anicluster\db`, shared by all users) |
-| Migration backups | next to the database (`data.legacy-…`, `data.v1-…`) |
+| Migration backups | next to the database (`data.legacy-…`, `data.v1-…`, `data.v2-…`) |
 | Logs | `logs\` next to the application (daily rotation) |
 | Settings | `%AppData%\Anicluster\settings.json` (per user) |
 
-The database currently uses **schema version 2** (`PRAGMA user_version`). Newer databases cannot be opened by older program versions.
+The database currently uses **schema version 3** (`PRAGMA user_version`). Newer databases cannot be opened by older program versions.
 
 ### Project structure
 
@@ -183,6 +186,7 @@ Anicluster/
   Views/                 UserControls (XAML + thin code-behind)
   Dialogs/               Dialog service and dialog window
   Imaging/               Image processing (downscaling, thumbnail creation)
+  Metadata/              Online metadata from AniList, Jikan and Kitsu (requests, results, text cleanup)
   Resources/             Styles, templates, icon
   Theming/ Settings/     Themes and settings
   Converters/            Value converters

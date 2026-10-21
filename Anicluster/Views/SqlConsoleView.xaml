@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:Anicluster.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:SqlConsoleViewModel}"
-             Width="960" Height="620">
+             MinWidth="960" MinHeight="620">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="170"/>

@@ -22,7 +22,16 @@ Neu in 2.3.0
   Zoom, waagerechtem Scrollen, Tooltips und Filter nach Name und Tags
 - Anime-Netzwerk: Animes als Netzwerk in drei Arten (Vorgänger/Nachfolger/Verwandt, ähnliche Tags, ähnliche Bewertung)
   mit Clustern, Reglern für die Ähnlichkeit, Auswahl mit Verbindungen und Zoom
-- Die Datenbankstruktur bleibt unverändert, es ist keine Migration nötig
+- Online-Metadaten: Im Editor lädt "Metadaten laden" auf Knopfdruck Cover, Beschreibung und Zeitraum eines Animes
+  aus AniList (Standard), Jikan (MyAnimeList) oder Kitsu. Die Quelle ist wählbar, es wird nur übernommen, was du
+  auswählst. Ohne Internet und ohne Konto bleibt Anicluster voll nutzbar
+- Neues Feld "Beschreibung" im Editor
+- Bilder-Ansicht: Schalter "Nur mit Bild" blendet Animes ohne Cover aus
+- Bibliothek lädt im Hintergrund, bei längerer Ladezeit erscheint ein kleiner Hinweis "Lädt ..."
+- Große Dialogfenster sind so groß wie das Hauptfenster, kleine Eingaben bleiben klein
+- Tag-Netzwerk mit Clustern, Zoom per Mausrad und Verschieben durch Ziehen
+- Die Datenbankstruktur wechselt auf Version 3 und wird beim ersten Start automatisch ergänzt (mit Sicherung).
+  Danach lässt sich die Datenbank nicht mehr mit älteren Versionen öffnen
 
 Neu in 2.2.0
 - Bilder: Jeder Anime kann ein Cover erhalten (Datei wählen, aus der Zwischenablage einfügen oder per Drag and Drop)

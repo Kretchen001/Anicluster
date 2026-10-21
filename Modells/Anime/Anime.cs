@@ -57,6 +57,18 @@ namespace Modells.Anime {
         /// <summary>Zusätzliche Kommentare oder Notizen zum Anime</summary>
         public string? Comment { get; set; }
 
+        /// <summary>Ausführliche Beschreibung (zum Beispiel aus einer Online-Quelle übernommen und vom Benutzer änderbar)</summary>
+        public string? Description { get; set; }
+
+        /// <summary>Id des Eintrags bei AniList, <c>null</c> wenn der Anime dort nicht verknüpft ist</summary>
+        public int? AniListId { get; set; }
+
+        /// <summary>Id des Eintrags bei MyAnimeList (auch die Id bei Jikan), <c>null</c> wenn nicht verknüpft</summary>
+        public int? MyAnimeListId { get; set; }
+
+        /// <summary>Id des Eintrags bei Kitsu, <c>null</c> wenn nicht verknüpft</summary>
+        public int? KitsuId { get; set; }
+
         /// <summary>Das Cover des Animes, <c>null</c> wenn keins hinterlegt ist</summary>
         public AnimeImage? Image { get; set; }
 

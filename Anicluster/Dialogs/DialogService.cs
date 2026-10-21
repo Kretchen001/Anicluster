@@ -15,7 +15,8 @@ namespace Anicluster.Dialogs {
             Window? owner = this.GetActiveWindow();
             DialogWindow window = new DialogWindow {
                 DataContext = viewModel,
-                Owner = owner
+                Owner = owner,
+                FillsOwnerWindow = viewModel.FillsOwnerWindow
             };
 
             void OnCloseRequested(object? sender, bool dialogResult) {
