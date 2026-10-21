@@ -108,6 +108,24 @@
 
                     <Border Style="{StaticResource Card}" Margin="0,0,0,20">
                         <StackPanel>
+                            <TextBlock Text="Beschreibung" Style="{StaticResource SectionTitle}"/>
+                            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="120"
+                                     MaxHeight="320"
+                                     VerticalScrollBarVisibility="Auto"
+                                     VerticalContentAlignment="Top"/>
+                            <TextBlock Text="Zum Beispiel aus einer Online-Quelle geladen (rechts „Metadaten laden“, meist englisch) und frei änderbar."
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
                             <TextBlock Text="Status" Style="{StaticResource SectionTitle}"/>
                             <WrapPanel>
                                 <RadioButton Style="{StaticResource ChipStyle}" Content="Wunschliste"
@@ -211,6 +229,26 @@
 
                 <!-- Rechte Spalte -->
                 <StackPanel Grid.Column="2">
+                    <!-- Online-Daten: Cover, Beschreibung und Zeitraum aus AniList, Jikan oder Kitsu, nur auf Knopfdruck -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="Online-Daten" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Text="Lädt Cover, Beschreibung und Veröffentlichungszeitraum aus AniList, Jikan (MyAnimeList) oder Kitsu. Es wird nur etwas übernommen, was du auswählst und bestätigst."
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,12"/>
+                            <Button Content="Metadaten laden …"
+                                    HorizontalAlignment="Left"
+                                    Click="BtnLoadMetadata_Click"/>
+                            <TextBlock Text="{Binding MetadataLinkText}"
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       Margin="0,10,0,0"
+                                       Visibility="{Binding HasMetadataLink, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        </StackPanel>
+                    </Border>
+
                     <!-- Bild: per Dialog, Zwischenablage oder Drag and Drop -->
                     <Border Style="{StaticResource Card}"
                             Margin="0,0,0,20"

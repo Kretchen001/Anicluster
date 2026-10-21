@@ -3,6 +3,52 @@
 Alle nennenswerten Änderungen an Anicluster. Das Format orientiert sich an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 Für Versionen vor 2.1.0 gibt es keine Tags im Verlauf, sie sind deshalb nach Zeiträumen gruppiert.
 
+## [2.3.0] – 2026-10-20
+
+### Hinzugefügt
+- **Geschmacksprofil**: Neuer Bereich in der Seitenleiste unter dem Tag-Netzwerk. Aus den gesehenen Animes, die du als Lieblinge wählst, wird berechnet, welche Tags dort auffällig häufiger oder seltener vorkommen als im Rest der Bibliothek. Als Liebling können die Tiers S bis D sowie Favoriten zählen. „Das magst du“ und „Eher nicht dein Ding“ zeigen Balken, Faktor und Begründung, „Zeigen“ filtert die Bibliothek nach dem Tag.
+- **Vorschläge zum Profil**: Animes werden nach Passung zum Profil sortiert, mit den passenden Tags. Der Status der bewerteten Animes ist wählbar (Wunschliste, Begonnen, Beendet, Unterbrochen, Abgebrochen oder alle). Zwei Schwellwerte teilen sie in „Passt zu dir“ und „Passt leidlich zu dir“. „In Bibliothek filtern“ übernimmt die stärksten Tags des Profils und den gewählten Status.
+- **Zeitstrahl**: Neuer Bereich in der Seitenleiste unter dem Geschmacksprofil. Alle Animes mit eingetragenem Veröffentlichungszeitraum erscheinen als Balken auf einer gemeinsamen Zeitachse: Staffeln einzeln, Unterbrechungen als Lücken, dazu eine Heute-Linie. Die Farbe folgt wahlweise dem Tier oder dem Status.
+  - Zoom per Regler oder Strg + Mausrad, waagerechtes Scrollen per Scrollbalken oder Umschalt + Mausrad. Jahresleiste und Namen laufen beim Scrollen mit.
+  - Ein Tooltip zeigt beim Überfahren eines Zeitraums oder einer Pause Beginn, Ende und Dauer.
+  - Filter nach Namen und nach Tags (alle Tags oder ein Tag genügt). Doppelklick öffnet den Anime. Animes ohne Zeitraum werden nur gezählt.
+- **Anime-Netzwerk**: Neuer Bereich in der Seitenleiste unter dem Tag-Netzwerk. Animes sind die Knoten, verbundene Animes rücken zusammen, Cluster erhalten eine gemeinsame Fläche mit Beschriftung (häufigste Tags, Durchschnittsnote oder Anzahl). Drei Netzwerkarten lassen sich umschalten, die Wahl wird gespeichert:
+  - **Vorgänger und Nachfolger**: Verbindungen aus den Feldern Vorgänger, Nachfolger und Verwandt. Pfeile zeigen vom Vorgänger zum Nachfolger, gestrichelte Linien verbinden Verwandte. Die Cluster sind die zusammenhängenden Gruppen (Franchises).
+  - **Ähnliche Tags**: Je mehr Tags zwei Animes gemeinsam haben, desto ähnlicher sind sie, seltene Tags zählen mehr als häufige (mindestens zwei gemeinsame Tags nötig). Animes ohne Tags erscheinen nicht.
+  - **Ähnliche Bewertung**: Ähnlichkeit aus den Teilnoten Story, Animation, Effekte und Akustik, gewichtet wie die Gesamtnote. Unbewertete Animes erscheinen nicht.
+  - Regler für Mindestähnlichkeit und die höchste Zahl ähnlicher Nachbarn pro Anime, Schalter für Animes ohne Verbindung (standardmäßig ausgeblendet), Filter nach Status und Hervorheben per Namenssuche.
+  - Klick wählt einen Anime und zeigt seine Verbindungen mit Art oder Ähnlichkeit, Doppelklick öffnet ihn im Editor, „In Bibliothek suchen“ springt zur Bibliothek. Zoom per Regler oder Strg + Mausrad, Knoten lassen sich ziehen, „Neu anordnen“ startet das Layout neu.
+- **Online-Metadaten**: Im Editor eines Animes lädt der Knopf „Metadaten laden …“ auf Wunsch Cover, Beschreibung und Veröffentlichungszeitraum aus dem Netz. Das passiert nur auf Knopfdruck und immer für einen einzelnen Anime, Anicluster bleibt ohne Konto und ohne Internet voll nutzbar.
+  - **Quelle wählbar**: AniList (Standard), Jikan (MyAnimeList) oder Kitsu. Die letzte Wahl wird gespeichert.
+  - Zusätzlich kommen, soweit die Quelle sie kennt, **Originalname**, **Produzent** (Studios und Produzenten), **Veröffentlicher** (Lizenzgeber) und **Autor** (Original-Urheber) mit. Sie lassen sich wie Cover und Beschreibung einzeln übernehmen.
+  - Der Dialog sucht mit dem Namen des Animes, zeigt Treffer mit Bild, Format, Jahr und Folgenzahl und lässt Cover, Beschreibung und Zeitraum einzeln übernehmen. Bereits Vorhandenes wird nicht vorausgewählt und nie stillschweigend überschrieben. Unvollständige Zeiträume (etwa nur das Jahr) bleiben leer, ein Zeitraum, der nicht zu einem vorhandenen Datum passt, wird nicht übernommen.
+  - Beschreibungen kommen meist auf Englisch und lassen sich danach im neuen Feld „Beschreibung“ im Editor frei ändern.
+  - Der Anime merkt sich seine Ids bei den Quellen („Verknüpft mit: …“), die nächste Abfrage braucht dann keine Suche mehr.
+  - Meldungen auf Deutsch für Offline, Zeitüberschreitung, erreichte Anfragegrenze (mit Wartezeit) und Dienstfehler. Zwischen zwei Anfragen hält Anicluster Mindestabstände ein, um die Grenzen der Dienste einzuhalten.
+- **Bilder-Ansicht**: Der Schalter „Nur mit Bild“ in der Kopfzeile blendet Animes ohne Cover aus. Er erscheint nur in der Bilder-Ansicht, Karten und Tabelle bleiben davon unberührt. Die Wahl wird gespeichert.
+- **Ladehinweis** in der Bibliothek: Dauert das Laden länger als 350 ms, gleitet unten rechts ein kleiner Hinweis „Lädt …“ herein und nach dem Laden wieder hinaus. Schnelle Vorgänge zeigen ihn nicht.
+- **Datensicherung**: In den Einstellungen exportiert „Exportieren …“ die ganze Bibliothek (Animes mit Bewertung, Staffeln, OVAs, Tags, Medieninfos, Beschreibung und Quell-Ids, Tags, wahlweise mit Cover) in eine JSON-Datei. „Importieren …“ liest sie wieder ein.
+  - **Zusammenführen** (Standard) ergänzt nur fehlende Animes, vorhandene bleiben unverändert. Erkannt wird ein Anime an seiner festen Kennung, an den Ids der Online-Quellen oder am Namen.
+  - **Ersetzen (Wiederherstellen)** ersetzt alle Animes und Tags durch den Inhalt der Datei. Vorher wird die Datenbank neben der Datenbankdatei kopiert (`data.vor-import-<Zeitstempel>.sqlite`).
+  - Die Datei wird vor dem Einlesen geprüft (Format, Version, Pflichtangaben). Schlägt etwas fehl, wird die Datenbank aus der Kopie wiederhergestellt und bleibt unverändert. Eine Sicherung aus einer neueren Version wird abgelehnt.
+  - Vorgänger, Nachfolger und Verwandte bleiben beim Einlesen erhalten, auch wenn sich die Datenbank-Ids ändern.
+  - Die **feste Kennung** (GUID) pro Anime ist die Grundlage für einen späteren Abgleich zwischen zwei Datenbanken.
+- `SqlScripts/Demo-Zeitraeume.sql`: Veröffentlichungszeiträume, Staffeln und Pausen für viele Animes der Beispielliste, zum Ausprobieren des Zeitstrahls.
+
+### Geändert
+- **Bibliothek lädt flüssiger**: Die Liste wird im Hintergrund aus der Datenbank gelesen, die Oberfläche bleibt bedienbar. Die Bilder-Ansicht erzeugt nur die gerade sichtbaren Kacheln, auch bei sehr vielen Animes bleibt Scrollen flüssig. Die Vorschaubilder werden nacheinander im Hintergrund nachgeladen.
+- **Dialogfenster**: Die großen Dialoge (Bewertung, Staffeln, OVAs/Filme, Tags, Veröffentlichungszeitraum, Metadaten, SQL-Konsole) sind jetzt etwa so groß wie das Hauptfenster (mindestens so groß wie ihr Inhalt) und öffnen mittig darüber. Kleine Eingaben und Rückfragen bleiben klein.
+- **Tag-Netzwerk**: Die Tags bilden jetzt Cluster mit einer gemeinsamen Fläche in einer eigenen Farbe aus dem Akzent. Zoom per Mausrad zum Mauszeiger (bis 800 %), Verschieben des Netzes durch Ziehen und „Einpassen“ wie im Anime-Netzwerk.
+- **Datenbank**: Struktur Version 4 mit den neuen Feldern `Description`, `AniListId`, `MyAnimeListId` und `KitsuId` sowie einer festen Kennung (`Uid`, eine GUID) pro Anime. Eine vorhandene Datenbank wird beim ersten Start automatisch ergänzt, vorher entsteht eine Sicherung neben der Datenbankdatei (`data.v<alte Version>-<Zeitstempel>.sqlite`), die bei einem Fehler zurückgespielt wird. Eine Datenbank der neuen Version lässt sich mit älteren Programmversionen nicht mehr öffnen.
+- **Installer**: Das Setup verlangt jetzt Administratorrechte und installiert für alle Benutzer nach „Programme“ (`C:\Program Files\Anicluster`, 64-Bit). Die Auswahl „nur für mich“ entfällt. Anicluster selbst läuft weiterhin ohne Administratorrechte.
+  - Datenbank und Logs bleiben im Installationsordner und werden für alle Benutzer beschreibbar angelegt. Alle Benutzer eines Rechners teilen sich damit eine Datenbank, die Einstellungen bleiben pro Benutzer.
+  - Eine bisher nur für den Benutzer installierte Version wird nicht automatisch übernommen: Die Datenbank (`%LocalAppData%\Programs\Anicluster\db`) muss nach dem Umstieg in den neuen `db`-Ordner kopiert werden.
+  - Beim Deinstallieren gilt die Rückfrage zu den Einstellungen nur für das Benutzerkonto, unter dem die Deinstallation läuft.
+
+### Hinweis
+- Die Datenbankstruktur wechselt auf Version 4. Die Migration läuft beim ersten Start automatisch (mit Sicherung), danach lässt sich die Datenbank nicht mehr mit älteren Versionen öffnen.
+- Die Online-Abfrage nutzt öffentliche Schnittstellen von AniList, Jikan und Kitsu. Die Daten bleiben bei diesen Diensten, Anicluster speichert nur, was du für einen einzelnen Anime übernimmst.
+
 ## [2.2.0] – 2026-10-20
 
 ### Hinzugefügt

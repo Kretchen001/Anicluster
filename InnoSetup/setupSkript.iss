@@ -22,9 +22,12 @@ VersionInfoVersion={#MyAppVersion}
 VersionInfoProductName={#MyAppName}
 VersionInfoDescription={#MyAppName} Setup
 
-; Standardmäßig pro Benutzer installieren, auf Wunsch (Dialog) für alle Benutzer nach "Programme"
-PrivilegesRequired=lowest
-PrivilegesRequiredOverridesAllowed=dialog
+; Installation für alle Benutzer nach "Programme" (C:\Program Files\Anicluster), dafür sind Administratorrechte nötig.
+; Die Anwendung selbst läuft später ohne Administratorrechte.
+PrivilegesRequired=admin
+; Anicluster ist 64-Bit, ohne diese Zeilen ginge die Installation nach "Programme (x86)" (ab Inno Setup 6.3).
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
 DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
@@ -65,8 +68,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Excludes: "version.txt,db\*,logs\*"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Dirs]
-; Datenbank und Logs liegen neben der Anwendung. Beide Ordner müssen für Benutzer beschreibbar sein
-; (bei Installation nach "Programme" ist das sonst nur mit Administratorrechten möglich).
+; Datenbank und Logs liegen neben der Anwendung. "Programme" ist für normale Benutzer schreibgeschützt, deshalb bekommen
+; beide Ordner Schreibrechte für die Gruppe "Benutzer". Die Datenbank wird damit von allen Benutzern des Rechners geteilt.
 ; uninsneveruninstall: Die Daten bleiben beim Deinstallieren zunächst erhalten, siehe [Code].
 Name: "{app}\db"; Permissions: users-modify; Flags: uninsneveruninstall
 Name: "{app}\logs"; Permissions: users-modify; Flags: uninsneveruninstall
@@ -80,12 +83,13 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Code]
-{ Beim Deinstallieren fragen, ob auch die Daten (Datenbank, Logs, Einstellungen) gelöscht werden sollen. Standard: behalten. }
+{ Beim Deinstallieren fragen, ob auch die Daten (Datenbank, Logs, Einstellungen) gelöscht werden sollen. Standard: behalten.
+  Die Einstellungen liegen im AppData-Ordner des Kontos, unter dem die Deinstallation läuft, die anderer Benutzer bleiben bestehen. }
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usPostUninstall then
   begin
-    if MsgBox('Sollen auch die Datenbank, die Log-Dateien und die Einstellungen gelöscht werden?' + #13#10 +
+    if MsgBox('Sollen auch die Datenbank, die Log-Dateien und die Einstellungen dieses Benutzerkontos gelöscht werden?' + #13#10 +
               'Diese Daten gehen unwiderruflich verloren.', mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
     begin
       DelTree(ExpandConstant('{app}\db'), True, True, True);

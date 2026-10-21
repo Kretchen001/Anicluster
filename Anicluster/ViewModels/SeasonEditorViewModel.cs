@@ -20,6 +20,8 @@ namespace Anicluster.ViewModels {
 
         public override string Title => "Staffel Generator";
 
+        public override bool FillsOwnerWindow => true;
+
         public ObservableCollection<Season> Seasons { get; } = [];
 
         public string EpisodeCountText {

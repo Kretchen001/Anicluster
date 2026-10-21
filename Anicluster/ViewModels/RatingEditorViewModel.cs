@@ -19,6 +19,8 @@ namespace Anicluster.ViewModels {
 
         public override string Title => "Bewertung";
 
+        public override bool FillsOwnerWindow => true;
+
         public ScoreViewModel Story { get; }
         public ScoreViewModel Animation { get; }
         public ScoreViewModel SpecialEffects { get; }

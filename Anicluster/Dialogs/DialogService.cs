@@ -15,7 +15,8 @@ namespace Anicluster.Dialogs {
             Window? owner = this.GetActiveWindow();
             DialogWindow window = new DialogWindow {
                 DataContext = viewModel,
-                Owner = owner
+                Owner = owner,
+                FillsOwnerWindow = viewModel.FillsOwnerWindow
             };
 
             void OnCloseRequested(object? sender, bool dialogResult) {
@@ -58,6 +59,30 @@ namespace Anicluster.Dialogs {
             OpenFileDialog dialog = new OpenFileDialog() {
                 Title = "Bild auswählen",
                 Filter = "Bilder|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.tif;*.tiff|Alle Dateien|*.*",
+                CheckFileExists = true
+            };
+            Window? owner = this.GetActiveWindow();
+            bool? confirmed = owner is null ? dialog.ShowDialog() : dialog.ShowDialog(owner);
+            return confirmed == true ? dialog.FileName : null;
+        }
+
+        public string? PickSaveFile(string title, string filter, string defaultFileName) {
+            SaveFileDialog dialog = new SaveFileDialog() {
+                Title = title,
+                Filter = filter,
+                FileName = defaultFileName,
+                AddExtension = true,
+                OverwritePrompt = true
+            };
+            Window? owner = this.GetActiveWindow();
+            bool? confirmed = owner is null ? dialog.ShowDialog() : dialog.ShowDialog(owner);
+            return confirmed == true ? dialog.FileName : null;
+        }
+
+        public string? PickOpenFile(string title, string filter) {
+            OpenFileDialog dialog = new OpenFileDialog() {
+                Title = title,
+                Filter = filter,
                 CheckFileExists = true
             };
             Window? owner = this.GetActiveWindow();

@@ -18,5 +18,8 @@
         public required IReadOnlyList<TagFilterItem> Tags { get; init; }
 
         public TagMatchMode Mode { get; init; }
+
+        /// <summary>Optional: Status, auf den die Bibliothek zusätzlich eingeschränkt wird (<c>null</c> = nicht ändern)</summary>
+        public LibraryStatusFilter? Status { get; init; }
     }
 }

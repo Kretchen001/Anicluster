@@ -1,4 +1,4 @@
-# Anicluster
+﻿# Anicluster
 
 <img src="Anicluster/Resources/Icon/Anicluster-64.png" alt="Anicluster icon" width="64" align="right">
 
@@ -35,12 +35,17 @@ Anicluster ist eine Windows-Desktopanwendung (WPF, .NET 8), mit der du deine Ani
 
 ### Funktionen
 
-- **Bibliothek** mit Suche, Filtern (Status, Tier, Favoriten, Tags) und Sortierung. Die Darstellung wechselt zwischen **Karten**, **Tabelle** und **Bildern** (Kacheln mit Cover). Die Auswahl wird gespeichert.
+- **Bibliothek** mit Suche, Filtern (Status, Tier, Favoriten, Tags) und Sortierung. Die Darstellung wechselt zwischen **Karten**, **Tabelle** und **Bildern** (Kacheln mit Cover, wahlweise nur Animes mit Bild). Die Auswahl wird gespeichert. Bei längerer Ladezeit erscheint ein kleiner Hinweis „Lädt …“.
 - **Editor** zum Anlegen und Bearbeiten: Name, Originalname, Link, Status, Tier, Favorit, Empfehlung, Kommentar, Vorgänger/Nachfolger/Verwandtes, Medieninfos und Veröffentlichungszeitraum.
 - **Bewertung** für Story, Animation, Effekte und Akustik (Soundtrack, Openings, Endings, Syncros) mit Gesamtwertung.
 - **Staffeln und OVAs/Filme** mit Sortierung per Drag and Drop.
 - **Bilder**: Cover per Dateiauswahl, aus der Zwischenablage oder per Drag and Drop einfügen. Bilder werden verkleinert in der Datenbank gespeichert, dazu entsteht eine zugeschnittene Vorschau (2:3).
-- **Tags** verwalten und im **Tag-Netzwerk** ansehen: Die Größe folgt der Häufigkeit, oft gemeinsam vorkommende Tags liegen näher beieinander. Die Auswahl lässt sich als Filter in die Bibliothek übernehmen.
+- **Tags** verwalten und im **Tag-Netzwerk** ansehen: Die Größe folgt der Häufigkeit, oft gemeinsam vorkommende Tags liegen näher beieinander, zusammengehörige Tags bilden farbige Cluster. Zoom (auch Strg + Mausrad), Verschieben durch Ziehen und „Einpassen“. Die Auswahl lässt sich als Filter in die Bibliothek übernehmen.
+- **Geschmacksprofil**: Wertet aus, welche Tags bei deinen Lieblingen (Tier S bis D, Favoriten) auffällig oft oder selten vorkommen, und schlägt dazu passende Animes vor, wahlweise nach Status (z. B. Wunschliste). Zwei Schwellwerte trennen „passt zu dir“ von „passt leidlich zu dir“.
+- **Zeitstrahl**: Zeigt alle Animes mit Veröffentlichungszeitraum als Balken auf einer Zeitachse, mit Staffeln, Unterbrechungen und Heute-Linie. Zoom (auch Strg + Mausrad), waagerechtes Scrollen, Tooltips mit Beginn, Ende und Dauer sowie Filter nach Name und Tags.
+- **Anime-Netzwerk**: Animes als Knoten in drei Netzwerkarten, zwischen denen du umschaltest: **Vorgänger und Nachfolger** (aus den Feldern Vorgänger, Nachfolger, Verwandt, mit Pfeilen), **ähnliche Tags** (seltene gemeinsame Tags zählen mehr) und **ähnliche Bewertung** (Story, Animation, Effekte, Akustik). Cluster liegen auf einer gemeinsamen Fläche mit Beschriftung. Regler für Mindestähnlichkeit und Nachbarn pro Anime, Statusfilter, Namenssuche, Zoom (auch Strg + Mausrad). Ein Klick zeigt die Verbindungen des Animes, ein Doppelklick öffnet ihn.
+- **Online-Metadaten** (optional): Im Editor lädt „Metadaten laden …“ auf Knopfdruck Cover, Beschreibung und Veröffentlichungszeitraum eines einzelnen Animes aus **AniList** (Standard), **Jikan** (MyAnimeList) oder **Kitsu**. Die Quelle wählst du im Dialog, übernommen wird nur, was du auswählst. Soweit verfügbar, kommen auch **Originalname**, **Produzent**, **Veröffentlicher** und **Autor** mit. Ohne Internet und ohne Konto bleibt alles nutzbar.
+- **Datensicherung**: In den Einstellungen exportierst du die ganze Bibliothek (wahlweise mit Cover) in eine **JSON-Datei** und liest sie wieder ein, entweder **zusammenführend** (nur Fehlendes ergänzen) oder **ersetzend** (Wiederherstellen, mit vorheriger Kopie der Datenbank). Jeder Anime hat eine feste Kennung, damit er sich später zwischen zwei Datenbanken wiedererkennen lässt.
 - **Themes**: Hell, Dunkel und eigene Farbpalette mit Live-Vorschau.
 - **Schnell hinzufügen** für Animes, die nur Name, Tier und Favorit brauchen.
 - Versteckte **SQL-Konsole** (Rechtsklick auf die Versionsnummer) für Fortgeschrittene. Verändernde Befehle werden bestätigt und protokolliert.
@@ -48,14 +53,15 @@ Anicluster ist eine Windows-Desktopanwendung (WPF, .NET 8), mit der du deine Ani
 
 ### Voraussetzungen
 
-- Windows 10 oder 11
-- Zum Bauen: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), optional [Inno Setup 6](https://jrsoftware.org/isinfo.php) für den Installer
+- Windows 10 oder 11 (64-Bit), zum Installieren sind Administratorrechte nötig
+- Zum Bauen: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), optional [Inno Setup 6.3 oder neuer](https://jrsoftware.org/isinfo.php) für den Installer
 
 ### Installation
 
 1. Den Installer `setup_Anicluster_v_<Version>.exe` ausführen.
-2. Standardmäßig wird nur für den aktuellen Benutzer installiert (keine Administratorrechte nötig). Alternativ ist die Installation für alle Benutzer möglich.
+2. Der Installer verlangt Administratorrechte und installiert für alle Benutzer nach `C:\Program Files\Anicluster`. Anicluster selbst läuft ohne Administratorrechte. Datenbank und Logs liegen im Installationsordner und sind für alle Benutzer beschreibbar, die Datenbank wird daher von allen Benutzern des Rechners gemeinsam genutzt. Die Einstellungen bleiben pro Benutzer.
 3. Ein Update über eine bestehende Installation behält Datenbank und Einstellungen. Eine ältere Datenbank wird beim ersten Start automatisch migriert und vorher gesichert.
+4. Umstieg von einer früheren Installation nur für den aktuellen Benutzer: Sie wird nicht automatisch übernommen. Nach der neuen Installation `data.sqlite` aus `%LocalAppData%\Programs\Anicluster\db` in `C:\Program Files\Anicluster\db` kopieren (Anicluster vorher schließen) und die alte Installation deinstallieren.
 
 ### Bauen und Veröffentlichen
 
@@ -73,12 +79,12 @@ dotnet publish Anicluster/Anicluster.csproj -p:PublishProfile=FolderProfile -p:B
 
 | Was | Wo |
 |---|---|
-| Datenbank | `db\data.sqlite` neben der Anwendung |
-| Sicherungen bei Migrationen | neben der Datenbank (`data.legacy-…`, `data.v1-…`) |
+| Datenbank | `db\data.sqlite` neben der Anwendung (installiert: `C:\Program Files\Anicluster\db`, für alle Benutzer gemeinsam) |
+| Sicherungen bei Migrationen | neben der Datenbank (`data.legacy-…`, `data.v1-…`, `data.v2-…`, `data.v3-…`, `data.vor-import-…`) |
 | Logs | `logs\` neben der Anwendung (tägliche Rotation) |
-| Einstellungen | `%AppData%\Anicluster\settings.json` |
+| Einstellungen | `%AppData%\Anicluster\settings.json` (pro Benutzer) |
 
-Die Datenbank hat derzeit die Struktur **Version 2** (`PRAGMA user_version`). Neuere Datenbanken lassen sich mit älteren Programmversionen nicht öffnen.
+Die Datenbank hat derzeit die Struktur **Version 4** (`PRAGMA user_version`). Neuere Datenbanken lassen sich mit älteren Programmversionen nicht öffnen.
 
 ### Projektstruktur
 
@@ -89,11 +95,16 @@ Anicluster/
   ViewModels/            Zustand und Logik (MVVM, ohne Framework und ohne Commands)
   Views/                 UserControls (XAML + schlanker Code-Behind)
   Dialogs/               Dialog-Dienst und Dialogfenster
+  Backup/                Export und Import der Bibliothek als JSON (Datensicherung)
   Imaging/               Bildaufbereitung (Verkleinern, Vorschau erzeugen)
+  Metadata/              Online-Metadaten von AniList, Jikan und Kitsu (Abfragen, Ergebnisse, Textaufbereitung)
   Resources/             Styles, Templates, Icon
   Theming/ Settings/     Themes und Einstellungen
   Converters/            Wertkonverter
   TagNetwork/            Layout-Simulation des Tag-Netzwerks (reines C#)
+  TasteProfile/          Berechnung des Geschmacksprofils (reines C#)
+  Timeline/              Berechnung des Zeitstrahl-Layouts (reines C#)
+  AnimeNetwork/          Verbindungen und Cluster des Anime-Netzwerks (reines C#)
 InnoSetup/               Installer-Skript
 SqlScripts/              Import- und Demodaten, Tag-Initialisierung
 CHANGELOG.md             Änderungsverlauf
@@ -117,12 +128,17 @@ Anicluster is a Windows desktop application (WPF, .NET 8) for managing your anim
 
 ### Features
 
-- **Library** with search, filters (status, tier, favorites, tags) and sorting. Switch between **cards**, **table** and **images** (tiles with covers). Your choice is remembered.
+- **Library** with search, filters (status, tier, favorites, tags) and sorting. Switch between **cards**, **table** and **images** (tiles with covers, optionally only animes with a cover). Your choice is remembered. A small "Lädt …" notice appears when loading takes a while.
 - **Editor** for creating and editing entries: name, original name, link, status, tier, favorite, recommended by, comment, predecessor/successor/related, media info and publishing period.
 - **Rating** for story, animation, effects and acoustics (soundtrack, openings, endings, dubs) with an overall score.
 - **Seasons and OVAs/movies**, reorderable by drag and drop.
 - **Images**: add a cover via file picker, from the clipboard or by drag and drop. Images are downscaled and stored in the database, together with a cropped 2:3 thumbnail.
-- **Tags** management and the **tag network**: size follows frequency, tags that often appear together sit closer. A selection can be applied as a filter in the library.
+- **Tags** management and the **tag network**: size follows frequency, tags that often appear together sit closer, related tags form coloured clusters. Zoom (also Ctrl + mouse wheel), pan by dragging and "fit to view". A selection can be applied as a filter in the library.
+- **Taste profile**: analyses which tags appear unusually often or rarely among your favourites (tier S to D, favourites) and suggests matching animes, optionally by status (e.g. wishlist). Two thresholds separate "fits you" from "fits you somewhat".
+- **Timeline**: shows all animes with a publishing period as bars on a time axis, including seasons, interruptions and a today line. Zoom (also Ctrl + mouse wheel), horizontal scrolling, tooltips with start, end and duration, and filters by name and tags.
+- **Anime network**: animes as nodes in three network types you can switch between: **predecessor and successor** (from the predecessor, successor and related fields, with arrows), **similar tags** (rare shared tags count more) and **similar ratings** (story, animation, effects, acoustics). Clusters sit on a shared background with a caption. Sliders for minimum similarity and neighbors per anime, status filter, name search, zoom (also Ctrl + mouse wheel). A click shows the connections of an anime, a double click opens it.
+- **Online metadata** (optional): in the editor, "Metadaten laden …" fetches cover, description and publishing period of a single anime from **AniList** (default), **Jikan** (MyAnimeList) or **Kitsu** on a button press. You pick the source in the dialog and only what you select is applied. Where available, **original name**, **producer**, **publisher** and **author** are loaded too. Everything stays usable without internet and without an account.
+- **Backup**: in the settings you export the whole library (optionally with covers) to a **JSON file** and import it again, either **merging** (only add what is missing) or **replacing** (restore, with a copy of the database beforehand). Every anime has a stable identifier so it can be recognised across two databases later.
 - **Themes**: light, dark and a custom palette with live preview.
 - **Quick add** for entries that only need a name, tier and favorite flag.
 - Hidden **SQL console** (right-click the version number) for advanced users. Modifying statements require confirmation and are logged.
@@ -130,14 +146,15 @@ Anicluster is a Windows desktop application (WPF, .NET 8) for managing your anim
 
 ### Requirements
 
-- Windows 10 or 11
-- To build: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), optionally [Inno Setup 6](https://jrsoftware.org/isinfo.php) for the installer
+- Windows 10 or 11 (64-bit); administrator rights are required to install
+- To build: [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0), optionally [Inno Setup 6.3 or newer](https://jrsoftware.org/isinfo.php) for the installer
 
 ### Installation (English)
 
 1. Run the installer `setup_Anicluster_v_<version>.exe`.
-2. By default it installs for the current user only (no administrator rights needed). Installing for all users is possible as an option.
+2. The installer requires administrator rights and installs for all users into `C:\Program Files\Anicluster`. Anicluster itself runs without administrator rights. The database and logs live in the installation folder (writable for all users), so all users of the computer share one database. Settings stay per user.
 3. Updating over an existing installation keeps your database and settings. An older database is migrated automatically on first start, after a backup.
+4. Switching from an earlier per-user installation: it is not taken over automatically. After the new installation, copy `data.sqlite` from `%LocalAppData%\Programs\Anicluster\db` to `C:\Program Files\Anicluster\db` (close Anicluster first) and uninstall the old installation.
 
 ### Build and publish
 
@@ -155,12 +172,12 @@ dotnet publish Anicluster/Anicluster.csproj -p:PublishProfile=FolderProfile -p:B
 
 | What | Where |
 |---|---|
-| Database | `db\data.sqlite` next to the application |
-| Migration backups | next to the database (`data.legacy-…`, `data.v1-…`) |
+| Database | `db\data.sqlite` next to the application (installed: `C:\Program Files\Anicluster\db`, shared by all users) |
+| Migration backups | next to the database (`data.legacy-…`, `data.v1-…`, `data.v2-…`, `data.v3-…`, `data.vor-import-…`) |
 | Logs | `logs\` next to the application (daily rotation) |
-| Settings | `%AppData%\Anicluster\settings.json` |
+| Settings | `%AppData%\Anicluster\settings.json` (per user) |
 
-The database currently uses **schema version 2** (`PRAGMA user_version`). Newer databases cannot be opened by older program versions.
+The database currently uses **schema version 4** (`PRAGMA user_version`). Newer databases cannot be opened by older program versions.
 
 ### Project structure
 
@@ -171,11 +188,16 @@ Anicluster/
   ViewModels/            State and logic (MVVM, no framework, no commands)
   Views/                 UserControls (XAML + thin code-behind)
   Dialogs/               Dialog service and dialog window
+  Backup/                Export and import of the library as JSON (backup)
   Imaging/               Image processing (downscaling, thumbnail creation)
+  Metadata/              Online metadata from AniList, Jikan and Kitsu (requests, results, text cleanup)
   Resources/             Styles, templates, icon
   Theming/ Settings/     Themes and settings
   Converters/            Value converters
   TagNetwork/            Layout simulation of the tag network (plain C#)
+  TasteProfile/          Calculation of the taste profile (plain C#)
+  Timeline/              Calculation of the timeline layout (plain C#)
+  AnimeNetwork/          Connections and clusters of the anime network (plain C#)
 InnoSetup/               Installer script
 SqlScripts/              Import and demo data, tag initialization
 CHANGELOG.md             Change history

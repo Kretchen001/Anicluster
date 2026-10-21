@@ -1,4 +1,5 @@
-﻿using Anicluster.Database.Services;
+﻿using Anicluster.AnimeNetwork;
+using Anicluster.Database.Services;
 using Anicluster.TagNetwork;
 using Modells.Anime;
 using System.Collections.ObjectModel;
@@ -18,6 +19,15 @@ namespace Anicluster.ViewModels {
         private const double MaxFontSize = 34;
         private const double TargetCoverage = 0.20;
         private const double MinDisplayScale = 0.55;
+        private const double MinZoom = 1.0;
+        private const double MaxZoom = 8.0;
+
+        /// <summary>Faktor pro Mausrad-Stufe (multiplikativ, damit sich jede Stufe gleich anfühlt)</summary>
+        private const double ZoomFactor = 1.25;
+        private const double ViewportInset = 2.0;
+
+        /// <summary>Für die Gruppen zählen je Tag nur seine stärksten Verbindungen, sonst verschmilzt bei vielen Tags alles zu einer Gruppe.</summary>
+        private const int ClusterNeighborCount = 3;
 
         private readonly ForceSimulation _simulation = new ForceSimulation();
         private readonly DispatcherTimer _timer;
@@ -36,6 +46,8 @@ namespace Anicluster.ViewModels {
         private string _searchText = string.Empty;
         private int _minCount = 1;
         private TagMatchMode _matchMode = TagMatchMode.All;
+        private double _zoom = MinZoom;
+        private IReadOnlyList<TagClusterViewModel> _clusters = [];
 
         public ObservableCollection<TagNodeViewModel> Nodes { get; } = [];
 
@@ -69,6 +81,28 @@ namespace Anicluster.ViewModels {
             get => this._worldHeight;
             private set => this.SetProperty(ref this._worldHeight, value);
         }
+
+        /// <summary>Vergrößerung der Darstellung von 1 (alles im sichtbaren Bereich) bis 8. Darüber hinaus wird gescrollt.</summary>
+        public double Zoom {
+            get => this._zoom;
+            set {
+                if (this.SetProperty(ref this._zoom, Math.Clamp(value, MinZoom, MaxZoom))) {
+                    this.OnPropertyChanged(nameof(this.ViewWidth));
+                    this.OnPropertyChanged(nameof(this.ViewHeight));
+                    this.OnPropertyChanged(nameof(this.ZoomText));
+                }
+            }
+        }
+
+        public string ZoomText => $"{Math.Round(this.Zoom * 100)} %";
+
+        /// <summary>Größe der dargestellten Fläche in Pixeln (sichtbarer Bereich mal Zoom)</summary>
+        public double ViewWidth => Math.Max(0.0, this._viewportWidth - ViewportInset) * this.Zoom;
+
+        public double ViewHeight => Math.Max(0.0, this._viewportHeight - ViewportInset) * this.Zoom;
+
+        /// <summary>Gruppen eng zusammenhängender Tags, jede mit eigener Fläche und Farbe</summary>
+        public IReadOnlyList<TagClusterViewModel> Clusters => this._clusters;
         #endregion
 
         #region Liste, Suche und Mindesthäufigkeit
@@ -169,6 +203,7 @@ namespace Anicluster.ViewModels {
                 node.IsVisibleInGraph = this.ShouldBeVisible(node);
                 node.Node.IsActive = node.IsVisibleInGraph;
             }
+            this.UpdateClusters();
         }
 
         #region Darstellung und Simulation
@@ -179,6 +214,8 @@ namespace Anicluster.ViewModels {
             }
             this._viewportWidth = width;
             this._viewportHeight = height;
+            this.OnPropertyChanged(nameof(this.ViewWidth));
+            this.OnPropertyChanged(nameof(this.ViewHeight));
             this.UpdateWorldSize();
             if (!this._hasLayout) {
                 this._hasLayout = true;
@@ -196,6 +233,16 @@ namespace Anicluster.ViewModels {
             this.PlaceAllNodes();
             this._simulation.Restart();
             this.StartTimer();
+        }
+
+        /// <summary>Ändert den Zoom um die angegebene Anzahl Stufen (positiv = größer).</summary>
+        public void ZoomBy(int steps) {
+            this.Zoom *= Math.Pow(ZoomFactor, steps);
+        }
+
+        /// <summary>Zeigt wieder das ganze Netzwerk im sichtbaren Bereich.</summary>
+        public void ResetZoom() {
+            this.Zoom = MinZoom;
         }
 
         /// <summary>Hält einen Knoten beim Ziehen an der Mausposition fest (in Koordinaten der Fläche).</summary>
@@ -336,6 +383,7 @@ namespace Anicluster.ViewModels {
                 }
             }
             this.UpdateWorldSize();
+            this.UpdateClusters();
             foreach (TagNodeViewModel node in shown) {
                 this.PlaceNearNeighbors(node);
             }
@@ -360,6 +408,47 @@ namespace Anicluster.ViewModels {
             node.Node.Vx = 0;
             node.Node.Vy = 0;
             node.NotifyPositionChanged();
+        }
+
+        /// <summary>
+        /// Gruppiert die sichtbaren Tags nach ihren Verbindungen (Label Propagation, wie im Anime-Netzwerk). Je Tag zählen nur seine
+        /// <see cref="ClusterNeighborCount"/> stärksten Verbindungen. Die Stärke ist der Anteil gemeinsamer Animes am selteneren Tag.
+        /// </summary>
+        private void UpdateClusters() {
+            Dictionary<TagEdgeViewModel, double> strengths = [];
+            Dictionary<int, List<TagEdgeViewModel>> byNode = [];
+            foreach (TagEdgeViewModel edge in this.Edges) {
+                if (!edge.IsVisible) {
+                    continue;
+                }
+                strengths[edge] = Math.Min(1.0, (double)edge.Count / Math.Max(1, Math.Min(edge.A.Count, edge.B.Count)));
+                foreach (int id in new[] { edge.A.Id, edge.B.Id }) {
+                    if (!byNode.TryGetValue(id, out List<TagEdgeViewModel>? list)) {
+                        list = [];
+                        byNode[id] = list;
+                    }
+                    list.Add(edge);
+                }
+            }
+            HashSet<TagEdgeViewModel> kept = [];
+            foreach (List<TagEdgeViewModel> list in byNode.Values) {
+                foreach (TagEdgeViewModel edge in list.OrderByDescending(x => strengths[x]).Take(ClusterNeighborCount)) {
+                    kept.Add(edge);
+                }
+            }
+            List<AnimeNetworkEdge> clusterEdges = kept
+                .OrderBy(x => x.A.Id)
+                .ThenBy(x => x.B.Id)
+                .Select(x => new AnimeNetworkEdge(x.A.Id, x.B.Id, strengths[x], AnimeEdgeKind.Similarity))
+                .ToList();
+
+            Dictionary<int, int> labels = ClusterDetector.LabelPropagation(clusterEdges);
+            IReadOnlyList<TagClusterViewModel> clusters = labels
+                .GroupBy(x => x.Value)
+                .OrderBy(x => x.Key)
+                .Select(group => new TagClusterViewModel(group.Key, group.Select(x => this._nodesById[x.Key]).ToList()))
+                .ToList();
+            this.SetProperty(ref this._clusters, clusters, nameof(this.Clusters));
         }
 
         private bool MatchesSearch(object item) {

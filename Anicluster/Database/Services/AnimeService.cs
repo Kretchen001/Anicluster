@@ -11,7 +11,9 @@ namespace Anicluster.Database.Services {
     /// </summary>
     public class AnimeService : IAnimeService {
 
-        private const string SelectAnimeColumns = "Id, Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment";
+        private const string SelectAnimeColumns =
+            "Id, Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment, "
+            + "Description, AniListId, MyAnimeListId, KitsuId, Uid";
 
         private readonly DatabaseManager _databaseManager;
         private readonly StatusService _statusService = new StatusService();
@@ -30,13 +32,20 @@ namespace Anicluster.Database.Services {
         public bool Insert(Anime animeToInsert) {
             try {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    if (string.IsNullOrWhiteSpace(animeToInsert.Uid)) {
+                        animeToInsert.Uid = Guid.NewGuid().ToString();
+                    }
                     animeToInsert.Id = session.Insert(
-                        @"INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment)
-                            VALUES (@Name, @OriginalName, @Url, @Favorite, @Tier, @RecommendedFrom, @Predecessor, @Successor, @Related, @Comment);",
+                        @"INSERT INTO Anime (Name, OriginalName, Url, Favorite, Tier, RecommendedFrom, Predecessor, Successor, Related, Comment,
+                                             Description, AniListId, MyAnimeListId, KitsuId, Uid)
+                            VALUES (@Name, @OriginalName, @Url, @Favorite, @Tier, @RecommendedFrom, @Predecessor, @Successor, @Related, @Comment,
+                                    @Description, @AniListId, @MyAnimeListId, @KitsuId, @Uid);",
                         ("@Name", animeToInsert.Name), ("@OriginalName", animeToInsert.OriginalName), ("@Url", animeToInsert.Url),
                         ("@Favorite", animeToInsert.Favorite), ("@Tier", animeToInsert.Tier), ("@RecommendedFrom", animeToInsert.RecommendedFrom),
                         ("@Predecessor", animeToInsert.Predecessor), ("@Successor", animeToInsert.Successor), ("@Related", animeToInsert.Related),
-                        ("@Comment", animeToInsert.Comment)
+                        ("@Comment", animeToInsert.Comment), ("@Description", animeToInsert.Description),
+                        ("@AniListId", animeToInsert.AniListId), ("@MyAnimeListId", animeToInsert.MyAnimeListId),
+                        ("@KitsuId", animeToInsert.KitsuId), ("@Uid", animeToInsert.Uid)
                     );
                     this.SaveRelatedData(session, animeToInsert);
                     session.Commit();
@@ -93,12 +102,15 @@ namespace Anicluster.Database.Services {
                         @"UPDATE Anime
                             SET Name = @Name, OriginalName = @OriginalName, Url = @Url, Favorite = @Favorite, Tier = @Tier,
                                 RecommendedFrom = @RecommendedFrom, Predecessor = @Predecessor, Successor = @Successor,
-                                Related = @Related, Comment = @Comment
+                                Related = @Related, Comment = @Comment, Description = @Description,
+                                AniListId = @AniListId, MyAnimeListId = @MyAnimeListId, KitsuId = @KitsuId
                             WHERE Id = @Id;",
                         ("@Name", animeToUpdate.Name), ("@OriginalName", animeToUpdate.OriginalName), ("@Url", animeToUpdate.Url),
                         ("@Favorite", animeToUpdate.Favorite), ("@Tier", animeToUpdate.Tier), ("@RecommendedFrom", animeToUpdate.RecommendedFrom),
                         ("@Predecessor", animeToUpdate.Predecessor), ("@Successor", animeToUpdate.Successor), ("@Related", animeToUpdate.Related),
-                        ("@Comment", animeToUpdate.Comment), ("@Id", animeToUpdate.Id)
+                        ("@Comment", animeToUpdate.Comment), ("@Description", animeToUpdate.Description),
+                        ("@AniListId", animeToUpdate.AniListId), ("@MyAnimeListId", animeToUpdate.MyAnimeListId),
+                        ("@KitsuId", animeToUpdate.KitsuId), ("@Id", animeToUpdate.Id)
                     );
                     if (affectedRows == 0) {
                         Log.Error("Anime mit der Id {AnimeId} existiert nicht und kann nicht aktualisiert werden.", animeToUpdate.Id);
@@ -165,6 +177,144 @@ namespace Anicluster.Database.Services {
             }
         }
 
+        public List<AnimeIdentity> SelectAnimeIdentities() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return session.Query(
+                        "SELECT Id, Uid, Name, OriginalName, AniListId, MyAnimeListId, KitsuId FROM Anime ORDER BY Id;",
+                        reader => new AnimeIdentity(
+                            reader.GetInt(0),
+                            reader.GetStringOrNull(1) ?? string.Empty,
+                            reader.GetString(2),
+                            reader.GetStringOrNull(3),
+                            reader.GetIntOrNull(4),
+                            reader.GetIntOrNull(5),
+                            reader.GetIntOrNull(6)
+                        )
+                    );
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Kennungen der Animes konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
+        public List<AnimeRelationEntry> SelectRelationEntries() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return session.Query(
+                        "SELECT Id, Predecessor, Successor, Related FROM Anime ORDER BY Id;",
+                        reader => new AnimeRelationEntry(reader.GetInt(0), reader.GetInt(1), reader.GetInt(2), reader.GetInt(3))
+                    );
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Verknüpfungen der Animes konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
+        public List<AnimeRatingEntry> SelectRatingEntries() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return this._ratingService.SelectEntries(session);
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Bewertungen der Animes konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
+        public List<TimelineEntry> SelectTimelineEntries() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    List<TimelineBase> animes = session.Query(
+                        @"SELECT a.Id, a.Name, a.Favorite, a.Tier, COALESCE(s.State, 0), pt.StartDate, pt.EndDate,
+                                 (SELECT GROUP_CONCAT(m.TagId) FROM AnimeTagAssociativeEntity m WHERE m.AnimeId = a.Id)
+                            FROM Anime a
+                            LEFT JOIN Status s ON s.AnimeId = a.Id
+                            LEFT JOIN MediaInfo mi ON mi.AnimeId = a.Id
+                            LEFT JOIN PublishingTime pt ON pt.MediaInfoId = mi.Id
+                            ORDER BY a.Id;",
+                        reader => new TimelineBase(
+                            reader.GetInt(0),
+                            reader.GetString(1),
+                            reader.GetBool(2),
+                            (Tier)reader.GetInt(3),
+                            (State)reader.GetInt(4),
+                            ToSpan(reader.GetDate(5), reader.GetDate(6)),
+                            ParseIds(reader.GetStringOrNull(7))
+                        )
+                    );
+                    Dictionary<int, List<TimelineSeason>> seasons = [];
+                    session.Query(
+                        @"SELECT se.AnimeId, se.Number, pt.StartDate, pt.EndDate
+                            FROM Season se
+                            JOIN PublishingTime pt ON pt.SeasonId = se.Id
+                            ORDER BY se.AnimeId, se.Number;",
+                        reader => (
+                            AnimeId: reader.GetInt(0),
+                            Season: ToSeason(reader.GetInt(1), reader.GetDate(2), reader.GetDate(3)))
+                    ).ForEach(x => {
+                        if (x.Season is not null) {
+                            AddTo(seasons, x.AnimeId, x.Season);
+                        }
+                    });
+                    Dictionary<int, List<TimelineInterruption>> interruptions = [];
+                    session.Query(
+                        @"SELECT COALESCE(mi.AnimeId, se.AnimeId), i.StartDate, i.EndDate
+                            FROM Interruption i
+                            JOIN PublishingTime pt ON pt.Id = i.PublishingTimeId
+                            LEFT JOIN MediaInfo mi ON mi.Id = pt.MediaInfoId
+                            LEFT JOIN Season se ON se.Id = pt.SeasonId
+                            ORDER BY i.StartDate;",
+                        reader => (AnimeId: reader.GetInt(0), Start: reader.GetDate(1), End: reader.GetDate(2))
+                    ).ForEach(x => {
+                        if (x.Start.Year > 1 && x.End >= x.Start) {
+                            AddTo(interruptions, x.AnimeId, new TimelineInterruption(x.Start, x.End));
+                        }
+                    });
+                    return animes.Select(x => new TimelineEntry(
+                        x.Id, x.Name, x.IsFavorite, x.Tier, x.State, x.Run,
+                        seasons.GetValueOrDefault(x.Id) ?? [],
+                        interruptions.GetValueOrDefault(x.Id) ?? [],
+                        x.TagIds
+                    )).ToList();
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Zeiträume für den Zeitstrahl konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
+        /// <summary>Ein Anime mit seinem Gesamtzeitraum, noch ohne Staffeln und Unterbrechungen.</summary>
+        private record TimelineBase(
+            int Id, string Name, bool IsFavorite, Tier Tier, State State, TimelineSpan? Run, IReadOnlyList<int> TagIds);
+
+        private static void AddTo<T>(Dictionary<int, List<T>> target, int animeId, T item) {
+            if (!target.TryGetValue(animeId, out List<T>? list)) {
+                list = [];
+                target[animeId] = list;
+            }
+            list.Add(item);
+        }
+
+        /// <summary>Wandelt Start und Ende in einen Zeitraum um. Ohne Startdatum gibt es keinen Zeitraum, ohne Ende ist es offen.</summary>
+        private static TimelineSpan? ToSpan(DateTime start, DateTime end) {
+            if (start.Year <= 1) {
+                return null;
+            }
+            return new TimelineSpan(start, end.Year > 1 && end >= start ? end : null);
+        }
+
+        private static TimelineSeason? ToSeason(int number, DateTime start, DateTime end) {
+            TimelineSpan? span = ToSpan(start, end);
+            return span is null ? null : new TimelineSeason(number, span);
+        }
+
         public byte[]? SelectThumbnail(int animeId) {
             try {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {
@@ -215,7 +365,12 @@ namespace Anicluster.Database.Services {
                 Predecessor = reader.GetInt(7),
                 Successor = reader.GetInt(8),
                 Related = reader.GetInt(9),
-                Comment = reader.GetStringOrNull(10)
+                Comment = reader.GetStringOrNull(10),
+                Description = reader.GetStringOrNull(11),
+                AniListId = reader.GetIntOrNull(12),
+                MyAnimeListId = reader.GetIntOrNull(13),
+                KitsuId = reader.GetIntOrNull(14),
+                Uid = reader.GetStringOrNull(15) ?? string.Empty
             };
         }
     }

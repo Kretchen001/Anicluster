@@ -14,6 +14,11 @@ namespace Anicluster.Database {
             return reader.IsDBNull(ordinal) ? 0 : reader.GetInt32(ordinal);
         }
 
+        /// <summary>Liest eine ganze Zahl, bei NULL wird <c>null</c> geliefert.</summary>
+        public static int? GetIntOrNull(this SqliteDataReader reader, int ordinal) {
+            return reader.IsDBNull(ordinal) ? null : reader.GetInt32(ordinal);
+        }
+
         public static bool GetBool(this SqliteDataReader reader, int ordinal) {
             return reader.GetInt(ordinal) != 0;
         }

@@ -1,6 +1,8 @@
-﻿using Anicluster.Database;
+﻿using Anicluster.Backup;
+using Anicluster.Database;
 using Anicluster.Database.Services;
 using Anicluster.Dialogs;
+using Anicluster.Metadata;
 using Anicluster.Settings;
 using Anicluster.Theming;
 using Modells.Anime;
@@ -20,6 +22,8 @@ namespace Anicluster.ViewModels {
         private readonly ITagService _tagService;
         private readonly IDialogService _dialogService;
         private readonly DatabaseManager _databaseManager;
+        private readonly IMetadataClient _metadataClient;
+        private readonly AppSettingsService _settingsService;
         private readonly SettingsViewModel _settingsPage;
         private object _currentPage;
         private NavigationTarget _navigation = NavigationTarget.Library;
@@ -53,16 +57,21 @@ namespace Anicluster.ViewModels {
             IDialogService dialogService,
             ThemeService themeService,
             AppSettingsService settingsService,
-            DatabaseManager databaseManager
+            DatabaseManager databaseManager,
+            IMetadataClient metadataClient,
+            IBackupService backupService
         ) {
             this._databaseManager = databaseManager;
+            this._metadataClient = metadataClient;
+            this._settingsService = settingsService;
             this._animeService = animeService;
             this._tagService = tagService;
             this._dialogService = dialogService;
             this.AppTitle = GetAssemblyTitle();
             this.VersionText = GetVersionText();
-            this._settingsPage = new SettingsViewModel(themeService, settingsService);
+            this._settingsPage = new SettingsViewModel(themeService, settingsService, dialogService, backupService);
             this.Library = new LibraryViewModel(animeService, settingsService);
+            this._settingsPage.DataImported += (sender, e) => this.Library.Refresh();
             this.Library.EditRequested += (sender, item) => this.EditAnime(item.Id);
             this.Library.DeleteRequested += (sender, item) => this.DeleteAnime(item.Id, item.Name);
             this._currentPage = this.Library;
@@ -89,6 +98,15 @@ namespace Anicluster.ViewModels {
                     break;
                 case NavigationTarget.TagNetwork:
                     this.CurrentPage = this.CreateTagNetwork();
+                    break;
+                case NavigationTarget.AnimeNetwork:
+                    this.CurrentPage = this.CreateAnimeNetwork();
+                    break;
+                case NavigationTarget.TasteProfile:
+                    this.CurrentPage = this.CreateTasteProfile();
+                    break;
+                case NavigationTarget.Timeline:
+                    this.CurrentPage = this.CreateTimeline();
                     break;
                 case NavigationTarget.Settings:
                     this.CurrentPage = this._settingsPage;
@@ -121,9 +139,18 @@ namespace Anicluster.ViewModels {
         }
 
         /// <summary>Wechselt zur Bibliothek und zeigt dort nur Animes mit den übergebenen Tags.</summary>
-        public void ShowLibraryWithTags(IReadOnlyList<TagFilterItem> tags, TagMatchMode mode) {
+        public void ShowLibraryWithTags(IReadOnlyList<TagFilterItem> tags, TagMatchMode mode, LibraryStatusFilter? status = null) {
             this.NavigateTo(NavigationTarget.Library);
             this.Library.SetTagFilter(tags, mode);
+            if (status.HasValue) {
+                this.Library.StatusFilter = status.Value;
+            }
+        }
+
+        /// <summary>Wechselt zur Bibliothek und sucht dort nach dem Text (zum Beispiel dem Namen eines Animes).</summary>
+        public void ShowLibraryWithSearch(string searchText) {
+            this.NavigateTo(NavigationTarget.Library);
+            this.Library.SearchText = searchText;
         }
 
         /// <summary>Zeigt den Dialog zum schnellen Anlegen und lädt danach die Liste neu.</summary>
@@ -155,9 +182,36 @@ namespace Anicluster.ViewModels {
             return network;
         }
 
+        private AnimeNetworkViewModel CreateAnimeNetwork() {
+            AnimeNetworkViewModel network = new AnimeNetworkViewModel(this._animeService, this._tagService, this._settingsService);
+            network.EditRequested += (sender, animeId) => this.EditAnime(animeId);
+            network.SearchInLibraryRequested += (sender, searchText) => this.ShowLibraryWithSearch(searchText);
+            return network;
+        }
+
+        private TasteProfileViewModel CreateTasteProfile() {
+            TasteProfileViewModel profile = new TasteProfileViewModel(this._animeService, this._tagService);
+            profile.EditRequested += (sender, item) => this.EditAnime(item.Id);
+            profile.ShowInLibraryRequested += (sender, e) => this.ShowLibraryWithTags(e.Tags, e.Mode, e.Status);
+            return profile;
+        }
+
+        private TimelineViewModel CreateTimeline() {
+            TimelineViewModel timeline = new TimelineViewModel(this._animeService, this._tagService);
+            timeline.EditRequested += (sender, animeId) => this.EditAnime(animeId);
+            return timeline;
+        }
+
         private void OpenEditor(Anime? anime) {
             this.DetachEditor();
-            AnimeEditorViewModel editor = new AnimeEditorViewModel(this._animeService, this._tagService, this._dialogService, anime);
+            AnimeEditorViewModel editor = new AnimeEditorViewModel(
+                this._animeService,
+                this._tagService,
+                this._dialogService,
+                this._metadataClient,
+                this._settingsService,
+                anime
+            );
             editor.CloseRequested += this.OnEditorCloseRequested;
             this._navigation = NavigationTarget.Library;
             this.CurrentPage = editor;

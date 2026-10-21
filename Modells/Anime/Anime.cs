@@ -10,6 +10,12 @@ namespace Modells.Anime {
 
         public int Id { get; set; }
 
+        /// <summary>
+        /// Feste Kennung (GUID als Text), bleibt beim Umbenennen und bei Datensicherungen gleich. Die Datenbank-Id gilt nur lokal,
+        /// die Kennung erlaubt es, denselben Anime in zwei Datenbanken wiederzuerkennen. Leer bis zum ersten Speichern.
+        /// </summary>
+        public string Uid { get; set; } = string.Empty;
+
         public string Name { get; set; } = "";
 
         /// <summary>Originalname des Animes</summary>
@@ -56,6 +62,18 @@ namespace Modells.Anime {
 
         /// <summary>Zusätzliche Kommentare oder Notizen zum Anime</summary>
         public string? Comment { get; set; }
+
+        /// <summary>Ausführliche Beschreibung (zum Beispiel aus einer Online-Quelle übernommen und vom Benutzer änderbar)</summary>
+        public string? Description { get; set; }
+
+        /// <summary>Id des Eintrags bei AniList, <c>null</c> wenn der Anime dort nicht verknüpft ist</summary>
+        public int? AniListId { get; set; }
+
+        /// <summary>Id des Eintrags bei MyAnimeList (auch die Id bei Jikan), <c>null</c> wenn nicht verknüpft</summary>
+        public int? MyAnimeListId { get; set; }
+
+        /// <summary>Id des Eintrags bei Kitsu, <c>null</c> wenn nicht verknüpft</summary>
+        public int? KitsuId { get; set; }
 
         /// <summary>Das Cover des Animes, <c>null</c> wenn keins hinterlegt ist</summary>
         public AnimeImage? Image { get; set; }

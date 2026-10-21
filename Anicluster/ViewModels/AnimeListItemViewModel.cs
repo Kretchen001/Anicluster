@@ -16,6 +16,9 @@ namespace Anicluster.ViewModels {
             { State.Canceled, "Abgebrochen" },
         };
 
+        /// <summary>Begrenzt die gleichzeitigen Datenbankzugriffe beim Laden der Vorschauen, damit das Scrollen flüssig bleibt</summary>
+        private static readonly SemaphoreSlim ThumbnailLoadLimit = new SemaphoreSlim(2);
+
         private readonly IAnimeService _animeService;
         private byte[]? _thumbnail;
         private bool _isThumbnailLoaded;
@@ -30,14 +33,17 @@ namespace Anicluster.ViewModels {
         public bool HasImage { get; }
 
         /// <summary>
-        /// Die kleine Vorschau des Bildes (JPEG-Daten), <c>null</c> ohne Bild. Sie wird erst beim ersten Zugriff geladen,
-        /// damit die Karten- und Tabellenansicht keine Bilddaten lesen müssen.
+        /// Die kleine Vorschau des Bildes (JPEG-Daten), <c>null</c> ohne Bild. Sie wird erst beim ersten Zugriff im Hintergrund
+        /// geladen, damit die Karten- und Tabellenansicht keine Bilddaten lesen müssen und die Bilder-Ansicht nicht stockt.
+        /// Bis dahin ist der Wert <c>null</c>, danach meldet sich die Property erneut.
         /// </summary>
         public byte[]? Thumbnail {
             get {
                 if (!this._isThumbnailLoaded) {
                     this._isThumbnailLoaded = true;
-                    this._thumbnail = this.HasImage ? this._animeService.SelectThumbnail(this.Id) : null;
+                    if (this.HasImage) {
+                        _ = this.LoadThumbnailAsync();
+                    }
                 }
                 return this._thumbnail;
             }
@@ -67,6 +73,17 @@ namespace Anicluster.ViewModels {
             this.State = entry.State;
             this.HasImage = entry.HasImage;
             this.TagIds = entry.TagIds.ToHashSet();
+        }
+
+        private async Task LoadThumbnailAsync() {
+            await ThumbnailLoadLimit.WaitAsync();
+            try {
+                this._thumbnail = await Task.Run(() => this._animeService.SelectThumbnail(this.Id));
+            }
+            finally {
+                ThumbnailLoadLimit.Release();
+            }
+            this.OnPropertyChanged(nameof(this.Thumbnail));
         }
 
         public void RequestEdit() {
