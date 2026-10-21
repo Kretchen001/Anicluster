@@ -24,7 +24,7 @@ Neu in 2.3.0
   mit Clustern, Reglern für die Ähnlichkeit, Auswahl mit Verbindungen und Zoom
 - Online-Metadaten: Im Editor lädt "Metadaten laden" auf Knopfdruck Cover, Beschreibung und Zeitraum eines Animes
   aus AniList (Standard), Jikan (MyAnimeList) oder Kitsu. Die Quelle ist wählbar, es wird nur übernommen, was du
-  auswählst. Ohne Internet und ohne Konto bleibt Anicluster voll nutzbar
+  auswählst. Soweit verfügbar, kommen auch Originalname, Produzent, Veröffentlicher und Autor mit. Ohne Internet und ohne Konto bleibt Anicluster voll nutzbar
 - Neues Feld "Beschreibung" im Editor
 - Datensicherung in den Einstellungen: ganze Bibliothek als JSON-Datei exportieren (wahlweise mit Cover) und
   wieder importieren, entweder zusammenführen (nur Fehlendes ergänzen) oder ersetzen (wiederherstellen)

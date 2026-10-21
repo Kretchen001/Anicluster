@@ -31,6 +31,10 @@ namespace Anicluster.ViewModels {
         private bool _applyCover;
         private bool _applyDescription;
         private bool _applyPeriod;
+        private bool _applyProducer;
+        private bool _applyPublisher;
+        private bool _applyAuthor;
+        private bool _applyOriginalName;
 
         public override string Title => "Metadaten laden";
 
@@ -233,6 +237,26 @@ namespace Anicluster.ViewModels {
 
         public string EndText => DescribeDate(this.SelectedCandidate?.Candidate.End);
 
+        /// <summary>Studios und Produzenten des Treffers (leer, wenn die Quelle sie nicht liefert)</summary>
+        public string ProducerText => this.SelectedCandidate?.Candidate.Producer ?? string.Empty;
+
+        public bool HasProducerText => this.ProducerText.Length > 0;
+
+        /// <summary>Lizenzgeber und Veröffentlicher des Treffers (leer, wenn die Quelle sie nicht liefert)</summary>
+        public string PublisherText => this.SelectedCandidate?.Candidate.Publisher ?? string.Empty;
+
+        public bool HasPublisherText => this.PublisherText.Length > 0;
+
+        /// <summary>Urheber der Vorlage laut Treffer (leer, wenn die Quelle ihn nicht liefert)</summary>
+        public string AuthorText => this.SelectedCandidate?.Candidate.Author ?? string.Empty;
+
+        public bool HasAuthorText => this.AuthorText.Length > 0;
+
+        /// <summary>Originalname laut Treffer (leer, wenn die Quelle ihn nicht liefert)</summary>
+        public string OriginalNameText => this.SelectedCandidate?.Candidate.OriginalName ?? string.Empty;
+
+        public bool HasOriginalNameText => this.OriginalNameText.Length > 0;
+
         /// <summary>Das heruntergeladene Cover des gewählten Treffers, <c>null</c> solange es lädt oder fehlt</summary>
         public byte[]? CoverData {
             get => this._coverData;
@@ -266,6 +290,10 @@ namespace Anicluster.ViewModels {
             this.ApplyCover = false;
             this.ApplyDescription = this.CanApplyDescription && !this._context.HasDescription;
             this.ApplyPeriod = this.CanApplyPeriod && !this._context.HasStartDate && !this._context.HasEndDate;
+            this.ApplyProducer = this.CanApplyProducer && !this._context.HasProducer;
+            this.ApplyPublisher = this.CanApplyPublisher && !this._context.HasPublisher;
+            this.ApplyAuthor = this.CanApplyAuthor && !this._context.HasAuthor;
+            this.ApplyOriginalName = this.CanApplyOriginalName && !this._context.HasOriginalName;
 
             this.OnPropertyChanged(nameof(this.HasSelection));
             this.OnPropertyChanged(nameof(this.PreviewTitle));
@@ -276,6 +304,26 @@ namespace Anicluster.ViewModels {
             this.OnPropertyChanged(nameof(this.EndText));
             this.OnPropertyChanged(nameof(this.CanApplyDescription));
             this.OnPropertyChanged(nameof(this.CanApplyPeriod));
+            this.OnPropertyChanged(nameof(this.ProducerText));
+            this.OnPropertyChanged(nameof(this.HasProducerText));
+            this.OnPropertyChanged(nameof(this.PublisherText));
+            this.OnPropertyChanged(nameof(this.HasPublisherText));
+            this.OnPropertyChanged(nameof(this.CanApplyProducer));
+            this.OnPropertyChanged(nameof(this.CanApplyPublisher));
+            this.OnPropertyChanged(nameof(this.ProducerNote));
+            this.OnPropertyChanged(nameof(this.HasProducerNote));
+            this.OnPropertyChanged(nameof(this.PublisherNote));
+            this.OnPropertyChanged(nameof(this.HasPublisherNote));
+            this.OnPropertyChanged(nameof(this.AuthorText));
+            this.OnPropertyChanged(nameof(this.HasAuthorText));
+            this.OnPropertyChanged(nameof(this.CanApplyAuthor));
+            this.OnPropertyChanged(nameof(this.AuthorNote));
+            this.OnPropertyChanged(nameof(this.HasAuthorNote));
+            this.OnPropertyChanged(nameof(this.OriginalNameText));
+            this.OnPropertyChanged(nameof(this.HasOriginalNameText));
+            this.OnPropertyChanged(nameof(this.CanApplyOriginalName));
+            this.OnPropertyChanged(nameof(this.OriginalNameNote));
+            this.OnPropertyChanged(nameof(this.HasOriginalNameNote));
             this.OnPropertyChanged(nameof(this.DescriptionNote));
             this.OnPropertyChanged(nameof(this.HasDescriptionNote));
             this.OnPropertyChanged(nameof(this.PeriodNote));
@@ -356,6 +404,66 @@ namespace Anicluster.ViewModels {
             }
         }
 
+        public bool ApplyProducer {
+            get => this._applyProducer;
+            set {
+                if (this.SetProperty(ref this._applyProducer, value)) {
+                    this.OnPropertyChanged(nameof(this.CanApply));
+                }
+            }
+        }
+
+        public bool ApplyPublisher {
+            get => this._applyPublisher;
+            set {
+                if (this.SetProperty(ref this._applyPublisher, value)) {
+                    this.OnPropertyChanged(nameof(this.CanApply));
+                }
+            }
+        }
+
+        public bool CanApplyProducer => this.HasProducerText;
+
+        public bool CanApplyPublisher => this.HasPublisherText;
+
+        public string ProducerNote => this._context.HasProducer ? "Der vorhandene Eintrag würde ersetzt." : string.Empty;
+
+        public bool HasProducerNote => this.ProducerNote.Length > 0 && this.CanApplyProducer;
+
+        public string PublisherNote => this._context.HasPublisher ? "Der vorhandene Eintrag würde ersetzt." : string.Empty;
+
+        public bool HasPublisherNote => this.PublisherNote.Length > 0 && this.CanApplyPublisher;
+
+        public bool ApplyAuthor {
+            get => this._applyAuthor;
+            set {
+                if (this.SetProperty(ref this._applyAuthor, value)) {
+                    this.OnPropertyChanged(nameof(this.CanApply));
+                }
+            }
+        }
+
+        public bool CanApplyAuthor => this.HasAuthorText;
+
+        public string AuthorNote => this._context.HasAuthor ? "Der vorhandene Eintrag würde ersetzt." : string.Empty;
+
+        public bool HasAuthorNote => this.AuthorNote.Length > 0 && this.CanApplyAuthor;
+
+        public bool ApplyOriginalName {
+            get => this._applyOriginalName;
+            set {
+                if (this.SetProperty(ref this._applyOriginalName, value)) {
+                    this.OnPropertyChanged(nameof(this.CanApply));
+                }
+            }
+        }
+
+        public bool CanApplyOriginalName => this.HasOriginalNameText;
+
+        public string OriginalNameNote => this._context.HasOriginalName ? "Der vorhandene Eintrag würde ersetzt." : string.Empty;
+
+        public bool HasOriginalNameNote => this.OriginalNameNote.Length > 0 && this.CanApplyOriginalName;
+
         public bool CanApplyCover => this.CoverData is not null;
 
         public bool CanApplyDescription => this.SelectedCandidate?.Candidate.Description is not null;
@@ -401,7 +509,11 @@ namespace Anicluster.ViewModels {
         public bool CanApply => this.SelectedCandidate is not null && !this.IsBusy && !this.IsCoverLoading
             && ((this.ApplyCover && this.CanApplyCover)
                 || (this.ApplyDescription && this.CanApplyDescription)
-                || (this.ApplyPeriod && this.CanApplyPeriod));
+                || (this.ApplyPeriod && this.CanApplyPeriod)
+                || (this.ApplyProducer && this.CanApplyProducer)
+                || (this.ApplyPublisher && this.CanApplyPublisher)
+                || (this.ApplyAuthor && this.CanApplyAuthor)
+                || (this.ApplyOriginalName && this.CanApplyOriginalName));
 
         public void Apply() {
             MetadataCandidate? candidate = this.SelectedCandidate?.Candidate;
@@ -416,7 +528,11 @@ namespace Anicluster.ViewModels {
                 this.ApplyCover && this.CanApplyCover ? this.CoverData : null,
                 this.ApplyDescription && this.CanApplyDescription ? candidate.Description : null,
                 withPeriod ? candidate.Start?.ToDateTime() : null,
-                withPeriod ? candidate.End?.ToDateTime() : null
+                withPeriod ? candidate.End?.ToDateTime() : null,
+                this.ApplyProducer && this.CanApplyProducer ? candidate.Producer : null,
+                this.ApplyPublisher && this.CanApplyPublisher ? candidate.Publisher : null,
+                this.ApplyAuthor && this.CanApplyAuthor ? candidate.Author : null,
+                this.ApplyOriginalName && this.CanApplyOriginalName ? candidate.OriginalName : null
             );
             this.CancelRunningRequests();
             this.RequestClose(true);

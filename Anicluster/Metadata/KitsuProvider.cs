@@ -12,6 +12,7 @@ namespace Anicluster.Metadata {
 
         private const string BaseUrl = "https://kitsu.io/api/edge/anime";
         private const int ResultLimit = 8;
+        private const string Include = "&include=animeProductions.producer%2Cstaff.person";
 
         private readonly MetadataHttp _http;
 
@@ -24,7 +25,7 @@ namespace Anicluster.Metadata {
         public async Task<MetadataResult<IReadOnlyList<MetadataCandidate>>> SearchAsync(string query, CancellationToken cancellationToken) {
             // Die eckigen Klammern der JSON:API-Parameter werden mitkodiert
             string limit = ResultLimit.ToString(CultureInfo.InvariantCulture);
-            string url = $"{BaseUrl}?filter%5Btext%5D={Uri.EscapeDataString(query)}&page%5Blimit%5D={limit}";
+            string url = $"{BaseUrl}?filter%5Btext%5D={Uri.EscapeDataString(query)}&page%5Blimit%5D={limit}{Include}";
             MetadataResult<string> response = await this.GetAsync(url, cancellationToken);
             if (response.Value is null) {
                 return response.AsFailure<IReadOnlyList<MetadataCandidate>>();
@@ -33,9 +34,10 @@ namespace Anicluster.Metadata {
                 using (JsonDocument document = JsonDocument.Parse(response.Value)) {
                     List<MetadataCandidate> candidates = [];
                     JsonElement? data = JsonReading.Get(document.RootElement, "data");
+                    Dictionary<string, JsonElement> included = IndexIncluded(document.RootElement);
                     if (data is { ValueKind: JsonValueKind.Array } list) {
                         foreach (JsonElement item in list.EnumerateArray()) {
-                            MetadataCandidate? candidate = this.Parse(item);
+                            MetadataCandidate? candidate = this.Parse(item, included);
                             if (candidate is not null) {
                                 candidates.Add(candidate);
                             }
@@ -54,14 +56,16 @@ namespace Anicluster.Metadata {
             if (!int.TryParse(externalId, NumberStyles.None, CultureInfo.InvariantCulture, out int id)) {
                 return MetadataResult<MetadataCandidate>.Failure(MetadataStatus.NotFound);
             }
-            MetadataResult<string> response = await this.GetAsync($"{BaseUrl}/{id.ToString(CultureInfo.InvariantCulture)}", cancellationToken);
+            string url = $"{BaseUrl}/{id.ToString(CultureInfo.InvariantCulture)}?{Include.TrimStart('&')}";
+            MetadataResult<string> response = await this.GetAsync(url, cancellationToken);
             if (response.Value is null) {
                 return response.AsFailure<MetadataCandidate>();
             }
             try {
                 using (JsonDocument document = JsonDocument.Parse(response.Value)) {
                     JsonElement? data = JsonReading.Get(document.RootElement, "data");
-                    MetadataCandidate? candidate = data is { ValueKind: JsonValueKind.Object } item ? this.Parse(item) : null;
+                    Dictionary<string, JsonElement> included = IndexIncluded(document.RootElement);
+                    MetadataCandidate? candidate = data is { ValueKind: JsonValueKind.Object } item ? this.Parse(item, included) : null;
                     return candidate is null
                         ? MetadataResult<MetadataCandidate>.Failure(MetadataStatus.NotFound)
                         : MetadataResult<MetadataCandidate>.Success(candidate);
@@ -79,7 +83,7 @@ namespace Anicluster.Metadata {
             return this._http.SendForTextAsync(request, cancellationToken);
         }
 
-        private MetadataCandidate? Parse(JsonElement item) {
+        private MetadataCandidate? Parse(JsonElement item, Dictionary<string, JsonElement> included) {
             string? id = JsonReading.GetString(item, "id");
             if (id is null) {
                 return null;
@@ -109,8 +113,81 @@ namespace Anicluster.Metadata {
                     ?? JsonReading.GetString(item, "attributes", "posterImage", "medium"),
                 start,
                 PartialDate.FromIso(JsonReading.GetString(item, "attributes", "endDate")),
-                null
+                null,
+                ReadProductions(item, included, "studio", "producer"),
+                ReadProductions(item, included, "licensor", "serialization"),
+                ReadAuthors(item, included),
+                japanese
             );
+        }
+
+        /// <summary>Alle mitgelieferten Einträge (<c>included</c>) nach Typ und Id, damit Verweise schnell aufgelöst werden.</summary>
+        private static Dictionary<string, JsonElement> IndexIncluded(JsonElement root) {
+            Dictionary<string, JsonElement> index = new Dictionary<string, JsonElement>();
+            JsonElement? included = JsonReading.Get(root, "included");
+            if (included is { ValueKind: JsonValueKind.Array } list) {
+                foreach (JsonElement entry in list.EnumerateArray()) {
+                    string? type = JsonReading.GetString(entry, "type");
+                    string? id = JsonReading.GetString(entry, "id");
+                    if (type is not null && id is not null) {
+                        index[type + ":" + id] = entry;
+                    }
+                }
+            }
+            return index;
+        }
+
+        /// <summary>Verweise (<c>type</c> und <c>id</c>) einer Beziehung des Eintrags, z. B. <c>animeProductions</c>.</summary>
+        private static List<JsonElement> ResolveRelation(
+            JsonElement owner, string relation, Dictionary<string, JsonElement> included
+        ) {
+            List<JsonElement> result = [];
+            JsonElement? refs = JsonReading.Get(owner, "relationships", relation, "data");
+            if (refs is { ValueKind: JsonValueKind.Array } list) {
+                foreach (JsonElement reference in list.EnumerateArray()) {
+                    string? type = JsonReading.GetString(reference, "type");
+                    string? id = JsonReading.GetString(reference, "id");
+                    if (type is not null && id is not null && included.TryGetValue(type + ":" + id, out JsonElement entry)) {
+                        result.Add(entry);
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static string? ResolveName(JsonElement owner, string relation, Dictionary<string, JsonElement> included) {
+            string? type = JsonReading.GetString(owner, "relationships", relation, "data", "type");
+            string? id = JsonReading.GetString(owner, "relationships", relation, "data", "id");
+            if (type is not null && id is not null && included.TryGetValue(type + ":" + id, out JsonElement target)) {
+                return JsonReading.GetString(target, "attributes", "name");
+            }
+            return null;
+        }
+
+        /// <summary>Firmen mit einer der Rollen (z. B. studio, producer, licensor) aus den Produktionen des Animes.</summary>
+        private static string? ReadProductions(JsonElement item, Dictionary<string, JsonElement> included, params string[] roles) {
+            List<string> names = [];
+            foreach (JsonElement production in ResolveRelation(item, "animeProductions", included)) {
+                string? role = JsonReading.GetString(production, "attributes", "role");
+                string? name = ResolveName(production, "producer", included);
+                if (role is not null && name is not null && roles.Contains(role, StringComparer.OrdinalIgnoreCase)) {
+                    names.Add(name);
+                }
+            }
+            return JsonReading.JoinNames(names);
+        }
+
+        /// <summary>Mitarbeiter mit der Rolle „Original Creator“ oder „Original Story“ gelten als Autor.</summary>
+        private static string? ReadAuthors(JsonElement item, Dictionary<string, JsonElement> included) {
+            List<string> names = [];
+            foreach (JsonElement member in ResolveRelation(item, "staff", included)) {
+                string? role = JsonReading.GetString(member, "attributes", "role");
+                string? name = ResolveName(member, "person", included);
+                if (role is not null && name is not null && role.Contains("Original", StringComparison.OrdinalIgnoreCase)) {
+                    names.Add(name);
+                }
+            }
+            return JsonReading.JoinNames(names);
         }
     }
 }

@@ -41,6 +41,27 @@ namespace Anicluster.Metadata {
             return null;
         }
 
+        /// <summary>Die Namen (<c>name</c>) der Einträge eines Arrays am Pfad, leere Namen entfallen.</summary>
+        public static List<string> GetNames(JsonElement element, params string[] path) {
+            List<string> names = [];
+            JsonElement? list = Get(element, path);
+            if (list is { ValueKind: JsonValueKind.Array } array) {
+                foreach (JsonElement entry in array.EnumerateArray()) {
+                    string? name = GetString(entry, "name");
+                    if (name is not null) {
+                        names.Add(name);
+                    }
+                }
+            }
+            return names;
+        }
+
+        /// <summary>Fügt Namen zu einem Text mit Kommas zusammen, doppelte entfallen. <c>null</c>, wenn es keine gibt.</summary>
+        public static string? JoinNames(IEnumerable<string> names) {
+            string joined = string.Join(", ", names.Distinct(StringComparer.OrdinalIgnoreCase));
+            return joined.Length == 0 ? null : joined;
+        }
+
         /// <summary>Datum aus einem Objekt mit year, month und day (jeweils auch <c>null</c>), <c>null</c> ohne Jahr.</summary>
         public static PartialDate? GetDateParts(JsonElement element, params string[] path) {
             JsonElement? parts = Get(element, path);

@@ -13,6 +13,10 @@ namespace Anicluster.ViewModels {
         bool HasDescription,
         bool HasStartDate,
         bool HasEndDate,
+        bool HasProducer,
+        bool HasPublisher,
+        bool HasAuthor,
+        bool HasOriginalName,
         int? AniListId,
         int? MyAnimeListId,
         int? KitsuId
@@ -41,6 +45,10 @@ namespace Anicluster.ViewModels {
     /// <param name="Description">Die Beschreibung</param>
     /// <param name="StartDate">Beginn der Veröffentlichung</param>
     /// <param name="EndDate">Ende der Veröffentlichung</param>
+    /// <param name="Producer">Studios und Produzenten</param>
+    /// <param name="Publisher">Lizenzgeber und Veröffentlicher</param>
+    /// <param name="Author">Urheber der Vorlage</param>
+    /// <param name="OriginalName">Titel in der Originalsprache</param>
     public record MetadataImportResult(
         MetadataProviderKind Provider,
         string ExternalId,
@@ -48,6 +56,10 @@ namespace Anicluster.ViewModels {
         byte[]? CoverData,
         string? Description,
         DateTime? StartDate,
-        DateTime? EndDate
+        DateTime? EndDate,
+        string? Producer,
+        string? Publisher,
+        string? Author,
+        string? OriginalName
     );
 }

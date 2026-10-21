@@ -53,7 +53,9 @@ namespace Anicluster.Metadata {
             if (!int.TryParse(externalId, NumberStyles.None, CultureInfo.InvariantCulture, out int id)) {
                 return MetadataResult<MetadataCandidate>.Failure(MetadataStatus.NotFound);
             }
-            MetadataResult<string> response = await this.GetAsync($"{BaseUrl}/{id.ToString(CultureInfo.InvariantCulture)}", cancellationToken);
+            // „/full“ liefert dieselben Felder wie die Suche plus Beziehungen, Musik und Links
+            string url = $"{BaseUrl}/{id.ToString(CultureInfo.InvariantCulture)}/full";
+            MetadataResult<string> response = await this.GetAsync(url, cancellationToken);
             if (response.Value is null) {
                 return response.AsFailure<MetadataCandidate>();
             }
@@ -101,7 +103,11 @@ namespace Anicluster.Metadata {
                 JsonReading.GetString(item, "images", "jpg", "large_image_url") ?? JsonReading.GetString(item, "images", "jpg", "image_url"),
                 start,
                 JsonReading.GetDateParts(item, "aired", "prop", "to"),
-                id
+                id,
+                JsonReading.JoinNames(JsonReading.GetNames(item, "studios").Concat(JsonReading.GetNames(item, "producers"))),
+                JsonReading.JoinNames(JsonReading.GetNames(item, "licensors")),
+                null,
+                japanese
             );
         }
     }

@@ -340,6 +340,10 @@ namespace Anicluster.ViewModels {
                 !string.IsNullOrWhiteSpace(this._anime.Description),
                 period.StartDate != UnsetDate,
                 period.EndDate != UnsetDate,
+                !string.IsNullOrWhiteSpace(this._anime.MediaInfo.Producer),
+                !string.IsNullOrWhiteSpace(this._anime.MediaInfo.Publisher),
+                !string.IsNullOrWhiteSpace(this._anime.MediaInfo.Author),
+                !string.IsNullOrWhiteSpace(this._anime.OriginalName),
                 this._anime.AniListId,
                 this._anime.MyAnimeListId,
                 this._anime.KitsuId
@@ -358,6 +362,18 @@ namespace Anicluster.ViewModels {
                 this.Description = result.Description;
             }
             this.ApplyPublishingPeriod(result.StartDate, result.EndDate);
+            if (result.Producer is not null) {
+                this.Producer = result.Producer;
+            }
+            if (result.Publisher is not null) {
+                this.Publisher = result.Publisher;
+            }
+            if (result.Author is not null) {
+                this.Author = result.Author;
+            }
+            if (result.OriginalName is not null) {
+                this.OriginalName = result.OriginalName;
+            }
             this.LinkMetadata(result);
         }
 

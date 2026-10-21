@@ -16,6 +16,10 @@
     /// <param name="Start">Beginn der Veröffentlichung, eventuell unvollständig</param>
     /// <param name="End">Ende der Veröffentlichung, eventuell unvollständig oder unbekannt</param>
     /// <param name="MyAnimeListId">Id bei MyAnimeList, wenn die Quelle sie mitliefert</param>
+    /// <param name="Producer">Studios und Produzenten, durch Komma getrennt (Jikan, AniList, Kitsu)</param>
+    /// <param name="Publisher">Lizenzgeber und Veröffentlicher, durch Komma getrennt (Jikan, Kitsu)</param>
+    /// <param name="Author">Urheber der Vorlage, durch Komma getrennt (AniList, Kitsu)</param>
+    /// <param name="OriginalName">Titel in der Originalsprache (japanisch), falls die Quelle ihn kennt</param>
     public record MetadataCandidate(
         MetadataProviderKind Provider,
         string ExternalId,
@@ -28,6 +32,10 @@
         string? CoverUrl,
         PartialDate? Start,
         PartialDate? End,
-        int? MyAnimeListId
+        int? MyAnimeListId,
+        string? Producer = null,
+        string? Publisher = null,
+        string? Author = null,
+        string? OriginalName = null
     );
 }

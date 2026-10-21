@@ -13,7 +13,9 @@ namespace Anicluster.Metadata {
         /// <summary>Größere Cover werden abgelehnt</summary>
         private const long MaxCoverBytes = 10 * 1024 * 1024;
 
-        private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(15);
+        // Jikan antwortet oft zäh und braucht mehr Zeit, außerdem kommt bei ihm gelegentlich ein Aussetzer, den ein zweiter Versuch behebt
+        private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(15);
+        private static readonly TimeSpan JikanTimeout = TimeSpan.FromSeconds(40);
 
         private readonly HttpClient _client;
         private readonly MetadataHttp _coverHttp;
@@ -22,16 +24,17 @@ namespace Anicluster.Metadata {
         public MetadataClient() {
             SocketsHttpHandler handler = new SocketsHttpHandler {
                 PooledConnectionLifetime = TimeSpan.FromMinutes(5),
-                MaxAutomaticRedirections = 3
+                MaxAutomaticRedirections = 3,
+                ConnectTimeout = TimeSpan.FromSeconds(10)
             };
-            this._client = new HttpClient(handler) { Timeout = RequestTimeout };
+            this._client = new HttpClient(handler) { Timeout = Timeout.InfiniteTimeSpan };
             Version? version = typeof(MetadataClient).Assembly.GetName().Version;
             this._client.DefaultRequestHeaders.UserAgent.ParseAdd($"Anicluster/{version?.ToString(3) ?? "2"}");
-            this._coverHttp = new MetadataHttp(this._client, TimeSpan.Zero);
+            this._coverHttp = new MetadataHttp(this._client, TimeSpan.Zero, DefaultTimeout, 0);
             this._providers = new Dictionary<MetadataProviderKind, IMetadataProvider> {
-                [MetadataProviderKind.AniList] = new AniListProvider(new MetadataHttp(this._client, TimeSpan.FromSeconds(2))),
-                [MetadataProviderKind.Jikan] = new JikanProvider(new MetadataHttp(this._client, TimeSpan.FromSeconds(1))),
-                [MetadataProviderKind.Kitsu] = new KitsuProvider(new MetadataHttp(this._client, TimeSpan.FromMilliseconds(500)))
+                [MetadataProviderKind.AniList] = new AniListProvider(new MetadataHttp(this._client, TimeSpan.FromSeconds(2), DefaultTimeout, 0)),
+                [MetadataProviderKind.Jikan] = new JikanProvider(new MetadataHttp(this._client, TimeSpan.FromSeconds(1), JikanTimeout, 2)),
+                [MetadataProviderKind.Kitsu] = new KitsuProvider(new MetadataHttp(this._client, TimeSpan.FromMilliseconds(500), DefaultTimeout, 0))
             };
         }
 

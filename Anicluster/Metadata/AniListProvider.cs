@@ -15,8 +15,13 @@ namespace Anicluster.Metadata {
         private const string Endpoint = "https://graphql.anilist.co";
         private const int ResultLimit = 8;
 
-        private const string MediaFields = @"id idMal title { romaji english native } format seasonYear episodes description(asHtml: false)
+        // Grundfelder, die immer abgefragt werden
+        private const string BasicFields = @"id idMal title { romaji english native } format seasonYear episodes description(asHtml: false)
             coverImage { extraLarge large } startDate { year month day } endDate { year month day }";
+
+        // Mit Studios und Mitarbeitern: schwerere Abfrage, bei der AniList manchmal mit einem Serverfehler antwortet
+        private const string MediaFields = BasicFields
+            + @" studios { edges { isMain node { name isAnimationStudio } } } staff(perPage: 25) { edges { role node { name { full } } } }";
 
         private readonly MetadataHttp _http;
 
@@ -27,9 +32,11 @@ namespace Anicluster.Metadata {
         }
 
         public async Task<MetadataResult<IReadOnlyList<MetadataCandidate>>> SearchAsync(string query, CancellationToken cancellationToken) {
-            string graphQl = "query ($search: String) { Page(page: 1, perPage: " + ResultLimit.ToString(CultureInfo.InvariantCulture)
-                + ") { media(search: $search, type: ANIME) { " + MediaFields + " } } }";
-            MetadataResult<string> response = await this.PostAsync(graphQl, new { search = query }, cancellationToken);
+            string Build(string fields) {
+                return "query ($search: String) { Page(page: 1, perPage: " + ResultLimit.ToString(CultureInfo.InvariantCulture)
+                    + ") { media(search: $search, type: ANIME) { " + fields + " } } }";
+            }
+            MetadataResult<string> response = await this.PostWithFallbackAsync(Build, new { search = query }, cancellationToken);
             if (response.Value is null) {
                 return response.AsFailure<IReadOnlyList<MetadataCandidate>>();
             }
@@ -58,8 +65,10 @@ namespace Anicluster.Metadata {
             if (!int.TryParse(externalId, NumberStyles.None, CultureInfo.InvariantCulture, out int id)) {
                 return MetadataResult<MetadataCandidate>.Failure(MetadataStatus.NotFound);
             }
-            string graphQl = "query ($id: Int) { Media(id: $id, type: ANIME) { " + MediaFields + " } }";
-            MetadataResult<string> response = await this.PostAsync(graphQl, new { id }, cancellationToken);
+            string Build(string fields) {
+                return "query ($id: Int) { Media(id: $id, type: ANIME) { " + fields + " } }";
+            }
+            MetadataResult<string> response = await this.PostWithFallbackAsync(Build, new { id }, cancellationToken);
             if (response.Value is null) {
                 return response.AsFailure<MetadataCandidate>();
             }
@@ -76,6 +85,20 @@ namespace Anicluster.Metadata {
                 Log.Error(ex, "Die Antwort von AniList konnte nicht gelesen werden.");
                 return MetadataResult<MetadataCandidate>.Failure(MetadataStatus.ServiceError, detail: "Unerwartete Antwort");
             }
+        }
+
+        /// <summary>Fragt mit allen Feldern an und bei einem Serverfehler noch einmal nur mit den Grundfeldern.</summary>
+        private async Task<MetadataResult<string>> PostWithFallbackAsync(
+            Func<string, string> build,
+            object variables,
+            CancellationToken cancellationToken
+        ) {
+            MetadataResult<string> response = await this.PostAsync(build(MediaFields), variables, cancellationToken);
+            if (response.Status == MetadataStatus.ServiceError || response.Status == MetadataStatus.Timeout) {
+                Log.Warning("AniList antwortet auf die Abfrage mit Studios und Mitarbeitern nicht, es folgt die Abfrage mit den Grundfeldern.");
+                response = await this.PostAsync(build(BasicFields), variables, cancellationToken);
+            }
+            return response;
         }
 
         private Task<MetadataResult<string>> PostAsync(string graphQl, object variables, CancellationToken cancellationToken) {
@@ -111,8 +134,44 @@ namespace Anicluster.Metadata {
                 JsonReading.GetString(item, "coverImage", "extraLarge") ?? JsonReading.GetString(item, "coverImage", "large"),
                 start,
                 JsonReading.GetDateParts(item, "endDate"),
-                JsonReading.GetInt(item, "idMal")
+                JsonReading.GetInt(item, "idMal"),
+                ReadStudios(item),
+                null,
+                ReadAuthors(item),
+                native
             );
+        }
+
+        /// <summary>Studios zuerst, danach die übrigen beteiligten Firmen (Produzenten).</summary>
+        private static string? ReadStudios(JsonElement item) {
+            List<(bool IsStudio, string Name)> entries = [];
+            JsonElement? edges = JsonReading.Get(item, "studios", "edges");
+            if (edges is { ValueKind: JsonValueKind.Array } list) {
+                foreach (JsonElement edge in list.EnumerateArray()) {
+                    string? name = JsonReading.GetString(edge, "node", "name");
+                    if (name is not null) {
+                        bool isStudio = JsonReading.Get(edge, "node", "isAnimationStudio") is { ValueKind: JsonValueKind.True };
+                        entries.Add((isStudio, name));
+                    }
+                }
+            }
+            return JsonReading.JoinNames(entries.OrderByDescending(x => x.IsStudio).Select(x => x.Name));
+        }
+
+        /// <summary>Mitarbeiter mit der Rolle „Original Creator“ oder „Original Story“ gelten als Autor.</summary>
+        private static string? ReadAuthors(JsonElement item) {
+            List<string> names = [];
+            JsonElement? edges = JsonReading.Get(item, "staff", "edges");
+            if (edges is { ValueKind: JsonValueKind.Array } list) {
+                foreach (JsonElement edge in list.EnumerateArray()) {
+                    string? role = JsonReading.GetString(edge, "role");
+                    string? name = JsonReading.GetString(edge, "node", "name", "full");
+                    if (role is not null && name is not null && role.Contains("Original", StringComparison.OrdinalIgnoreCase)) {
+                        names.Add(name);
+                    }
+                }
+            }
+            return JsonReading.JoinNames(names);
         }
     }
 }

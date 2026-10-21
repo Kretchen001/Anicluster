@@ -206,6 +206,22 @@
                                         <Run Text="Ende: "/>
                                         <Run Text="{Binding EndText, Mode=OneWay}" FontWeight="SemiBold"/>
                                     </TextBlock>
+                                    <StackPanel Visibility="{Binding HasProducerText, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Produzent" Style="{StaticResource FieldLabel}" Margin="0,16,0,5"/>
+                                        <TextBlock Text="{Binding ProducerText}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <StackPanel Visibility="{Binding HasPublisherText, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Veröffentlicher" Style="{StaticResource FieldLabel}" Margin="0,16,0,5"/>
+                                        <TextBlock Text="{Binding PublisherText}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <StackPanel Visibility="{Binding HasAuthorText, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Autor" Style="{StaticResource FieldLabel}" Margin="0,16,0,5"/>
+                                        <TextBlock Text="{Binding AuthorText}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <StackPanel Visibility="{Binding HasOriginalNameText, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Originalname" Style="{StaticResource FieldLabel}" Margin="0,16,0,5"/>
+                                        <TextBlock Text="{Binding OriginalNameText}" TextWrapping="Wrap"/>
+                                    </StackPanel>
                                 </StackPanel>
                             </Grid>
 
@@ -249,6 +265,46 @@
                                        TextWrapping="Wrap"
                                        Margin="28,2,0,0"
                                        Visibility="{Binding HasPeriodNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <CheckBox Content="Produzent"
+                                      Margin="0,8,0,0"
+                                      IsChecked="{Binding ApplyProducer}"
+                                      IsEnabled="{Binding CanApplyProducer}"/>
+                            <TextBlock Text="{Binding ProducerNote}"
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="28,2,0,0"
+                                       Visibility="{Binding HasProducerNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <CheckBox Content="Veröffentlicher"
+                                      Margin="0,8,0,0"
+                                      IsChecked="{Binding ApplyPublisher}"
+                                      IsEnabled="{Binding CanApplyPublisher}"/>
+                            <TextBlock Text="{Binding PublisherNote}"
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="28,2,0,0"
+                                       Visibility="{Binding HasPublisherNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <CheckBox Content="Autor"
+                                      Margin="0,8,0,0"
+                                      IsChecked="{Binding ApplyAuthor}"
+                                      IsEnabled="{Binding CanApplyAuthor}"/>
+                            <TextBlock Text="{Binding AuthorNote}"
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="28,2,0,0"
+                                       Visibility="{Binding HasAuthorNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <CheckBox Content="Originalname"
+                                      Margin="0,8,0,0"
+                                      IsChecked="{Binding ApplyOriginalName}"
+                                      IsEnabled="{Binding CanApplyOriginalName}"/>
+                            <TextBlock Text="{Binding OriginalNameNote}"
+                                       Style="{StaticResource MutedText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Margin="28,2,0,0"
+                                       Visibility="{Binding HasOriginalNameNote, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
