@@ -20,6 +20,8 @@ Neu in 2.3.0
   Schwellwerte) und lassen sich in der Bibliothek filtern
 - Zeitstrahl: Animes nach Veröffentlichungszeitraum auf einer Zeitachse, mit Staffeln, Unterbrechungen und Heute-Linie,
   Zoom, waagerechtem Scrollen, Tooltips und Filter nach Name und Tags
+- Anime-Netzwerk: Animes als Netzwerk in drei Arten (Vorgänger/Nachfolger/Verwandt, ähnliche Tags, ähnliche Bewertung)
+  mit Clustern, Reglern für die Ähnlichkeit, Auswahl mit Verbindungen und Zoom
 - Die Datenbankstruktur bleibt unverändert, es ist keine Migration nötig
 
 Neu in 2.2.0

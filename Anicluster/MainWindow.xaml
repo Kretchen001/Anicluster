@@ -83,6 +83,13 @@
                         </StackPanel>
                     </RadioButton>
                     <RadioButton Style="{StaticResource NavStyle}"
+                                 IsChecked="{Binding Navigation, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:NavigationTarget.AnimeNetwork}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE716;" FontFamily="{StaticResource IconFont}" FontSize="16" Width="28" VerticalAlignment="Center"/>
+                            <TextBlock Text="Anime-Netzwerk" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource NavStyle}"
                                  IsChecked="{Binding Navigation, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:NavigationTarget.TasteProfile}}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE8E1;" FontFamily="{StaticResource IconFont}" FontSize="16" Width="28" VerticalAlignment="Center"/>

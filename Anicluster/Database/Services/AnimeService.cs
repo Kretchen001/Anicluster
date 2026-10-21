@@ -165,6 +165,33 @@ namespace Anicluster.Database.Services {
             }
         }
 
+        public List<AnimeRelationEntry> SelectRelationEntries() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return session.Query(
+                        "SELECT Id, Predecessor, Successor, Related FROM Anime ORDER BY Id;",
+                        reader => new AnimeRelationEntry(reader.GetInt(0), reader.GetInt(1), reader.GetInt(2), reader.GetInt(3))
+                    );
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Verknüpfungen der Animes konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
+        public List<AnimeRatingEntry> SelectRatingEntries() {
+            try {
+                using (DatabaseSession session = this._databaseManager.BeginSession()) {
+                    return this._ratingService.SelectEntries(session);
+                }
+            }
+            catch (Exception ex) {
+                Log.Error(ex, "Die Bewertungen der Animes konnten nicht geladen werden.");
+                return [];
+            }
+        }
+
         public List<TimelineEntry> SelectTimelineEntries() {
             try {
                 using (DatabaseSession session = this._databaseManager.BeginSession()) {

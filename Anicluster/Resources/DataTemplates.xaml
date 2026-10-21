@@ -18,6 +18,9 @@
     <DataTemplate DataType="{x:Type vm:TagNetworkViewModel}">
         <views:TagNetworkView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:AnimeNetworkViewModel}">
+        <views:AnimeNetworkView/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:TasteProfileViewModel}">
         <views:TasteProfileView/>
     </DataTemplate>

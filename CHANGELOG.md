@@ -12,6 +12,12 @@ Für Versionen vor 2.1.0 gibt es keine Tags im Verlauf, sie sind deshalb nach Ze
   - Zoom per Regler oder Strg + Mausrad, waagerechtes Scrollen per Scrollbalken oder Umschalt + Mausrad. Jahresleiste und Namen laufen beim Scrollen mit.
   - Ein Tooltip zeigt beim Überfahren eines Zeitraums oder einer Pause Beginn, Ende und Dauer.
   - Filter nach Namen und nach Tags (alle Tags oder ein Tag genügt). Doppelklick öffnet den Anime. Animes ohne Zeitraum werden nur gezählt.
+- **Anime-Netzwerk**: Neuer Bereich in der Seitenleiste unter dem Tag-Netzwerk. Animes sind die Knoten, verbundene Animes rücken zusammen, Cluster erhalten eine gemeinsame Fläche mit Beschriftung (häufigste Tags, Durchschnittsnote oder Anzahl). Drei Netzwerkarten lassen sich umschalten, die Wahl wird gespeichert:
+  - **Vorgänger und Nachfolger**: Verbindungen aus den Feldern Vorgänger, Nachfolger und Verwandt. Pfeile zeigen vom Vorgänger zum Nachfolger, gestrichelte Linien verbinden Verwandte. Die Cluster sind die zusammenhängenden Gruppen (Franchises).
+  - **Ähnliche Tags**: Je mehr Tags zwei Animes gemeinsam haben, desto ähnlicher sind sie, seltene Tags zählen mehr als häufige (mindestens zwei gemeinsame Tags nötig). Animes ohne Tags erscheinen nicht.
+  - **Ähnliche Bewertung**: Ähnlichkeit aus den Teilnoten Story, Animation, Effekte und Akustik, gewichtet wie die Gesamtnote. Unbewertete Animes erscheinen nicht.
+  - Regler für Mindestähnlichkeit und die höchste Zahl ähnlicher Nachbarn pro Anime, Schalter für Animes ohne Verbindung (standardmäßig ausgeblendet), Filter nach Status und Hervorheben per Namenssuche.
+  - Klick wählt einen Anime und zeigt seine Verbindungen mit Art oder Ähnlichkeit, Doppelklick öffnet ihn im Editor, „In Bibliothek suchen“ springt zur Bibliothek. Zoom per Regler oder Strg + Mausrad, Knoten lassen sich ziehen, „Neu anordnen“ startet das Layout neu.
 - `SqlScripts/Demo-Zeitraeume.sql`: Veröffentlichungszeiträume, Staffeln und Pausen für viele Animes der Beispielliste, zum Ausprobieren des Zeitstrahls.
 
 ### Geändert

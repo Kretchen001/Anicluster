@@ -20,6 +20,7 @@ namespace Anicluster.ViewModels {
         private readonly ITagService _tagService;
         private readonly IDialogService _dialogService;
         private readonly DatabaseManager _databaseManager;
+        private readonly AppSettingsService _settingsService;
         private readonly SettingsViewModel _settingsPage;
         private object _currentPage;
         private NavigationTarget _navigation = NavigationTarget.Library;
@@ -56,6 +57,7 @@ namespace Anicluster.ViewModels {
             DatabaseManager databaseManager
         ) {
             this._databaseManager = databaseManager;
+            this._settingsService = settingsService;
             this._animeService = animeService;
             this._tagService = tagService;
             this._dialogService = dialogService;
@@ -89,6 +91,9 @@ namespace Anicluster.ViewModels {
                     break;
                 case NavigationTarget.TagNetwork:
                     this.CurrentPage = this.CreateTagNetwork();
+                    break;
+                case NavigationTarget.AnimeNetwork:
+                    this.CurrentPage = this.CreateAnimeNetwork();
                     break;
                 case NavigationTarget.TasteProfile:
                     this.CurrentPage = this.CreateTasteProfile();
@@ -135,6 +140,12 @@ namespace Anicluster.ViewModels {
             }
         }
 
+        /// <summary>Wechselt zur Bibliothek und sucht dort nach dem Text (zum Beispiel dem Namen eines Animes).</summary>
+        public void ShowLibraryWithSearch(string searchText) {
+            this.NavigateTo(NavigationTarget.Library);
+            this.Library.SearchText = searchText;
+        }
+
         /// <summary>Zeigt den Dialog zum schnellen Anlegen und lädt danach die Liste neu.</summary>
         public void CreateQuickAnime() {
             this._dialogService.ShowDialog(new QuickAnimeViewModel(this._animeService, this._dialogService));
@@ -161,6 +172,13 @@ namespace Anicluster.ViewModels {
             TagNetworkViewModel network = new TagNetworkViewModel(this._animeService, this._tagService);
             network.EditRequested += (sender, item) => this.EditAnime(item.Id);
             network.ShowInLibraryRequested += (sender, e) => this.ShowLibraryWithTags(e.Tags, e.Mode);
+            return network;
+        }
+
+        private AnimeNetworkViewModel CreateAnimeNetwork() {
+            AnimeNetworkViewModel network = new AnimeNetworkViewModel(this._animeService, this._tagService, this._settingsService);
+            network.EditRequested += (sender, animeId) => this.EditAnime(animeId);
+            network.SearchInLibraryRequested += (sender, searchText) => this.ShowLibraryWithSearch(searchText);
             return network;
         }
 

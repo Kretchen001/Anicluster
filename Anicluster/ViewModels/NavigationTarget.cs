@@ -5,6 +5,7 @@
         Library,
         Tags,
         TagNetwork,
+        AnimeNetwork,
         TasteProfile,
         Timeline,
         Settings
